@@ -1304,3 +1304,4 @@ function wmo_get_inline_styles()
     ';
 }
 
+"// Test Korbit" 
