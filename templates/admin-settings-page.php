@@ -26,38 +26,32 @@
                         ?>
                     </div>
                     <div class="wmo-color-group">
-                        <h3>System</h3>
-                        <?php
-                        wmo_render_color_picker($menu_colors, 'users', 'Users');
-                        wmo_render_color_picker($menu_colors, 'tools', 'Tools');
-                        wmo_render_color_picker($menu_colors, 'settings', 'Settings');
-                        ?>
-                    </div>
-                    <div class="wmo-color-group">
                         <h3>Other</h3>
                         <?php
-                        global $submenu;
-                        foreach ($menu as $item) {
-                            $menu_slug = sanitize_title(strip_tags($item[0]));
-                            if (empty($menu_slug) || in_array($menu_slug, ['dashboard', 'posts', 'media', 'pages', 'comments', 'appearance', 'plugins', 'users', 'tools', 'settings'])) continue;
+                        global $menu, $submenu;
+                        if (isset($menu) && is_array($menu)) {
+                            foreach ($menu as $item) {
+                                $menu_slug = sanitize_title(strip_tags($item[0]));
+                                if (empty($menu_slug) || in_array($menu_slug, ['dashboard', 'posts', 'media', 'pages', 'comments', 'appearance', 'plugins', 'users', 'tools', 'settings'])) continue;
 
-                            if (strpos($menu_slug, 'comments') !== false) {
-                                $menu_title = 'Comments';
-                            } else {
-                                $menu_title = preg_replace('/\d+/', '', strip_tags($item[0]));
-                                $menu_title = trim($menu_title);
-                            }
+                                if (strpos($menu_slug, 'comments') !== false) {
+                                    $menu_title = 'Comments';
+                                } else {
+                                    $menu_title = preg_replace('/\d+/', '', strip_tags($item[0]));
+                                    $menu_title = trim($menu_title);
+                                }
 
-                            wmo_render_color_picker($menu_colors, $menu_slug, $menu_title);
+                                wmo_render_color_picker($menu_colors, $menu_slug, $menu_title);
 
-                            // Handle submenus
-                            if (isset($submenu[$item[2]])) {
-                                foreach ($submenu[$item[2]] as $subitem) {
-                                    $submenu_slug = sanitize_title(strip_tags($subitem[0]));
-                                    $submenu_title = strip_tags($subitem[0]);
+                                // Handle submenus
+                                if (isset($submenu[$item[2]])) {
+                                    foreach ($submenu[$item[2]] as $subitem) {
+                                        $submenu_slug = sanitize_title(strip_tags($subitem[0]));
+                                        $submenu_title = strip_tags($subitem[0]);
 
-                                    // Display submenu with indentation
-                                    wmo_render_color_picker($menu_colors, $submenu_slug, '— ' . $submenu_title, true);
+                                        // Display submenu with indentation
+                                        wmo_render_color_picker($menu_colors, $submenu_slug, '— ' . $submenu_title, true);
+                                    }
                                 }
                             }
                         }

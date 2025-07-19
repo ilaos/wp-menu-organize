@@ -1,0 +1,535 @@
+/* WP Menu Organize - Admin Styles */
+
+/* Inline Editing Styles */
+.inline-edit-input {
+    border: 1px solid #0073aa;
+    background: #fff;
+    padding: 4px 8px;
+    font-size: 14px;
+    border-radius: 3px;
+    width: 200px;
+    max-width: 100%;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+.inline-edit-input:focus {
+    outline: none;
+    border-color: #0073aa;
+    box-shadow: 0 0 0 1px #0073aa;
+}
+
+/* Spinner Styles */
+.edit-spinner {
+    display: inline-block;
+    margin-left: 8px;
+    font-size: 14px;
+    animation: spin 1s linear infinite;
+    color: #0073aa;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* Loading States */
+.edit-loading {
+    opacity: 0.7;
+    pointer-events: none;
+}
+
+.edit-loading .edit-spinner {
+    opacity: 1;
+}
+
+/* Feedback Messages */
+.edit-success,
+.edit-error {
+    position: absolute;
+    top: -25px;
+    left: 0;
+    padding: 4px 8px;
+    border-radius: 3px;
+    font-size: 12px;
+    font-weight: 500;
+    z-index: 1000;
+    opacity: 0;
+    transform: translateY(-5px);
+    transition: all 0.3s ease;
+}
+
+.edit-success {
+    background: #46b450;
+    color: #fff;
+}
+
+.edit-error {
+    background: #dc3232;
+    color: #fff;
+}
+
+.edit-success.show,
+.edit-error.show {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* Inline Controls Positioning */
+.item-inline-controls {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-left: auto;
+}
+
+.edit-label {
+    background: none;
+    border: none;
+    color: #0073aa;
+    cursor: pointer;
+    padding: 4px;
+    border-radius: 3px;
+    transition: all 0.2s ease;
+}
+
+.edit-label:hover {
+    background: #f0f0f1;
+    color: #005a87;
+}
+
+.edit-label:focus {
+    outline: none;
+    box-shadow: 0 0 0 1px #0073aa;
+}
+
+/* Toggle Label Styles */
+.toggle-label {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    cursor: pointer;
+    padding: 4px;
+    border-radius: 3px;
+    transition: all 0.2s ease;
+    position: relative;
+}
+
+.toggle-label:hover {
+    background: #f0f0f1;
+}
+
+.visibility-toggle {
+    margin: 0;
+    cursor: pointer;
+}
+
+/* Color Swatch Styles */
+.color-swatch {
+    width: 20px;
+    height: 20px;
+    border: 1px solid #ccc;
+    cursor: pointer;
+    border-radius: 50%;
+    display: inline-block;
+    transition: all 0.2s ease;
+    position: relative;
+    margin-left: 8px;
+}
+
+.color-swatch:hover {
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+    transform: scale(1.1);
+}
+
+.color-swatch:focus {
+    outline: 2px solid #0073aa;
+    outline-offset: 2px;
+}
+
+.color-swatch[style*="transparent"] {
+    background-image: linear-gradient(45deg, #f0f0f1 25%, transparent 25%), 
+                      linear-gradient(-45deg, #f0f0f1 25%, transparent 25%), 
+                      linear-gradient(45deg, transparent 75%, #f0f0f1 75%), 
+                      linear-gradient(-45deg, transparent 75%, #f0f0f1 75%);
+    background-size: 4px 4px;
+    background-position: 0 0, 0 2px, 2px -2px, -2px 0px;
+}
+
+.color-swatch[style*="transparent"]::after {
+    content: "🎨";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 10px;
+    color: #6b7280;
+}
+
+/* Inline Color Picker Styles */
+.inline-color-picker {
+    position: absolute !important;
+    opacity: 0 !important;
+    pointer-events: none !important;
+    z-index: -1 !important;
+}
+
+/* Color Picker Container Positioning */
+.wp-picker-container {
+    z-index: 10000 !important;
+}
+
+.wp-picker-container .wp-color-result {
+    z-index: 10001 !important;
+}
+
+/* Color Picker Dropdown */
+.wp-picker-holder {
+    z-index: 10002 !important;
+    position: absolute !important;
+}
+
+/* Icon Selector Styles */
+.icon-selector {
+    font-size: 20px;
+    cursor: pointer;
+    color: #0073aa;
+    padding: 4px;
+    border-radius: 3px;
+    transition: all 0.2s ease;
+    display: inline-block;
+    margin-left: 8px;
+    position: relative;
+}
+
+.icon-selector:hover {
+    transform: scale(1.2);
+    color: #005a87;
+    background: #f0f0f1;
+}
+
+.icon-selector:focus {
+    outline: 2px solid #0073aa;
+    outline-offset: 2px;
+}
+
+.icon-selector:focus-visible {
+    outline: 2px solid #0073aa;
+    outline-offset: 2px;
+}
+
+/* Icon Picker Popup Styles */
+.wmo-icon-picker-popup {
+    position: fixed;
+    background: #fff;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.15);
+    padding: 16px;
+    min-width: 320px;
+    max-width: 90vw;
+    max-height: 60vh;
+    overflow: auto;
+    z-index: 10010;
+}
+
+.wmo-icon-search {
+    width: 100%;
+    padding: 8px 12px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    margin-bottom: 12px;
+    font-size: 14px;
+}
+
+.wmo-icon-search:focus {
+    outline: none;
+    border-color: #0073aa;
+    box-shadow: 0 0 0 1px #0073aa;
+}
+
+.wmo-icon-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(40px, 1fr));
+    gap: 8px;
+    max-height: 300px;
+    overflow-y: auto;
+}
+
+.wmo-icon-choice {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 18px;
+    color: #666;
+    transition: all 0.2s ease;
+}
+
+.wmo-icon-choice:hover {
+    background: #f0f0f1;
+    border-color: #0073aa;
+    color: #0073aa;
+    transform: scale(1.1);
+}
+
+.wmo-icon-choice.selected {
+    background: #0073aa;
+    color: #fff;
+    border-color: #0073aa;
+}
+
+.wmo-icon-choice:focus {
+    outline: 2px solid #0073aa;
+    outline-offset: 2px;
+}
+
+.wmo-icon-close {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    background: none;
+    border: none;
+    font-size: 20px;
+    color: #666;
+    cursor: pointer;
+    padding: 4px;
+    border-radius: 3px;
+}
+
+.wmo-icon-close:hover {
+    background: #f0f0f1;
+    color: #333;
+}
+
+.wmo-icon-picker-popup.saving {
+    opacity: 0.7;
+    pointer-events: none;
+}
+
+.wmo-icon-picker-popup.saving::after {
+    content: "Saving...";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: #0073aa;
+    color: #fff;
+    padding: 8px 16px;
+    border-radius: 4px;
+    font-size: 14px;
+    font-weight: 500;
+}
+
+/* Mobile Responsiveness */
+@media (max-width: 768px) {
+    .inline-edit-input {
+        width: 150px;
+        font-size: 13px;
+    }
+    
+    .item-inline-controls {
+        flex-direction: column;
+        gap: 4px;
+        align-items: flex-start;
+    }
+    
+    .edit-success,
+    .edit-error {
+        position: static;
+        margin-top: 4px;
+        font-size: 11px;
+    }
+    
+    .color-swatch {
+        width: 24px;
+        height: 24px;
+        margin-left: 4px;
+    }
+    
+    .color-swatch[style*="transparent"]::after {
+        font-size: 12px;
+    }
+    
+    .icon-selector {
+        font-size: 18px;
+        padding: 6px;
+        margin-left: 4px;
+    }
+    
+    .icon-selector:hover {
+        transform: scale(1.1);
+    }
+    
+    .wmo-icon-picker-popup {
+        min-width: 280px;
+        max-width: 95vw;
+        padding: 12px;
+    }
+    
+    .wmo-icon-grid {
+        grid-template-columns: repeat(auto-fill, minmax(36px, 1fr));
+        gap: 6px;
+    }
+    
+    .wmo-icon-choice {
+        width: 36px;
+        height: 36px;
+        font-size: 16px;
+    }
+}
+
+/* Accessibility Improvements */
+.edit-label:focus-visible,
+.toggle-label:focus-visible {
+    outline: 2px solid #0073aa;
+    outline-offset: 2px;
+}
+
+.visibility-toggle:focus-visible {
+    outline: 2px solid #0073aa;
+    outline-offset: 1px;
+}
+
+.color-swatch:focus-visible {
+    outline: 2px solid #0073aa;
+    outline-offset: 2px;
+}
+
+.icon-selector:focus-visible {
+    outline: 2px solid #0073aa;
+    outline-offset: 2px;
+}
+
+/* High Contrast Mode Support */
+@media (prefers-contrast: high) {
+    .edit-label {
+        border: 1px solid currentColor;
+    }
+    
+    .toggle-label {
+        border: 1px solid currentColor;
+    }
+    
+    .color-swatch {
+        border: 2px solid currentColor;
+    }
+    
+    .icon-selector {
+        border: 1px solid currentColor;
+    }
+    
+    .edit-success {
+        border: 2px solid #46b450;
+    }
+    
+    .edit-error {
+        border: 2px solid #dc3232;
+    }
+}
+
+/* Reduced Motion Support */
+@media (prefers-reduced-motion: reduce) {
+    .edit-spinner {
+        animation: none;
+    }
+    
+    .edit-success,
+    .edit-error {
+        transition: none;
+    }
+    
+    .color-swatch {
+        transition: none;
+    }
+    
+    .color-swatch:hover {
+        transform: none;
+    }
+    
+    .icon-selector {
+        transition: none;
+    }
+    
+    .icon-selector:hover {
+        transform: none;
+    }
+    
+    .wmo-icon-choice {
+        transition: none;
+    }
+    
+    .wmo-icon-choice:hover {
+        transform: none;
+    }
+}
+
+/* Sortable Disabled State */
+.ui-sortable-disabled {
+    opacity: 0.6;
+    pointer-events: none;
+}
+
+.ui-sortable-disabled .menu-item-handle {
+    cursor: not-allowed;
+}
+
+/* Menu Item States */
+.menu-item.dragging {
+    z-index: 1000;
+    transform: rotate(2deg);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+
+.menu-item.dragging .item-inline-controls {
+    opacity: 0.5;
+}
+
+/* Placeholder Styles */
+.sortable-placeholder {
+    background: #f0f0f1;
+    border: 2px dashed #0073aa;
+    height: 40px;
+    margin: 4px 0;
+    border-radius: 3px;
+}
+
+/* Error Handling */
+.wmo-error {
+    background: #dc3232;
+    color: #fff;
+    padding: 10px;
+    border-radius: 3px;
+    margin: 10px 0;
+    border-left: 4px solid #dc3232;
+}
+
+.wmo-success {
+    background: #46b450;
+    color: #fff;
+    padding: 10px;
+    border-radius: 3px;
+    margin: 10px 0;
+    border-left: 4px solid #46b450;
+}
+
+/* Debug Styles */
+.wmo-debug {
+    background: #f0f0f1;
+    border: 1px solid #ddd;
+    padding: 10px;
+    margin: 10px 0;
+    border-radius: 3px;
+    font-family: monospace;
+    font-size: 12px;
+}
+
+.wmo-debug pre {
+    margin: 0;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+} 
