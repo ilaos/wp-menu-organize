@@ -1,0 +1,1992 @@
+[08-Jul-2025 16:10:53 UTC] WMO: Current admin menu: Array
+(
+    [2] => Array
+        (
+            [0] => Dashboard
+            [1] => read
+            [2] => index.php
+            [3] => 
+            [4] => menu-top menu-top-first menu-icon-dashboard
+            [5] => menu-dashboard
+            [6] => dashicons-dashboard
+        )
+
+    [4] => Array
+        (
+            [0] => 
+            [1] => read
+            [2] => separator1
+            [3] => 
+            [4] => wp-menu-separator
+        )
+
+    [10] => Array
+        (
+            [0] => Media
+            [1] => upload_files
+            [2] => upload.php
+            [3] => 
+            [4] => menu-top menu-icon-media
+            [5] => menu-media
+            [6] => dashicons-admin-media
+        )
+
+    [15] => Array
+        (
+            [0] => Links
+            [1] => manage_links
+            [2] => edit-tags.php?taxonomy=link_category
+            [3] => 
+            [4] => menu-top menu-icon-links
+            [5] => menu-links
+            [6] => dashicons-admin-links
+        )
+
+    [25] => Array
+        (
+            [0] => Comments <span class="awaiting-mod count-0"><span class="pending-count" aria-hidden="true">0</span><span class="comments-in-moderation-text screen-reader-text">0 Comments in moderation</span></span>
+            [1] => edit_posts
+            [2] => edit-comments.php
+            [3] => 
+            [4] => menu-top menu-icon-comments
+            [5] => menu-comments
+            [6] => dashicons-admin-comments
+        )
+
+    [5] => Array
+        (
+            [0] => Posts
+            [1] => edit_posts
+            [2] => edit.php
+            [3] => 
+            [4] => menu-top menu-icon-post open-if-no-js
+            [5] => menu-posts
+            [6] => dashicons-admin-post
+        )
+
+    [20] => Array
+        (
+            [0] => Pages
+            [1] => edit_pages
+            [2] => edit.php?post_type=page
+            [3] => 
+            [4] => menu-top menu-icon-page
+            [5] => menu-pages
+            [6] => dashicons-admin-page
+        )
+
+    [59] => Array
+        (
+            [0] => 
+            [1] => read
+            [2] => separator2
+            [3] => 
+            [4] => wp-menu-separator
+        )
+
+    [60] => Array
+        (
+            [0] => Appearance
+            [1] => switch_themes
+            [2] => themes.php
+            [3] => 
+            [4] => menu-top menu-icon-appearance
+            [5] => menu-appearance
+            [6] => dashicons-admin-appearance
+        )
+
+    [65] => Array
+        (
+            [0] => Plugins <span class="update-plugins count-0"><span class="plugin-count">0</span></span>
+            [1] => activate_plugins
+            [2] => plugins.php
+            [3] => 
+            [4] => menu-top menu-icon-plugins
+            [5] => menu-plugins
+            [6] => dashicons-admin-plugins
+        )
+
+    [70] => Array
+        (
+            [0] => Users
+            [1] => list_users
+            [2] => users.php
+            [3] => 
+            [4] => menu-top menu-icon-users
+            [5] => menu-users
+            [6] => dashicons-admin-users
+        )
+
+    [75] => Array
+        (
+            [0] => Tools
+            [1] => edit_posts
+            [2] => tools.php
+            [3] => 
+            [4] => menu-top menu-icon-tools
+            [5] => menu-tools
+            [6] => dashicons-admin-tools
+        )
+
+    [80] => Array
+        (
+            [0] => Settings
+            [1] => manage_options
+            [2] => options-general.php
+            [3] => 
+            [4] => menu-top menu-icon-settings
+            [5] => menu-settings
+            [6] => dashicons-admin-settings
+        )
+
+    [99] => Array
+        (
+            [0] => 
+            [1] => read
+            [2] => separator-last
+            [3] => 
+            [4] => wp-menu-separator
+        )
+
+    [100] => Array
+        (
+            [0] => Menu Colors
+            [1] => manage_options
+            [2] => wp-menu-organize-settings
+            [3] => WP Menu Colors Settings
+            [4] => menu-top toplevel_page_wp-menu-organize-settings
+            [5] => toplevel_page_wp-menu-organize-settings
+            [6] => dashicons-admin-generic
+        )
+
+)
+
+[08-Jul-2025 16:10:53 UTC] WMO Debug: menu_order filter called. Order: Array
+(
+    [0] => index.php
+    [1] => separator1
+    [2] => edit.php
+    [3] => upload.php
+    [4] => edit.php?post_type=page
+    [5] => edit-comments.php
+    [6] => separator2
+    [7] => themes.php
+    [8] => plugins.php
+    [9] => users.php
+    [10] => tools.php
+    [11] => options-general.php
+    [12] => separator-last
+    [13] => wp-menu-organize-settings
+)
+
+[08-Jul-2025 16:10:59 UTC] WMO: Current admin menu: Array
+(
+    [2] => Array
+        (
+            [0] => Dashboard
+            [1] => read
+            [2] => index.php
+            [3] => 
+            [4] => menu-top menu-top-first menu-icon-dashboard
+            [5] => menu-dashboard
+            [6] => dashicons-dashboard
+        )
+
+    [4] => Array
+        (
+            [0] => 
+            [1] => read
+            [2] => separator1
+            [3] => 
+            [4] => wp-menu-separator
+        )
+
+    [10] => Array
+        (
+            [0] => Media
+            [1] => upload_files
+            [2] => upload.php
+            [3] => 
+            [4] => menu-top menu-icon-media
+            [5] => menu-media
+            [6] => dashicons-admin-media
+        )
+
+    [15] => Array
+        (
+            [0] => Links
+            [1] => manage_links
+            [2] => edit-tags.php?taxonomy=link_category
+            [3] => 
+            [4] => menu-top menu-icon-links
+            [5] => menu-links
+            [6] => dashicons-admin-links
+        )
+
+    [25] => Array
+        (
+            [0] => Comments <span class="awaiting-mod count-0"><span class="pending-count" aria-hidden="true">0</span><span class="comments-in-moderation-text screen-reader-text">0 Comments in moderation</span></span>
+            [1] => edit_posts
+            [2] => edit-comments.php
+            [3] => 
+            [4] => menu-top menu-icon-comments
+            [5] => menu-comments
+            [6] => dashicons-admin-comments
+        )
+
+    [5] => Array
+        (
+            [0] => Posts
+            [1] => edit_posts
+            [2] => edit.php
+            [3] => 
+            [4] => menu-top menu-icon-post open-if-no-js
+            [5] => menu-posts
+            [6] => dashicons-admin-post
+        )
+
+    [20] => Array
+        (
+            [0] => Pages
+            [1] => edit_pages
+            [2] => edit.php?post_type=page
+            [3] => 
+            [4] => menu-top menu-icon-page
+            [5] => menu-pages
+            [6] => dashicons-admin-page
+        )
+
+    [59] => Array
+        (
+            [0] => 
+            [1] => read
+            [2] => separator2
+            [3] => 
+            [4] => wp-menu-separator
+        )
+
+    [60] => Array
+        (
+            [0] => Appearance
+            [1] => switch_themes
+            [2] => themes.php
+            [3] => 
+            [4] => menu-top menu-icon-appearance
+            [5] => menu-appearance
+            [6] => dashicons-admin-appearance
+        )
+
+    [65] => Array
+        (
+            [0] => Plugins <span class="update-plugins count-0"><span class="plugin-count">0</span></span>
+            [1] => activate_plugins
+            [2] => plugins.php
+            [3] => 
+            [4] => menu-top menu-icon-plugins
+            [5] => menu-plugins
+            [6] => dashicons-admin-plugins
+        )
+
+    [70] => Array
+        (
+            [0] => Users
+            [1] => list_users
+            [2] => users.php
+            [3] => 
+            [4] => menu-top menu-icon-users
+            [5] => menu-users
+            [6] => dashicons-admin-users
+        )
+
+    [75] => Array
+        (
+            [0] => Tools
+            [1] => edit_posts
+            [2] => tools.php
+            [3] => 
+            [4] => menu-top menu-icon-tools
+            [5] => menu-tools
+            [6] => dashicons-admin-tools
+        )
+
+    [80] => Array
+        (
+            [0] => Settings
+            [1] => manage_options
+            [2] => options-general.php
+            [3] => 
+            [4] => menu-top menu-icon-settings
+            [5] => menu-settings
+            [6] => dashicons-admin-settings
+        )
+
+    [99] => Array
+        (
+            [0] => 
+            [1] => read
+            [2] => separator-last
+            [3] => 
+            [4] => wp-menu-separator
+        )
+
+    [100] => Array
+        (
+            [0] => Menu Colors
+            [1] => manage_options
+            [2] => wp-menu-organize-settings
+            [3] => WP Menu Colors Settings
+            [4] => menu-top toplevel_page_wp-menu-organize-settings
+            [5] => toplevel_page_wp-menu-organize-settings
+            [6] => dashicons-admin-generic
+        )
+
+)
+
+[08-Jul-2025 16:10:59 UTC] WMO Debug: menu_order filter called. Order: Array
+(
+    [0] => index.php
+    [1] => separator1
+    [2] => edit.php
+    [3] => upload.php
+    [4] => edit.php?post_type=page
+    [5] => edit-comments.php
+    [6] => separator2
+    [7] => themes.php
+    [8] => plugins.php
+    [9] => users.php
+    [10] => tools.php
+    [11] => options-general.php
+    [12] => separator-last
+    [13] => wp-menu-organize-settings
+)
+
+[08-Jul-2025 16:11:06 UTC] WMO: Current admin menu: Array
+(
+    [2] => Array
+        (
+            [0] => Dashboard
+            [1] => read
+            [2] => index.php
+            [3] => 
+            [4] => menu-top menu-top-first menu-icon-dashboard
+            [5] => menu-dashboard
+            [6] => dashicons-dashboard
+        )
+
+    [4] => Array
+        (
+            [0] => 
+            [1] => read
+            [2] => separator1
+            [3] => 
+            [4] => wp-menu-separator
+        )
+
+    [10] => Array
+        (
+            [0] => Media
+            [1] => upload_files
+            [2] => upload.php
+            [3] => 
+            [4] => menu-top menu-icon-media
+            [5] => menu-media
+            [6] => dashicons-admin-media
+        )
+
+    [15] => Array
+        (
+            [0] => Links
+            [1] => manage_links
+            [2] => edit-tags.php?taxonomy=link_category
+            [3] => 
+            [4] => menu-top menu-icon-links
+            [5] => menu-links
+            [6] => dashicons-admin-links
+        )
+
+    [25] => Array
+        (
+            [0] => Comments <span class="awaiting-mod count-0"><span class="pending-count" aria-hidden="true">0</span><span class="comments-in-moderation-text screen-reader-text">0 Comments in moderation</span></span>
+            [1] => edit_posts
+            [2] => edit-comments.php
+            [3] => 
+            [4] => menu-top menu-icon-comments
+            [5] => menu-comments
+            [6] => dashicons-admin-comments
+        )
+
+    [5] => Array
+        (
+            [0] => Posts
+            [1] => edit_posts
+            [2] => edit.php
+            [3] => 
+            [4] => menu-top menu-icon-post open-if-no-js
+            [5] => menu-posts
+            [6] => dashicons-admin-post
+        )
+
+    [20] => Array
+        (
+            [0] => Pages
+            [1] => edit_pages
+            [2] => edit.php?post_type=page
+            [3] => 
+            [4] => menu-top menu-icon-page
+            [5] => menu-pages
+            [6] => dashicons-admin-page
+        )
+
+    [59] => Array
+        (
+            [0] => 
+            [1] => read
+            [2] => separator2
+            [3] => 
+            [4] => wp-menu-separator
+        )
+
+    [60] => Array
+        (
+            [0] => Appearance
+            [1] => switch_themes
+            [2] => themes.php
+            [3] => 
+            [4] => menu-top menu-icon-appearance
+            [5] => menu-appearance
+            [6] => dashicons-admin-appearance
+        )
+
+    [65] => Array
+        (
+            [0] => Plugins <span class="update-plugins count-0"><span class="plugin-count">0</span></span>
+            [1] => activate_plugins
+            [2] => plugins.php
+            [3] => 
+            [4] => menu-top menu-icon-plugins
+            [5] => menu-plugins
+            [6] => dashicons-admin-plugins
+        )
+
+    [70] => Array
+        (
+            [0] => Users
+            [1] => list_users
+            [2] => users.php
+            [3] => 
+            [4] => menu-top menu-icon-users
+            [5] => menu-users
+            [6] => dashicons-admin-users
+        )
+
+    [75] => Array
+        (
+            [0] => Tools
+            [1] => edit_posts
+            [2] => tools.php
+            [3] => 
+            [4] => menu-top menu-icon-tools
+            [5] => menu-tools
+            [6] => dashicons-admin-tools
+        )
+
+    [80] => Array
+        (
+            [0] => Settings
+            [1] => manage_options
+            [2] => options-general.php
+            [3] => 
+            [4] => menu-top menu-icon-settings
+            [5] => menu-settings
+            [6] => dashicons-admin-settings
+        )
+
+    [99] => Array
+        (
+            [0] => 
+            [1] => read
+            [2] => separator-last
+            [3] => 
+            [4] => wp-menu-separator
+        )
+
+    [100] => Array
+        (
+            [0] => Menu Colors
+            [1] => manage_options
+            [2] => wp-menu-organize-settings
+            [3] => WP Menu Colors Settings
+            [4] => menu-top toplevel_page_wp-menu-organize-settings
+            [5] => toplevel_page_wp-menu-organize-settings
+            [6] => dashicons-admin-generic
+        )
+
+)
+
+[08-Jul-2025 16:11:06 UTC] WMO Debug: menu_order filter called. Order: Array
+(
+    [0] => index.php
+    [1] => separator1
+    [2] => edit.php
+    [3] => upload.php
+    [4] => edit.php?post_type=page
+    [5] => edit-comments.php
+    [6] => separator2
+    [7] => themes.php
+    [8] => plugins.php
+    [9] => users.php
+    [10] => tools.php
+    [11] => options-general.php
+    [12] => separator-last
+    [13] => wp-menu-organize-settings
+)
+
+[08-Jul-2025 16:22:12 UTC] WMO: Current admin menu: Array
+(
+    [2] => Array
+        (
+            [0] => Dashboard
+            [1] => read
+            [2] => index.php
+            [3] => 
+            [4] => menu-top menu-top-first menu-icon-dashboard
+            [5] => menu-dashboard
+            [6] => dashicons-dashboard
+        )
+
+    [4] => Array
+        (
+            [0] => 
+            [1] => read
+            [2] => separator1
+            [3] => 
+            [4] => wp-menu-separator
+        )
+
+    [10] => Array
+        (
+            [0] => Media
+            [1] => upload_files
+            [2] => upload.php
+            [3] => 
+            [4] => menu-top menu-icon-media
+            [5] => menu-media
+            [6] => dashicons-admin-media
+        )
+
+    [15] => Array
+        (
+            [0] => Links
+            [1] => manage_links
+            [2] => edit-tags.php?taxonomy=link_category
+            [3] => 
+            [4] => menu-top menu-icon-links
+            [5] => menu-links
+            [6] => dashicons-admin-links
+        )
+
+    [25] => Array
+        (
+            [0] => Comments <span class="awaiting-mod count-0"><span class="pending-count" aria-hidden="true">0</span><span class="comments-in-moderation-text screen-reader-text">0 Comments in moderation</span></span>
+            [1] => edit_posts
+            [2] => edit-comments.php
+            [3] => 
+            [4] => menu-top menu-icon-comments
+            [5] => menu-comments
+            [6] => dashicons-admin-comments
+        )
+
+    [5] => Array
+        (
+            [0] => Posts
+            [1] => edit_posts
+            [2] => edit.php
+            [3] => 
+            [4] => menu-top menu-icon-post open-if-no-js
+            [5] => menu-posts
+            [6] => dashicons-admin-post
+        )
+
+    [20] => Array
+        (
+            [0] => Pages
+            [1] => edit_pages
+            [2] => edit.php?post_type=page
+            [3] => 
+            [4] => menu-top menu-icon-page
+            [5] => menu-pages
+            [6] => dashicons-admin-page
+        )
+
+    [59] => Array
+        (
+            [0] => 
+            [1] => read
+            [2] => separator2
+            [3] => 
+            [4] => wp-menu-separator
+        )
+
+    [60] => Array
+        (
+            [0] => Appearance
+            [1] => switch_themes
+            [2] => themes.php
+            [3] => 
+            [4] => menu-top menu-icon-appearance
+            [5] => menu-appearance
+            [6] => dashicons-admin-appearance
+        )
+
+    [65] => Array
+        (
+            [0] => Plugins <span class="update-plugins count-0"><span class="plugin-count">0</span></span>
+            [1] => activate_plugins
+            [2] => plugins.php
+            [3] => 
+            [4] => menu-top menu-icon-plugins
+            [5] => menu-plugins
+            [6] => dashicons-admin-plugins
+        )
+
+    [70] => Array
+        (
+            [0] => Users
+            [1] => list_users
+            [2] => users.php
+            [3] => 
+            [4] => menu-top menu-icon-users
+            [5] => menu-users
+            [6] => dashicons-admin-users
+        )
+
+    [75] => Array
+        (
+            [0] => Tools
+            [1] => edit_posts
+            [2] => tools.php
+            [3] => 
+            [4] => menu-top menu-icon-tools
+            [5] => menu-tools
+            [6] => dashicons-admin-tools
+        )
+
+    [80] => Array
+        (
+            [0] => Settings
+            [1] => manage_options
+            [2] => options-general.php
+            [3] => 
+            [4] => menu-top menu-icon-settings
+            [5] => menu-settings
+            [6] => dashicons-admin-settings
+        )
+
+    [99] => Array
+        (
+            [0] => 
+            [1] => read
+            [2] => separator-last
+            [3] => 
+            [4] => wp-menu-separator
+        )
+
+    [100] => Array
+        (
+            [0] => Menu Colors
+            [1] => manage_options
+            [2] => wp-menu-organize-settings
+            [3] => WP Menu Colors Settings
+            [4] => menu-top toplevel_page_wp-menu-organize-settings
+            [5] => toplevel_page_wp-menu-organize-settings
+            [6] => dashicons-admin-generic
+        )
+
+)
+
+[08-Jul-2025 16:22:12 UTC] WMO Debug: menu_order filter called. Order: Array
+(
+    [0] => index.php
+    [1] => separator1
+    [2] => edit.php
+    [3] => upload.php
+    [4] => edit.php?post_type=page
+    [5] => edit-comments.php
+    [6] => separator2
+    [7] => themes.php
+    [8] => plugins.php
+    [9] => users.php
+    [10] => tools.php
+    [11] => options-general.php
+    [12] => separator-last
+    [13] => wp-menu-organize-settings
+)
+
+[08-Jul-2025 16:22:15 UTC] WMO: Current admin menu: Array
+(
+    [2] => Array
+        (
+            [0] => Dashboard
+            [1] => read
+            [2] => index.php
+            [3] => 
+            [4] => menu-top menu-top-first menu-icon-dashboard
+            [5] => menu-dashboard
+            [6] => dashicons-dashboard
+        )
+
+    [4] => Array
+        (
+            [0] => 
+            [1] => read
+            [2] => separator1
+            [3] => 
+            [4] => wp-menu-separator
+        )
+
+    [10] => Array
+        (
+            [0] => Media
+            [1] => upload_files
+            [2] => upload.php
+            [3] => 
+            [4] => menu-top menu-icon-media
+            [5] => menu-media
+            [6] => dashicons-admin-media
+        )
+
+    [15] => Array
+        (
+            [0] => Links
+            [1] => manage_links
+            [2] => edit-tags.php?taxonomy=link_category
+            [3] => 
+            [4] => menu-top menu-icon-links
+            [5] => menu-links
+            [6] => dashicons-admin-links
+        )
+
+    [25] => Array
+        (
+            [0] => Comments <span class="awaiting-mod count-0"><span class="pending-count" aria-hidden="true">0</span><span class="comments-in-moderation-text screen-reader-text">0 Comments in moderation</span></span>
+            [1] => edit_posts
+            [2] => edit-comments.php
+            [3] => 
+            [4] => menu-top menu-icon-comments
+            [5] => menu-comments
+            [6] => dashicons-admin-comments
+        )
+
+    [5] => Array
+        (
+            [0] => Posts
+            [1] => edit_posts
+            [2] => edit.php
+            [3] => 
+            [4] => menu-top menu-icon-post open-if-no-js
+            [5] => menu-posts
+            [6] => dashicons-admin-post
+        )
+
+    [20] => Array
+        (
+            [0] => Pages
+            [1] => edit_pages
+            [2] => edit.php?post_type=page
+            [3] => 
+            [4] => menu-top menu-icon-page
+            [5] => menu-pages
+            [6] => dashicons-admin-page
+        )
+
+    [59] => Array
+        (
+            [0] => 
+            [1] => read
+            [2] => separator2
+            [3] => 
+            [4] => wp-menu-separator
+        )
+
+    [60] => Array
+        (
+            [0] => Appearance
+            [1] => switch_themes
+            [2] => themes.php
+            [3] => 
+            [4] => menu-top menu-icon-appearance
+            [5] => menu-appearance
+            [6] => dashicons-admin-appearance
+        )
+
+    [65] => Array
+        (
+            [0] => Plugins <span class="update-plugins count-0"><span class="plugin-count">0</span></span>
+            [1] => activate_plugins
+            [2] => plugins.php
+            [3] => 
+            [4] => menu-top menu-icon-plugins
+            [5] => menu-plugins
+            [6] => dashicons-admin-plugins
+        )
+
+    [70] => Array
+        (
+            [0] => Users
+            [1] => list_users
+            [2] => users.php
+            [3] => 
+            [4] => menu-top menu-icon-users
+            [5] => menu-users
+            [6] => dashicons-admin-users
+        )
+
+    [75] => Array
+        (
+            [0] => Tools
+            [1] => edit_posts
+            [2] => tools.php
+            [3] => 
+            [4] => menu-top menu-icon-tools
+            [5] => menu-tools
+            [6] => dashicons-admin-tools
+        )
+
+    [80] => Array
+        (
+            [0] => Settings
+            [1] => manage_options
+            [2] => options-general.php
+            [3] => 
+            [4] => menu-top menu-icon-settings
+            [5] => menu-settings
+            [6] => dashicons-admin-settings
+        )
+
+    [99] => Array
+        (
+            [0] => 
+            [1] => read
+            [2] => separator-last
+            [3] => 
+            [4] => wp-menu-separator
+        )
+
+    [100] => Array
+        (
+            [0] => Menu Colors
+            [1] => manage_options
+            [2] => wp-menu-organize-settings
+            [3] => WP Menu Colors Settings
+            [4] => menu-top toplevel_page_wp-menu-organize-settings
+            [5] => toplevel_page_wp-menu-organize-settings
+            [6] => dashicons-admin-generic
+        )
+
+)
+
+[08-Jul-2025 16:22:15 UTC] WMO Debug: menu_order filter called. Order: Array
+(
+    [0] => index.php
+    [1] => separator1
+    [2] => edit.php
+    [3] => upload.php
+    [4] => edit.php?post_type=page
+    [5] => edit-comments.php
+    [6] => separator2
+    [7] => themes.php
+    [8] => plugins.php
+    [9] => users.php
+    [10] => tools.php
+    [11] => options-general.php
+    [12] => separator-last
+    [13] => wp-menu-organize-settings
+)
+
+[08-Jul-2025 16:23:06 UTC] WMO: Current admin menu: Array
+(
+    [2] => Array
+        (
+            [0] => Dashboard
+            [1] => read
+            [2] => index.php
+            [3] => 
+            [4] => menu-top menu-top-first menu-icon-dashboard
+            [5] => menu-dashboard
+            [6] => dashicons-dashboard
+        )
+
+    [4] => Array
+        (
+            [0] => 
+            [1] => read
+            [2] => separator1
+            [3] => 
+            [4] => wp-menu-separator
+        )
+
+    [10] => Array
+        (
+            [0] => Media
+            [1] => upload_files
+            [2] => upload.php
+            [3] => 
+            [4] => menu-top menu-icon-media
+            [5] => menu-media
+            [6] => dashicons-admin-media
+        )
+
+    [15] => Array
+        (
+            [0] => Links
+            [1] => manage_links
+            [2] => edit-tags.php?taxonomy=link_category
+            [3] => 
+            [4] => menu-top menu-icon-links
+            [5] => menu-links
+            [6] => dashicons-admin-links
+        )
+
+    [25] => Array
+        (
+            [0] => Comments <span class="awaiting-mod count-0"><span class="pending-count" aria-hidden="true">0</span><span class="comments-in-moderation-text screen-reader-text">0 Comments in moderation</span></span>
+            [1] => edit_posts
+            [2] => edit-comments.php
+            [3] => 
+            [4] => menu-top menu-icon-comments
+            [5] => menu-comments
+            [6] => dashicons-admin-comments
+        )
+
+    [5] => Array
+        (
+            [0] => Posts
+            [1] => edit_posts
+            [2] => edit.php
+            [3] => 
+            [4] => menu-top menu-icon-post open-if-no-js
+            [5] => menu-posts
+            [6] => dashicons-admin-post
+        )
+
+    [20] => Array
+        (
+            [0] => Pages
+            [1] => edit_pages
+            [2] => edit.php?post_type=page
+            [3] => 
+            [4] => menu-top menu-icon-page
+            [5] => menu-pages
+            [6] => dashicons-admin-page
+        )
+
+    [59] => Array
+        (
+            [0] => 
+            [1] => read
+            [2] => separator2
+            [3] => 
+            [4] => wp-menu-separator
+        )
+
+    [60] => Array
+        (
+            [0] => Appearance
+            [1] => switch_themes
+            [2] => themes.php
+            [3] => 
+            [4] => menu-top menu-icon-appearance
+            [5] => menu-appearance
+            [6] => dashicons-admin-appearance
+        )
+
+    [65] => Array
+        (
+            [0] => Plugins <span class="update-plugins count-0"><span class="plugin-count">0</span></span>
+            [1] => activate_plugins
+            [2] => plugins.php
+            [3] => 
+            [4] => menu-top menu-icon-plugins
+            [5] => menu-plugins
+            [6] => dashicons-admin-plugins
+        )
+
+    [70] => Array
+        (
+            [0] => Users
+            [1] => list_users
+            [2] => users.php
+            [3] => 
+            [4] => menu-top menu-icon-users
+            [5] => menu-users
+            [6] => dashicons-admin-users
+        )
+
+    [75] => Array
+        (
+            [0] => Tools
+            [1] => edit_posts
+            [2] => tools.php
+            [3] => 
+            [4] => menu-top menu-icon-tools
+            [5] => menu-tools
+            [6] => dashicons-admin-tools
+        )
+
+    [80] => Array
+        (
+            [0] => Settings
+            [1] => manage_options
+            [2] => options-general.php
+            [3] => 
+            [4] => menu-top menu-icon-settings
+            [5] => menu-settings
+            [6] => dashicons-admin-settings
+        )
+
+    [99] => Array
+        (
+            [0] => 
+            [1] => read
+            [2] => separator-last
+            [3] => 
+            [4] => wp-menu-separator
+        )
+
+    [100] => Array
+        (
+            [0] => Menu Colors
+            [1] => manage_options
+            [2] => wp-menu-organize-settings
+            [3] => WP Menu Colors Settings
+            [4] => menu-top toplevel_page_wp-menu-organize-settings
+            [5] => toplevel_page_wp-menu-organize-settings
+            [6] => dashicons-admin-generic
+        )
+
+)
+
+[08-Jul-2025 16:23:06 UTC] WMO Debug: menu_order filter called. Order: Array
+(
+    [0] => index.php
+    [1] => separator1
+    [2] => edit.php
+    [3] => upload.php
+    [4] => edit.php?post_type=page
+    [5] => edit-comments.php
+    [6] => separator2
+    [7] => themes.php
+    [8] => plugins.php
+    [9] => users.php
+    [10] => tools.php
+    [11] => options-general.php
+    [12] => separator-last
+    [13] => wp-menu-organize-settings
+)
+
+[08-Jul-2025 16:23:57 UTC] WMO: Current admin menu: Array
+(
+    [2] => Array
+        (
+            [0] => Dashboard
+            [1] => read
+            [2] => index.php
+            [3] => 
+            [4] => menu-top menu-top-first menu-icon-dashboard
+            [5] => menu-dashboard
+            [6] => dashicons-dashboard
+        )
+
+    [4] => Array
+        (
+            [0] => 
+            [1] => read
+            [2] => separator1
+            [3] => 
+            [4] => wp-menu-separator
+        )
+
+    [10] => Array
+        (
+            [0] => Media
+            [1] => upload_files
+            [2] => upload.php
+            [3] => 
+            [4] => menu-top menu-icon-media
+            [5] => menu-media
+            [6] => dashicons-admin-media
+        )
+
+    [15] => Array
+        (
+            [0] => Links
+            [1] => manage_links
+            [2] => edit-tags.php?taxonomy=link_category
+            [3] => 
+            [4] => menu-top menu-icon-links
+            [5] => menu-links
+            [6] => dashicons-admin-links
+        )
+
+    [25] => Array
+        (
+            [0] => Comments <span class="awaiting-mod count-0"><span class="pending-count" aria-hidden="true">0</span><span class="comments-in-moderation-text screen-reader-text">0 Comments in moderation</span></span>
+            [1] => edit_posts
+            [2] => edit-comments.php
+            [3] => 
+            [4] => menu-top menu-icon-comments
+            [5] => menu-comments
+            [6] => dashicons-admin-comments
+        )
+
+    [5] => Array
+        (
+            [0] => Posts
+            [1] => edit_posts
+            [2] => edit.php
+            [3] => 
+            [4] => menu-top menu-icon-post open-if-no-js
+            [5] => menu-posts
+            [6] => dashicons-admin-post
+        )
+
+    [20] => Array
+        (
+            [0] => Pages
+            [1] => edit_pages
+            [2] => edit.php?post_type=page
+            [3] => 
+            [4] => menu-top menu-icon-page
+            [5] => menu-pages
+            [6] => dashicons-admin-page
+        )
+
+    [59] => Array
+        (
+            [0] => 
+            [1] => read
+            [2] => separator2
+            [3] => 
+            [4] => wp-menu-separator
+        )
+
+    [60] => Array
+        (
+            [0] => Appearance
+            [1] => switch_themes
+            [2] => themes.php
+            [3] => 
+            [4] => menu-top menu-icon-appearance
+            [5] => menu-appearance
+            [6] => dashicons-admin-appearance
+        )
+
+    [65] => Array
+        (
+            [0] => Plugins <span class="update-plugins count-0"><span class="plugin-count">0</span></span>
+            [1] => activate_plugins
+            [2] => plugins.php
+            [3] => 
+            [4] => menu-top menu-icon-plugins
+            [5] => menu-plugins
+            [6] => dashicons-admin-plugins
+        )
+
+    [70] => Array
+        (
+            [0] => Users
+            [1] => list_users
+            [2] => users.php
+            [3] => 
+            [4] => menu-top menu-icon-users
+            [5] => menu-users
+            [6] => dashicons-admin-users
+        )
+
+    [75] => Array
+        (
+            [0] => Tools
+            [1] => edit_posts
+            [2] => tools.php
+            [3] => 
+            [4] => menu-top menu-icon-tools
+            [5] => menu-tools
+            [6] => dashicons-admin-tools
+        )
+
+    [80] => Array
+        (
+            [0] => Settings
+            [1] => manage_options
+            [2] => options-general.php
+            [3] => 
+            [4] => menu-top menu-icon-settings
+            [5] => menu-settings
+            [6] => dashicons-admin-settings
+        )
+
+    [99] => Array
+        (
+            [0] => 
+            [1] => read
+            [2] => separator-last
+            [3] => 
+            [4] => wp-menu-separator
+        )
+
+    [100] => Array
+        (
+            [0] => Menu Colors
+            [1] => manage_options
+            [2] => wp-menu-organize-settings
+            [3] => WP Menu Colors Settings
+            [4] => menu-top toplevel_page_wp-menu-organize-settings
+            [5] => toplevel_page_wp-menu-organize-settings
+            [6] => dashicons-admin-generic
+        )
+
+)
+
+[08-Jul-2025 16:23:57 UTC] WMO Debug: menu_order filter called. Order: Array
+(
+    [0] => index.php
+    [1] => separator1
+    [2] => edit.php
+    [3] => upload.php
+    [4] => edit.php?post_type=page
+    [5] => edit-comments.php
+    [6] => separator2
+    [7] => themes.php
+    [8] => plugins.php
+    [9] => users.php
+    [10] => tools.php
+    [11] => options-general.php
+    [12] => separator-last
+    [13] => wp-menu-organize-settings
+)
+
+[08-Jul-2025 16:25:39 UTC] WMO: Current admin menu: Array
+(
+    [2] => Array
+        (
+            [0] => Dashboard
+            [1] => read
+            [2] => index.php
+            [3] => 
+            [4] => menu-top menu-top-first menu-icon-dashboard
+            [5] => menu-dashboard
+            [6] => dashicons-dashboard
+        )
+
+    [4] => Array
+        (
+            [0] => 
+            [1] => read
+            [2] => separator1
+            [3] => 
+            [4] => wp-menu-separator
+        )
+
+    [10] => Array
+        (
+            [0] => Media
+            [1] => upload_files
+            [2] => upload.php
+            [3] => 
+            [4] => menu-top menu-icon-media
+            [5] => menu-media
+            [6] => dashicons-admin-media
+        )
+
+    [15] => Array
+        (
+            [0] => Links
+            [1] => manage_links
+            [2] => edit-tags.php?taxonomy=link_category
+            [3] => 
+            [4] => menu-top menu-icon-links
+            [5] => menu-links
+            [6] => dashicons-admin-links
+        )
+
+    [25] => Array
+        (
+            [0] => Comments <span class="awaiting-mod count-0"><span class="pending-count" aria-hidden="true">0</span><span class="comments-in-moderation-text screen-reader-text">0 Comments in moderation</span></span>
+            [1] => edit_posts
+            [2] => edit-comments.php
+            [3] => 
+            [4] => menu-top menu-icon-comments
+            [5] => menu-comments
+            [6] => dashicons-admin-comments
+        )
+
+    [5] => Array
+        (
+            [0] => Posts
+            [1] => edit_posts
+            [2] => edit.php
+            [3] => 
+            [4] => menu-top menu-icon-post open-if-no-js
+            [5] => menu-posts
+            [6] => dashicons-admin-post
+        )
+
+    [20] => Array
+        (
+            [0] => Pages
+            [1] => edit_pages
+            [2] => edit.php?post_type=page
+            [3] => 
+            [4] => menu-top menu-icon-page
+            [5] => menu-pages
+            [6] => dashicons-admin-page
+        )
+
+    [59] => Array
+        (
+            [0] => 
+            [1] => read
+            [2] => separator2
+            [3] => 
+            [4] => wp-menu-separator
+        )
+
+    [60] => Array
+        (
+            [0] => Appearance
+            [1] => switch_themes
+            [2] => themes.php
+            [3] => 
+            [4] => menu-top menu-icon-appearance
+            [5] => menu-appearance
+            [6] => dashicons-admin-appearance
+        )
+
+    [65] => Array
+        (
+            [0] => Plugins <span class="update-plugins count-0"><span class="plugin-count">0</span></span>
+            [1] => activate_plugins
+            [2] => plugins.php
+            [3] => 
+            [4] => menu-top menu-icon-plugins
+            [5] => menu-plugins
+            [6] => dashicons-admin-plugins
+        )
+
+    [70] => Array
+        (
+            [0] => Users
+            [1] => list_users
+            [2] => users.php
+            [3] => 
+            [4] => menu-top menu-icon-users
+            [5] => menu-users
+            [6] => dashicons-admin-users
+        )
+
+    [75] => Array
+        (
+            [0] => Tools
+            [1] => edit_posts
+            [2] => tools.php
+            [3] => 
+            [4] => menu-top menu-icon-tools
+            [5] => menu-tools
+            [6] => dashicons-admin-tools
+        )
+
+    [80] => Array
+        (
+            [0] => Settings
+            [1] => manage_options
+            [2] => options-general.php
+            [3] => 
+            [4] => menu-top menu-icon-settings
+            [5] => menu-settings
+            [6] => dashicons-admin-settings
+        )
+
+    [99] => Array
+        (
+            [0] => 
+            [1] => read
+            [2] => separator-last
+            [3] => 
+            [4] => wp-menu-separator
+        )
+
+    [100] => Array
+        (
+            [0] => Menu Colors
+            [1] => manage_options
+            [2] => wp-menu-organize-settings
+            [3] => WP Menu Colors Settings
+            [4] => menu-top toplevel_page_wp-menu-organize-settings
+            [5] => toplevel_page_wp-menu-organize-settings
+            [6] => dashicons-admin-generic
+        )
+
+)
+
+[08-Jul-2025 16:25:39 UTC] WMO Debug: menu_order filter called. Order: Array
+(
+    [0] => index.php
+    [1] => separator1
+    [2] => edit.php
+    [3] => upload.php
+    [4] => edit.php?post_type=page
+    [5] => edit-comments.php
+    [6] => separator2
+    [7] => themes.php
+    [8] => plugins.php
+    [9] => users.php
+    [10] => tools.php
+    [11] => options-general.php
+    [12] => separator-last
+    [13] => wp-menu-organize-settings
+)
+
+[08-Jul-2025 16:28:24 UTC] WMO: Current admin menu: Array
+(
+    [2] => Array
+        (
+            [0] => Dashboard
+            [1] => read
+            [2] => index.php
+            [3] => 
+            [4] => menu-top menu-top-first menu-icon-dashboard
+            [5] => menu-dashboard
+            [6] => dashicons-dashboard
+        )
+
+    [4] => Array
+        (
+            [0] => 
+            [1] => read
+            [2] => separator1
+            [3] => 
+            [4] => wp-menu-separator
+        )
+
+    [10] => Array
+        (
+            [0] => Media
+            [1] => upload_files
+            [2] => upload.php
+            [3] => 
+            [4] => menu-top menu-icon-media
+            [5] => menu-media
+            [6] => dashicons-admin-media
+        )
+
+    [15] => Array
+        (
+            [0] => Links
+            [1] => manage_links
+            [2] => edit-tags.php?taxonomy=link_category
+            [3] => 
+            [4] => menu-top menu-icon-links
+            [5] => menu-links
+            [6] => dashicons-admin-links
+        )
+
+    [25] => Array
+        (
+            [0] => Comments <span class="awaiting-mod count-0"><span class="pending-count" aria-hidden="true">0</span><span class="comments-in-moderation-text screen-reader-text">0 Comments in moderation</span></span>
+            [1] => edit_posts
+            [2] => edit-comments.php
+            [3] => 
+            [4] => menu-top menu-icon-comments
+            [5] => menu-comments
+            [6] => dashicons-admin-comments
+        )
+
+    [5] => Array
+        (
+            [0] => Posts
+            [1] => edit_posts
+            [2] => edit.php
+            [3] => 
+            [4] => menu-top menu-icon-post open-if-no-js
+            [5] => menu-posts
+            [6] => dashicons-admin-post
+        )
+
+    [20] => Array
+        (
+            [0] => Pages
+            [1] => edit_pages
+            [2] => edit.php?post_type=page
+            [3] => 
+            [4] => menu-top menu-icon-page
+            [5] => menu-pages
+            [6] => dashicons-admin-page
+        )
+
+    [59] => Array
+        (
+            [0] => 
+            [1] => read
+            [2] => separator2
+            [3] => 
+            [4] => wp-menu-separator
+        )
+
+    [60] => Array
+        (
+            [0] => Appearance
+            [1] => switch_themes
+            [2] => themes.php
+            [3] => 
+            [4] => menu-top menu-icon-appearance
+            [5] => menu-appearance
+            [6] => dashicons-admin-appearance
+        )
+
+    [65] => Array
+        (
+            [0] => Plugins <span class="update-plugins count-0"><span class="plugin-count">0</span></span>
+            [1] => activate_plugins
+            [2] => plugins.php
+            [3] => 
+            [4] => menu-top menu-icon-plugins
+            [5] => menu-plugins
+            [6] => dashicons-admin-plugins
+        )
+
+    [70] => Array
+        (
+            [0] => Users
+            [1] => list_users
+            [2] => users.php
+            [3] => 
+            [4] => menu-top menu-icon-users
+            [5] => menu-users
+            [6] => dashicons-admin-users
+        )
+
+    [75] => Array
+        (
+            [0] => Tools
+            [1] => edit_posts
+            [2] => tools.php
+            [3] => 
+            [4] => menu-top menu-icon-tools
+            [5] => menu-tools
+            [6] => dashicons-admin-tools
+        )
+
+    [80] => Array
+        (
+            [0] => Settings
+            [1] => manage_options
+            [2] => options-general.php
+            [3] => 
+            [4] => menu-top menu-icon-settings
+            [5] => menu-settings
+            [6] => dashicons-admin-settings
+        )
+
+    [99] => Array
+        (
+            [0] => 
+            [1] => read
+            [2] => separator-last
+            [3] => 
+            [4] => wp-menu-separator
+        )
+
+    [100] => Array
+        (
+            [0] => Menu Colors
+            [1] => manage_options
+            [2] => wp-menu-organize-settings
+            [3] => WP Menu Colors Settings
+            [4] => menu-top toplevel_page_wp-menu-organize-settings
+            [5] => toplevel_page_wp-menu-organize-settings
+            [6] => dashicons-admin-generic
+        )
+
+)
+
+[08-Jul-2025 16:28:24 UTC] WMO Debug: menu_order filter called. Order: Array
+(
+    [0] => index.php
+    [1] => separator1
+    [2] => edit.php
+    [3] => upload.php
+    [4] => edit.php?post_type=page
+    [5] => edit-comments.php
+    [6] => separator2
+    [7] => themes.php
+    [8] => plugins.php
+    [9] => users.php
+    [10] => tools.php
+    [11] => options-general.php
+    [12] => separator-last
+    [13] => wp-menu-organize-settings
+)
+
+[08-Jul-2025 16:29:59 UTC] WMO: Current admin menu: Array
+(
+    [2] => Array
+        (
+            [0] => Dashboard
+            [1] => read
+            [2] => index.php
+            [3] => 
+            [4] => menu-top menu-top-first menu-icon-dashboard
+            [5] => menu-dashboard
+            [6] => dashicons-dashboard
+        )
+
+    [4] => Array
+        (
+            [0] => 
+            [1] => read
+            [2] => separator1
+            [3] => 
+            [4] => wp-menu-separator
+        )
+
+    [10] => Array
+        (
+            [0] => Media
+            [1] => upload_files
+            [2] => upload.php
+            [3] => 
+            [4] => menu-top menu-icon-media
+            [5] => menu-media
+            [6] => dashicons-admin-media
+        )
+
+    [15] => Array
+        (
+            [0] => Links
+            [1] => manage_links
+            [2] => edit-tags.php?taxonomy=link_category
+            [3] => 
+            [4] => menu-top menu-icon-links
+            [5] => menu-links
+            [6] => dashicons-admin-links
+        )
+
+    [25] => Array
+        (
+            [0] => Comments <span class="awaiting-mod count-0"><span class="pending-count" aria-hidden="true">0</span><span class="comments-in-moderation-text screen-reader-text">0 Comments in moderation</span></span>
+            [1] => edit_posts
+            [2] => edit-comments.php
+            [3] => 
+            [4] => menu-top menu-icon-comments
+            [5] => menu-comments
+            [6] => dashicons-admin-comments
+        )
+
+    [5] => Array
+        (
+            [0] => Posts
+            [1] => edit_posts
+            [2] => edit.php
+            [3] => 
+            [4] => menu-top menu-icon-post open-if-no-js
+            [5] => menu-posts
+            [6] => dashicons-admin-post
+        )
+
+    [20] => Array
+        (
+            [0] => Pages
+            [1] => edit_pages
+            [2] => edit.php?post_type=page
+            [3] => 
+            [4] => menu-top menu-icon-page
+            [5] => menu-pages
+            [6] => dashicons-admin-page
+        )
+
+    [59] => Array
+        (
+            [0] => 
+            [1] => read
+            [2] => separator2
+            [3] => 
+            [4] => wp-menu-separator
+        )
+
+    [60] => Array
+        (
+            [0] => Appearance
+            [1] => switch_themes
+            [2] => themes.php
+            [3] => 
+            [4] => menu-top menu-icon-appearance
+            [5] => menu-appearance
+            [6] => dashicons-admin-appearance
+        )
+
+    [65] => Array
+        (
+            [0] => Plugins <span class="update-plugins count-0"><span class="plugin-count">0</span></span>
+            [1] => activate_plugins
+            [2] => plugins.php
+            [3] => 
+            [4] => menu-top menu-icon-plugins
+            [5] => menu-plugins
+            [6] => dashicons-admin-plugins
+        )
+
+    [70] => Array
+        (
+            [0] => Users
+            [1] => list_users
+            [2] => users.php
+            [3] => 
+            [4] => menu-top menu-icon-users
+            [5] => menu-users
+            [6] => dashicons-admin-users
+        )
+
+    [75] => Array
+        (
+            [0] => Tools
+            [1] => edit_posts
+            [2] => tools.php
+            [3] => 
+            [4] => menu-top menu-icon-tools
+            [5] => menu-tools
+            [6] => dashicons-admin-tools
+        )
+
+    [80] => Array
+        (
+            [0] => Settings
+            [1] => manage_options
+            [2] => options-general.php
+            [3] => 
+            [4] => menu-top menu-icon-settings
+            [5] => menu-settings
+            [6] => dashicons-admin-settings
+        )
+
+    [99] => Array
+        (
+            [0] => 
+            [1] => read
+            [2] => separator-last
+            [3] => 
+            [4] => wp-menu-separator
+        )
+
+    [100] => Array
+        (
+            [0] => Menu Colors
+            [1] => manage_options
+            [2] => wp-menu-organize-settings
+            [3] => WP Menu Colors Settings
+            [4] => menu-top toplevel_page_wp-menu-organize-settings
+            [5] => toplevel_page_wp-menu-organize-settings
+            [6] => dashicons-admin-generic
+        )
+
+)
+
+[08-Jul-2025 16:29:59 UTC] WMO Debug: menu_order filter called. Order: Array
+(
+    [0] => index.php
+    [1] => separator1
+    [2] => edit.php
+    [3] => upload.php
+    [4] => edit.php?post_type=page
+    [5] => edit-comments.php
+    [6] => separator2
+    [7] => themes.php
+    [8] => plugins.php
+    [9] => users.php
+    [10] => tools.php
+    [11] => options-general.php
+    [12] => separator-last
+    [13] => wp-menu-organize-settings
+)
+
+[08-Jul-2025 16:32:52 UTC] WMO: Current admin menu: Array
+(
+    [2] => Array
+        (
+            [0] => Dashboard
+            [1] => read
+            [2] => index.php
+            [3] => 
+            [4] => menu-top menu-top-first menu-icon-dashboard
+            [5] => menu-dashboard
+            [6] => dashicons-dashboard
+        )
+
+    [4] => Array
+        (
+            [0] => 
+            [1] => read
+            [2] => separator1
+            [3] => 
+            [4] => wp-menu-separator
+        )
+
+    [10] => Array
+        (
+            [0] => Media
+            [1] => upload_files
+            [2] => upload.php
+            [3] => 
+            [4] => menu-top menu-icon-media
+            [5] => menu-media
+            [6] => dashicons-admin-media
+        )
+
+    [15] => Array
+        (
+            [0] => Links
+            [1] => manage_links
+            [2] => edit-tags.php?taxonomy=link_category
+            [3] => 
+            [4] => menu-top menu-icon-links
+            [5] => menu-links
+            [6] => dashicons-admin-links
+        )
+
+    [25] => Array
+        (
+            [0] => Comments <span class="awaiting-mod count-0"><span class="pending-count" aria-hidden="true">0</span><span class="comments-in-moderation-text screen-reader-text">0 Comments in moderation</span></span>
+            [1] => edit_posts
+            [2] => edit-comments.php
+            [3] => 
+            [4] => menu-top menu-icon-comments
+            [5] => menu-comments
+            [6] => dashicons-admin-comments
+        )
+
+    [5] => Array
+        (
+            [0] => Posts
+            [1] => edit_posts
+            [2] => edit.php
+            [3] => 
+            [4] => menu-top menu-icon-post open-if-no-js
+            [5] => menu-posts
+            [6] => dashicons-admin-post
+        )
+
+    [20] => Array
+        (
+            [0] => Pages
+            [1] => edit_pages
+            [2] => edit.php?post_type=page
+            [3] => 
+            [4] => menu-top menu-icon-page
+            [5] => menu-pages
+            [6] => dashicons-admin-page
+        )
+
+    [59] => Array
+        (
+            [0] => 
+            [1] => read
+            [2] => separator2
+            [3] => 
+            [4] => wp-menu-separator
+        )
+
+    [60] => Array
+        (
+            [0] => Appearance
+            [1] => switch_themes
+            [2] => themes.php
+            [3] => 
+            [4] => menu-top menu-icon-appearance
+            [5] => menu-appearance
+            [6] => dashicons-admin-appearance
+        )
+
+    [65] => Array
+        (
+            [0] => Plugins <span class="update-plugins count-0"><span class="plugin-count">0</span></span>
+            [1] => activate_plugins
+            [2] => plugins.php
+            [3] => 
+            [4] => menu-top menu-icon-plugins
+            [5] => menu-plugins
+            [6] => dashicons-admin-plugins
+        )
+
+    [70] => Array
+        (
+            [0] => Users
+            [1] => list_users
+            [2] => users.php
+            [3] => 
+            [4] => menu-top menu-icon-users
+            [5] => menu-users
+            [6] => dashicons-admin-users
+        )
+
+    [75] => Array
+        (
+            [0] => Tools
+            [1] => edit_posts
+            [2] => tools.php
+            [3] => 
+            [4] => menu-top menu-icon-tools
+            [5] => menu-tools
+            [6] => dashicons-admin-tools
+        )
+
+    [80] => Array
+        (
+            [0] => Settings
+            [1] => manage_options
+            [2] => options-general.php
+            [3] => 
+            [4] => menu-top menu-icon-settings
+            [5] => menu-settings
+            [6] => dashicons-admin-settings
+        )
+
+    [99] => Array
+        (
+            [0] => 
+            [1] => read
+            [2] => separator-last
+            [3] => 
+            [4] => wp-menu-separator
+        )
+
+    [100] => Array
+        (
+            [0] => Menu Colors
+            [1] => manage_options
+            [2] => wp-menu-organize-settings
+            [3] => WP Menu Colors Settings
+            [4] => menu-top toplevel_page_wp-menu-organize-settings
+            [5] => toplevel_page_wp-menu-organize-settings
+            [6] => dashicons-admin-generic
+        )
+
+)
+
+[08-Jul-2025 16:32:52 UTC] WMO Debug: menu_order filter called. Order: Array
+(
+    [0] => index.php
+    [1] => separator1
+    [2] => edit.php
+    [3] => upload.php
+    [4] => edit.php?post_type=page
+    [5] => edit-comments.php
+    [6] => separator2
+    [7] => themes.php
+    [8] => plugins.php
+    [9] => users.php
+    [10] => tools.php
+    [11] => options-general.php
+    [12] => separator-last
+    [13] => wp-menu-organize-settings
+)
+
+[08-Jul-2025 16:32:52 UTC] WMO: enqueue_scripts called for hook: menu-colors_page_wp-menu-organize-reorder

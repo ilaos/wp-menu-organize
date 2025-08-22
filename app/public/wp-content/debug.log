@@ -1,0 +1,1093 @@
+[22-Aug-2025 16:42:26 UTC] Automatic updates starting...
+[22-Aug-2025 16:42:26 UTC]   Automatic theme updates starting...
+[22-Aug-2025 16:42:26 UTC]   Automatic theme updates complete.
+[22-Aug-2025 16:42:26 UTC] Automatic updates complete.
+[22-Aug-2025 16:48:17 UTC] WMO: Current admin menu: Array
+(
+    [2] => Array
+        (
+            [0] => Dashboard
+            [1] => read
+            [2] => index.php
+            [3] => 
+            [4] => menu-top menu-top-first menu-icon-dashboard
+            [5] => menu-dashboard
+            [6] => dashicons-dashboard
+        )
+
+    [4] => Array
+        (
+            [0] => 
+            [1] => read
+            [2] => separator1
+            [3] => 
+            [4] => wp-menu-separator
+        )
+
+    [10] => Array
+        (
+            [0] => Media
+            [1] => upload_files
+            [2] => upload.php
+            [3] => 
+            [4] => menu-top menu-icon-media
+            [5] => menu-media
+            [6] => dashicons-admin-media
+        )
+
+    [15] => Array
+        (
+            [0] => Links
+            [1] => manage_links
+            [2] => edit-tags.php?taxonomy=link_category
+            [3] => 
+            [4] => menu-top menu-icon-links
+            [5] => menu-links
+            [6] => dashicons-admin-links
+        )
+
+    [25] => Array
+        (
+            [0] => Comments <span class="awaiting-mod count-0"><span class="pending-count" aria-hidden="true">0</span><span class="comments-in-moderation-text screen-reader-text">0 Comments in moderation</span></span>
+            [1] => edit_posts
+            [2] => edit-comments.php
+            [3] => 
+            [4] => menu-top menu-icon-comments
+            [5] => menu-comments
+            [6] => dashicons-admin-comments
+        )
+
+    [5] => Array
+        (
+            [0] => Posts
+            [1] => edit_posts
+            [2] => edit.php
+            [3] => 
+            [4] => menu-top menu-icon-post open-if-no-js
+            [5] => menu-posts
+            [6] => dashicons-admin-post
+        )
+
+    [20] => Array
+        (
+            [0] => Pages
+            [1] => edit_pages
+            [2] => edit.php?post_type=page
+            [3] => 
+            [4] => menu-top menu-icon-page
+            [5] => menu-pages
+            [6] => dashicons-admin-page
+        )
+
+    [59] => Array
+        (
+            [0] => 
+            [1] => read
+            [2] => separator2
+            [3] => 
+            [4] => wp-menu-separator
+        )
+
+    [60] => Array
+        (
+            [0] => Appearance
+            [1] => switch_themes
+            [2] => themes.php
+            [3] => 
+            [4] => menu-top menu-icon-appearance
+            [5] => menu-appearance
+            [6] => dashicons-admin-appearance
+        )
+
+    [65] => Array
+        (
+            [0] => Plugins <span class="update-plugins count-0"><span class="plugin-count">0</span></span>
+            [1] => activate_plugins
+            [2] => plugins.php
+            [3] => 
+            [4] => menu-top menu-icon-plugins
+            [5] => menu-plugins
+            [6] => dashicons-admin-plugins
+        )
+
+    [70] => Array
+        (
+            [0] => Users
+            [1] => list_users
+            [2] => users.php
+            [3] => 
+            [4] => menu-top menu-icon-users
+            [5] => menu-users
+            [6] => dashicons-admin-users
+        )
+
+    [75] => Array
+        (
+            [0] => Tools
+            [1] => edit_posts
+            [2] => tools.php
+            [3] => 
+            [4] => menu-top menu-icon-tools
+            [5] => menu-tools
+            [6] => dashicons-admin-tools
+        )
+
+    [80] => Array
+        (
+            [0] => Settings
+            [1] => manage_options
+            [2] => options-general.php
+            [3] => 
+            [4] => menu-top menu-icon-settings
+            [5] => menu-settings
+            [6] => dashicons-admin-settings
+        )
+
+    [99] => Array
+        (
+            [0] => 
+            [1] => read
+            [2] => separator-last
+            [3] => 
+            [4] => wp-menu-separator
+        )
+
+    [100] => Array
+        (
+            [0] => Speed Optimizer
+            [1] => manage_options
+            [2] => sg-cachepress
+            [3] => Speed Optimizer
+            [4] => menu-top toplevel_page_sg-cachepress
+            [5] => toplevel_page_sg-cachepress
+            [6] => http://my-playground.local/wp-content/plugins/sg-cachepress/assets/images/icon.svg
+        )
+
+    [101] => Array
+        (
+            [0] => Menu Organize
+            [1] => manage_options
+            [2] => wp-menu-organize-settings
+            [3] => WP Menu Organize
+            [4] => menu-top toplevel_page_wp-menu-organize-settings
+            [5] => toplevel_page_wp-menu-organize-settings
+            [6] => dashicons-admin-generic
+        )
+
+    [80.49552] => Array
+        (
+            [0] => SmartNav WP
+            [1] => manage_options
+            [2] => smartnav-wp
+            [3] => SmartNav WP Menu Editor
+            [4] => menu-top toplevel_page_smartnav-wp
+            [5] => toplevel_page_smartnav-wp
+            [6] => dashicons-menu
+        )
+
+    [59.9] => Array
+        (
+            [0] => Hello
+            [1] => manage_options
+            [2] => hello-elementor
+            [3] => Hello
+            [4] => menu-top toplevel_page_hello-elementor
+            [5] => toplevel_page_hello-elementor
+            [6] => dashicons-plus-alt
+        )
+
+)
+
+[22-Aug-2025 16:48:17 UTC] WMO: enqueue_scripts called for hook: toplevel_page_wp-menu-organize-settings
+[22-Aug-2025 16:48:17 UTC] WMO: Loading scripts for hook: toplevel_page_wp-menu-organize-settings
+[22-Aug-2025 16:48:17 UTC] WMO: Dashicons enqueued
+[22-Aug-2025 16:48:17 UTC] WMO: jQuery UI CSS enqueued
+[22-Aug-2025 16:48:17 UTC] WMO: WordPress jQuery UI sortable enqueued
+[22-Aug-2025 16:48:17 UTC] WMO: jQuery UI CDN fallback enqueued
+[22-Aug-2025 16:48:17 UTC] WMO: WordPress color picker CSS enqueued
+[22-Aug-2025 16:48:17 UTC] WMO: Plugin CSS enqueued
+[22-Aug-2025 16:48:17 UTC] WMO: Plugin script enqueued with proper dependencies
+[22-Aug-2025 16:48:17 UTC] WMO: Color picker script enqueued
+[22-Aug-2025 16:48:17 UTC] WMO: Script localized with AJAX data
+[22-Aug-2025 16:48:17 UTC] WMO: Color picker script also localized with AJAX data
+[22-Aug-2025 16:48:17 UTC] WMO: Inline styles added
+[22-Aug-2025 16:48:17 UTC] WMO: Final script check - jquery-ui-sortable enqueued: YES
+[22-Aug-2025 16:48:17 UTC] WMO: Final script check - jquery-ui-cdn-fallback enqueued: YES
+[22-Aug-2025 16:48:17 UTC] WMO DEBUG: Current admin hook: toplevel_page_wp-menu-organize-settings
+[22-Aug-2025 16:48:17 UTC] WMO DEBUG: Checking script registration...
+[22-Aug-2025 16:48:17 UTC] WMO DEBUG: jquery-ui-sortable registered: YES
+[22-Aug-2025 16:48:17 UTC] WMO DEBUG: jquery-ui-sortable enqueued: YES
+[22-Aug-2025 16:48:17 UTC] WMO DEBUG: jquery registered: YES
+[22-Aug-2025 16:48:17 UTC] WMO DEBUG: jquery enqueued: YES
+[22-Aug-2025 16:48:17 UTC] WMO: wmo_apply_menu_colors function called
+[22-Aug-2025 16:48:20 UTC] WMO: Current admin menu: Array
+(
+    [2] => Array
+        (
+            [0] => Dashboard
+            [1] => read
+            [2] => index.php
+            [3] => 
+            [4] => menu-top menu-top-first menu-icon-dashboard
+            [5] => menu-dashboard
+            [6] => dashicons-dashboard
+        )
+
+    [4] => Array
+        (
+            [0] => 
+            [1] => read
+            [2] => separator1
+            [3] => 
+            [4] => wp-menu-separator
+        )
+
+    [10] => Array
+        (
+            [0] => Media
+            [1] => upload_files
+            [2] => upload.php
+            [3] => 
+            [4] => menu-top menu-icon-media
+            [5] => menu-media
+            [6] => dashicons-admin-media
+        )
+
+    [15] => Array
+        (
+            [0] => Links
+            [1] => manage_links
+            [2] => edit-tags.php?taxonomy=link_category
+            [3] => 
+            [4] => menu-top menu-icon-links
+            [5] => menu-links
+            [6] => dashicons-admin-links
+        )
+
+    [25] => Array
+        (
+            [0] => Comments <span class="awaiting-mod count-0"><span class="pending-count" aria-hidden="true">0</span><span class="comments-in-moderation-text screen-reader-text">0 Comments in moderation</span></span>
+            [1] => edit_posts
+            [2] => edit-comments.php
+            [3] => 
+            [4] => menu-top menu-icon-comments
+            [5] => menu-comments
+            [6] => dashicons-admin-comments
+        )
+
+    [5] => Array
+        (
+            [0] => Posts
+            [1] => edit_posts
+            [2] => edit.php
+            [3] => 
+            [4] => menu-top menu-icon-post open-if-no-js
+            [5] => menu-posts
+            [6] => dashicons-admin-post
+        )
+
+    [20] => Array
+        (
+            [0] => Pages
+            [1] => edit_pages
+            [2] => edit.php?post_type=page
+            [3] => 
+            [4] => menu-top menu-icon-page
+            [5] => menu-pages
+            [6] => dashicons-admin-page
+        )
+
+    [59] => Array
+        (
+            [0] => 
+            [1] => read
+            [2] => separator2
+            [3] => 
+            [4] => wp-menu-separator
+        )
+
+    [60] => Array
+        (
+            [0] => Appearance
+            [1] => switch_themes
+            [2] => themes.php
+            [3] => 
+            [4] => menu-top menu-icon-appearance
+            [5] => menu-appearance
+            [6] => dashicons-admin-appearance
+        )
+
+    [65] => Array
+        (
+            [0] => Plugins <span class="update-plugins count-0"><span class="plugin-count">0</span></span>
+            [1] => activate_plugins
+            [2] => plugins.php
+            [3] => 
+            [4] => menu-top menu-icon-plugins
+            [5] => menu-plugins
+            [6] => dashicons-admin-plugins
+        )
+
+    [70] => Array
+        (
+            [0] => Users
+            [1] => list_users
+            [2] => users.php
+            [3] => 
+            [4] => menu-top menu-icon-users
+            [5] => menu-users
+            [6] => dashicons-admin-users
+        )
+
+    [75] => Array
+        (
+            [0] => Tools
+            [1] => edit_posts
+            [2] => tools.php
+            [3] => 
+            [4] => menu-top menu-icon-tools
+            [5] => menu-tools
+            [6] => dashicons-admin-tools
+        )
+
+    [80] => Array
+        (
+            [0] => Settings
+            [1] => manage_options
+            [2] => options-general.php
+            [3] => 
+            [4] => menu-top menu-icon-settings
+            [5] => menu-settings
+            [6] => dashicons-admin-settings
+        )
+
+    [99] => Array
+        (
+            [0] => 
+            [1] => read
+            [2] => separator-last
+            [3] => 
+            [4] => wp-menu-separator
+        )
+
+    [100] => Array
+        (
+            [0] => Speed Optimizer
+            [1] => manage_options
+            [2] => sg-cachepress
+            [3] => Speed Optimizer
+            [4] => menu-top toplevel_page_sg-cachepress
+            [5] => toplevel_page_sg-cachepress
+            [6] => http://my-playground.local/wp-content/plugins/sg-cachepress/assets/images/icon.svg
+        )
+
+    [101] => Array
+        (
+            [0] => Menu Organize
+            [1] => manage_options
+            [2] => wp-menu-organize-settings
+            [3] => WP Menu Organize
+            [4] => menu-top toplevel_page_wp-menu-organize-settings
+            [5] => toplevel_page_wp-menu-organize-settings
+            [6] => dashicons-admin-generic
+        )
+
+    [80.49552] => Array
+        (
+            [0] => SmartNav WP
+            [1] => manage_options
+            [2] => smartnav-wp
+            [3] => SmartNav WP Menu Editor
+            [4] => menu-top toplevel_page_smartnav-wp
+            [5] => toplevel_page_smartnav-wp
+            [6] => dashicons-menu
+        )
+
+    [59.9] => Array
+        (
+            [0] => Hello
+            [1] => manage_options
+            [2] => hello-elementor
+            [3] => Hello
+            [4] => menu-top toplevel_page_hello-elementor
+            [5] => toplevel_page_hello-elementor
+            [6] => dashicons-plus-alt
+        )
+
+)
+
+[22-Aug-2025 16:48:20 UTC] WMO: enqueue_scripts called for hook: toplevel_page_wp-menu-organize-settings
+[22-Aug-2025 16:48:20 UTC] WMO: Loading scripts for hook: toplevel_page_wp-menu-organize-settings
+[22-Aug-2025 16:48:20 UTC] WMO: Dashicons enqueued
+[22-Aug-2025 16:48:20 UTC] WMO: jQuery UI CSS enqueued
+[22-Aug-2025 16:48:20 UTC] WMO: WordPress jQuery UI sortable enqueued
+[22-Aug-2025 16:48:20 UTC] WMO: jQuery UI CDN fallback enqueued
+[22-Aug-2025 16:48:20 UTC] WMO: WordPress color picker CSS enqueued
+[22-Aug-2025 16:48:20 UTC] WMO: Plugin CSS enqueued
+[22-Aug-2025 16:48:20 UTC] WMO: Plugin script enqueued with proper dependencies
+[22-Aug-2025 16:48:20 UTC] WMO: Color picker script enqueued
+[22-Aug-2025 16:48:20 UTC] WMO: Script localized with AJAX data
+[22-Aug-2025 16:48:20 UTC] WMO: Color picker script also localized with AJAX data
+[22-Aug-2025 16:48:20 UTC] WMO: Inline styles added
+[22-Aug-2025 16:48:20 UTC] WMO: Final script check - jquery-ui-sortable enqueued: YES
+[22-Aug-2025 16:48:20 UTC] WMO: Final script check - jquery-ui-cdn-fallback enqueued: YES
+[22-Aug-2025 16:48:20 UTC] WMO DEBUG: Current admin hook: toplevel_page_wp-menu-organize-settings
+[22-Aug-2025 16:48:20 UTC] WMO DEBUG: Checking script registration...
+[22-Aug-2025 16:48:20 UTC] WMO DEBUG: jquery-ui-sortable registered: YES
+[22-Aug-2025 16:48:20 UTC] WMO DEBUG: jquery-ui-sortable enqueued: YES
+[22-Aug-2025 16:48:20 UTC] WMO DEBUG: jquery registered: YES
+[22-Aug-2025 16:48:20 UTC] WMO DEBUG: jquery enqueued: YES
+[22-Aug-2025 16:48:20 UTC] WMO: wmo_apply_menu_colors function called
+[22-Aug-2025 16:50:05 UTC] WMO: Current admin menu: Array
+(
+    [2] => Array
+        (
+            [0] => Dashboard
+            [1] => read
+            [2] => index.php
+            [3] => 
+            [4] => menu-top menu-top-first menu-icon-dashboard
+            [5] => menu-dashboard
+            [6] => dashicons-dashboard
+        )
+
+    [4] => Array
+        (
+            [0] => 
+            [1] => read
+            [2] => separator1
+            [3] => 
+            [4] => wp-menu-separator
+        )
+
+    [10] => Array
+        (
+            [0] => Media
+            [1] => upload_files
+            [2] => upload.php
+            [3] => 
+            [4] => menu-top menu-icon-media
+            [5] => menu-media
+            [6] => dashicons-admin-media
+        )
+
+    [15] => Array
+        (
+            [0] => Links
+            [1] => manage_links
+            [2] => edit-tags.php?taxonomy=link_category
+            [3] => 
+            [4] => menu-top menu-icon-links
+            [5] => menu-links
+            [6] => dashicons-admin-links
+        )
+
+    [25] => Array
+        (
+            [0] => Comments <span class="awaiting-mod count-0"><span class="pending-count" aria-hidden="true">0</span><span class="comments-in-moderation-text screen-reader-text">0 Comments in moderation</span></span>
+            [1] => edit_posts
+            [2] => edit-comments.php
+            [3] => 
+            [4] => menu-top menu-icon-comments
+            [5] => menu-comments
+            [6] => dashicons-admin-comments
+        )
+
+    [5] => Array
+        (
+            [0] => Posts
+            [1] => edit_posts
+            [2] => edit.php
+            [3] => 
+            [4] => menu-top menu-icon-post open-if-no-js
+            [5] => menu-posts
+            [6] => dashicons-admin-post
+        )
+
+    [20] => Array
+        (
+            [0] => Pages
+            [1] => edit_pages
+            [2] => edit.php?post_type=page
+            [3] => 
+            [4] => menu-top menu-icon-page
+            [5] => menu-pages
+            [6] => dashicons-admin-page
+        )
+
+    [59] => Array
+        (
+            [0] => 
+            [1] => read
+            [2] => separator2
+            [3] => 
+            [4] => wp-menu-separator
+        )
+
+    [60] => Array
+        (
+            [0] => Appearance
+            [1] => switch_themes
+            [2] => themes.php
+            [3] => 
+            [4] => menu-top menu-icon-appearance
+            [5] => menu-appearance
+            [6] => dashicons-admin-appearance
+        )
+
+    [65] => Array
+        (
+            [0] => Plugins <span class="update-plugins count-0"><span class="plugin-count">0</span></span>
+            [1] => activate_plugins
+            [2] => plugins.php
+            [3] => 
+            [4] => menu-top menu-icon-plugins
+            [5] => menu-plugins
+            [6] => dashicons-admin-plugins
+        )
+
+    [70] => Array
+        (
+            [0] => Users
+            [1] => list_users
+            [2] => users.php
+            [3] => 
+            [4] => menu-top menu-icon-users
+            [5] => menu-users
+            [6] => dashicons-admin-users
+        )
+
+    [75] => Array
+        (
+            [0] => Tools
+            [1] => edit_posts
+            [2] => tools.php
+            [3] => 
+            [4] => menu-top menu-icon-tools
+            [5] => menu-tools
+            [6] => dashicons-admin-tools
+        )
+
+    [80] => Array
+        (
+            [0] => Settings
+            [1] => manage_options
+            [2] => options-general.php
+            [3] => 
+            [4] => menu-top menu-icon-settings
+            [5] => menu-settings
+            [6] => dashicons-admin-settings
+        )
+
+    [99] => Array
+        (
+            [0] => 
+            [1] => read
+            [2] => separator-last
+            [3] => 
+            [4] => wp-menu-separator
+        )
+
+    [100] => Array
+        (
+            [0] => Speed Optimizer
+            [1] => manage_options
+            [2] => sg-cachepress
+            [3] => Speed Optimizer
+            [4] => menu-top toplevel_page_sg-cachepress
+            [5] => toplevel_page_sg-cachepress
+            [6] => http://my-playground.local/wp-content/plugins/sg-cachepress/assets/images/icon.svg
+        )
+
+    [101] => Array
+        (
+            [0] => Menu Organize
+            [1] => manage_options
+            [2] => wp-menu-organize-settings
+            [3] => WP Menu Organize
+            [4] => menu-top toplevel_page_wp-menu-organize-settings
+            [5] => toplevel_page_wp-menu-organize-settings
+            [6] => dashicons-admin-generic
+        )
+
+    [80.49552] => Array
+        (
+            [0] => SmartNav WP
+            [1] => manage_options
+            [2] => smartnav-wp
+            [3] => SmartNav WP Menu Editor
+            [4] => menu-top toplevel_page_smartnav-wp
+            [5] => toplevel_page_smartnav-wp
+            [6] => dashicons-menu
+        )
+
+    [59.9] => Array
+        (
+            [0] => Hello
+            [1] => manage_options
+            [2] => hello-elementor
+            [3] => Hello
+            [4] => menu-top toplevel_page_hello-elementor
+            [5] => toplevel_page_hello-elementor
+            [6] => dashicons-plus-alt
+        )
+
+)
+
+[22-Aug-2025 16:50:05 UTC] WMO: enqueue_scripts called for hook: index.php
+[22-Aug-2025 16:50:05 UTC] WMO: Not loading scripts for hook: index.php
+[22-Aug-2025 16:50:05 UTC] WMO DEBUG: Current admin hook: index.php
+[22-Aug-2025 16:50:05 UTC] WMO DEBUG: Checking script registration...
+[22-Aug-2025 16:50:05 UTC] WMO DEBUG: jquery-ui-sortable registered: YES
+[22-Aug-2025 16:50:05 UTC] WMO DEBUG: jquery-ui-sortable enqueued: YES
+[22-Aug-2025 16:50:05 UTC] WMO DEBUG: jquery registered: YES
+[22-Aug-2025 16:50:05 UTC] WMO DEBUG: jquery enqueued: YES
+[22-Aug-2025 16:50:05 UTC] WMO: wmo_apply_menu_colors function called
+[22-Aug-2025 16:50:11 UTC] WMO: Current admin menu: Array
+(
+    [2] => Array
+        (
+            [0] => Dashboard
+            [1] => read
+            [2] => index.php
+            [3] => 
+            [4] => menu-top menu-top-first menu-icon-dashboard
+            [5] => menu-dashboard
+            [6] => dashicons-dashboard
+        )
+
+    [4] => Array
+        (
+            [0] => 
+            [1] => read
+            [2] => separator1
+            [3] => 
+            [4] => wp-menu-separator
+        )
+
+    [10] => Array
+        (
+            [0] => Media
+            [1] => upload_files
+            [2] => upload.php
+            [3] => 
+            [4] => menu-top menu-icon-media
+            [5] => menu-media
+            [6] => dashicons-admin-media
+        )
+
+    [15] => Array
+        (
+            [0] => Links
+            [1] => manage_links
+            [2] => edit-tags.php?taxonomy=link_category
+            [3] => 
+            [4] => menu-top menu-icon-links
+            [5] => menu-links
+            [6] => dashicons-admin-links
+        )
+
+    [25] => Array
+        (
+            [0] => Comments <span class="awaiting-mod count-0"><span class="pending-count" aria-hidden="true">0</span><span class="comments-in-moderation-text screen-reader-text">0 Comments in moderation</span></span>
+            [1] => edit_posts
+            [2] => edit-comments.php
+            [3] => 
+            [4] => menu-top menu-icon-comments
+            [5] => menu-comments
+            [6] => dashicons-admin-comments
+        )
+
+    [5] => Array
+        (
+            [0] => Posts
+            [1] => edit_posts
+            [2] => edit.php
+            [3] => 
+            [4] => menu-top menu-icon-post open-if-no-js
+            [5] => menu-posts
+            [6] => dashicons-admin-post
+        )
+
+    [20] => Array
+        (
+            [0] => Pages
+            [1] => edit_pages
+            [2] => edit.php?post_type=page
+            [3] => 
+            [4] => menu-top menu-icon-page
+            [5] => menu-pages
+            [6] => dashicons-admin-page
+        )
+
+    [59] => Array
+        (
+            [0] => 
+            [1] => read
+            [2] => separator2
+            [3] => 
+            [4] => wp-menu-separator
+        )
+
+    [60] => Array
+        (
+            [0] => Appearance
+            [1] => switch_themes
+            [2] => themes.php
+            [3] => 
+            [4] => menu-top menu-icon-appearance
+            [5] => menu-appearance
+            [6] => dashicons-admin-appearance
+        )
+
+    [65] => Array
+        (
+            [0] => Plugins <span class="update-plugins count-0"><span class="plugin-count">0</span></span>
+            [1] => activate_plugins
+            [2] => plugins.php
+            [3] => 
+            [4] => menu-top menu-icon-plugins
+            [5] => menu-plugins
+            [6] => dashicons-admin-plugins
+        )
+
+    [70] => Array
+        (
+            [0] => Users
+            [1] => list_users
+            [2] => users.php
+            [3] => 
+            [4] => menu-top menu-icon-users
+            [5] => menu-users
+            [6] => dashicons-admin-users
+        )
+
+    [75] => Array
+        (
+            [0] => Tools
+            [1] => edit_posts
+            [2] => tools.php
+            [3] => 
+            [4] => menu-top menu-icon-tools
+            [5] => menu-tools
+            [6] => dashicons-admin-tools
+        )
+
+    [80] => Array
+        (
+            [0] => Settings
+            [1] => manage_options
+            [2] => options-general.php
+            [3] => 
+            [4] => menu-top menu-icon-settings
+            [5] => menu-settings
+            [6] => dashicons-admin-settings
+        )
+
+    [99] => Array
+        (
+            [0] => 
+            [1] => read
+            [2] => separator-last
+            [3] => 
+            [4] => wp-menu-separator
+        )
+
+    [100] => Array
+        (
+            [0] => Speed Optimizer
+            [1] => manage_options
+            [2] => sg-cachepress
+            [3] => Speed Optimizer
+            [4] => menu-top toplevel_page_sg-cachepress
+            [5] => toplevel_page_sg-cachepress
+            [6] => http://my-playground.local/wp-content/plugins/sg-cachepress/assets/images/icon.svg
+        )
+
+    [101] => Array
+        (
+            [0] => Menu Organize
+            [1] => manage_options
+            [2] => wp-menu-organize-settings
+            [3] => WP Menu Organize
+            [4] => menu-top toplevel_page_wp-menu-organize-settings
+            [5] => toplevel_page_wp-menu-organize-settings
+            [6] => dashicons-admin-generic
+        )
+
+    [80.49552] => Array
+        (
+            [0] => SmartNav WP
+            [1] => manage_options
+            [2] => smartnav-wp
+            [3] => SmartNav WP Menu Editor
+            [4] => menu-top toplevel_page_smartnav-wp
+            [5] => toplevel_page_smartnav-wp
+            [6] => dashicons-menu
+        )
+
+    [59.9] => Array
+        (
+            [0] => Hello
+            [1] => manage_options
+            [2] => hello-elementor
+            [3] => Hello
+            [4] => menu-top toplevel_page_hello-elementor
+            [5] => toplevel_page_hello-elementor
+            [6] => dashicons-plus-alt
+        )
+
+)
+
+[22-Aug-2025 16:50:11 UTC] WMO: enqueue_scripts called for hook: toplevel_page_wp-menu-organize-settings
+[22-Aug-2025 16:50:11 UTC] WMO: Loading scripts for hook: toplevel_page_wp-menu-organize-settings
+[22-Aug-2025 16:50:11 UTC] WMO: Dashicons enqueued
+[22-Aug-2025 16:50:11 UTC] WMO: jQuery UI CSS enqueued
+[22-Aug-2025 16:50:11 UTC] WMO: WordPress jQuery UI sortable enqueued
+[22-Aug-2025 16:50:11 UTC] WMO: jQuery UI CDN fallback enqueued
+[22-Aug-2025 16:50:11 UTC] WMO: WordPress color picker CSS enqueued
+[22-Aug-2025 16:50:11 UTC] WMO: Plugin CSS enqueued
+[22-Aug-2025 16:50:11 UTC] WMO: Plugin script enqueued with proper dependencies
+[22-Aug-2025 16:50:11 UTC] WMO: Color picker script enqueued
+[22-Aug-2025 16:50:11 UTC] WMO: Script localized with AJAX data
+[22-Aug-2025 16:50:11 UTC] WMO: Color picker script also localized with AJAX data
+[22-Aug-2025 16:50:11 UTC] WMO: Inline styles added
+[22-Aug-2025 16:50:11 UTC] WMO: Final script check - jquery-ui-sortable enqueued: YES
+[22-Aug-2025 16:50:11 UTC] WMO: Final script check - jquery-ui-cdn-fallback enqueued: YES
+[22-Aug-2025 16:50:11 UTC] WMO DEBUG: Current admin hook: toplevel_page_wp-menu-organize-settings
+[22-Aug-2025 16:50:11 UTC] WMO DEBUG: Checking script registration...
+[22-Aug-2025 16:50:11 UTC] WMO DEBUG: jquery-ui-sortable registered: YES
+[22-Aug-2025 16:50:11 UTC] WMO DEBUG: jquery-ui-sortable enqueued: YES
+[22-Aug-2025 16:50:11 UTC] WMO DEBUG: jquery registered: YES
+[22-Aug-2025 16:50:11 UTC] WMO DEBUG: jquery enqueued: YES
+[22-Aug-2025 16:50:11 UTC] WMO: wmo_apply_menu_colors function called
+[22-Aug-2025 16:50:16 UTC] WMO: wmo_reset_menu_colors function called
+[22-Aug-2025 16:50:16 UTC] WMO: Attempting to delete wmo_menu_colors option
+[22-Aug-2025 16:50:16 UTC] WMO: Option exists check: false
+[22-Aug-2025 16:50:16 UTC] WMO: Current option value: 
+[22-Aug-2025 16:50:16 UTC] WMO: delete_option result: false
+[22-Aug-2025 16:50:16 UTC] WMO: Option after delete: deleted
+[22-Aug-2025 16:50:16 UTC] WMO: Actually deleted: true
+[22-Aug-2025 16:50:16 UTC] WMO: Menu colors reset successfully
+[22-Aug-2025 16:50:16 UTC] WMO: Set wmo_colors_reset transient for 5 minutes
+[22-Aug-2025 16:50:16 UTC] WMO: Removed wmo_apply_menu_colors from admin_head
+[22-Aug-2025 16:50:16 UTC] WMO: Final check - menu_colors option: 
+[22-Aug-2025 16:50:19 UTC] WMO: Current admin menu: Array
+(
+    [2] => Array
+        (
+            [0] => Dashboard
+            [1] => read
+            [2] => index.php
+            [3] => 
+            [4] => menu-top menu-top-first menu-icon-dashboard
+            [5] => menu-dashboard
+            [6] => dashicons-dashboard
+        )
+
+    [4] => Array
+        (
+            [0] => 
+            [1] => read
+            [2] => separator1
+            [3] => 
+            [4] => wp-menu-separator
+        )
+
+    [10] => Array
+        (
+            [0] => Media
+            [1] => upload_files
+            [2] => upload.php
+            [3] => 
+            [4] => menu-top menu-icon-media
+            [5] => menu-media
+            [6] => dashicons-admin-media
+        )
+
+    [15] => Array
+        (
+            [0] => Links
+            [1] => manage_links
+            [2] => edit-tags.php?taxonomy=link_category
+            [3] => 
+            [4] => menu-top menu-icon-links
+            [5] => menu-links
+            [6] => dashicons-admin-links
+        )
+
+    [25] => Array
+        (
+            [0] => Comments <span class="awaiting-mod count-0"><span class="pending-count" aria-hidden="true">0</span><span class="comments-in-moderation-text screen-reader-text">0 Comments in moderation</span></span>
+            [1] => edit_posts
+            [2] => edit-comments.php
+            [3] => 
+            [4] => menu-top menu-icon-comments
+            [5] => menu-comments
+            [6] => dashicons-admin-comments
+        )
+
+    [5] => Array
+        (
+            [0] => Posts
+            [1] => edit_posts
+            [2] => edit.php
+            [3] => 
+            [4] => menu-top menu-icon-post open-if-no-js
+            [5] => menu-posts
+            [6] => dashicons-admin-post
+        )
+
+    [20] => Array
+        (
+            [0] => Pages
+            [1] => edit_pages
+            [2] => edit.php?post_type=page
+            [3] => 
+            [4] => menu-top menu-icon-page
+            [5] => menu-pages
+            [6] => dashicons-admin-page
+        )
+
+    [59] => Array
+        (
+            [0] => 
+            [1] => read
+            [2] => separator2
+            [3] => 
+            [4] => wp-menu-separator
+        )
+
+    [60] => Array
+        (
+            [0] => Appearance
+            [1] => switch_themes
+            [2] => themes.php
+            [3] => 
+            [4] => menu-top menu-icon-appearance
+            [5] => menu-appearance
+            [6] => dashicons-admin-appearance
+        )
+
+    [65] => Array
+        (
+            [0] => Plugins <span class="update-plugins count-0"><span class="plugin-count">0</span></span>
+            [1] => activate_plugins
+            [2] => plugins.php
+            [3] => 
+            [4] => menu-top menu-icon-plugins
+            [5] => menu-plugins
+            [6] => dashicons-admin-plugins
+        )
+
+    [70] => Array
+        (
+            [0] => Users
+            [1] => list_users
+            [2] => users.php
+            [3] => 
+            [4] => menu-top menu-icon-users
+            [5] => menu-users
+            [6] => dashicons-admin-users
+        )
+
+    [75] => Array
+        (
+            [0] => Tools
+            [1] => edit_posts
+            [2] => tools.php
+            [3] => 
+            [4] => menu-top menu-icon-tools
+            [5] => menu-tools
+            [6] => dashicons-admin-tools
+        )
+
+    [80] => Array
+        (
+            [0] => Settings
+            [1] => manage_options
+            [2] => options-general.php
+            [3] => 
+            [4] => menu-top menu-icon-settings
+            [5] => menu-settings
+            [6] => dashicons-admin-settings
+        )
+
+    [99] => Array
+        (
+            [0] => 
+            [1] => read
+            [2] => separator-last
+            [3] => 
+            [4] => wp-menu-separator
+        )
+
+    [100] => Array
+        (
+            [0] => Speed Optimizer
+            [1] => manage_options
+            [2] => sg-cachepress
+            [3] => Speed Optimizer
+            [4] => menu-top toplevel_page_sg-cachepress
+            [5] => toplevel_page_sg-cachepress
+            [6] => http://my-playground.local/wp-content/plugins/sg-cachepress/assets/images/icon.svg
+        )
+
+    [101] => Array
+        (
+            [0] => Menu Organize
+            [1] => manage_options
+            [2] => wp-menu-organize-settings
+            [3] => WP Menu Organize
+            [4] => menu-top toplevel_page_wp-menu-organize-settings
+            [5] => toplevel_page_wp-menu-organize-settings
+            [6] => dashicons-admin-generic
+        )
+
+    [80.49552] => Array
+        (
+            [0] => SmartNav WP
+            [1] => manage_options
+            [2] => smartnav-wp
+            [3] => SmartNav WP Menu Editor
+            [4] => menu-top toplevel_page_smartnav-wp
+            [5] => toplevel_page_smartnav-wp
+            [6] => dashicons-menu
+        )
+
+    [59.9] => Array
+        (
+            [0] => Hello
+            [1] => manage_options
+            [2] => hello-elementor
+            [3] => Hello
+            [4] => menu-top toplevel_page_hello-elementor
+            [5] => toplevel_page_hello-elementor
+            [6] => dashicons-plus-alt
+        )
+
+)
+
+[22-Aug-2025 16:50:19 UTC] WMO: enqueue_scripts called for hook: toplevel_page_wp-menu-organize-settings
+[22-Aug-2025 16:50:19 UTC] WMO: Loading scripts for hook: toplevel_page_wp-menu-organize-settings
+[22-Aug-2025 16:50:19 UTC] WMO: Dashicons enqueued
+[22-Aug-2025 16:50:19 UTC] WMO: jQuery UI CSS enqueued
+[22-Aug-2025 16:50:19 UTC] WMO: WordPress jQuery UI sortable enqueued
+[22-Aug-2025 16:50:19 UTC] WMO: jQuery UI CDN fallback enqueued
+[22-Aug-2025 16:50:19 UTC] WMO: WordPress color picker CSS enqueued
+[22-Aug-2025 16:50:19 UTC] WMO: Plugin CSS enqueued
+[22-Aug-2025 16:50:19 UTC] WMO: Plugin script enqueued with proper dependencies
+[22-Aug-2025 16:50:19 UTC] WMO: Color picker script enqueued
+[22-Aug-2025 16:50:19 UTC] WMO: Script localized with AJAX data
+[22-Aug-2025 16:50:19 UTC] WMO: Color picker script also localized with AJAX data
+[22-Aug-2025 16:50:19 UTC] WMO: Inline styles added
+[22-Aug-2025 16:50:19 UTC] WMO: Final script check - jquery-ui-sortable enqueued: YES
+[22-Aug-2025 16:50:19 UTC] WMO: Final script check - jquery-ui-cdn-fallback enqueued: YES
+[22-Aug-2025 16:50:19 UTC] WMO DEBUG: Current admin hook: toplevel_page_wp-menu-organize-settings
+[22-Aug-2025 16:50:19 UTC] WMO DEBUG: Checking script registration...
+[22-Aug-2025 16:50:19 UTC] WMO DEBUG: jquery-ui-sortable registered: YES
+[22-Aug-2025 16:50:19 UTC] WMO DEBUG: jquery-ui-sortable enqueued: YES
+[22-Aug-2025 16:50:19 UTC] WMO DEBUG: jquery registered: YES
+[22-Aug-2025 16:50:19 UTC] WMO DEBUG: jquery enqueued: YES
+[22-Aug-2025 16:50:19 UTC] WMO: wmo_apply_menu_colors function called
+[22-Aug-2025 16:50:19 UTC] WMO: Colors reset transient found, skipping color application
