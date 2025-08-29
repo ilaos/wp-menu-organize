@@ -1,0 +1,119 @@
+                <!-- Menu Templates Section -->
+                <div class="wmo-section wmo-templates-section">
+                    <h3><span class="dashicons dashicons-art"></span> Menu Templates</h3>
+                    
+                    <div class="wmo-templates-intro">
+                        <p class="description">
+                            <strong>🎨 Transform your menu instantly!</strong><br>
+                            • <strong>Professional designs:</strong> Apply complete styling with one click<br>
+                            • <strong>Save custom templates:</strong> Create your own reusable design packages<br>
+                            • <strong>Perfect consistency:</strong> Ensure identical branding across all sites<br>
+                            • <strong>Seasonal flexibility:</strong> Switch between different looks instantly
+                        </p>
+                    </div>
+                    
+                    <div class="wmo-templates-controls">
+                        <div class="wmo-templates-actions">
+                            <button type="button" id="wmo-save-template-btn" class="button button-secondary">
+                                <span class="dashicons dashicons-plus-alt2"></span> Save Current as Template
+                            </button>
+                            <button type="button" id="wmo-manage-templates-btn" class="button button-secondary">
+                                <span class="dashicons dashicons-admin-settings"></span> Manage Templates
+                            </button>
+                        </div>
+                        
+                        <div class="wmo-templates-filter">
+                            <label for="wmo-template-category">Category:</label>
+                            <select id="wmo-template-category">
+                                <option value="all">All Templates</option>
+                                <option value="business">Business</option>
+                                <option value="creative">Creative</option>
+                                <option value="medical">Medical</option>
+                                <option value="ecommerce">E-commerce</option>
+                                <option value="custom">My Custom</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="wmo-templates-gallery" id="wmo-templates-gallery">
+                        <!-- Templates will be loaded here via JavaScript -->
+                        <div class="wmo-templates-loading">
+                            <span class="dashicons dashicons-update-alt wmo-spin"></span>
+                            Loading templates...
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Template Preview Modal -->
+                <div id="wmo-template-preview-modal" class="wmo-modal" style="display: none;">
+                    <div class="wmo-modal-content wmo-template-modal">
+                        <div class="wmo-modal-header">
+                            <h3 id="wmo-template-modal-title">Template Preview</h3>
+                            <button type="button" class="wmo-modal-close">&times;</button>
+                        </div>
+                        <div class="wmo-modal-body">
+                            <div id="wmo-template-preview-content">
+                                <!-- Preview content will be loaded here -->
+                            </div>
+                        </div>
+                        <div class="wmo-modal-footer">
+                            <button type="button" class="button button-secondary wmo-modal-close">Cancel</button>
+                            <button type="button" id="wmo-apply-template-btn" class="button button-primary">Apply Template</button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Save Template Modal -->
+                <div id="wmo-save-template-modal" class="wmo-modal" style="display: none;">
+                    <div class="wmo-modal-content">
+                        <div class="wmo-modal-header">
+                            <h3>Save as Template</h3>
+                            <button type="button" class="wmo-modal-close">&times;</button>
+                        </div>
+                        <div class="wmo-modal-body">
+                            <div class="wmo-template-form">
+                                <div class="wmo-template-field">
+                                    <label for="wmo-template-name">Template Name *</label>
+                                    <input type="text" id="wmo-template-name" placeholder="e.g., Corporate Blue v2" required />
+                                </div>
+                                
+                                <div class="wmo-template-field">
+                                    <label for="wmo-template-description">Description</label>
+                                    <textarea id="wmo-template-description" rows="3" placeholder="Professional blue theme for business clients..."></textarea>
+                                </div>
+                                
+                                <div class="wmo-template-field">
+                                    <label for="wmo-template-category-save">Category</label>
+                                    <select id="wmo-template-category-save">
+                                        <option value="custom">My Custom</option>
+                                        <option value="business">Business</option>
+                                        <option value="creative">Creative</option>
+                                        <option value="medical">Medical</option>
+                                        <option value="ecommerce">E-commerce</option>
+                                    </select>
+                                </div>
+                                
+                                <div class="wmo-template-field">
+                                    <label>Include in Template:</label>
+                                    <div class="wmo-template-includes">
+                                        <label><input type="checkbox" id="wmo-template-include-colors" checked> Colors</label>
+                                        <label><input type="checkbox" id="wmo-template-include-typography" checked> Typography</label>
+                                        <label><input type="checkbox" id="wmo-template-include-badges" checked> Badges</label>
+                                        <label><input type="checkbox" id="wmo-template-include-theme" checked> Theme Settings</label>
+                                    </div>
+                                </div>
+                                
+                                <div class="wmo-template-preview-current">
+                                    <h4>Current Settings Preview:</h4>
+                                    <div id="wmo-current-settings-summary">
+                                        <!-- Will be populated via JavaScript -->
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="wmo-modal-footer">
+                            <button type="button" class="button button-secondary wmo-modal-close">Cancel</button>
+                            <button type="button" id="wmo-save-template-confirm-btn" class="button button-primary">Save Template</button>
+                        </div>
+                    </div>
+                </div> 
