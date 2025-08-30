@@ -2,7 +2,7 @@
 /*
 Plugin Name: WP Menu Organize
 Description: A plugin to customize and organize the WordPress Admin Menu.
-Version: 3.0.5
+Version: 3.1.0
 Author: Ish Laos
 */
 
@@ -32,7 +32,7 @@ function wmo_log_admin_menu()
     global $menu;
     error_log('WMO: Current admin menu: ' . print_r($menu, true));
 }
-add_action('admin_menu', 'wmo_log_admin_menu', 9999);
+add_action('admin_menu', 'wmo_log_admin_menu', 100);
 
 // Add settings link on plugin page
 function wmo_settings_link($links)
@@ -47,23 +47,72 @@ add_filter("plugin_action_links_$plugin", 'wmo_settings_link');
 // Apply custom admin menu order
 function wmo_apply_admin_menu_order($menu_order)
 {
-    $customizations = get_option('wmo_admin_customizations', array());
-    $custom_order = isset($customizations['menu_order']) ? $customizations['menu_order'] : array();
+    // Get custom order from flat structure (not nested under admin_customizations)
+    $custom_order = wmo_get_settings('menu_order');
     
-    if (!empty($custom_order)) {
-        return $custom_order;
+    if (empty($custom_order) || !is_array($custom_order)) {
+        return $menu_order;
     }
     
-    return $menu_order;
+    // Get all current menu slugs from global $menu
+    global $menu;
+    $current_menu_slugs = array();
+    
+    if (is_array($menu)) {
+        foreach ($menu as $menu_item) {
+            if (!empty($menu_item[2]) && $menu_item[2] !== 'separator') {
+                $current_menu_slugs[] = $menu_item[2];
+            }
+        }
+    }
+    
+    // Merge: Start with custom_order, append any missing slugs from current menu in default order
+    $merged_order = $custom_order;
+    
+    // Add any missing slugs from current menu that aren't in custom order
+    foreach ($current_menu_slugs as $slug) {
+        if (!in_array($slug, $merged_order)) {
+            $merged_order[] = $slug;
+        }
+    }
+    
+    error_log('WMO: Applying menu order: ' . print_r($merged_order, true));
+    error_log('WMO: Original menu order: ' . print_r($menu_order, true));
+    error_log('WMO: Custom order: ' . print_r($custom_order, true));
+    error_log('WMO: Current menu slugs: ' . print_r($current_menu_slugs, true));
+    
+    return $merged_order;
 }
 add_filter('menu_order', 'wmo_apply_admin_menu_order', 10);
 add_filter('custom_menu_order', '__return_true');
+
+// Apply custom menu icons directly to menu array
+function wmo_apply_menu_icons() {
+    global $menu;
+    $icons = wmo_get_settings('icons');
+    if (!empty($icons)) {
+        foreach ($menu as $key => $item) {
+            $slug = $item[2]; // e.g., 'index.php' for Dashboard
+            if (isset($icons[$slug])) {
+                $icon = $icons[$slug];
+                if ($icon['type'] === 'dashicon') {
+                    $menu[$key][6] = $icon['value']; // e.g., 'dashicons-admin-post'
+                } elseif ($icon['type'] === 'emoji') {
+                    // Wrap emoji in span for rendering
+                    $menu[$key][6] = '<span class="wmo-emoji-icon">' . esc_html($icon['value']) . '</span>';
+                }
+            }
+        }
+    }
+    error_log('WMO: Applied menu icons: ' . print_r($icons, true));
+}
+add_action('admin_menu', 'wmo_apply_menu_icons', 999); // High priority to override defaults
 
 // Apply custom labels and visibility to admin menu
 function wmo_apply_admin_menu_customizations()
 {
     global $menu, $submenu;
-    $customizations = get_option('wmo_admin_customizations', array());
+    $customizations = wmo_get_settings('admin_customizations');
     
     if (empty($customizations['items'])) {
         return;
@@ -152,143 +201,30 @@ function wmo_apply_admin_menu_customizations()
         }
     }
 }
-add_action('admin_menu', 'wmo_apply_admin_menu_customizations', 999);
+add_action('admin_menu', 'wmo_apply_admin_menu_customizations', 100);
 
 // Apply custom colors and icons to admin menu via CSS
 function wmo_apply_admin_menu_styles()
 {
-    $customizations = get_option('wmo_admin_customizations', array());
+    $icons = wmo_get_settings('icons');
     
-    if (empty($customizations['items'])) {
+    if (empty($icons)) {
         return;
     }
     
     echo '<style type="text/css">';
     
-    foreach ($customizations['items'] as $menu_slug => $item_customizations) {
-        // Apply custom colors
-        if (isset($item_customizations['color']) && !empty($item_customizations['color'])) {
-            $color = $item_customizations['color'];
-            echo "#toplevel_page_{$menu_slug} > a { color: {$color} !important; }";
-            echo "#toplevel_page_{$menu_slug} > a .wp-menu-image:before { color: {$color} !important; }";
-        }
-        
-        // Apply custom icons
-        if (isset($item_customizations['icon']) && !empty($item_customizations['icon'])) {
-            $icon = $item_customizations['icon'];
-            // Map common icon names to Dashicon codes
-            $icon_codes = array(
-                'admin-appearance' => 'f100',
-                'admin-collapse' => 'f148',
-                'admin-comments' => 'f101',
-                'admin-generic' => 'f110',
-                'admin-home' => 'f102',
-                'admin-links' => 'f103',
-                'admin-media' => 'f104',
-                'admin-network' => 'f112',
-                'admin-page' => 'f105',
-                'admin-plugins' => 'f106',
-                'admin-post' => 'f109',
-                'admin-settings' => 'f108',
-                'admin-site' => 'f319',
-                'admin-tools' => 'f107',
-                'admin-users' => 'f110',
-                'plus' => 'f502',
-                'edit' => 'f464',
-                'trash' => 'f2ed',
-                'visibility' => 'f177',
-                'yes' => 'f147',
-                'no' => 'f158',
-                'arrow-up' => 'f142',
-                'arrow-down' => 'f140',
-                'arrow-left' => 'f139',
-                'arrow-right' => 'f141',
-                'star-filled' => 'f155',
-                'star-empty' => 'f154',
-                'star-half' => 'f459',
-                'heart' => 'f487',
-                'info' => 'f348',
-                'warning' => 'f534',
-                'flag' => 'f227',
-                'search' => 'f179',
-                'filter' => 'f536',
-                'update' => 'f463',
-                'upload' => 'f317',
-                'download' => 'f316',
-                'lock' => 'f160',
-                'unlock' => 'f528',
-                'calendar' => 'f469',
-                'clock' => 'f469',
-                'location' => 'f230',
-                'menu' => 'f333',
-                'menu-alt' => 'f329',
-                'menu-alt2' => 'f226',
-                'menu-alt3' => 'f227',
-                'menu-alt4' => 'f228',
-                'menu-alt5' => 'f229',
-                'menu-alt6' => 'f230',
-                'menu-alt7' => 'f231',
-                'menu-alt8' => 'f232',
-                'menu-alt9' => 'f233',
-                'menu-alt10' => 'f234',
-                'menu-alt11' => 'f235',
-                'menu-alt12' => 'f236',
-                'menu-alt13' => 'f237',
-                'menu-alt14' => 'f238',
-                'menu-alt15' => 'f239',
-                'menu-alt16' => 'f240',
-                'menu-alt17' => 'f241',
-                'menu-alt18' => 'f242',
-                'menu-alt19' => 'f243',
-                'menu-alt20' => 'f244',
-                'menu-alt21' => 'f245',
-                'menu-alt22' => 'f246',
-                'menu-alt23' => 'f247',
-                'menu-alt24' => 'f248',
-                'menu-alt25' => 'f249',
-                'menu-alt26' => 'f250',
-                'menu-alt27' => 'f251',
-                'menu-alt28' => 'f252',
-                'menu-alt29' => 'f253',
-                'menu-alt30' => 'f254',
-                'menu-alt31' => 'f255',
-                'menu-alt32' => 'f256',
-                'menu-alt33' => 'f257',
-                'menu-alt34' => 'f258',
-                'menu-alt35' => 'f259',
-                'menu-alt36' => 'f260',
-                'menu-alt37' => 'f261',
-                'menu-alt38' => 'f262',
-                'menu-alt39' => 'f263',
-                'menu-alt40' => 'f264',
-                'menu-alt41' => 'f265',
-                'menu-alt42' => 'f266',
-                'menu-alt43' => 'f267',
-                'menu-alt44' => 'f268',
-                'menu-alt45' => 'f269',
-                'menu-alt46' => 'f270',
-                'menu-alt47' => 'f271',
-                'menu-alt48' => 'f272',
-                'menu-alt49' => 'f273',
-                'menu-alt50' => 'f274',
-                'menu-alt51' => 'f275',
-                'menu-alt52' => 'f276',
-                'menu-alt53' => 'f277',
-                'menu-alt54' => 'f278',
-                'menu-alt55' => 'f279',
-                'menu-alt56' => 'f280',
-                'menu-alt57' => 'f281',
-                'menu-alt58' => 'f282',
-                'menu-alt59' => 'f283',
-                'menu-alt60' => 'f284',
-                'menu-alt61' => 'f285',
-                'menu-alt62' => 'f286',
-                'menu-alt63' => 'f287',
-                'admin-menu' => 'f333'
-            );
-            
-            $icon_code = isset($icon_codes[$icon]) ? $icon_codes[$icon] : 'f333'; // Default to admin-menu
-            echo "#toplevel_page_{$menu_slug} > a .wp-menu-image:before { content: '\\f{$icon_code}' !important; }";
+    foreach ($icons as $menu_slug => $icon_data) {
+        if (isset($icon_data['type']) && isset($icon_data['value']) && !empty($icon_data['value'])) {
+            if ($icon_data['type'] === 'dashicon') {
+                // Apply dashicon
+                echo "#toplevel_page_{$menu_slug} > a .wp-menu-image:before { content: none !important; }";
+                echo "#toplevel_page_{$menu_slug} > a .wp-menu-image .dashicons { display: block !important; }";
+            } else if ($icon_data['type'] === 'emoji') {
+                // Apply emoji
+                echo "#toplevel_page_{$menu_slug} > a .wp-menu-image:before { content: none !important; }";
+                echo "#toplevel_page_{$menu_slug} > a .wp-menu-image .wmo-emoji-icon { display: block !important; font-size: 20px !important; }";
+            }
         }
     }
     
@@ -1304,4 +1240,266 @@ function wmo_get_inline_styles()
     ';
 }
 
-"// Test Korbit" 
+// Temporary icon reset functionality
+add_action('admin_init', function() {
+    if (isset($_GET['reset_wmo_icons']) && current_user_can('manage_options')) {
+        // Clear the saved icons
+        delete_option('wmo_menu_icons');
+        
+        // Also clear any other related icon options that might exist
+        delete_option('wmo_saved_icons');
+        
+        // Add a success message
+        add_action('admin_notices', function() {
+            echo '<div class="notice notice-success is-dismissible">';
+            echo '<p><strong>WMO Icons Reset:</strong> All saved menu icons have been cleared successfully.</p>';
+            echo '</div>';
+        });
+        
+        // Redirect back to admin to avoid the parameter staying in URL
+        wp_redirect(admin_url());
+        exit;
+    }
+});
+
+// Version control and cleanup system
+function wmo_version_check() {
+    $current_version = get_option('wmo_version', '0');
+    $plugin_version = '2.0.0'; // New optimized version
+    
+    if (version_compare($current_version, $plugin_version, '<')) {
+        // Run upgrade routines
+        wmo_cleanup_old_data();
+        wmo_migrate_options(); // Ensure migration runs
+        update_option('wmo_version', $plugin_version);
+        
+        // Log the upgrade
+        error_log('WMO: Plugin upgraded to version ' . $plugin_version);
+    }
+}
+add_action('admin_init', 'wmo_version_check');
+
+// Cleanup old data and options
+function wmo_cleanup_old_data() {
+    // Clean up any old options that might still exist
+    $old_options = array(
+        'wmo_menu_colors',
+        'wmo_menu_badges', 
+        'wmo_menu_typography',
+        'wmo_saved_icons',
+        'wmo_custom_css',
+        'wmo_menu_order',
+        'wmo_admin_customizations',
+        'wmo_theme_preference',
+        'wmo_templates',
+        'wmo_dark_mode'
+    );
+    
+    foreach ($old_options as $option) {
+        delete_option($option);
+    }
+    
+    // Clear any old transients
+    delete_transient('wmo_debug_data');
+    delete_transient('wmo_menu_cache');
+    
+    // Clear any old error logs
+    $upload_dir = wp_upload_dir();
+    $debug_file = $upload_dir['basedir'] . '/wmo-debug.log';
+    if (file_exists($debug_file)) {
+        unlink($debug_file);
+    }
+}
+
+// Plugin health check function
+function wmo_health_check() {
+    $issues = array();
+    $warnings = array();
+    
+    // Check if settings exist
+    if (!get_option('wmo_settings')) {
+        $issues[] = 'Settings not initialized';
+    }
+    
+    // Check if migration completed
+    if (!get_option('wmo_migrated_v2')) {
+        $issues[] = 'Database migration not completed';
+    }
+    
+    // Check file sizes and existence
+    $files = array(
+        'assets/css/admin.css' => 50000, // 50KB limit
+        'assets/js/admin.js' => 50000,   // 50KB limit
+        'assets/js/color-picker.js' => 20000 // 20KB limit
+    );
+    
+    foreach ($files as $file => $size_limit) {
+        $path = plugin_dir_path(__FILE__) . $file;
+        if (!file_exists($path)) {
+            $issues[] = $file . ' not found';
+        } elseif (filesize($path) > $size_limit) {
+            $warnings[] = $file . ' is large (' . round(filesize($path)/1024) . 'KB)';
+        }
+    }
+    
+    // Check for minified files
+    $minified_files = array(
+        'assets/css/admin.min.css',
+        'assets/js/admin.min.js',
+        'assets/js/color-picker.min.js'
+    );
+    
+    foreach ($minified_files as $file) {
+        $path = plugin_dir_path(__FILE__) . $file;
+        if (!file_exists($path)) {
+            $warnings[] = 'Minified file not found: ' . $file;
+        }
+    }
+    
+    // Check for error_log statements (should be removed)
+    $php_files = array(
+        'wp-menu-organize.php',
+        'includes/ajax-handlers.php',
+        'includes/admin-page.php',
+        'includes/helper-functions.php'
+    );
+    
+    foreach ($php_files as $file) {
+        $path = plugin_dir_path(__FILE__) . $file;
+        if (file_exists($path)) {
+            $content = file_get_contents($path);
+            if (strpos($content, 'error_log(') !== false) {
+                $warnings[] = 'Debug logging found in ' . $file;
+            }
+        }
+    }
+    
+    return array(
+        'issues' => $issues,
+        'warnings' => $warnings,
+        'status' => empty($issues) ? 'healthy' : 'needs_attention'
+    );
+}
+
+// Display health status in admin
+function wmo_display_health_status() {
+    $screen = get_current_screen();
+    if (!$screen || strpos($screen->id, 'wp-menu-organize') === false) {
+        return;
+    }
+    
+    $health = wmo_health_check();
+    
+    if (!empty($health['issues']) || !empty($health['warnings'])) {
+        echo '<div class="notice notice-' . ($health['status'] === 'healthy' ? 'warning' : 'error') . ' is-dismissible">';
+        echo '<h3>🔍 WMO Plugin Health Check</h3>';
+        
+        if (!empty($health['issues'])) {
+            echo '<p><strong>Issues found:</strong></p>';
+            echo '<ul>';
+            foreach ($health['issues'] as $issue) {
+                echo '<li>❌ ' . esc_html($issue) . '</li>';
+            }
+            echo '</ul>';
+        }
+        
+        if (!empty($health['warnings'])) {
+            echo '<p><strong>Warnings:</strong></p>';
+            echo '<ul>';
+            foreach ($health['warnings'] as $warning) {
+                echo '<li>⚠️ ' . esc_html($warning) . '</li>';
+            }
+            echo '</ul>';
+        }
+        
+        echo '<p><em>These are optimization suggestions and won\'t affect functionality.</em></p>';
+        echo '</div>';
+    } else {
+        echo '<div class="notice notice-success is-dismissible">';
+        echo '<p>✅ <strong>WMO Plugin Health Check:</strong> All systems optimal! Plugin is running at peak performance.</p>';
+        echo '</div>';
+    }
+}
+add_action('admin_notices', 'wmo_display_health_status');
+
+// Remove the temporary minification function after use
+function wmo_remove_minification_function() {
+    // This function will be called after minification is complete
+    // We'll keep it for now but can remove it later
+}
+
+// Database migration function to consolidate options
+function wmo_migrate_options() {
+    // Check if migration is needed
+    if (get_option('wmo_migrated_v2')) {
+        return;
+    }
+    
+    // Gather all old options
+    $settings = array(
+        'colors' => get_option('wmo_menu_colors', array()),
+        'badges' => get_option('wmo_menu_badges', array()),
+        'typography' => get_option('wmo_menu_typography', array()),
+        'icons' => get_option('wmo_menu_icons', array()),
+        'saved_icons' => get_option('wmo_saved_icons', array()),
+        'custom_css' => get_option('wmo_custom_css', ''),
+        'menu_order' => get_option('wmo_menu_order', array()),
+        'admin_customizations' => get_option('wmo_admin_customizations', array()),
+        'theme_preference' => get_option('wmo_theme_preference', 'light'),
+        'templates' => get_option('wmo_templates', array())
+    );
+    
+    // Save as single option
+    update_option('wmo_settings', $settings);
+    
+    // Clean up old options
+    delete_option('wmo_menu_colors');
+    delete_option('wmo_menu_badges');
+    delete_option('wmo_menu_typography');
+    delete_option('wmo_menu_icons');
+    delete_option('wmo_saved_icons');
+    delete_option('wmo_custom_css');
+    delete_option('wmo_menu_order');
+    delete_option('wmo_admin_customizations');
+    delete_option('wmo_theme_preference');
+    delete_option('wmo_templates');
+    
+    // Mark as migrated
+    update_option('wmo_migrated_v2', true);
+    
+    // Log migration for debugging
+    error_log('WMO: Database options migrated to wmo_settings');
+}
+add_action('admin_init', 'wmo_migrate_options');
+
+// Helper function to get settings with fallback
+function wmo_get_settings($key = null) {
+    $settings = get_option('wmo_settings', array());
+    
+    if ($key === null) {
+        return $settings;
+    }
+    
+    return isset($settings[$key]) ? $settings[$key] : array();
+}
+
+// Helper function to update settings
+function wmo_update_settings($key, $value) {
+    $settings = wmo_get_settings();
+    $settings[$key] = $value;
+    update_option('wmo_settings', $settings);
+}
+
+// Cleanup function to remove old debug data
+function wmo_cleanup_debug_data() {
+    // Clear any transients
+    delete_transient('wmo_debug_data');
+    
+    // Clear any old error logs specific to your plugin
+    $upload_dir = wp_upload_dir();
+    $debug_file = $upload_dir['basedir'] . '/wmo-debug.log';
+    if (file_exists($debug_file)) {
+        unlink($debug_file);
+    }
+}
+add_action('admin_init', 'wmo_cleanup_debug_data');

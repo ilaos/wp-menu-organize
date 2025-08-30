@@ -9,31 +9,24 @@
     console.log('jQuery version:', jQuery.fn.jquery);
     console.log('jQuery UI version:', jQuery.ui ? jQuery.ui.version : 'Not available');
 
-    // COORDINATION FLAGS - Prevent double initialization
-    if (window.wmoAdminJSInitialized) {
-        console.log('WMO: Admin JS already initialized, skipping duplicate initialization');
-        return;
-    }
-    window.wmoAdminJSInitialized = true;
-    
     // Global saveMenuOrder function - define at the top before wmoInitializeSortable
     window.saveMenuOrder = function() {
         try {
             console.log('WMO: saveMenuOrder function called');
             
             var $status = $('#wmo-save-status');
+            var $saveButton = $('#wmo-save-order');
             
             if ($status.length) {
                 $status.removeClass('success error').addClass('loading').text('Saving...');
             }
+            if ($saveButton.length) {
+                $saveButton.prop('disabled', true);
+            }
             
-            // Collect the full order as array of slugs - ensure all valid slugs
             var order = [];
             $('#wmo-sortable-menu li').each(function() {
-                var slug = $(this).data('slug');
-                if (slug && slug.trim() !== '') {
-                    order.push(slug);
-                }
+                order.push($(this).data('slug'));
             });
             
             console.log('WMO: Menu order to save:', order);
@@ -61,8 +54,8 @@
                             $status.removeClass('loading error').addClass('success').text('Menu order saved successfully!');
                         }
                         
-                        // Show success notice with refresh hint
-                        var notice = $('<div class="wmo-notice success">Menu order saved! Refresh page to see changes in admin sidebar.</div>');
+                        // Show success notice
+                        var notice = $('<div class="wmo-notice success">Menu order saved!</div>');
                         $('body').append(notice);
                         setTimeout(function() {
                             notice.remove();
@@ -87,7 +80,9 @@
                     }
                 },
                 complete: function() {
-                    // Remove loading state
+                    if ($saveButton.length) {
+                        $saveButton.prop('disabled', false);
+                    }
                 }
             });
         } catch (error) {
@@ -515,11 +510,6 @@
 
         // Enhanced retry mechanism for sortable initialization
         function initializeSortableWithRetry(maxRetries = 10, delay = 300) {
-            // COORDINATION CHECK - Prevent double sortable initialization
-            if (window.wmoSortableInitialized) {
-                console.log('WMO: Sortable already initialized, skipping duplicate initialization');
-                return;
-            }
             var retryCount = 0;
             
             function tryInitialize() {
@@ -537,9 +527,6 @@
                 if ($container.length && $menu.length && $items.length > 0) {
                     console.log('WMO: Elements found, initializing sortable');
                     
-                    // COORDINATION CHECK - Mark as initialized
-                    window.wmoSortableInitialized = true;
-                    
                     // Try to use the existing wmoInitializeSortable function first
                     if (typeof window.wmoInitializeSortable === 'function') {
                         console.log('WMO: Using existing wmoInitializeSortable function');
@@ -550,18 +537,12 @@
                             // Fall back to our own initialization
                             initializeSortableFallback($menu);
                         }
-                                    } else {
-                    // Fallback to our own initialization
-                    console.log('WMO: wmoInitializeSortable not found, using fallback initialization');
-                    initializeSortableFallback($menu);
-                }
-                
-                // Post-init check
-                if ($menu.hasClass('ui-sortable')) {
-                    console.log('WMO: Sortable ready');
-                }
-                
-                return true; // Success
+                    } else {
+                        // Fallback to our own initialization
+                        console.log('WMO: wmoInitializeSortable not found, using fallback initialization');
+                        initializeSortableFallback($menu);
+                    }
+                    return true; // Success
                 } else {
                     console.log('WMO: Elements not found yet, retrying...');
                     
@@ -624,12 +605,7 @@
         // Initialize with enhanced retry mechanism if on reorder page
         if ($('.menu-items-list').length > 0) {
             console.log('WMO: Found menu items list, initializing with retry mechanism');
-            // COORDINATION CHECK - Only initialize if not already done by template
-            if (!window.wmoSortableInitialized) {
-                initializeSortableWithRetry();
-            } else {
-                console.log('WMO: Sortable already initialized by template, skipping admin.js initialization');
-            }
+            initializeSortableWithRetry();
         } else {
             console.log('WMO: No menu items list found, skipping sortable initialization');
         }
@@ -777,155 +753,5 @@
                 wmoApplyColor(slug, menuColors[slug], isSubmenu);
             }
         }
-        
-        // ===== TOGGLE FUNCTIONALITY FIX =====
-        // Global toggle function that takes a slug parameter and toggles .expanded class
-        window.wmo_toggle_expand = function(slug) {
-            console.log('WMO: Toggling expand for slug:', slug);
-            
-            // Find the wrapper using data-menu-slug attribute
-            var $wrapper = $('.wmo-menu-item-wrapper[data-menu-slug="' + slug + '"]');
-            var $expandedContent = $wrapper.find('.wmo-expanded-content');
-            var $header = $wrapper.find('.wmo-menu-header');
-            
-            // Check if wrapper exists
-            if ($wrapper.length === 0) {
-                console.error('WMO: Menu item wrapper not found for slug:', slug);
-                return;
-            }
-            
-            // Check current visibility state
-            var isVisible = $expandedContent.is(':visible');
-            console.log('WMO: Content visibility:', isVisible ? 'visible' : 'hidden');
-            
-            // Toggle .expanded class on wrapper
-            $wrapper.toggleClass('expanded');
-            
-            // Use jQuery's slideToggle for smooth animation (400ms default)
-            $expandedContent.slideToggle(400, function() {
-                console.log('WMO: Slide animation completed for slug:', slug);
-                
-                // Re-initialize color pickers in the expanded content if it's now visible
-                if ($expandedContent.is(':visible')) {
-                    console.log('WMO: Re-initializing color pickers for expanded content');
-                    if (typeof initColorPickers === 'function') {
-                        initColorPickers();
-                    } else if ($.fn.wpColorPicker) {
-                        // Initialize any new color pickers that might not be initialized yet
-                        $expandedContent.find('.wmo-color-field').each(function() {
-                            if (!$(this).hasClass('wp-color-picker')) {
-                                $(this).wpColorPicker({
-                                    defaultColor: '#23282d'
-                                });
-                                
-                                // Fix positioning for re-initialized color pickers
-                                var $container = $(this).closest('.wp-picker-container');
-                                var $holder = $container.find('.wp-picker-holder');
-                                var $picker = $holder.find('.iris-picker');
-                                
-                                // Set highest z-index with !important using inline styles
-                                $holder.attr('style', $holder.attr('style') + '; z-index: 1000012 !important; position: absolute !important;');
-                                $picker.attr('style', $picker.attr('style') + '; z-index: 1000013 !important; position: relative !important;');
-                            }
-                        });
-                    }
-                }
-            });
-            
-            // Update arrow icon
-            var $icon = $header.find('.wmo-expand-toggle .dashicons');
-            if (isVisible) {
-                $icon.removeClass('dashicons-arrow-up-alt2').addClass('dashicons-arrow-down-alt2');
-            } else {
-                $icon.removeClass('dashicons-arrow-down-alt2').addClass('dashicons-arrow-up-alt2');
-            }
-        };
-        
-        // Delegated event listener for both headers and toggle buttons
-        $(document).on('click', '.wmo-menu-header, .wmo-expand-toggle', function(e) {
-            // Don't trigger if clicking on color picker or other interactive elements
-            if ($(e.target).closest('.wmo-color-picker-wrapper, .wmo-status-indicators').length > 0) {
-                return;
-            }
-            
-            var $element = $(this);
-            var slug = null;
-            
-            // Determine which element was clicked and get the appropriate slug
-            if ($element.hasClass('wmo-expand-toggle')) {
-                // Clicked on the toggle button
-                e.stopPropagation(); // Prevent header click from also firing
-                slug = $element.data('menu-slug');
-                console.log('WMO: Expand toggle button clicked for slug:', slug);
-            } else if ($element.hasClass('wmo-menu-header')) {
-                // Clicked on the header
-                slug = $element.data('toggle-slug');
-                console.log('WMO: Menu header clicked for slug:', slug);
-            }
-            
-            if (slug) {
-                window.wmo_toggle_expand(slug);
-            } else {
-                console.error('WMO: No slug found for clicked element');
-            }
-        });
-        
-        // Debug function to check toggle elements
-        function wmoDebugToggleElements() {
-            var toggleHeaders = $('.wmo-toggle-header').length;
-            var menuWrappers = $('.wmo-menu-item-wrapper').length;
-            var expandButtons = $('.wmo-expand-toggle').length;
-            
-            console.log('WMO: Toggle debug - Headers:', toggleHeaders, 'Wrappers:', menuWrappers, 'Buttons:', expandButtons);
-            
-            // Update debug info if elements exist
-            if ($('#wmo-toggle-count').length) {
-                $('#wmo-toggle-count').text(toggleHeaders);
-            }
-            if ($('#wmo-menu-count').length) {
-                $('#wmo-menu-count').text(menuWrappers);
-            }
-            
-            // Log first few toggle headers for debugging
-            $('.wmo-toggle-header').each(function(index) {
-                if (index < 3) {
-                    console.log('WMO: Toggle header', index, 'slug:', $(this).data('toggle-slug'));
-                }
-            });
-        }
-        
-        // Run debug on page load
-        wmoDebugToggleElements();
-        
-        // Update debug info with hook suffix
-        if (typeof wmo_ajax !== 'undefined' && wmo_ajax.hook_suffix) {
-            $('#wmo-hook-suffix').text(wmo_ajax.hook_suffix);
-        }
-        
-        // Show debug info if needed (uncomment to enable)
-        // $('.wmo-debug-info').show();
-        
-        // Additional debug: Check if toggle function is available
-        console.log('WMO: Toggle function available:', typeof window.wmo_toggle_expand === 'function');
-        console.log('WMO: jQuery available:', typeof $ !== 'undefined');
-        console.log('WMO: Document ready completed');
-        
-        // Test function for specific slugs (for debugging)
-        window.wmo_test_toggle = function(slug) {
-            console.log('WMO: Testing toggle for slug:', slug);
-            if (typeof window.wmo_toggle_expand === 'function') {
-                window.wmo_toggle_expand(slug);
-            } else {
-                console.error('WMO: Toggle function not available');
-            }
-        };
-        
-        // Log available slugs for testing
-        $('.wmo-menu-item-wrapper').each(function(index) {
-            if (index < 5) { // Only log first 5 to avoid spam
-                var slug = $(this).data('menu-slug');
-                console.log('WMO: Available slug', index, ':', slug);
-            }
-        });
     });
 })(jQuery);

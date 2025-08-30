@@ -23,14 +23,13 @@ if (!is_array($menu) || empty($menu)) {
     return;
 }
 
-// Get current menu order from settings (flat structure)
+// Get current menu order from settings
 $saved_order = wmo_get_settings('menu_order');
 $saved_order = is_array($saved_order) ? $saved_order : array();
 
 error_log('WMO: Saved order count: ' . count($saved_order));
-error_log('WMO: Saved order: ' . print_r($saved_order, true));
 
-// Filter out separators and empty items, preserve exact slugs
+// Filter out separators and empty items
 $valid_menu_items = array();
 $processed_count = 0;
 
@@ -47,12 +46,12 @@ foreach ($menu as $menu_item) {
 error_log('WMO: Processed ' . $processed_count . ' menu items');
 error_log('WMO: Valid menu items count: ' . count($valid_menu_items));
 
-// Apply saved order if available - improved logic
+// Apply saved order if available
 if (!empty($saved_order) && count($saved_order) > 0) {
     $ordered_items = array();
     $unordered_items = array();
     
-    // First, add items in saved order (preserve exact slugs)
+    // First, add items in saved order
     foreach ($saved_order as $slug) {
         foreach ($valid_menu_items as $key => $item) {
             if ($item[2] === $slug) {
@@ -63,7 +62,7 @@ if (!empty($saved_order) && count($saved_order) > 0) {
         }
     }
     
-    // Then add any remaining items in their original order
+    // Then add any remaining items
     foreach ($valid_menu_items as $item) {
         $unordered_items[] = $item;
     }
@@ -71,13 +70,6 @@ if (!empty($saved_order) && count($saved_order) > 0) {
     $valid_menu_items = array_merge($ordered_items, $unordered_items);
     error_log('WMO: Applied saved order to ' . count($ordered_items) . ' items');
 }
-
-// Log final rendered order for debugging
-$final_slugs = array();
-foreach ($valid_menu_items as $item) {
-    $final_slugs[] = $item[2];
-}
-error_log('WMO: Final rendered order: ' . print_r($final_slugs, true));
 ?>
 
 <div class="wrap">
@@ -85,7 +77,7 @@ error_log('WMO: Final rendered order: ' . print_r($final_slugs, true));
     
     <div class="wmo-instructions">
         <p><strong>✨ Optimize your workflow:</strong> Drag items to arrange your menu in the order that works best for you. Your most-used pages should be easily accessible.</p>
-        <p><em>Tip: Click and drag the menu item titles to reorder them. Changes are saved automatically when you drag items.</em></p>
+        <p><em>Tip: Click and drag the menu item titles to reorder them. Changes are saved automatically when you drag items, or use the Save Order button below.</em></p>
     </div>
 
     <?php if (empty($valid_menu_items)): ?>
@@ -103,9 +95,9 @@ error_log('WMO: Final rendered order: ' . print_r($final_slugs, true));
                 <ul id="wmo-sortable-menu">
                     <?php foreach ($valid_menu_items as $menu_item): ?>
                         <?php
-                        // Extract menu item data - preserve exact slugs
+                        // Extract menu item data
                         $menu_title = strip_tags($menu_item[0]);
-                        $menu_slug = $menu_item[2]; // Use exact slug (e.g., 'index.php', 'edit.php')
+                        $menu_slug = $menu_item[2];
                         $menu_icon = isset($menu_item[6]) ? $menu_item[6] : 'dashicons-admin-generic';
                         
                         // Skip if no title or slug
@@ -129,18 +121,15 @@ error_log('WMO: Final rendered order: ' . print_r($final_slugs, true));
 
             <div class="wmo-actions">
                 <p class="submit">
-                    <button type="button" id="wmo-refresh-page" class="button button-primary">
-                        <span class="dashicons dashicons-update"></span>
-                        <?php _e('Refresh Page to Apply Changes', 'wp-menu-organize'); ?>
+                    <button type="button" id="wmo-save-order" class="button button-primary">
+                        <span class="dashicons dashicons-saved"></span>
+                        <?php _e('Save Menu Order', 'wp-menu-organize'); ?>
                     </button>
                     <button type="button" id="wmo-reset-order" class="button button-secondary">
                         <span class="dashicons dashicons-image-rotate"></span>
                         <?php _e('Reset to Default', 'wp-menu-organize'); ?>
                     </button>
                     <span id="wmo-save-status" class="wmo-status"></span>
-                </p>
-                <p class="description">
-                    <em><?php _e('Changes are saved automatically when you drag items. Click "Refresh Page to Apply Changes" to see the new order in the WordPress admin sidebar.', 'wp-menu-organize'); ?></em>
                 </p>
             </div>
         </form>
@@ -151,7 +140,6 @@ error_log('WMO: Final rendered order: ' . print_r($final_slugs, true));
             <p><strong><?php _e('Saved order items:', 'wp-menu-organize'); ?></strong> <?php echo count($saved_order); ?></p>
             <p><strong><?php _e('Current page:', 'wp-menu-organize'); ?></strong> <?php echo esc_html($_GET['page'] ?? 'unknown'); ?></p>
             <p><strong><?php _e('Global menu count:', 'wp-menu-organize'); ?></strong> <?php echo count($menu); ?></p>
-            <p><strong><?php _e('Final order slugs:', 'wp-menu-organize'); ?></strong> <?php echo esc_html(implode(', ', $final_slugs)); ?></p>
         </div>
     <?php endif; ?>
 </div>
@@ -326,30 +314,19 @@ error_log('WMO: Final rendered order: ' . print_r($final_slugs, true));
 
 <script type="text/javascript">
 jQuery(document).ready(function($) {
-    // COORDINATION FLAGS - Prevent double initialization
-    if (window.wmoTemplateInitialized) {
-        console.log('WMO: Template already initialized, skipping duplicate initialization');
-        return;
-    }
-    window.wmoTemplateInitialized = true;
-    
     // Global saveMenuOrder function - define at the top
     window.saveMenuOrder = function() {
         try {
             var $status = $('#wmo-save-status');
+            var $saveButton = $('#wmo-save-order');
             
             $status.removeClass('success error').addClass('loading').text('Saving...');
+            $saveButton.prop('disabled', true);
             
-            // Collect the full order as array of slugs
             var order = [];
             $('#wmo-sortable-menu li').each(function() {
-                var slug = $(this).data('slug');
-                if (slug && slug.trim() !== '') {
-                    order.push(slug);
-                }
+                order.push($(this).data('slug'));
             });
-            
-            console.log('WMO: Saving menu order:', order);
             
             // Check if wmo_ajax is defined, fallback to admin-ajax.php
             var ajaxUrl = (typeof wmo_ajax !== 'undefined' && wmo_ajax.ajax_url) ? wmo_ajax.ajax_url : ajaxurl;
@@ -368,7 +345,7 @@ jQuery(document).ready(function($) {
                         $status.removeClass('loading error').addClass('success').text('Menu order saved successfully!');
                         
                         // Show success notice
-                        var notice = $('<div class="wmo-notice success">Menu order saved! Refresh page to see changes in admin sidebar.</div>');
+                        var notice = $('<div class="wmo-notice success">Menu order saved!</div>');
                         $('body').append(notice);
                         setTimeout(function() {
                             notice.remove();
@@ -385,7 +362,7 @@ jQuery(document).ready(function($) {
                     $status.removeClass('loading success').addClass('error').text('Network error while saving menu order');
                 },
                 complete: function() {
-                    // Remove loading state
+                    $saveButton.prop('disabled', false);
                 }
             });
         } catch (error) {
@@ -456,20 +433,17 @@ jQuery(document).ready(function($) {
     }
     
     // Event handlers
-    $('#wmo-refresh-page').on('click', function() {
-        if (confirm('<?php _e('Refresh the page to apply menu order changes to the WordPress admin sidebar?', 'wp-menu-organize'); ?>')) {
-            window.location.reload();
+    $('#wmo-save-order').on('click', function() {
+        if (typeof window.saveMenuOrder === 'function') {
+            window.saveMenuOrder();
+        } else {
+            alert('Save function not available. Please refresh the page.');
         }
     });
     $('#wmo-reset-order').on('click', resetMenuOrder);
     
     // Function to initialize sortable with enhanced retry mechanism
     function initializeSortableWithRetry(maxRetries = 10, delay = 300) {
-        // COORDINATION CHECK - Prevent double sortable initialization
-        if (window.wmoSortableInitialized) {
-            console.log('WMO: Sortable already initialized, skipping duplicate initialization');
-            return;
-        }
         var retryCount = 0;
         
         function tryInitialize() {
@@ -487,9 +461,6 @@ jQuery(document).ready(function($) {
             if ($container.length && $menu.length && $items.length > 0) {
                 console.log('WMO: Elements found, initializing sortable');
                 
-                // COORDINATION CHECK - Mark as initialized
-                window.wmoSortableInitialized = true;
-                
                 // Try to use the existing wmoInitializeSortable function first
                 if (typeof window.wmoInitializeSortable === 'function') {
                     console.log('WMO: Using existing wmoInitializeSortable function');
@@ -505,12 +476,6 @@ jQuery(document).ready(function($) {
                     console.log('WMO: wmoInitializeSortable not found, using fallback initialization');
                     initializeSortableFallback($menu);
                 }
-                
-                // Post-init check
-                if ($menu.hasClass('ui-sortable')) {
-                    console.log('WMO: Sortable ready');
-                }
-                
                 return true; // Success
             } else {
                 console.log('WMO: Elements not found yet, retrying...');
