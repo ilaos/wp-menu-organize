@@ -108,6 +108,243 @@ function wmo_apply_menu_icons() {
 }
 add_action('admin_menu', 'wmo_apply_menu_icons', 999); // High priority to override defaults
 
+// Add deactivate submenus for enabled items
+function wmo_add_deactivate_submenus() {
+    global $menu, $submenu;
+    
+    // Get deactivate settings
+    $deactivate_settings = wmo_get_settings('deactivate_submenus');
+    
+    if (empty($deactivate_settings)) {
+        error_log('WMO: No deactivate settings found');
+        return;
+    }
+    
+    error_log('WMO: Enabled submenus: ' . print_r($deactivate_settings, true));
+    
+    // Loop through menu items and add deactivate submenus for enabled ones
+    foreach ($menu as $menu_item) {
+        $menu_slug = $menu_item[2]; // The menu slug/file (e.g., 'sg-cachepress' for Speed Optimizer)
+        $menu_title = $menu_item[0]; // The menu title (e.g., 'Speed Optimizer')
+        
+        // Compute the check slug using sanitized title (matches what's saved in settings)
+        $check_slug = sanitize_title(strip_tags($menu_title));
+        
+        error_log('WMO: Checking menu item: ' . $menu_slug . ' (' . $menu_title . ') -> check_slug: ' . $check_slug);
+        
+        // Check if this menu item has deactivate enabled using the sanitized title
+        if (isset($deactivate_settings[$check_slug]) && $deactivate_settings[$check_slug] && $menu_slug && strpos($menu_slug, 'separator') === false) {
+            error_log('WMO: Found enabled deactivate setting for: ' . $check_slug . ' (menu_slug: ' . $menu_slug . ')');
+            
+            // Get the plugin file for this menu item
+            $plugin_file = wmo_get_plugin_file_for_menu_slug($menu_slug);
+            
+            if (!$plugin_file) {
+                error_log('WMO: Could not find plugin file for menu slug: ' . $menu_slug);
+                continue; // Skip this menu item if we can't find its plugin
+            }
+            
+            // Generate the deactivate URL with proper nonce and plugin identification
+            $deactivate_url = wp_nonce_url(
+                admin_url('admin.php?wmo_action=deactivate_plugin&deactivate=1&plugin=' . urlencode($plugin_file)),
+                'wmo_deactivate_plugin',
+                'nonce'
+            );
+            error_log('WMO: Generated deactivate URL: ' . $deactivate_url);
+            
+            // Add the deactivate submenu
+            $result = add_submenu_page(
+                $menu_slug, // Parent slug (actual menu slug)
+                'Deactivate Plugin', // Page title
+                'Deactivate', // Menu title
+                'manage_options', // Capability (changed back to manage_options)
+                'wmo_deactivate_plugin', // Menu slug
+                'wmo_deactivate_callback' // Callback function
+            );
+            
+            if ($result) {
+                error_log('WMO: Successfully added deactivate submenu for: ' . $menu_slug . ' (' . $menu_title . ')');
+                
+                // Override the submenu URL to use our custom deactivate URL
+                if (isset($submenu[$menu_slug])) {
+                    foreach ($submenu[$menu_slug] as $priority => $submenu_item) {
+                        if ($submenu_item[2] === 'wmo_deactivate_plugin') {
+                            $submenu[$menu_slug][$priority][2] = $deactivate_url;
+                            error_log('WMO: Submenu link set to: ' . $submenu[$menu_slug][$priority][2]);
+                            break;
+                        }
+                    }
+                }
+                
+                // Check if submenu count < 1 after add, add dummy if needed
+                if (isset($submenu[$menu_slug]) && count($submenu[$menu_slug]) < 1) {
+                    error_log('WMO: Adding dummy submenu for: ' . $menu_slug . ' (submenu count < 1)');
+                    add_submenu_page(
+                        $menu_slug, // Parent slug
+                        '', // Page title (empty for dummy)
+                        '', // Menu title (empty for dummy)
+                        'manage_options', // Capability (changed back to match)
+                        'wmo_dummy', // Menu slug
+                        '__return_false' // Callback (does nothing)
+                    );
+                }
+                
+                // Verify the submenu was added to the global
+                if (isset($submenu[$menu_slug])) {
+                    error_log('WMO: Submenu array for ' . $menu_slug . ': ' . print_r($submenu[$menu_slug], true));
+                } else {
+                    error_log('WMO: ERROR - Submenu not found in global for: ' . $menu_slug);
+                }
+            } else {
+                error_log('WMO: ERROR - Failed to add deactivate submenu for: ' . $menu_slug);
+            }
+        } else {
+            error_log('WMO: Menu item ' . $check_slug . ' not enabled for deactivate (menu_slug: ' . $menu_slug . ')');
+        }
+    }
+    
+    // Final debug: log all submenus
+    error_log('WMO: Final submenu state: ' . print_r($submenu, true));
+}
+add_action('admin_menu', 'wmo_add_deactivate_submenus', 999); // High priority to run after menu is built
+
+// Handle deactivation action via admin_init hook
+add_action('admin_init', 'wmo_handle_deactivation_action');
+
+/**
+ * Get the plugin file for a given menu slug
+ * Maps WordPress admin menu slugs to their corresponding plugin files
+ * 
+ * @param string $menu_slug The menu slug to find the plugin for
+ * @return string|false The plugin file path or false if not found
+ */
+function wmo_get_plugin_file_for_menu_slug($menu_slug) {
+    // Get all active plugins
+    $active_plugins = get_option('active_plugins');
+    $all_plugins = get_plugins();
+    
+    // Common menu slug to plugin file mappings
+    $menu_to_plugin_mappings = array(
+        // Speed Optimizer (SiteGround)
+        'sg-cachepress' => 'sg-cachepress/sg-cachepress.php',
+        'sg-optimizer' => 'sg-cachepress/sg-cachepress.php',
+        
+        // SmartNav WP
+        'smartnav-wp' => 'smartnav-wp/smartnav-wp.php',
+        
+        // WP Menu Organize (our own plugin)
+        'wp-menu-organize-settings' => 'wp-menu-organize/wp-menu-organize.php',
+        
+        // Common WordPress plugins
+        'woocommerce' => 'woocommerce/woocommerce.php',
+        'elementor' => 'elementor/elementor.php',
+        'yoast-seo' => 'wordpress-seo/wp-seo.php',
+        'wordpress-seo' => 'wordpress-seo/wp-seo.php',
+        'contact-form-7' => 'contact-form-7/wp-contact-form-7.php',
+        'jetpack' => 'jetpack/jetpack.php',
+        'akismet' => 'akismet/akismet.php',
+        'hello-dolly' => 'hello-dolly/hello.php',
+        
+        // Add more mappings as needed
+    );
+    
+    // First, check our predefined mappings
+    if (isset($menu_to_plugin_mappings[$menu_slug])) {
+        $plugin_file = $menu_to_plugin_mappings[$menu_slug];
+        if (in_array($plugin_file, $active_plugins)) {
+            error_log('WMO: Found plugin file via mapping: ' . $plugin_file . ' for menu slug: ' . $menu_slug);
+            return $plugin_file;
+        }
+    }
+    
+    // If no direct mapping, try to find by plugin name in active plugins
+    foreach ($active_plugins as $plugin_file) {
+        $plugin_slug = dirname($plugin_file);
+        
+        // Check if the menu slug matches the plugin slug
+        if ($menu_slug === $plugin_slug) {
+            error_log('WMO: Found plugin file by slug match: ' . $plugin_file . ' for menu slug: ' . $menu_slug);
+            return $plugin_file;
+        }
+        
+        // Check if the menu slug is part of the plugin file path
+        if (strpos($plugin_file, $menu_slug) !== false) {
+            error_log('WMO: Found plugin file by path match: ' . $plugin_file . ' for menu slug: ' . $menu_slug);
+            return $plugin_file;
+        }
+    }
+    
+    // If still not found, try to match by plugin data
+    foreach ($active_plugins as $plugin_file) {
+        if (isset($all_plugins[$plugin_file])) {
+            $plugin_data = $all_plugins[$plugin_file];
+            $plugin_name = sanitize_title($plugin_data['Name']);
+            
+            if ($menu_slug === $plugin_name) {
+                error_log('WMO: Found plugin file by name match: ' . $plugin_file . ' for menu slug: ' . $menu_slug);
+                return $plugin_file;
+            }
+        }
+    }
+    
+    error_log('WMO: Could not find plugin file for menu slug: ' . $menu_slug);
+    return false;
+}
+
+/**
+ * Handle deactivation action via admin_init hook
+ * This prevents the "not allowed to access this page" error
+ */
+function wmo_handle_deactivation_action() {
+    // Check if deactivation is requested with valid nonce and parameters
+    if (isset($_GET['wmo_action']) && $_GET['wmo_action'] === 'deactivate_plugin' && 
+        isset($_GET['deactivate']) && $_GET['deactivate'] === '1' && 
+        isset($_GET['plugin']) && isset($_GET['nonce']) && 
+        wp_verify_nonce($_GET['nonce'], 'wmo_deactivate_plugin')) {
+        
+        // Security check - ensure user can activate/deactivate plugins
+        if (!current_user_can('activate_plugins')) {
+            error_log('WMO: Deactivation attempt blocked - insufficient permissions for user: ' . wp_get_current_user()->user_login);
+            wp_die('Sorry, you cannot deactivate plugins.');
+        }
+        
+        $plugin_file = sanitize_text_field($_GET['plugin']);
+        
+        // Validate the plugin file exists and is active
+        if (!file_exists(WP_PLUGIN_DIR . '/' . $plugin_file) || !is_plugin_active($plugin_file)) {
+            error_log('WMO: Invalid plugin file or plugin not active: ' . $plugin_file);
+            wp_die('Invalid plugin or plugin not active.');
+        }
+        
+        // Prevent deactivation of our own plugin through this interface
+        if ($plugin_file === 'wp-menu-organize/wp-menu-organize.php') {
+            error_log('WMO: Attempt to deactivate wp-menu-organize blocked');
+            wp_die('This plugin cannot deactivate itself through this interface. Please use the standard WordPress plugin management.');
+        }
+        
+        // Prevent deactivation of critical plugins
+        $critical_plugins = array(
+            'akismet/akismet.php',
+            'hello-dolly/hello.php'
+        );
+        
+        if (in_array($plugin_file, $critical_plugins)) {
+            error_log('WMO: Attempt to deactivate critical plugin blocked: ' . $plugin_file);
+            wp_die('Critical plugins cannot be deactivated through this interface. Please use the standard WordPress plugin management.');
+        }
+        
+        // Log the deactivation attempt
+        error_log('WMO: Plugin deactivation initiated by user: ' . wp_get_current_user()->user_login . ' for plugin: ' . $plugin_file);
+        
+        // Deactivate the specified plugin
+        deactivate_plugins($plugin_file);
+        
+        // Redirect to plugins page with deactivate parameter and plugin name
+        wp_redirect(admin_url('plugins.php?deactivate=true&plugin=' . urlencode($plugin_file)));
+        exit;
+    }
+}
+
 // Apply custom labels and visibility to admin menu
 function wmo_apply_admin_menu_customizations()
 {

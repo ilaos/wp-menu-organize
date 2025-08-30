@@ -1015,6 +1015,41 @@ function wmo_save_icon() {
 }
 add_action('wp_ajax_wmo_save_icon', 'wmo_save_icon');
 
+// Deactivate submenu toggle handler
+function wmo_save_deactivate_toggle() {
+    error_log('WMO: wmo_save_deactivate_toggle called');
+    
+    if (!current_user_can('manage_options')) {
+        error_log('WMO: Deactivate toggle save - insufficient permissions');
+        wp_send_json_error('Insufficient permissions');
+    }
+    
+    if (!check_ajax_referer('wmo_ajax_nonce', 'nonce', false)) {
+        wp_die('Security check failed');
+    }
+    
+    $menu_slug = sanitize_key($_POST['menu_slug']);
+    $enabled = (bool) $_POST['enabled'];
+    
+    error_log('WMO: Deactivate toggle save - menu_slug: ' . $menu_slug . ', enabled: ' . ($enabled ? 'true' : 'false'));
+    
+    if (empty($menu_slug)) {
+        error_log('WMO: Deactivate toggle save - empty menu_slug');
+        wp_send_json_error('No menu slug provided');
+    }
+    
+    $result = wmo_update_deactivate_setting($menu_slug, $enabled);
+    
+    error_log('WMO: Deactivate toggle save result: ' . ($result ? 'success' : 'failed'));
+    
+    if ($result !== false) {
+        wp_send_json_success('Deactivate toggle saved successfully');
+    } else {
+        wp_send_json_error('Failed to save deactivate toggle');
+    }
+}
+add_action('wp_ajax_wmo_save_deactivate_toggle', 'wmo_save_deactivate_toggle');
+
 // Template system handlers
 function wmo_load_templates()
 {

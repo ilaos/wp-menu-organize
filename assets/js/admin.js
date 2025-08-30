@@ -927,5 +927,81 @@
                 console.log('WMO: Available slug', index, ':', slug);
             }
         });
+        
+        // Deactivate submenu confirmation handler
+        $(document).on('click', '.wp-submenu a[href*="wmo_deactivate_plugin"]', function(e) {
+            e.preventDefault();
+            
+            var $link = $(this);
+            var href = $link.attr('href');
+            var menuText = $link.closest('.wp-submenu').prev('.wp-menu-item').find('.wp-menu-name').text().trim();
+            
+            // Create confirmation message
+            var confirmMessage = 'Are you sure you want to deactivate ' + menuText + '? This will revert customizations until reactivated.';
+            
+            console.log('WMO: Deactivate link clicked for:', menuText);
+            
+            // Show confirmation dialog
+            if (confirm(confirmMessage)) {
+                console.log('WMO: User confirmed deactivation for:', menuText);
+                // Proceed with the deactivation
+                window.location.href = href;
+            } else {
+                console.log('WMO: User cancelled deactivation for:', menuText);
+                // Cancel the action
+                return false;
+            }
+        });
+        
+        // Deactivate submenu toggle handler
+        $(document).on('change', '.wmo-deactivate-enable', function() {
+            var $checkbox = $(this);
+            var menuSlug = $checkbox.data('menu-slug');
+            var enabled = $checkbox.is(':checked');
+            
+            console.log('WMO: Deactivate toggle changed for', menuSlug, 'to', enabled);
+            
+            // Show saving indicator
+            var $wrapper = $checkbox.closest('.wmo-deactivate-wrapper');
+            var $indicator = $wrapper.find('.wmo-deactivate-saving-indicator');
+            
+            if ($indicator.length === 0) {
+                $indicator = $('<div class="wmo-deactivate-saving-indicator" style="margin-top: 5px; font-size: 12px; color: #0073aa;"></div>');
+                $wrapper.append($indicator);
+            }
+            
+            $indicator.text('Saving...').removeClass('success error').addClass('info');
+            
+            // Auto-save via AJAX
+            $.ajax({
+                url: wmo_ajax.ajax_url,
+                method: 'POST',
+                data: {
+                    action: 'wmo_save_deactivate_toggle',
+                    menu_slug: menuSlug,
+                    enabled: enabled ? 1 : 0,
+                    nonce: wmo_ajax.nonce
+                },
+                success: function(response) {
+                    if (response.success) {
+                        $indicator.text('Saved!').removeClass('info error').addClass('success');
+                        console.log('WMO: Deactivate toggle saved successfully for', menuSlug);
+                    } else {
+                        $indicator.text('Error saving').removeClass('info success').addClass('error');
+                        console.error('WMO: Deactivate toggle save failed:', response.data);
+                    }
+                },
+                error: function(jqXHR, textStatus, errorThrown) {
+                    $indicator.text('Network error').removeClass('info success').addClass('error');
+                    console.error('WMO: Deactivate toggle AJAX error:', textStatus, errorThrown);
+                },
+                complete: function() {
+                    // Hide indicator after 2 seconds
+                    setTimeout(function() {
+                        $indicator.fadeOut();
+                    }, 2000);
+                }
+            });
+        });
     });
 })(jQuery);

@@ -581,6 +581,25 @@ function wmo_render_color_picker($menu_colors, $slug, $title, $is_submenu = fals
                     </div>
                 </div>
             </div>
+            
+            <!-- Quick Deactivate Submenu Section -->
+            <div class="wmo-deactivate-wrapper" data-menu-slug="<?php echo esc_attr($sanitized_slug); ?>">
+                <div class="wmo-deactivate-toggle">
+                    <label title="Warning: Adds 'Deactivate' link on hover—use cautiously. This feature allows quick plugin deactivation from the admin menu.">
+                        <input type="checkbox" 
+                               class="wmo-deactivate-enable"
+                               data-menu-slug="<?php echo esc_attr($sanitized_slug); ?>"
+                               <?php checked(wmo_get_deactivate_setting($sanitized_slug)); ?> />
+                        <span class="wmo-deactivate-label">Add Quick Deactivate Submenu</span>
+                    </label>
+                    <p class="wmo-deactivate-warning" style="margin-top: 5px; color: #d63638; font-size: 12px; font-style: italic;">
+                        ⚠️ Warning: This will add a "Deactivate" option to the submenu for quick plugin management. Use cautiously as this action cannot be undone.
+                    </p>
+                    <p class="wmo-deactivate-note" style="margin-top: 3px; color: #666; font-size: 11px; font-style: italic;">
+                        💡 Tip: The deactivation requires confirmation and proper permissions.
+                    </p>
+                </div>
+            </div>
         </div>
     </div>
 <?php
@@ -647,6 +666,103 @@ function wmo_validate_ajax_request() {
     }
     
     return true;
+}
+
+/**
+ * Get deactivate setting for a specific menu item.
+ *
+ * @param string $menu_slug The menu slug.
+ * @return bool Whether deactivate submenu is enabled.
+ */
+function wmo_get_deactivate_setting($menu_slug) {
+    $deactivate_settings = wmo_get_settings('deactivate_submenus');
+    return isset($deactivate_settings[$menu_slug]) ? (bool) $deactivate_settings[$menu_slug] : false;
+}
+
+/**
+ * Update deactivate setting for a specific menu item.
+ *
+ * @param string $menu_slug The menu slug.
+ * @param bool $enabled Whether to enable deactivate submenu.
+ * @return bool Success status.
+ */
+function wmo_update_deactivate_setting($menu_slug, $enabled) {
+    $deactivate_settings = wmo_get_settings('deactivate_submenus');
+    $deactivate_settings[$menu_slug] = $enabled;
+    return wmo_update_settings('deactivate_submenus', $deactivate_settings);
+}
+
+/**
+ * Get the deactivate URL with proper nonce for a menu item.
+ *
+ * @param string $menu_slug The menu slug.
+ * @return string The deactivate URL with nonce.
+ */
+function wmo_get_deactivate_url($menu_slug) {
+    return wp_nonce_url(
+        admin_url('admin.php?page=wmo_deactivate_plugin&deactivate=1'),
+        'wmo_deactivate_plugin',
+        'nonce'
+    );
+}
+
+/**
+ * Callback function for deactivate submenu action.
+ * This is a fallback in case the admin_init hook doesn't catch the action.
+ */
+function wmo_deactivate_callback() {
+    // Security check - ensure user can activate/deactivate plugins
+    if (!current_user_can('activate_plugins')) {
+        error_log('WMO: Deactivation attempt blocked - insufficient permissions for user: ' . wp_get_current_user()->user_login);
+        wp_die('Sorry, you cannot deactivate plugins.');
+    }
+    
+    // Check if deactivation is requested with valid nonce and parameters
+    if (isset($_GET['wmo_action']) && $_GET['wmo_action'] === 'deactivate_plugin' && 
+        isset($_GET['deactivate']) && $_GET['deactivate'] === '1' && 
+        isset($_GET['plugin']) && isset($_GET['nonce']) && 
+        wp_verify_nonce($_GET['nonce'], 'wmo_deactivate_plugin')) {
+        
+        $plugin_file = sanitize_text_field($_GET['plugin']);
+        
+        // Validate the plugin file exists and is active
+        if (!file_exists(WP_PLUGIN_DIR . '/' . $plugin_file) || !is_plugin_active($plugin_file)) {
+            error_log('WMO: Invalid plugin file or plugin not active: ' . $plugin_file);
+            wp_die('Invalid plugin or plugin not active.');
+        }
+        
+        // Prevent deactivation of our own plugin through this interface
+        if ($plugin_file === 'wp-menu-organize/wp-menu-organize.php') {
+            error_log('WMO: Attempt to deactivate wp-menu-organize blocked');
+            wp_die('This plugin cannot deactivate itself through this interface. Please use the standard WordPress plugin management.');
+        }
+        
+        // Prevent deactivation of critical plugins
+        $critical_plugins = array(
+            'akismet/akismet.php',
+            'hello-dolly/hello.php'
+        );
+        
+        if (in_array($plugin_file, $critical_plugins)) {
+            error_log('WMO: Attempt to deactivate critical plugin blocked: ' . $plugin_file);
+            wp_die('Critical plugins cannot be deactivated through this interface. Please use the standard WordPress plugin management.');
+        }
+        
+        // Log the deactivation attempt
+        error_log('WMO: Plugin deactivation initiated by user: ' . wp_get_current_user()->user_login . ' for plugin: ' . $plugin_file);
+        
+        // Deactivate the specified plugin
+        deactivate_plugins($plugin_file);
+        
+        // Redirect to plugins page with deactivate parameter and plugin name
+        wp_redirect(admin_url('plugins.php?deactivate=true&plugin=' . urlencode($plugin_file)));
+        exit;
+    } else {
+        // Invalid request
+        echo 'Invalid request.';
+        error_log('WMO: Invalid deactivation request - missing parameters or invalid nonce');
+        error_log('WMO: GET parameters: ' . print_r($_GET, true));
+    }
 }
 
 // Helper for color validation
