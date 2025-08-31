@@ -290,6 +290,55 @@ function wmo_save_color()
 }
 add_action('wp_ajax_wmo_save_color', 'wmo_save_color');
 
+function wmo_save_background_color()
+{
+    // Verify nonce
+    if (!wp_verify_nonce($_POST['nonce'], 'wmo_ajax_nonce')) {
+        wp_send_json_error('Invalid nonce');
+    }
+    
+    // Check user capabilities
+    if (!current_user_can('manage_options')) {
+        wp_send_json_error('Insufficient permissions');
+    }
+    
+    $item_id = sanitize_text_field($_POST['id']);
+    $color = sanitize_hex_color($_POST['color']);
+    
+    if (empty($item_id)) {
+        wp_send_json_error('Invalid item ID');
+    }
+    
+    // Get existing background colors
+    $background_colors = wmo_get_settings('background_colors');
+    
+    if (!is_array($background_colors)) {
+        $background_colors = array();
+    }
+    
+    // Update the background color for this item
+    if (!empty($color)) {
+        $background_colors[$item_id] = $color;
+    } else {
+        // Remove the background color if empty
+        unset($background_colors[$item_id]);
+    }
+    
+    // Save the updated background colors
+    $update_result = wmo_update_settings('background_colors', $background_colors);
+    
+    if ($update_result !== false) {
+        wp_send_json_success(array(
+            'message' => 'Background color saved successfully',
+            'item_id' => $item_id,
+            'color' => $color
+        ));
+    } else {
+        wp_send_json_error('Failed to save background color');
+    }
+}
+add_action('wp_ajax_wmo_save_background_color', 'wmo_save_background_color');
+
 function wmo_apply_menu_colors()
 {
     $menu_colors = wmo_get_settings('colors');
@@ -314,6 +363,31 @@ function wmo_apply_menu_colors()
         
         if (!empty($css_rules)) {
             // NEW - Use wp_add_inline_style with higher priority
+            wp_add_inline_style('wp-menu-organize-style', $css_rules);
+        }
+    }
+}
+
+function wmo_apply_menu_background_colors()
+{
+    $background_colors = wmo_get_settings('background_colors');
+    
+    if (!empty($background_colors) && is_array($background_colors)) {
+        $css_rules = '';
+        foreach ($background_colors as $slug => $color) {
+            if (!empty($color)) {
+                // Ultra-high specificity selectors for background colors
+                $css_rules .= "
+                    body #adminmenu li#menu-{$slug} > a,
+                    body #adminmenu li#toplevel_page_{$slug} > a,
+                    body #adminmenu li[id*='{$slug}'] > a { 
+                        background-color: " . esc_attr($color) . " !important; 
+                    }
+                ";
+            }
+        }
+        
+        if (!empty($css_rules)) {
             wp_add_inline_style('wp-menu-organize-style', $css_rules);
         }
     }
@@ -1193,6 +1267,9 @@ add_action('wp_ajax_wmo_import_preview', 'wmo_import_preview_ajax');
 
 // Hook to apply theme preference globally on all admin pages
 add_action('admin_head', 'wmo_apply_menu_colors');
+
+// Hook to apply background colors globally on all admin pages
+add_action('admin_head', 'wmo_apply_menu_background_colors');
 
 // Hook to apply typography globally on all admin pages
 add_action('admin_head', 'wmo_apply_typography_globally');

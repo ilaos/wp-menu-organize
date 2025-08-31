@@ -1530,44 +1530,7 @@ body.wmo-dark-theme * {
     box-shadow: 0 0 0 1px #8e44ad;
 }
 
-.wmo-typography-preview {
-    text-align: center;
-    padding: 15px;
-    background: #fff;
-    border: 2px dashed #8e44ad;
-    border-radius: 6px;
-    position: relative;
-}
 
-.wmo-typography-preview::before {
-    content: "Live Preview";
-    position: absolute;
-    top: -10px;
-    left: 15px;
-    background: #fff;
-    color: #8e44ad;
-    font-size: 11px;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-    padding: 0 8px;
-}
-
-.wmo-typography-sample {
-    display: inline-block;
-    padding: 8px 16px;
-    background: linear-gradient(135deg, #8e44ad 0%, #9b59b6 100%);
-    color: white;
-    border-radius: 4px;
-    font-size: 14px;
-    transition: all 0.3s ease;
-    box-shadow: 0 2px 8px rgba(142, 68, 173, 0.3);
-}
-
-.wmo-typography-sample:empty::after {
-    content: "Sample Text";
-    opacity: 0.8;
-}
 
 /* Responsive adjustments for typography */
 @media (max-width: 768px) {
@@ -1587,9 +1550,7 @@ body.wmo-dark-theme * {
         padding: 8px 10px;
     }
     
-    .wmo-typography-preview {
-        padding: 12px;
-    }
+
     
     .wmo-menu-item-wrapper {
         padding: 12px;
@@ -1620,15 +1581,7 @@ body.wmo-dark-theme .wmo-typography-weight:focus {
     border-color: #8e44ad !important;
 }
 
-body.wmo-dark-theme .wmo-typography-preview {
-    background: #2a2a2a !important;
-    border-color: #8e44ad !important;
-}
 
-body.wmo-dark-theme .wmo-typography-preview::before {
-    background: #2a2a2a !important;
-    color: #8e44ad !important;
-}
 
 body.wmo-dark-theme .wmo-typography-field label,
 body.wmo-dark-theme .wmo-typography-label {
@@ -2360,7 +2313,8 @@ body.wmo-dark-theme #wmo-preview-content li {
 }
 
 /* Color Picker Wrapper */
-.wmo-color-picker-wrapper {
+.wmo-color-picker-wrapper,
+.wmo-background-color-picker-wrapper {
     position: relative;
     margin-bottom: 15px;
     padding: 12px;
@@ -2369,7 +2323,8 @@ body.wmo-dark-theme #wmo-preview-content li {
     border-radius: 6px;
 }
 
-.wmo-color-picker-wrapper label {
+.wmo-color-picker-wrapper label,
+.wmo-background-color-picker-wrapper label {
     display: block;
     margin-bottom: 8px;
     font-weight: 500;
@@ -2388,6 +2343,39 @@ body.wmo-dark-theme #wmo-preview-content li {
     font-size: 14px;
 }
 
+.wmo-color-input-group {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+}
+
+.wmo-background-color-field {
+    flex: 1;
+    height: 36px;
+    border: 1px solid #d1d5db;
+    border-radius: 4px;
+    transition: border-color 0.2s ease;
+    padding: 8px 12px;
+    font-size: 14px;
+    font-family: monospace;
+}
+
+.wmo-color-picker-button {
+    height: 36px;
+    padding: 8px 16px;
+    background: #0073aa;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: background-color 0.2s ease;
+}
+
+.wmo-color-picker-button:hover {
+    background: #005a87;
+}
+
 .wmo-color-field:hover {
     border-color: #0073aa;
 }
@@ -2398,10 +2386,41 @@ body.wmo-dark-theme #wmo-preview-content li {
     box-shadow: 0 0 0 3px rgba(0, 115, 170, 0.1);
 }
 
+.wmo-background-color-field:hover {
+    border-color: #0073aa;
+}
+
+.wmo-background-color-field:focus {
+    outline: none;
+    border-color: #0073aa;
+    box-shadow: 0 0 0 3px rgba(0, 115, 170, 0.1);
+}
+
 /* Status badge for color */
 .wmo-status-color {
     background: #3b82f6 !important;
     color: white !important;
+}
+
+/* Status badge for background color */
+.wmo-status-bg-color {
+    background: #8b5cf6 !important;
+    color: white !important;
+}
+
+/* Ensure background color picker is visible */
+.wmo-background-color-picker-wrapper .wp-picker-container {
+    position: relative;
+    z-index: 1000000 !important;
+}
+
+.wmo-background-color-picker-wrapper .wp-picker-holder {
+    position: absolute !important;
+    z-index: 1000001 !important;
+}
+
+.wmo-background-color-picker-wrapper .iris-picker {
+    z-index: 1000002 !important;
 }
 
 /* Typography section styling to accommodate color picker */
@@ -2449,7 +2468,8 @@ body.wmo-dark-theme #wmo-preview-content li {
 }
 
 /* Dark theme support for color picker in typography section */
-body.wmo-dark-theme .wmo-color-picker-wrapper {
+body.wmo-dark-theme .wmo-color-picker-wrapper,
+body.wmo-dark-theme .wmo-background-color-picker-wrapper {
     background: #2d2d2d;
     border-color: #404040;
 }
@@ -2649,12 +2669,14 @@ body.wmo-dark-theme .wmo-expanded-content {
 
 /* Target the specific color picker elements in our plugin */
 .wmo-color-picker-wrapper .wp-core-ui .wp-picker-holder,
+.wmo-background-color-picker-wrapper .wp-core-ui .wp-picker-holder,
 .wmo-badge-color-field .wp-core-ui .wp-picker-holder,
 .wmo-badge-bg-field .wp-core-ui .wp-picker-holder {
     z-index: 1000008 !important;
 }
 
 .wmo-color-picker-wrapper .wp-core-ui .iris-picker,
+.wmo-background-color-picker-wrapper .wp-core-ui .iris-picker,
 .wmo-badge-color-field .wp-core-ui .iris-picker,
 .wmo-badge-bg-field .wp-core-ui .iris-picker {
     z-index: 1000009 !important;

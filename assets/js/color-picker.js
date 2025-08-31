@@ -76,6 +76,140 @@
             }
         });
 
+        // Initialize background color fields (text input with color picker button)
+        console.log('WMO: Initializing text input color fields...');
+        console.log('WMO: Total background color fields found:', $('.wmo-background-color-field').length);
+        $('.wmo-background-color-field').each(function() {
+            console.log('WMO: Found background color field:', this.id, 'Value:', $(this).val());
+        });
+        
+        // Handle color picker button clicks
+        $(document).on('click', '.wmo-color-picker-button', function() {
+            var $button = $(this);
+            var targetId = $button.data('target');
+            var $input = $('#' + targetId);
+            
+            console.log('WMO: Color picker button clicked for:', targetId);
+            console.log('WMO: Found input:', $input.length > 0 ? 'Yes' : 'No');
+            console.log('WMO: Current input value:', $input.val());
+            
+            // Create a temporary color input
+            var $tempColorInput = $('<input type="color" style="position: absolute; left: -9999px;">');
+            $tempColorInput.val($input.val() || '#000000');
+            
+            console.log('WMO: Created temp color input with value:', $tempColorInput.val());
+            
+            // Add to body temporarily
+            $('body').append($tempColorInput);
+            
+            // Handle the color selection BEFORE triggering click
+            $tempColorInput.on('input change', function() {
+                var color = $(this).val();
+                console.log('WMO: Color selected:', color);
+                
+                // Update the text input
+                $input.val(color);
+                
+                // Trigger the change event
+                $input.trigger('change');
+                
+                // Remove the temporary input
+                $tempColorInput.remove();
+            });
+            
+            // Trigger the color picker
+            console.log('WMO: Triggering color picker...');
+            $tempColorInput[0].click();
+            
+            // Fallback: If color picker doesn't open, try a different approach
+            setTimeout(function() {
+                if ($tempColorInput.val() === ($input.val() || '#000000')) {
+                    console.log('WMO: Color picker may not have opened, trying fallback...');
+                    
+                    // Try creating a visible color input
+                    var $visibleColorInput = $('<input type="color" style="position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 999999;">');
+                    $visibleColorInput.val($input.val() || '#000000');
+                    
+                    $('body').append($visibleColorInput);
+                    $visibleColorInput[0].click();
+                    
+                    $visibleColorInput.on('input change', function() {
+                        var color = $(this).val();
+                        console.log('WMO: Color selected (fallback):', color);
+                        $input.val(color);
+                        $input.trigger('change');
+                        $visibleColorInput.remove();
+                    });
+                }
+            }, 100);
+        });
+        
+        // Handle text input changes
+        $(document).on('input change', '.wmo-background-color-field', debounce(function() {
+            var $input = $(this);
+            var slug = $input.data('menu-slug');
+            var color = $input.val();
+            var isSubmenu = $input.data('is-submenu') === true;
+
+            console.log('WMO: Background color changed for', slug, 'to', color);
+
+            // Validate color format
+            if (color && !/^#[0-9A-F]{6}$/i.test(color)) {
+                console.log('WMO: Invalid color format:', color);
+                return;
+            }
+
+            // Apply background color to menu immediately (live preview)
+            wmoApplyBackgroundColorToMenu(slug, color);
+            
+            // Trigger custom event
+            $(document).trigger('wmoBackgroundColorChanged', [slug, color, isSubmenu]);
+            
+            // Auto-save background color
+            if (slug) {
+                wmoAutoSaveBackgroundColor(slug, color, $input);
+            }
+        }, 300));
+        
+
+        
+        // Debug: Add click handler for background color fields
+        $(document).on('click', '.wmo-background-color-field', function() {
+            console.log('WMO: Background color field clicked:', this.id);
+            console.log('WMO: Field value:', $(this).val());
+            console.log('WMO: Field has wpColorPicker:', $(this).hasClass('wp-color-picker'));
+            
+            // Set up a watcher to see if the value changes
+            var $field = $(this);
+            var originalValue = $field.val();
+            
+            setTimeout(function() {
+                var newValue = $field.val();
+                if (newValue !== originalValue) {
+                    console.log('WMO: Field value changed from', originalValue, 'to', newValue);
+                } else {
+                    console.log('WMO: Field value did not change, still:', originalValue);
+                }
+            }, 1000);
+        });
+        
+        // Debug: Check for any element with the class
+        $(document).on('click', '[class*="background-color"]', function() {
+            console.log('WMO: Any background-color element clicked:', this.className);
+        });
+        
+        // Debug: Check document ready state
+        console.log('WMO: Document ready state:', document.readyState);
+        console.log('WMO: jQuery version:', $.fn.jquery);
+        console.log('WMO: wpColorPicker available:', typeof $.fn.wpColorPicker);
+        
+        // Debug: Check all input fields on the page
+        console.log('WMO: Total input fields on page:', $('input').length);
+        console.log('WMO: Input fields with "color" in class:', $('input[class*="color"]').length);
+        $('input[class*="color"]').each(function() {
+            console.log('WMO: Color-related input found:', this.id, 'Class:', this.className);
+        });
+
         // Fix color picker positioning when opened
         $(document).on('click', '.wp-color-result', function() {
             var $this = $(this);
@@ -193,6 +327,44 @@
                 error: function(jqXHR, textStatus, errorThrown) {
                     wmoShowSavingIndicator($input, 'Network error', 'error');
                     console.error('WMO: Color save AJAX error:', textStatus, errorThrown);
+                }
+            });
+        }, 500);
+    }
+
+    // Auto-save background color function
+    function wmoAutoSaveBackgroundColor(slug, color, $input) {
+        // Clear existing timeout
+        if (autoSaveTimeouts[slug + '_bg']) {
+            clearTimeout(autoSaveTimeouts[slug + '_bg']);
+        }
+
+        // Show saving indicator
+        wmoShowSavingIndicator($input, 'Saving...', 'info');
+
+        // Set new timeout
+        autoSaveTimeouts[slug + '_bg'] = setTimeout(function() {
+            $.ajax({
+                url: wmo_ajax.ajax_url,
+                method: 'POST',
+                data: {
+                    action: 'wmo_save_background_color',
+                    id: slug,
+                    color: color,
+                    nonce: wmo_ajax.nonce
+                },
+                success: function(response) {
+                    if (response.success) {
+                        wmoShowSavingIndicator($input, 'Saved!', 'success');
+                        console.log('WMO: Background color saved successfully for', slug);
+                    } else {
+                        wmoShowSavingIndicator($input, 'Error saving', 'error');
+                        console.error('WMO: Background color save failed:', response.data);
+                    }
+                },
+                error: function(jqXHR, textStatus, errorThrown) {
+                    wmoShowSavingIndicator($input, 'Network error', 'error');
+                    console.error('WMO: Background color save AJAX error:', textStatus, errorThrown);
                 }
             });
         }, 500);
@@ -403,6 +575,84 @@
         }
     }
 
+    // NEW - Inject background color CSS
+    function wmoInjectBackgroundCSS(slug, color) {
+        const styleId = 'wmo-bg-color-' + slug;
+        let styleElement = document.getElementById(styleId);
+        
+        if (!styleElement) {
+            styleElement = document.createElement('style');
+            styleElement.id = styleId;
+            document.head.appendChild(styleElement);
+        }
+        
+        const cssRules = `
+            body #adminmenu li#menu-${slug} > a,
+            body #adminmenu li#toplevel_page_${slug} > a,
+            body #adminmenu li[id*='${slug}'] > a { 
+                background-color: ${color} !important; 
+            }
+        `;
+        
+        styleElement.textContent = cssRules;
+        console.log('WMO: Injected background CSS for', slug, 'with color', color);
+    }
+
+    // NEW - Apply background color to WordPress menu (real-time)
+    function wmoApplyBackgroundColorToMenu(slug, color) {
+        console.log('WMO: Applying background color to menu for', slug, 'Color:', color);
+        
+        try {
+            if (color) {
+                wmoInjectBackgroundCSS(slug, color);
+            } else {
+                // Remove background color
+                const styleId = 'wmo-bg-color-' + slug;
+                const styleElement = document.getElementById(styleId);
+                if (styleElement) {
+                    styleElement.remove();
+                    console.log('WMO: Removed background CSS for', slug);
+                }
+            }
+        } catch (error) {
+            console.error('WMO: Error applying background color:', error);
+            // Fallback to old method if needed
+            wmoApplyBackgroundColorToMenuFallback(slug, color);
+        }
+    }
+
+    // Fallback function for background color (keeping old method as backup)
+    function wmoApplyBackgroundColorToMenuFallback(slug, color) {
+        console.log('WMO: Using fallback method for background color', slug);
+        
+        // Try direct element targeting as fallback
+        const selectors = [
+            '#menu-' + slug + ' > a',
+            '#toplevel_page_' + slug + ' > a',
+            'li[id*="' + slug + '"] > a'
+        ];
+        
+        let found = false;
+        selectors.forEach(function(selector) {
+            const elements = document.querySelectorAll(selector);
+            if (elements.length > 0) {
+                elements.forEach(function(element) {
+                    if (color) {
+                        element.style.setProperty('background-color', color, 'important');
+                    } else {
+                        element.style.removeProperty('background-color');
+                    }
+                    found = true;
+                    console.log('WMO: Applied background color via fallback to:', element.textContent.trim());
+                });
+            }
+        });
+        
+        if (!found) {
+            console.log('WMO: Warning - No menu elements found for background color application. Slug:', slug);
+        }
+    }
+
     // Fallback function (keeping old method as backup)
     function wmoApplyColorToMenuFallback(slug, color) {
         console.log('WMO: Using fallback method for', slug);
@@ -510,8 +760,7 @@
             
             console.log('WMO: Typography changed for', slug, 'Value:', $select.val());
             
-            // Update preview
-            wmoUpdateTypographyPreview(slug);
+
             
             // Apply to actual menu immediately (live preview)
             wmoApplyTypographyToMenu(slug);
@@ -534,27 +783,7 @@
         }, 1000);
     }
     
-    // Update typography preview
-    function wmoUpdateTypographyPreview(slug) {
-        var $wrapper = $('.wmo-typography-wrapper').filter(function() {
-            return $(this).find('[data-menu-slug="' + slug + '"]').length > 0;
-        });
-        
-        var $preview = $wrapper.find('.wmo-typography-sample[data-menu-slug="' + slug + '"]');
-        var fontFamily = $wrapper.find('.wmo-typography-family[data-menu-slug="' + slug + '"]').val();
-        var fontSize = $wrapper.find('.wmo-typography-size[data-menu-slug="' + slug + '"]').val();
-        var fontWeight = $wrapper.find('.wmo-typography-weight[data-menu-slug="' + slug + '"]').val();
-        
-        // Apply typography styles to preview
-        var styles = {};
-        if (fontFamily) styles['font-family'] = fontFamily;
-        if (fontSize) styles['font-size'] = fontSize;
-        if (fontWeight) styles['font-weight'] = fontWeight;
-        
-        $preview.css(styles);
-        
-        console.log('WMO: Updated typography preview for', slug, 'with styles:', styles);
-    }
+
     
     // Apply typography to WordPress menu
     function wmoApplyTypographyToMenu(slug) {
@@ -729,6 +958,8 @@
          // Initialize everything when document is ready
      $(document).ready(function() {
          console.log('WMO: Color picker script loaded');
+         console.log('WMO: Document ready - initializing color picker functionality');
+         console.log('WMO: Script loaded successfully');
          
          // Add CSS to ensure color changes are visible
          var style = document.createElement('style');
@@ -742,8 +973,11 @@
          `;
          document.head.appendChild(style);
          
-         // Initialize color pickers
-         initColorPickers();
+         // Initialize color pickers with delay to ensure DOM is ready
+         setTimeout(function() {
+             console.log('WMO: Delayed initialization of color pickers');
+             initColorPickers();
+         }, 1000);
          
          // Initialize badge functionality
          initBadgeFunctionality();

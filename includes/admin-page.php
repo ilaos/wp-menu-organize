@@ -79,6 +79,7 @@ class WP_Menu_Organize
         register_setting('wmo_settings_group', 'wmo_menu_colors', array($this, 'sanitize_menu_colors'));
         register_setting('wmo_settings_group', 'wmo_menu_badges', array($this, 'sanitize_menu_badges'));
         register_setting('wmo_settings_group', 'wmo_menu_typography', array($this, 'sanitize_menu_typography'));
+        register_setting('wmo_settings_group', 'wmo_menu_background_colors', array($this, 'sanitize_menu_background_colors'));
     }
 
     public function render_settings_page()
@@ -212,6 +213,20 @@ class WP_Menu_Organize
 
         return $sanitized;
     }
+    
+    public function sanitize_menu_background_colors($input)
+    {
+        if (!is_array($input)) {
+            return array();
+        }
+
+        $sanitized = array();
+        foreach ($input as $slug => $color) {
+            $sanitized[sanitize_key($slug)] = sanitize_hex_color($color);
+        }
+
+        return $sanitized;
+    }
 
     public function enqueue_scripts($hook_suffix) {
         // Existing debug logs...
@@ -234,6 +249,7 @@ class WP_Menu_Organize
         if (strpos($hook_suffix, 'wp-menu-organize') !== false) {
             wp_enqueue_script('wmo-admin', wmo_get_asset_url('admin.js'), array('jquery', 'wp-color-picker', 'jquery-ui-sortable'), '1.0', true);
             wp_enqueue_script('wmo-icon-picker', wmo_get_asset_url('icon-picker.js'), array('jquery'), '1.0', true);
+            wp_enqueue_script('wmo-color-picker', wmo_get_asset_url('color-picker.js'), array('jquery', 'wp-color-picker'), '1.0', true);
             wp_enqueue_style('wmo-admin', wmo_get_asset_url('admin.css'), array('wp-color-picker'), '1.0');
             
             wp_localize_script('wmo-admin', 'wmo_ajax', array(
