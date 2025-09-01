@@ -2313,8 +2313,7 @@ body.wmo-dark-theme #wmo-preview-content li {
 }
 
 /* Color Picker Wrapper */
-.wmo-color-picker-wrapper,
-.wmo-background-color-picker-wrapper {
+.wmo-color-picker-wrapper {
     position: relative;
     margin-bottom: 15px;
     padding: 12px;
@@ -2323,8 +2322,7 @@ body.wmo-dark-theme #wmo-preview-content li {
     border-radius: 6px;
 }
 
-.wmo-color-picker-wrapper label,
-.wmo-background-color-picker-wrapper label {
+.wmo-color-picker-wrapper label {
     display: block;
     margin-bottom: 8px;
     font-weight: 500;
@@ -2343,39 +2341,6 @@ body.wmo-dark-theme #wmo-preview-content li {
     font-size: 14px;
 }
 
-.wmo-color-input-group {
-    display: flex;
-    gap: 8px;
-    align-items: center;
-}
-
-.wmo-background-color-field {
-    flex: 1;
-    height: 36px;
-    border: 1px solid #d1d5db;
-    border-radius: 4px;
-    transition: border-color 0.2s ease;
-    padding: 8px 12px;
-    font-size: 14px;
-    font-family: monospace;
-}
-
-.wmo-color-picker-button {
-    height: 36px;
-    padding: 8px 16px;
-    background: #0073aa;
-    color: white;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    font-size: 14px;
-    transition: background-color 0.2s ease;
-}
-
-.wmo-color-picker-button:hover {
-    background: #005a87;
-}
-
 .wmo-color-field:hover {
     border-color: #0073aa;
 }
@@ -2386,14 +2351,224 @@ body.wmo-dark-theme #wmo-preview-content li {
     box-shadow: 0 0 0 3px rgba(0, 115, 170, 0.1);
 }
 
-.wmo-background-color-field:hover {
-    border-color: #0073aa;
+/* Premium Background Color Section Styles */
+.wmo-background-color-section {
+    margin-top: 20px;
+    padding: 20px;
+    border: 2px solid #e5e7eb;
+    border-radius: 12px;
+    background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+    position: relative;
+    overflow: hidden;
+}
+
+.wmo-background-color-section::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, #8b5cf6, #3b82f6, #10b981, #f59e0b);
+}
+
+.wmo-section-header {
+    margin-bottom: 20px;
+}
+
+.wmo-section-title {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 8px;
+    font-size: 16px;
+    color: #1f2937;
+}
+
+.wmo-premium-badge {
+    font-size: 18px;
+    animation: sparkle 2s ease-in-out infinite;
+}
+
+@keyframes sparkle {
+    0%, 100% { transform: scale(1) rotate(0deg); }
+    50% { transform: scale(1.1) rotate(10deg); }
+}
+
+.wmo-feature-label {
+    background: linear-gradient(135deg, #8b5cf6, #3b82f6);
+    color: white;
+    padding: 2px 8px;
+    border-radius: 12px;
+    font-size: 10px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.wmo-section-description {
+    color: #6b7280;
+    font-size: 14px;
+    line-height: 1.4;
+}
+
+.wmo-background-color-picker-wrapper {
+    background: white;
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.wmo-color-picker-container {
+    display: flex;
+    gap: 20px;
+    align-items: flex-start;
+    margin-bottom: 20px;
+}
+
+.wmo-color-preview {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    min-width: 200px;
+}
+
+.wmo-color-swatch {
+    width: 48px;
+    height: 48px;
+    border-radius: 8px;
+    border: 3px solid #e5e7eb;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s ease;
+}
+
+.wmo-color-swatch:hover {
+    transform: scale(1.05);
+}
+
+.wmo-color-info {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.wmo-color-value {
+    font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+    font-size: 14px;
+    font-weight: 600;
+    color: #1f2937;
+}
+
+.wmo-color-label {
+    font-size: 12px;
+    color: #6b7280;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.wmo-color-controls {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.wmo-background-color-field {
+    width: 100%;
+    height: 40px;
+    border: 2px solid #e5e7eb;
+    border-radius: 8px;
+    padding: 8px 12px;
+    font-size: 14px;
+    background: #ffffff;
+    transition: all 0.2s ease;
+    font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
 }
 
 .wmo-background-color-field:focus {
     outline: none;
-    border-color: #0073aa;
-    box-shadow: 0 0 0 3px rgba(0, 115, 170, 0.1);
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.wmo-quick-colors {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.wmo-quick-color-label {
+    font-size: 12px;
+    color: #6b7280;
+    font-weight: 500;
+    white-space: nowrap;
+}
+
+.wmo-quick-color-buttons {
+    display: flex;
+    gap: 6px;
+}
+
+.wmo-quick-color {
+    width: 32px;
+    height: 32px;
+    border: 2px solid #e5e7eb;
+    border-radius: 6px;
+    background: white;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    font-size: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.wmo-quick-color:hover {
+    transform: scale(1.1);
+    border-color: #3b82f6;
+    box-shadow: 0 2px 8px rgba(59, 130, 246, 0.2);
+}
+
+.wmo-quick-color:active {
+    transform: scale(0.95);
+}
+
+.wmo-quick-color-active {
+    transform: scale(1.15) !important;
+    border-color: #3b82f6 !important;
+    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.4) !important;
+    background: #eff6ff !important;
+}
+
+.wmo-live-preview {
+    border-top: 1px solid #e5e7eb;
+    padding-top: 20px;
+}
+
+.wmo-preview-label {
+    font-size: 12px;
+    color: #6b7280;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 8px;
+}
+
+.wmo-menu-preview {
+    display: inline-flex;
+    align-items: center;
+    padding: 8px 16px;
+    border-radius: 6px;
+    min-width: 120px;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.wmo-preview-text {
+    color: white;
+    font-size: 14px;
+    font-weight: 500;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
 }
 
 /* Status badge for color */
@@ -2670,6 +2845,7 @@ body.wmo-dark-theme .wmo-expanded-content {
 /* Target the specific color picker elements in our plugin */
 .wmo-color-picker-wrapper .wp-core-ui .wp-picker-holder,
 .wmo-background-color-picker-wrapper .wp-core-ui .wp-picker-holder,
+.wmo-background-color-section .wp-core-ui .wp-picker-holder,
 .wmo-badge-color-field .wp-core-ui .wp-picker-holder,
 .wmo-badge-bg-field .wp-core-ui .wp-picker-holder {
     z-index: 1000008 !important;
@@ -2677,6 +2853,7 @@ body.wmo-dark-theme .wmo-expanded-content {
 
 .wmo-color-picker-wrapper .wp-core-ui .iris-picker,
 .wmo-background-color-picker-wrapper .wp-core-ui .iris-picker,
+.wmo-background-color-section .wp-core-ui .iris-picker,
 .wmo-badge-color-field .wp-core-ui .iris-picker,
 .wmo-badge-bg-field .wp-core-ui .iris-picker {
     z-index: 1000009 !important;
@@ -2716,7 +2893,8 @@ html body.wp-admin .wp-core-ui .wp-picker-container .wp-picker-holder .iris-pick
 /* Target our specific plugin elements with maximum specificity */
 html body.wp-admin .wmo-menu-item-wrapper .wp-core-ui .wp-picker-container .wp-picker-holder,
 html body.wp-admin .wmo-badge-wrapper .wp-core-ui .wp-picker-container .wp-picker-holder,
-html body.wp-admin .wmo-expanded-content .wp-core-ui .wp-picker-container .wp-picker-holder {
+html body.wp-admin .wmo-expanded-content .wp-core-ui .wp-picker-container .wp-picker-holder,
+html body.wp-admin .wmo-background-color-section .wp-core-ui .wp-picker-container .wp-picker-holder {
     z-index: 1000021 !important;
     position: absolute !important;
 }
@@ -2757,6 +2935,57 @@ html body.wp-admin .wmo-menu-item-wrapper.wmo-submenu-wrapper.expanded .iris-pic
 html body.wp-admin .wmo-color-group.wmo-parent-menu-group *,
 html body.wp-admin .wmo-menu-item-wrapper.wmo-submenu-wrapper.expanded * {
     z-index: auto !important;
+}
+
+/* Ensure expanded content doesn't interfere with color pickers */
+.wmo-expanded-content {
+    overflow: visible !important;
+    position: relative !important;
+    z-index: auto !important;
+}
+
+/* Force background color picker to appear above expanded content */
+.wmo-expanded-content .wmo-background-color-section .wp-picker-holder {
+    z-index: 1000030 !important;
+    position: absolute !important;
+}
+
+.wmo-expanded-content .wmo-background-color-section .iris-picker {
+    z-index: 1000031 !important;
+    position: relative !important;
+}
+
+/* Ensure the expanded content itself doesn't create a stacking context that blocks the picker */
+.wmo-expanded-content .wmo-background-color-section {
+    position: relative !important;
+    z-index: auto !important;
+}
+
+/* Force the color picker to break out of any stacking contexts */
+.wmo-expanded-content .wmo-background-color-section .wp-picker-container {
+    position: relative !important;
+    z-index: auto !important;
+}
+
+/* Ultimate fix - force color picker to appear above everything */
+.wmo-expanded-content .wmo-background-color-section .wp-picker-holder {
+    z-index: 999999 !important;
+    position: fixed !important;
+    top: auto !important;
+    left: auto !important;
+    right: auto !important;
+    bottom: auto !important;
+}
+
+/* Ensure the iris picker itself has maximum z-index */
+.wmo-expanded-content .wmo-background-color-section .iris-picker {
+    z-index: 1000000 !important;
+    position: relative !important;
+}
+
+/* Force all iris picker elements to have high z-index */
+.wmo-expanded-content .wmo-background-color-section .iris-picker * {
+    z-index: 1000001 !important;
 }
 
 /* Exception for the color picker itself */
@@ -2899,5 +3128,110 @@ body.wmo-dark-theme .wmo-deactivate-saving-indicator.error {
 /* Hide dummy submenu items */
 .wp-submenu .wp-submenu-item[href*="wmo_dummy_"] {
     display: none !important;
+}
+
+/* Submenu Color Picker Z-Index Fix - Ensure submenu color pickers appear above all UI elements */
+.wmo-submenu-wrapper .wp-picker-container {
+    z-index: 1000050 !important;
+    position: relative !important;
+}
+
+.wmo-submenu-wrapper .wp-picker-holder {
+    z-index: 1000051 !important;
+    position: absolute !important;
+}
+
+.wmo-submenu-wrapper .iris-picker {
+    z-index: 1000052 !important;
+    position: relative !important;
+}
+
+.wmo-submenu-wrapper .iris-picker-inner {
+    z-index: 1000053 !important;
+    position: relative !important;
+}
+
+/* Target specific problematic containers that might be hiding color pickers */
+.wmo-submenu-wrapper .wmo-background-color-section .wp-picker-container {
+    z-index: 1000060 !important;
+}
+
+.wmo-submenu-wrapper .wmo-background-color-section .wp-picker-holder {
+    z-index: 1000061 !important;
+}
+
+.wmo-submenu-wrapper .wmo-background-color-section .iris-picker {
+    z-index: 1000062 !important;
+}
+
+/* Override any container overflow or transform issues */
+.wmo-submenu-wrapper .wmo-background-color-section {
+    overflow: visible !important;
+    position: relative !important;
+    z-index: auto !important;
+}
+
+.wmo-submenu-wrapper .wmo-background-color-section .wmo-background-color-picker-wrapper {
+    overflow: visible !important;
+    position: relative !important;
+    z-index: auto !important;
+}
+
+/* Notification System Styles */
+.wmo-notification {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    padding: 12px 20px;
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: 500;
+    z-index: 10000000;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    transform: translateX(400px);
+    transition: transform 0.3s ease;
+    max-width: 300px;
+}
+
+.wmo-notification.show {
+    transform: translateX(0);
+}
+
+.wmo-notification-success {
+    background: #46b450;
+    color: white;
+    border-left: 4px solid #2e7d32;
+}
+
+.wmo-notification-error {
+    background: #dc3232;
+    color: white;
+    border-left: 4px solid #c62828;
+}
+
+.wmo-notification-info {
+    background: #0073aa;
+    color: white;
+    border-left: 4px solid #005a87;
+}
+
+/* Dark theme support for notifications */
+body.wmo-dark-theme .wmo-notification {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+}
+
+body.wmo-dark-theme .wmo-notification-success {
+    background: #4caf50;
+    border-left-color: #388e3c;
+}
+
+body.wmo-dark-theme .wmo-notification-error {
+    background: #f44336;
+    border-left-color: #d32f2f;
+}
+
+body.wmo-dark-theme .wmo-notification-info {
+    background: #2196f3;
+    border-left-color: #1976d2;
 }
 

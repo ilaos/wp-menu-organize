@@ -249,7 +249,7 @@ class WP_Menu_Organize
         if (strpos($hook_suffix, 'wp-menu-organize') !== false) {
             wp_enqueue_script('wmo-admin', wmo_get_asset_url('admin.js'), array('jquery', 'wp-color-picker', 'jquery-ui-sortable'), '1.0', true);
             wp_enqueue_script('wmo-icon-picker', wmo_get_asset_url('icon-picker.js'), array('jquery'), '1.0', true);
-            wp_enqueue_script('wmo-color-picker', wmo_get_asset_url('color-picker.js'), array('jquery', 'wp-color-picker'), '1.0', true);
+            wp_enqueue_script('wmo-color-picker', wmo_get_asset_url('color-picker.js'), array('jquery', 'wp-color-picker'), '1.1', true);
             wp_enqueue_style('wmo-admin', wmo_get_asset_url('admin.css'), array('wp-color-picker'), '1.0');
             
             wp_localize_script('wmo-admin', 'wmo_ajax', array(

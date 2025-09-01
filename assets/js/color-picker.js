@@ -17,6 +17,31 @@
         };
     }
 
+    // Notification system for showing "Saved" messages
+    function showNotification(message, type = 'success') {
+        // Remove any existing notifications
+        $('.wmo-notification').remove();
+        
+        // Create notification element
+        var $notification = $('<div class="wmo-notification wmo-notification-' + type + '">' + message + '</div>');
+        
+        // Add to body
+        $('body').append($notification);
+        
+        // Show notification
+        setTimeout(function() {
+            $notification.addClass('show');
+        }, 100);
+        
+        // Auto-hide after 3 seconds
+        setTimeout(function() {
+            $notification.removeClass('show');
+            setTimeout(function() {
+                $notification.remove();
+            }, 300);
+        }, 3000);
+    }
+
     // Auto-save timeouts storage
     var autoSaveTimeouts = {};
 
@@ -30,6 +55,11 @@
         }
 
         // Initialize main color fields
+        console.log('WMO: Initializing main color fields, found:', $('.wmo-color-field').length);
+        $('.wmo-color-field').each(function(index) {
+            console.log('WMO: Color field', index, 'ID:', this.id, 'Is submenu:', $(this).data('is-submenu'));
+        });
+        
         $('.wmo-color-field').wpColorPicker({
             defaultColor: '#23282d',
             change: debounce(function(event, ui) {
@@ -38,7 +68,7 @@
                 var color = ui.color.toString();
                 var isSubmenu = $input.data('is-submenu') === true;
 
-                console.log('WMO: Color changed for', slug, 'to', color);
+                console.log('WMO: Color changed for', slug, 'to', color, 'Is submenu:', isSubmenu);
 
                 // Update input value
                 $input.val(color);
@@ -52,11 +82,31 @@
                 // Auto-save color
                 if (slug) {
                     wmoAutoSaveColor(slug, color, $input);
+                    // Show saved notification
+                    showNotification('Color saved successfully!', 'success');
                 }
                 
                 // Auto-close picker after delay
+                console.log('WMO: Attempting to auto-close color picker for', slug);
                 setTimeout(function() {
-                    $input.wpColorPicker('close');
+                    // Force close using multiple methods to ensure it works
+                    try {
+                        // Method 1: WordPress API
+                        if ($input.wpColorPicker && typeof $input.wpColorPicker === 'function') {
+                            $input.wpColorPicker('close');
+                            console.log('WMO: Successfully closed color picker for', slug, 'using wpColorPicker method');
+                        }
+                    } catch (error) {
+                        console.log('WMO: wpColorPicker method failed for', slug, ':', error);
+                    }
+                    
+                    // Method 2: Always use fallback to ensure closure
+                    setTimeout(function() {
+                        $('.wp-picker-holder').hide();
+                        $('.wp-color-result').removeClass('wp-picker-open');
+                        console.log('WMO: Applied fallback close method for', slug);
+                    }, 100);
+                    
                 }, 300);
             }, 300),
             clear: function(event, ui) {
@@ -76,89 +126,27 @@
             }
         });
 
-        // Initialize background color fields (text input with color picker button)
-        console.log('WMO: Initializing text input color fields...');
+        // Initialize background color fields (WordPress color picker)
+        console.log('WMO: Initializing WordPress color pickers for background colors...');
         console.log('WMO: Total background color fields found:', $('.wmo-background-color-field').length);
-        $('.wmo-background-color-field').each(function() {
-            console.log('WMO: Found background color field:', this.id, 'Value:', $(this).val());
+        $('.wmo-background-color-field').each(function(index) {
+            console.log('WMO: Background color field', index, 'ID:', this.id, 'Is submenu:', $(this).data('is-submenu'), 'Value:', $(this).val());
         });
         
-        // Handle color picker button clicks
-        $(document).on('click', '.wmo-color-picker-button', function() {
-            var $button = $(this);
-            var targetId = $button.data('target');
-            var $input = $('#' + targetId);
-            
-            console.log('WMO: Color picker button clicked for:', targetId);
-            console.log('WMO: Found input:', $input.length > 0 ? 'Yes' : 'No');
-            console.log('WMO: Current input value:', $input.val());
-            
-            // Create a temporary color input
-            var $tempColorInput = $('<input type="color" style="position: absolute; left: -9999px;">');
-            $tempColorInput.val($input.val() || '#000000');
-            
-            console.log('WMO: Created temp color input with value:', $tempColorInput.val());
-            
-            // Add to body temporarily
-            $('body').append($tempColorInput);
-            
-            // Handle the color selection BEFORE triggering click
-            $tempColorInput.on('input change', function() {
-                var color = $(this).val();
-                console.log('WMO: Color selected:', color);
-                
-                // Update the text input
-                $input.val(color);
-                
-                // Trigger the change event
-                $input.trigger('change');
-                
-                // Remove the temporary input
-                $tempColorInput.remove();
-            });
-            
-            // Trigger the color picker
-            console.log('WMO: Triggering color picker...');
-            $tempColorInput[0].click();
-            
-            // Fallback: If color picker doesn't open, try a different approach
-            setTimeout(function() {
-                if ($tempColorInput.val() === ($input.val() || '#000000')) {
-                    console.log('WMO: Color picker may not have opened, trying fallback...');
-                    
-                    // Try creating a visible color input
-                    var $visibleColorInput = $('<input type="color" style="position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 999999;">');
-                    $visibleColorInput.val($input.val() || '#000000');
-                    
-                    $('body').append($visibleColorInput);
-                    $visibleColorInput[0].click();
-                    
-                    $visibleColorInput.on('input change', function() {
-                        var color = $(this).val();
-                        console.log('WMO: Color selected (fallback):', color);
-                        $input.val(color);
-                        $input.trigger('change');
-                        $visibleColorInput.remove();
-                    });
-                }
-            }, 100);
-        });
-        
-        // Handle text input changes
-        $(document).on('input change', '.wmo-background-color-field', debounce(function() {
+            // Initialize background color fields with WordPress color picker
+    $('.wmo-background-color-field').wpColorPicker({
+        defaultColor: '#000000',
+        change: debounce(function(event, ui) {
             var $input = $(this);
             var slug = $input.data('menu-slug');
-            var color = $input.val();
+            var color = ui.color.toString();
             var isSubmenu = $input.data('is-submenu') === true;
 
             console.log('WMO: Background color changed for', slug, 'to', color);
 
-            // Validate color format
-            if (color && !/^#[0-9A-F]{6}$/i.test(color)) {
-                console.log('WMO: Invalid color format:', color);
-                return;
-            }
-
+            // Update color swatch and preview
+            wmoUpdateBackgroundColorPreview($input, color);
+            
             // Apply background color to menu immediately (live preview)
             wmoApplyBackgroundColorToMenu(slug, color);
             
@@ -168,8 +156,99 @@
             // Auto-save background color
             if (slug) {
                 wmoAutoSaveBackgroundColor(slug, color, $input);
+                // Show saved notification
+                showNotification('Background color saved successfully!', 'success');
             }
-        }, 300));
+            
+            // Auto-close picker after delay
+            setTimeout(function() {
+                // Force close using multiple methods to ensure it works
+                try {
+                    // Method 1: WordPress API
+                    if ($input.wpColorPicker && typeof $input.wpColorPicker === 'function') {
+                        $input.wpColorPicker('close');
+                        console.log('WMO: Successfully closed background color picker for', slug, 'using wpColorPicker method');
+                    }
+                } catch (error) {
+                    console.log('WMO: wpColorPicker method failed for', slug, ':', error);
+                }
+                
+                // Method 2: Always use fallback to ensure closure
+                setTimeout(function() {
+                    $('.wp-picker-holder').hide();
+                    $('.wp-color-result').removeClass('wp-picker-open');
+                    console.log('WMO: Applied fallback close method for background color picker', slug);
+                }, 100);
+                
+            }, 300);
+        }, 300),
+        clear: function(event, ui) {
+            var $input = $(this);
+            var slug = $input.data('menu-slug');
+            
+            console.log('WMO: Background color cleared for', slug);
+            $input.val('');
+            
+            // Update color swatch and preview
+            wmoUpdateBackgroundColorPreview($input, '');
+            
+            if (slug) {
+                wmoAutoSaveBackgroundColor(slug, '', $input);
+            }
+            
+            setTimeout(function() {
+                // Force close using multiple methods to ensure it works
+                try {
+                    // Method 1: WordPress API
+                    if ($input.wpColorPicker && typeof $input.wpColorPicker === 'function') {
+                        $input.wpColorPicker('close');
+                        console.log('WMO: Successfully closed background color picker (clear) for', slug, 'using wpColorPicker method');
+                    }
+                } catch (error) {
+                    console.log('WMO: wpColorPicker method failed for', slug, ':', error);
+                }
+                
+                // Method 2: Always use fallback to ensure closure
+                setTimeout(function() {
+                    $('.wp-picker-holder').hide();
+                    $('.wp-color-result').removeClass('wp-picker-open');
+                    console.log('WMO: Applied fallback close method for background color picker (clear)', slug);
+                }, 100);
+                
+            }, 300);
+        }
+    });
+    
+    // Initialize quick color buttons
+    $('.wmo-quick-color').on('click', function() {
+        var $button = $(this);
+        var color = $button.data('color');
+        var $section = $button.closest('.wmo-background-color-section');
+        var $input = $section.find('.wmo-background-color-field');
+        var slug = $input.data('menu-slug');
+        
+        console.log('WMO: Quick color selected:', color, 'for slug:', slug);
+        
+        // Update the color picker
+        $input.wpColorPicker('color', color);
+        
+        // Update color swatch and preview
+        wmoUpdateBackgroundColorPreview($input, color);
+        
+        // Apply background color to menu immediately
+        wmoApplyBackgroundColorToMenu(slug, color);
+        
+        // Auto-save background color
+        if (slug) {
+            wmoAutoSaveBackgroundColor(slug, color, $input);
+        }
+        
+        // Visual feedback
+        $button.addClass('wmo-quick-color-active');
+        setTimeout(function() {
+            $button.removeClass('wmo-quick-color-active');
+        }, 200);
+    });
         
 
         
@@ -540,39 +619,247 @@
         const cssRules = `
             body #adminmenu li#menu-${slug} > a,
             body #adminmenu li#toplevel_page_${slug} > a,
-            body #adminmenu li[id*='${slug}'] > a,
-            body #adminmenu li[id*='${slug}'] .wp-menu-name,
-            body #adminmenu li[id*='${slug}'] .wp-menu-image:before,
-            body #adminmenu li[id*='${slug}'] .wp-menu-image:before { 
+            body #adminmenu li[id='menu-${slug}'] > a,
+            body #adminmenu li[id='toplevel_page_${slug}'] > a,
+            body #adminmenu li#menu-${slug} .wp-menu-name,
+            body #adminmenu li#toplevel_page_${slug} .wp-menu-name,
+            body #adminmenu li#menu-${slug} .wp-menu-image:before,
+            body #adminmenu li#toplevel_page_${slug} .wp-menu-image:before { 
                 color: ${color} !important; 
             }
         `;
         
         styleElement.textContent = cssRules;
         console.log('WMO: Injected CSS for', slug, 'with color', color);
+        console.log('WMO: CSS Rules:', cssRules);
+        
+        // Debug: Check if elements exist
+        const selectors = [
+            `#menu-${slug}`,
+            `#toplevel_page_${slug}`,
+            `li[id='menu-${slug}']`,
+            `li[id='toplevel_page_${slug}']`
+        ];
+        
+        selectors.forEach(selector => {
+            const elements = document.querySelectorAll(selector);
+            console.log(`WMO: Selector "${selector}" found ${elements.length} elements:`, elements);
+        });
     }
 
     // NEW - Apply color to WordPress menu (real-time)
     function wmoApplyColorToMenu(slug, color) {
         console.log('WMO: Applying color to menu for', slug, 'Color:', color);
+        console.log('WMO: Slug type:', typeof slug, 'Slug value:', slug);
         
         try {
             if (color) {
+                // First, try to apply to parent menu items (existing functionality)
                 wmoInjectCSS(slug, color);
+                
+                // Then, handle submenu items by text content
+                wmoApplyColorToSubmenuByText(slug, color);
             } else {
-                // Remove color
+                // Remove color from parent menu items
                 const styleId = 'wmo-color-' + slug;
                 const styleElement = document.getElementById(styleId);
                 if (styleElement) {
                     styleElement.remove();
                     console.log('WMO: Removed CSS for', slug);
                 }
+                
+                // Remove color from submenu items
+                wmoRemoveColorFromSubmenuByText(slug);
             }
         } catch (error) {
             console.error('WMO: Error applying color:', error);
             // Fallback to old method if needed
             wmoApplyColorToMenuFallback(slug, color);
         }
+    }
+
+    // NEW - Apply color to submenu items by text content
+    function wmoApplyColorToSubmenuByText(slug, color) {
+        console.log('WMO: Applying color to submenu by text for', slug, 'Color:', color);
+        
+        // Find submenu items by text content
+        const submenuLinks = document.querySelectorAll('#adminmenu .wp-submenu li a');
+        let found = false;
+        
+        console.log('WMO: Total submenu links found:', submenuLinks.length);
+        
+        submenuLinks.forEach((link, index) => {
+            const linkText = link.textContent.trim();
+            console.log(`WMO: Submenu link ${index}: "${linkText}"`);
+            
+            // Enhanced matching logic with common submenu patterns
+            const slugVariations = [
+                slug.toLowerCase(),
+                slug.replace(/-/g, ' ').toLowerCase(),
+                slug.replace(/-/g, '').toLowerCase(),
+                slug.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase()).toLowerCase()
+            ];
+            
+            // Add common submenu patterns
+            if (slug === 'home') {
+                slugVariations.push('dashboard', 'main', 'overview');
+            }
+            if (slug === 'dashboard') {
+                slugVariations.push('home', 'main', 'overview');
+            }
+            
+            const linkTextLower = linkText.toLowerCase();
+            const isMatch = slugVariations.some(variation => 
+                linkTextLower === variation || 
+                linkTextLower.includes(variation) ||
+                variation.includes(linkTextLower)
+            );
+            
+            if (isMatch) {
+                link.style.setProperty('color', color, 'important');
+                found = true;
+                console.log('WMO: ✅ MATCH FOUND! Applied submenu color', color, 'to', linkText);
+                console.log('WMO: Matching variations:', slugVariations);
+            }
+        });
+        
+        if (!found) {
+            console.log('WMO: ❌ No submenu item found with text for slug:', slug);
+            console.log('WMO: Tried variations:', slugVariations);
+            
+            // Debug: Show all available submenu texts
+            console.log('WMO: Available submenu texts:');
+            submenuLinks.forEach((link, index) => {
+                if (index < 10) { // Only show first 10 to avoid spam
+                    console.log(`  ${index}: "${link.textContent.trim()}"`);
+                }
+            });
+        }
+    }
+
+    // NEW - Remove color from submenu items by text content
+    function wmoRemoveColorFromSubmenuByText(slug) {
+        console.log('WMO: Removing color from submenu by text for', slug);
+        
+        // Find submenu items by text content and remove color
+        const submenuLinks = document.querySelectorAll('#adminmenu .wp-submenu li a');
+        
+        submenuLinks.forEach(link => {
+            const linkText = link.textContent.trim();
+            // Use the same enhanced matching logic
+            const slugVariations = [
+                slug.toLowerCase(),
+                slug.replace(/-/g, ' ').toLowerCase(),
+                slug.replace(/-/g, '').toLowerCase(),
+                slug.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase()).toLowerCase()
+            ];
+            
+            // Add common submenu patterns
+            if (slug === 'home') {
+                slugVariations.push('dashboard', 'main', 'overview');
+            }
+            if (slug === 'dashboard') {
+                slugVariations.push('home', 'main', 'overview');
+            }
+            
+            const linkTextLower = linkText.toLowerCase();
+            const isMatch = slugVariations.some(variation => 
+                linkTextLower === variation || 
+                linkTextLower.includes(variation) ||
+                variation.includes(linkTextLower)
+            );
+            
+            if (isMatch) {
+                link.style.removeProperty('color');
+                console.log('WMO: Removed submenu color from', linkText);
+            }
+        });
+    }
+
+    // NEW - Apply background color to submenu items by text content
+    function wmoApplyBackgroundColorToSubmenuByText(slug, color) {
+        console.log('WMO: Applying background color to submenu by text for', slug, 'Color:', color);
+        
+        // Find submenu items by text content
+        const submenuLinks = document.querySelectorAll('#adminmenu .wp-submenu li a');
+        let found = false;
+        
+        submenuLinks.forEach((link, index) => {
+            const linkText = link.textContent.trim();
+            
+            // Enhanced matching logic with common submenu patterns
+            const slugVariations = [
+                slug.toLowerCase(),
+                slug.replace(/-/g, ' ').toLowerCase(),
+                slug.replace(/-/g, '').toLowerCase(),
+                slug.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase()).toLowerCase()
+            ];
+            
+            // Add common submenu patterns
+            if (slug === 'home') {
+                slugVariations.push('dashboard', 'main', 'overview');
+            }
+            if (slug === 'dashboard') {
+                slugVariations.push('home', 'main', 'overview');
+            }
+            
+            const linkTextLower = linkText.toLowerCase();
+            const isMatch = slugVariations.some(variation => 
+                linkTextLower === variation || 
+                linkTextLower.includes(variation) ||
+                variation.includes(linkTextLower)
+            );
+            
+            if (isMatch) {
+                link.style.setProperty('background-color', color, 'important');
+                found = true;
+                console.log('WMO: ✅ MATCH FOUND! Applied submenu background color', color, 'to', linkText);
+                console.log('WMO: Matching variations:', slugVariations);
+            }
+        });
+        
+        if (!found) {
+            console.log('WMO: ❌ No submenu item found for background color application. Slug:', slug);
+        }
+    }
+
+    // NEW - Remove background color from submenu items by text content
+    function wmoRemoveBackgroundColorFromSubmenuByText(slug) {
+        console.log('WMO: Removing background color from submenu by text for', slug);
+        
+        // Find submenu items by text content and remove background color
+        const submenuLinks = document.querySelectorAll('#adminmenu .wp-submenu li a');
+        
+        submenuLinks.forEach(link => {
+            const linkText = link.textContent.trim();
+            // Use the same enhanced matching logic
+            const slugVariations = [
+                slug.toLowerCase(),
+                slug.replace(/-/g, ' ').toLowerCase(),
+                slug.replace(/-/g, '').toLowerCase(),
+                slug.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase()).toLowerCase()
+            ];
+            
+            // Add common submenu patterns
+            if (slug === 'home') {
+                slugVariations.push('dashboard', 'main', 'overview');
+            }
+            if (slug === 'dashboard') {
+                slugVariations.push('home', 'main', 'overview');
+            }
+            
+            const linkTextLower = linkText.toLowerCase();
+            const isMatch = slugVariations.some(variation => 
+                linkTextLower === variation || 
+                linkTextLower.includes(variation) ||
+                variation.includes(linkTextLower)
+            );
+            
+            if (isMatch) {
+                link.style.removeProperty('background-color');
+                console.log('WMO: Removed submenu background color from', linkText);
+            }
+        });
     }
 
     // NEW - Inject background color CSS
@@ -589,7 +876,8 @@
         const cssRules = `
             body #adminmenu li#menu-${slug} > a,
             body #adminmenu li#toplevel_page_${slug} > a,
-            body #adminmenu li[id*='${slug}'] > a { 
+            body #adminmenu li[id='menu-${slug}'] > a,
+            body #adminmenu li[id='toplevel_page_${slug}'] > a { 
                 background-color: ${color} !important; 
             }
         `;
@@ -605,6 +893,8 @@
         try {
             if (color) {
                 wmoInjectBackgroundCSS(slug, color);
+                // Also apply background color to submenu items
+                wmoApplyBackgroundColorToSubmenuByText(slug, color);
             } else {
                 // Remove background color
                 const styleId = 'wmo-bg-color-' + slug;
@@ -613,6 +903,8 @@
                     styleElement.remove();
                     console.log('WMO: Removed background CSS for', slug);
                 }
+                // Remove background color from submenu items
+                wmoRemoveBackgroundColorFromSubmenuByText(slug);
             }
         } catch (error) {
             console.error('WMO: Error applying background color:', error);
@@ -650,6 +942,24 @@
         
         if (!found) {
             console.log('WMO: Warning - No menu elements found for background color application. Slug:', slug);
+        }
+    }
+
+    // Update background color preview elements
+    function wmoUpdateBackgroundColorPreview($input, color) {
+        var $section = $input.closest('.wmo-background-color-section');
+        var $swatch = $section.find('.wmo-color-swatch');
+        var $value = $section.find('.wmo-color-value');
+        var $preview = $section.find('.wmo-menu-preview');
+        
+        if (color) {
+            $swatch.css('background-color', color);
+            $value.text(color);
+            $preview.css('background-color', color);
+        } else {
+            $swatch.css('background-color', '#000000');
+            $value.text('#000000');
+            $preview.css('background-color', '#000000');
         }
     }
 
@@ -979,6 +1289,14 @@
              initColorPickers();
          }, 1000);
          
+         // Re-initialize color pickers when content is expanded (for submenus)
+         $(document).on('wmoContentExpanded', function() {
+             console.log('WMO: Content expanded, re-initializing color pickers');
+             setTimeout(function() {
+                 initColorPickers();
+             }, 100);
+         });
+         
          // Initialize badge functionality
          initBadgeFunctionality();
          
@@ -1012,9 +1330,69 @@
              }
          });
 
+         // Debug function to inspect WordPress admin menu structure
+         function wmoDebugMenuStructure() {
+             console.log('=== WMO: WordPress Admin Menu Structure Debug ===');
+             
+             // Check all menu items
+             const allMenuItems = document.querySelectorAll('#adminmenu li');
+             console.log('WMO: Total menu items found:', allMenuItems.length);
+             
+             allMenuItems.forEach((item, index) => {
+                 if (index < 10) { // Only log first 10 to avoid spam
+                     const id = item.id;
+                     const text = item.textContent.trim();
+                     const classes = item.className;
+                     console.log(`WMO: Menu item ${index}: ID="${id}", Text="${text}", Classes="${classes}"`);
+                 }
+             });
+             
+             // Check submenu items specifically
+             const submenuItems = document.querySelectorAll('#adminmenu .wp-submenu li');
+             console.log('WMO: Total submenu items found:', submenuItems.length);
+             
+             submenuItems.forEach((item, index) => {
+                 if (index < 10) { // Only log first 10 to avoid spam
+                     const id = item.id;
+                     const text = item.textContent.trim();
+                     const classes = item.className;
+                     console.log(`WMO: Submenu item ${index}: ID="${id}", Text="${text}", Classes="${classes}"`);
+                 }
+             });
+         }
+         
+         // Call debug function after a delay
+         setTimeout(wmoDebugMenuStructure, 3000);
+         
+
          
      });
 
-    
+    // Remove color from WordPress menu
+    function wmoRemoveColorFromMenu(slug) {
+        console.log('WMO: Removing color from menu for', slug);
+        
+        // More specific selectors to target only the exact menu item
+        var selectors = [
+            '#menu-' + slug + ' > a',                    // Standard WordPress menu format
+            '#toplevel_page_' + slug + ' > a',           // Plugin pages
+            'li[id="menu-' + slug + '"] > a',           // Alternative format
+            'li[id="toplevel_page_' + slug + '"] > a'   // Plugin page format
+        ];
+        
+        selectors.forEach(function(selector) {
+            var elements = document.querySelectorAll(selector);
+            elements.forEach(function(element) {
+                if (element) {
+                    // Remove color styles
+                    element.style.removeProperty('color');
+                    console.log('WMO: Removed color from element:', element, 'Text:', element.textContent.trim());
+                }
+            });
+        });
+        
+        // Also remove color from submenu items
+        wmoRemoveColorFromSubmenuByText(slug);
+    }
 
 })(jQuery);

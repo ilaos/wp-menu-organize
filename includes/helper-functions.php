@@ -49,7 +49,7 @@ function wmo_render_color_picker($menu_colors, $slug, $title, $is_submenu = fals
     $color = isset($menu_colors[$slug]) ? esc_attr($menu_colors[$slug]) : '';
     
     // Get background colors data
-    $background_colors = wmo_get_settings('background_colors');
+    $background_colors = get_option('wmo_menu_background_colors', array());
     $sanitized_slug = sanitize_title($slug);
     
     // Add this check to prevent empty slugs
@@ -186,100 +186,78 @@ function wmo_render_color_picker($menu_colors, $slug, $title, $is_submenu = fals
                                 <option value="900" <?php selected($font_weight, '900'); ?>>900 (Black)</option>
                             </select>
                         </div>
-                    </div>
-                    
-                    <!-- Color Picker - MOVED from header to typography section -->
-                    <div class="wmo-color-picker-wrapper">
-                        <label for="wmo_menucolors<?php echo esc_attr($unique_slug); ?>">Menu Color</label>
-                        <input type="text"
-                            id="wmo_menucolors<?php echo esc_attr($unique_slug); ?>"
-                            name="wmo_menu_colors[<?php echo esc_attr($sanitized_slug); ?>]"
-                            value="<?php echo $color; ?>"
-                            class="wmo-color-field"
-                            data-menu-slug="<?php echo esc_attr($sanitized_slug); ?>"
-                            data-is-submenu="<?php echo $is_submenu ? 'true' : 'false'; ?>" />
-                    </div>
-                    
-                    <div class="wmo-typography-fields" style="<?php echo $typography_enabled ? '' : 'display: none;'; ?>">
-                        <div class="wmo-typography-field">
-                            <label for="wmo_typography_family_<?php echo esc_attr($unique_slug); ?>">Font Family</label>
-                            <select id="wmo_typography_family_<?php echo esc_attr($unique_slug); ?>"
-                                    name="wmo_menu_typography[<?php echo esc_attr($sanitized_slug); ?>][font_family]"
-                                    class="wmo-typography-family"
-                                    data-menu-slug="<?php echo esc_attr($sanitized_slug); ?>">
-                                <option value="">Default</option>
-                                <option value="Arial, sans-serif" <?php selected($font_family, 'Arial, sans-serif'); ?>>Arial</option>
-                                <option value="Helvetica, sans-serif" <?php selected($font_family, 'Helvetica, sans-serif'); ?>>Helvetica</option>
-                                <option value="Georgia, serif" <?php selected($font_family, 'Georgia, serif'); ?>>Georgia</option>
-                                <option value="Times New Roman, serif" <?php selected($font_family, 'Times New Roman, serif'); ?>>Times New Roman</option>
-                                <option value="Verdana, sans-serif" <?php selected($font_family, 'Verdana, sans-serif'); ?>>Verdana</option>
-                                <option value="Trebuchet MS, sans-serif" <?php selected($font_family, 'Trebuchet MS, sans-serif'); ?>>Trebuchet MS</option>
-                                <option value="Impact, sans-serif" <?php selected($font_family, 'Impact, sans-serif'); ?>>Impact</option>
-                                <option value="Comic Sans MS, cursive" <?php selected($font_family, 'Comic Sans MS, cursive'); ?>>Comic Sans MS</option>
-                                <option value="Courier New, monospace" <?php selected($font_family, 'Courier New, monospace'); ?>>Courier New</option>
-                                <option value="Lucida Console, monospace" <?php selected($font_family, 'Lucida Console, monospace'); ?>>Lucida Console</option>
-                            </select>
-                        </div>
                         
-                        <div class="wmo-typography-field">
-                            <label for="wmo_typography_size_<?php echo esc_attr($unique_slug); ?>">Font Size</label>
-                            <select id="wmo_typography_size_<?php echo esc_attr($unique_slug); ?>"
-                                    name="wmo_menu_typography[<?php echo esc_attr($sanitized_slug); ?>][font_size]"
-                                    class="wmo-typography-size"
-                                    data-menu-slug="<?php echo esc_attr($sanitized_slug); ?>">
-                                <option value="">Default</option>
-                                <option value="10px" <?php selected($font_size, '10px'); ?>>10px</option>
-                                <option value="11px" <?php selected($font_size, '11px'); ?>>11px</option>
-                                <option value="12px" <?php selected($font_size, '12px'); ?>>12px</option>
-                                <option value="13px" <?php selected($font_size, '13px'); ?>>13px</option>
-                                <option value="14px" <?php selected($font_size, '14px'); ?>>14px</option>
-                                <option value="15px" <?php selected($font_size, '15px'); ?>>15px</option>
-                                <option value="16px" <?php selected($font_size, '16px'); ?>>16px</option>
-                                <option value="18px" <?php selected($font_size, '18px'); ?>>18px</option>
-                                <option value="20px" <?php selected($font_size, '20px'); ?>>20px</option>
-                                <option value="24px" <?php selected($font_size, '24px'); ?>>24px</option>
-                            </select>
-                        </div>
-                        
-                        <div class="wmo-typography-field">
-                            <label for="wmo_typography_weight_<?php echo esc_attr($unique_slug); ?>">Font Weight</label>
-                            <select id="wmo_typography_weight_<?php echo esc_attr($unique_slug); ?>"
-                                    name="wmo_menu_typography[<?php echo esc_attr($sanitized_slug); ?>][font_weight]"
-                                    class="wmo-typography-weight"
-                                    data-menu-slug="<?php echo esc_attr($sanitized_slug); ?>">
-                                <option value="">Default</option>
-                                <option value="100" <?php selected($font_weight, '100'); ?>>100 (Thin)</option>
-                                <option value="200" <?php selected($font_weight, '200'); ?>>200 (Extra Light)</option>
-                                <option value="300" <?php selected($font_weight, '300'); ?>>300 (Light)</option>
-                                <option value="400" <?php selected($font_weight, '400'); ?>>400 (Normal)</option>
-                                <option value="500" <?php selected($font_weight, '500'); ?>>500 (Medium)</option>
-                                <option value="600" <?php selected($font_weight, '600'); ?>>600 (Semi Bold)</option>
-                                <option value="700" <?php selected($font_weight, '700'); ?>>700 (Bold)</option>
-                                <option value="800" <?php selected($font_weight, '800'); ?>>800 (Extra Bold)</option>
-                                <option value="900" <?php selected($font_weight, '900'); ?>>900 (Black)</option>
-                            </select>
-                        </div>
-                    </div>
-                    
-                    <!-- Background Color Picker - NEW FEATURE -->
-                    <div class="wmo-background-color-picker-wrapper">
-                        <label for="wmo_menubgcolors<?php echo esc_attr($unique_slug); ?>">Background Color</label>
-                        <div class="wmo-color-input-group">
+                        <!-- Color Picker - Now properly controlled by typography toggle -->
+                        <div class="wmo-color-picker-wrapper">
+                            <label for="wmo_menucolors<?php echo esc_attr($unique_slug); ?>">Menu Color</label>
                             <input type="text"
-                                id="wmo_menubgcolors<?php echo esc_attr($unique_slug); ?>"
-                                name="wmo_menu_background_colors[<?php echo esc_attr($sanitized_slug); ?>]"
-                                value="<?php echo isset($background_colors[$sanitized_slug]) ? esc_attr($background_colors[$sanitized_slug]) : '#000000'; ?>"
-                                class="wmo-background-color-field"
-                                data-menu-slug="<?php echo esc_attr($sanitized_slug); ?>"
-                                data-is-submenu="<?php echo $is_submenu ? 'true' : 'false'; ?>"
-                                placeholder="#000000" />
-                            <button type="button" 
-                                class="wmo-color-picker-button" 
-                                data-target="wmo_menubgcolors<?php echo esc_attr($unique_slug); ?>">
-                                Pick Color
-                            </button>
+                                id="wmo_menucolors<?php echo esc_attr($unique_slug); ?>"
+                                name="wmo_menu_colors[<?php echo esc_attr($sanitized_slug); ?>]"
+                                value="<?php echo $color; ?>"
+                                class="wmo-color-field"
+                                  data-menu-slug="<?php echo esc_attr($sanitized_slug); ?>"
+                                data-is-submenu="<?php echo $is_submenu ? 'true' : 'false'; ?>" />
                         </div>
                     </div>
+                    
+                    <!-- Background Color Picker - PREMIUM FEATURE -->
+                    <div class="wmo-background-color-section">
+                        <div class="wmo-section-header">
+                            <div class="wmo-section-title">
+                                <span class="wmo-premium-badge">✨</span>
+                                <strong>Background Color</strong>
+                                <span class="wmo-feature-label">Premium</span>
+                            </div>
+                            <div class="wmo-section-description">
+                                Customize the background color of this menu item in the WordPress admin sidebar
+                            </div>
+                        </div>
+                        
+                        <div class="wmo-background-color-picker-wrapper">
+                            <div class="wmo-color-picker-container">
+                                <div class="wmo-color-preview">
+                                    <div class="wmo-color-swatch" 
+                                         style="background-color: <?php echo isset($background_colors[$sanitized_slug]) ? esc_attr($background_colors[$sanitized_slug]) : '#000000'; ?>">
+                                    </div>
+                                    <div class="wmo-color-info">
+                                        <span class="wmo-color-value"><?php echo isset($background_colors[$sanitized_slug]) ? esc_attr($background_colors[$sanitized_slug]) : '#000000'; ?></span>
+                                        <span class="wmo-color-label">Current Color</span>
+                                    </div>
+                                </div>
+                                
+                                <div class="wmo-color-controls">
+                                    <input type="text"
+                                        id="wmo_menubgcolors<?php echo esc_attr($unique_slug); ?>"
+                                        name="wmo_menu_background_colors[<?php echo esc_attr($sanitized_slug); ?>]"
+                                        value="<?php echo isset($background_colors[$sanitized_slug]) ? esc_attr($background_colors[$sanitized_slug]) : '#000000'; ?>"
+                                        class="wmo-background-color-field"
+                                        data-menu-slug="<?php echo esc_attr($sanitized_slug); ?>"
+                                        data-is-submenu="<?php echo $is_submenu ? 'true' : 'false'; ?>" />
+                                    
+                                    <div class="wmo-quick-colors">
+                                        <span class="wmo-quick-color-label">Quick Colors:</span>
+                                        <div class="wmo-quick-color-buttons">
+                                            <button type="button" class="wmo-quick-color" data-color="#000000" title="Black">⬛</button>
+                                            <button type="button" class="wmo-quick-color" data-color="#1e40af" title="Blue">🔵</button>
+                                            <button type="button" class="wmo-quick-color" data-color="#059669" title="Green">🟢</button>
+                                            <button type="button" class="wmo-quick-color" data-color="#dc2626" title="Red">🔴</button>
+                                            <button type="button" class="wmo-quick-color" data-color="#7c3aed" title="Purple">🟣</button>
+                                            <button type="button" class="wmo-quick-color" data-color="#ea580c" title="Orange">🟠</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="wmo-live-preview">
+                                <div class="wmo-preview-label">Live Preview:</div>
+                                <div class="wmo-menu-preview" 
+                                     style="background-color: <?php echo isset($background_colors[$sanitized_slug]) ? esc_attr($background_colors[$sanitized_slug]) : '#000000'; ?>">
+                                    <span class="wmo-preview-text">Menu Item</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
                 </div>
                 
                 <!-- Icon Section -->
@@ -1138,21 +1116,11 @@ function wmo_get_import_preview($data) {
 
 // Asset URL helper for minified files with cache busting
 function wmo_get_asset_url($filename) {
-    $suffix = defined('SCRIPT_DEBUG') && SCRIPT_DEBUG ? '' : '.min';
     $extension = pathinfo($filename, PATHINFO_EXTENSION);
-    $name = pathinfo($filename, PATHINFO_FILENAME);
     
-    $minified = plugin_dir_path(__FILE__) . '../assets/' . $extension . '/' . $name . $suffix . '.' . $extension;
-    $regular = plugin_dir_path(__FILE__) . '../assets/' . $extension . '/' . $filename;
-    
-    // Use minified if it exists and SCRIPT_DEBUG is not enabled, otherwise use regular
-    if (!defined('SCRIPT_DEBUG') && file_exists($minified)) {
-        $file_path = $minified;
-        $file_url = plugin_dir_url(__FILE__) . '../assets/' . $extension . '/' . $name . $suffix . '.' . $extension;
-    } else {
-        $file_path = $regular;
-        $file_url = plugin_dir_url(__FILE__) . '../assets/' . $extension . '/' . $filename;
-    }
+    // Force use unminified files for now to ensure our fixes work
+    $file_path = plugin_dir_path(__FILE__) . '../assets/' . $extension . '/' . $filename;
+    $file_url = plugin_dir_url(__FILE__) . '../assets/' . $extension . '/' . $filename;
     
     // Add cache busting using file modification time
     if (file_exists($file_path)) {

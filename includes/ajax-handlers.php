@@ -310,7 +310,11 @@ function wmo_save_background_color()
     }
     
     // Get existing background colors
-    $background_colors = wmo_get_settings('background_colors');
+    $background_colors = get_option('wmo_menu_background_colors', array());
+    
+    // Debug logging
+    error_log("WMO: AJAX save background color - Item ID: {$item_id}, Color: {$color}");
+    error_log("WMO: Existing background colors: " . (is_array($background_colors) ? count($background_colors) : 'none'));
     
     if (!is_array($background_colors)) {
         $background_colors = array();
@@ -319,13 +323,17 @@ function wmo_save_background_color()
     // Update the background color for this item
     if (!empty($color)) {
         $background_colors[$item_id] = $color;
+        error_log("WMO: Added/updated background color for {$item_id}: {$color}");
     } else {
         // Remove the background color if empty
         unset($background_colors[$item_id]);
+        error_log("WMO: Removed background color for {$item_id}");
     }
     
     // Save the updated background colors
-    $update_result = wmo_update_settings('background_colors', $background_colors);
+    $update_result = update_option('wmo_menu_background_colors', $background_colors);
+    error_log("WMO: Update result: " . ($update_result ? 'success' : 'failed'));
+    error_log("WMO: Final background colors count: " . count($background_colors));
     
     if ($update_result !== false) {
         wp_send_json_success(array(
@@ -347,22 +355,32 @@ function wmo_apply_menu_colors()
         $css_rules = '';
         foreach ($menu_colors as $slug => $color) {
             if (!empty($color)) {
-                // NEW - Ultra-high specificity selectors to override WordPress admin color schemes
+                // FIXED - Target parent menu items only, not submenu items
                 $css_rules .= "
+                    /* Target parent menu items only */
                     body #adminmenu li#menu-{$slug} > a,
                     body #adminmenu li#toplevel_page_{$slug} > a,
-                    body #adminmenu li[id*='{$slug}'] > a,
-                    body #adminmenu li[id*='{$slug}'] .wp-menu-name,
-                    body #adminmenu li[id*='{$slug}'] .wp-menu-image:before,
-                    body #adminmenu li[id*='{$slug}'] .wp-menu-image:before { 
+                    body #adminmenu li[id='menu-{$slug}'] > a,
+                    body #adminmenu li[id='toplevel_page_{$slug}'] > a,
+                    body #adminmenu li#menu-{$slug} .wp-menu-name,
+                    body #adminmenu li#toplevel_page_{$slug} .wp-menu-name,
+                    body #adminmenu li#menu-{$slug} .wp-menu-image:before,
+                    body #adminmenu li#toplevel_page_{$slug} .wp-menu-image:before { 
                         color: " . esc_attr($color) . " !important; 
+                    }
+                    
+                    /* EXPLICITLY EXCLUDE submenu items from inheriting parent colors */
+                    body #adminmenu li#menu-{$slug} .wp-submenu li a,
+                    body #adminmenu li#toplevel_page_{$slug} .wp-submenu li a,
+                    body #adminmenu li[id='menu-{$slug}'] .wp-submenu li a,
+                    body #adminmenu li[id='toplevel_page_{$slug}'] .wp-submenu li a { 
+                        color: inherit !important; 
                     }
                 ";
             }
         }
         
         if (!empty($css_rules)) {
-            // NEW - Use wp_add_inline_style with higher priority
             wp_add_inline_style('wp-menu-organize-style', $css_rules);
         }
     }
@@ -370,26 +388,96 @@ function wmo_apply_menu_colors()
 
 function wmo_apply_menu_background_colors()
 {
-    $background_colors = wmo_get_settings('background_colors');
+    $background_colors = get_option('wmo_menu_background_colors', array());
+    
+    // Debug logging
+    error_log('WMO: Global background colors function called');
+    error_log('WMO: Background colors found: ' . (is_array($background_colors) ? count($background_colors) : 'none'));
+    if (is_array($background_colors) && !empty($background_colors)) {
+        error_log('WMO: Background color slugs: ' . implode(', ', array_keys($background_colors)));
+    }
+    
+    // Debug: Log current admin menu structure to understand the real IDs
+    global $menu;
+    if (!empty($menu)) {
+        error_log('WMO: Current admin menu structure:');
+        foreach ($menu as $key => $item) {
+            if (isset($item[2])) {
+                error_log("WMO: Menu item - Key: {$key}, Slug: {$item[2]}, Title: {$item[0]}");
+            }
+        }
+    }
     
     if (!empty($background_colors) && is_array($background_colors)) {
         $css_rules = '';
         foreach ($background_colors as $slug => $color) {
             if (!empty($color)) {
-                // Ultra-high specificity selectors for background colors
+                // FIXED - Target parent menu items only, explicitly exclude submenu items
                 $css_rules .= "
+                    /* Primary selectors - parent menu items only */
                     body #adminmenu li#menu-{$slug} > a,
                     body #adminmenu li#toplevel_page_{$slug} > a,
-                    body #adminmenu li[id*='{$slug}'] > a { 
+                    body #adminmenu li[id='menu-{$slug}'] > a,
+                    body #adminmenu li[id='toplevel_page_{$slug}'] > a,
+                    
+                    /* Hover states - parent menu items only */
+                    body #adminmenu li#menu-{$slug} > a:hover,
+                    body #adminmenu li#toplevel_page_{$slug} > a:hover,
+                    body #adminmenu li[id='menu-{$slug}'] > a:hover,
+                    body #adminmenu li[id='toplevel_page_{$slug}'] > a:hover,
+                    
+                    /* Current/highlighted states - parent menu items only */
+                    body #adminmenu li#menu-{$slug}.current > a,
+                    body #adminmenu li#toplevel_page_{$slug}.current > a,
+                    body #adminmenu li[id='menu-{$slug}'].current > a,
+                    body #adminmenu li[id='toplevel_page_{$slug}'].current > a,
+                    body #adminmenu li#menu-{$slug}.wp-has-current-submenu > a,
+                    body #adminmenu li#toplevel_page_{$slug}.wp-has-current-submenu > a,
+                    body #adminmenu li[id='menu-{$slug}'].wp-has-current-submenu > a,
+                    body #adminmenu li[id='toplevel_page_{$slug}'].wp-has-current-submenu > a,
+                    
+                    /* Alternative selectors - parent menu items only */
+                    body #adminmenu li#menu-{$slug} a,
+                    body #adminmenu li#toplevel_page_{$slug} a,
+                    body #adminmenu li[id='menu-{$slug}'] a,
+                    body #adminmenu li[id='toplevel_page_{$slug}'] a,
+                    
+                    /* Direct menu item targeting - parent menu items only */
+                    body #adminmenu #menu-{$slug} > a,
+                    body #adminmenu #toplevel_page_{$slug} > a,
+                    body #adminmenu li[id='menu-{$slug}'] > a,
+                    body #adminmenu li[id='toplevel_page_{$slug}'] > a { 
                         background-color: " . esc_attr($color) . " !important; 
                     }
+                    
+                    /* EXPLICITLY EXCLUDE submenu items from inheriting parent background colors */
+                    body #adminmenu li#menu-{$slug} .wp-submenu li a,
+                    body #adminmenu li#toplevel_page_{$slug} .wp-submenu li a,
+                    body #adminmenu li[id='menu-{$slug}'] .wp-submenu li a,
+                    body #adminmenu li[id='toplevel_page_{$slug}'] .wp-submenu li a { 
+                        background-color: inherit !important; 
+                    }
                 ";
+                error_log("WMO: Added CSS rule for slug: {$slug}, color: {$color}");
             }
         }
         
         if (!empty($css_rules)) {
-            wp_add_inline_style('wp-menu-organize-style', $css_rules);
+            // Use wp-admin style which is always loaded on admin pages
+            wp_add_inline_style('wp-admin', $css_rules);
+            error_log('WMO: Background color CSS rules added to wp-admin style');
+            error_log('WMO: Generated CSS rules: ' . $css_rules);
+            
+            // Also add as a separate style with higher priority
+            wp_register_style('wmo-background-colors', false);
+            wp_enqueue_style('wmo-background-colors');
+            wp_add_inline_style('wmo-background-colors', $css_rules);
+            error_log('WMO: Background color CSS also added as separate style with higher priority');
+        } else {
+            error_log('WMO: No background color CSS rules to add');
         }
+    } else {
+        error_log('WMO: No background colors found or not an array');
     }
 }
 
@@ -1268,8 +1356,8 @@ add_action('wp_ajax_wmo_import_preview', 'wmo_import_preview_ajax');
 // Hook to apply theme preference globally on all admin pages
 add_action('admin_head', 'wmo_apply_menu_colors');
 
-// Hook to apply background colors globally on all admin pages
-add_action('admin_head', 'wmo_apply_menu_background_colors');
+// Hook to apply background colors globally on all admin pages - use very late priority
+add_action('admin_head', 'wmo_apply_menu_background_colors', 999);
 
 // Hook to apply typography globally on all admin pages
 add_action('admin_head', 'wmo_apply_typography_globally');

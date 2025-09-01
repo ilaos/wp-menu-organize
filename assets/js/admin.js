@@ -1003,5 +1003,28 @@
                 }
             });
         });
+        
+        // Menu search/filter functionality
+        $('#wmo-menu-search').on('keyup', function() {
+            var search = $(this).val().toLowerCase();
+            
+            if (search === '') {
+                $('.wmo-color-group').show();
+            } else {
+                $('.wmo-color-group').each(function() {
+                    var $group = $(this);
+                    var text = $group.text().toLowerCase();
+                    var matches = text.indexOf(search) > -1;
+                    $group.toggle(matches);
+                });
+            }
+            
+            // Optional: Show count (remove if not wanted)
+            var visible = $('.wmo-color-group:visible').length;
+            var total = $('.wmo-color-group').length;
+            if (search !== '') {
+                console.log(`WMO: Showing ${visible} of ${total} menu groups`);
+            }
+        });
     });
 })(jQuery);
