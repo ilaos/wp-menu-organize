@@ -1,0 +1,23 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(tree:*)",
+      "Bash(php -l:*)",
+      "Bash(for file in includes/*.php)",
+      "Bash(do php -l \"$file\")",
+      "Bash(done)",
+      "Bash(find:*)",
+      "Bash(npm run build:*)",
+      "Bash(cd:*)",
+      "Bash(npm install:*)",
+      "Bash(git diff-tree:*)",
+      "WebSearch",
+      "Bash(git log:*)",
+      "Bash(curl:*)",
+      "Bash(php:*)",
+      "Bash(rg:*)"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}

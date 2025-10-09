@@ -1,0 +1,7 @@
+﻿WordPress Backup Manifest
+Created: 08/29/2025 16:15:55
+Backup Path: .\BACKUPS\manual-backup-2025-08-29-161555
+
+Files backed up:
+- C:\Users\ishla\Local Sites\my-playground\BACKUPS\manual-backup-2025-08-29-161555\wp-config-backup.php
+

@@ -1990,3 +1990,11 @@
 )
 
 [08-Jul-2025 16:32:52 UTC] WMO: enqueue_scripts called for hook: menu-colors_page_wp-menu-organize-reorder
+[05-Sep-2025 23:15:58 UTC] PHP Fatal error:  Uncaught Error: Call to undefined function get_option() in Command line code:1
+Stack trace:
+#0 {main}
+  thrown in Command line code on line 1
+[07-Sep-2025 00:48:24 UTC] PHP Parse error:  Unmatched '}' in C:\Users\ishla\Local Sites\my-playground\app\public\wp-content\plugins\wp-menu-organize\includes\ajax-handlers.php on line 614
+[07-Sep-2025 01:22:11 UTC] PHP Parse error:  syntax error, unexpected token "\", expecting end of file in Command line code on line 2
+[07-Sep-2025 01:31:08 UTC] PHP Parse error:  syntax error, unexpected token "\", expecting variable or "$" in Command line code on line 4
+[07-Sep-2025 01:31:17 UTC] PHP Parse error:  syntax error, unexpected token "\" in Command line code on line 15

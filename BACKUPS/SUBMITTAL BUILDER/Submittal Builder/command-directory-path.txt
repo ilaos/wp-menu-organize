@@ -1,0 +1,18 @@
+cd "C:\Users\ishla\Local Sites\my-playground\app\public\wp-content\plugins\Submittal Builder"
+
+
+● Bootstrap file created successfully! The file has been overwritten with the exact code provided.
+
+  Summary of changes:
+  - Removed the init() method and its hook
+  - Simplified enqueue_admin() to use ['jquery'] dependencies instead of WP-specific ones
+  - Simplified enqueue_front() similarly
+  - Updated shortcode to only accept id parameter (removed show_leed and cover_sheet)
+  - Replaced full REST API routes with a simple /health endpoint stub
+  - Removed API methods: api_get_form(), api_generate(), api_share()
+
+  The file is ready for activation. You can now:
+  1. Activate the plugin in WP Admin → Plugins
+  2. Check the admin page at Submittal Builder in the sidebar
+  3. Test the shortcode [submittal_builder id="1"] on a page
+  4. Verify the REST endpoint at /wp-json/sfb/v1/health

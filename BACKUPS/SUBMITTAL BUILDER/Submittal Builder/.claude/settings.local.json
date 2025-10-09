@@ -1,0 +1,16 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(php -l:*)",
+      "Bash(where php)",
+      "WebFetch(domain:github.com)",
+      "Bash(curl:*)",
+      "Bash(php)",
+      "Bash(tar:*)",
+      "Bash(unzip:*)",
+      "Bash(test:*)"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}
