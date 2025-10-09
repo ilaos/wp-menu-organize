@@ -1371,9 +1371,14 @@
 
 .sfb-btn-primary:hover {
   background: var(--sfb-primary-dark);
-  color: white;
+  color: white !important;
   box-shadow: 0 4px 8px rgba(30, 58, 95, 0.4), 0 0 20px rgba(123, 97, 255, 0.3); /* Added glow */
   transform: translateY(-1px);
+}
+
+/* Ensure anchor tags with primary button class maintain white text on hover */
+a.sfb-btn-primary:hover {
+  color: white !important;
 }
 
 .sfb-btn-primary:disabled {
