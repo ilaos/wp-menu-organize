@@ -1696,3 +1696,187 @@ a.sfb-btn-primary:hover {
   border-color: rgba(255, 255, 255, 0.6);
   transform: translateX(2px);
 }
+
+/* ========== UI Polish: Refined Styles ========== */
+/* Updated color palette and refinements */
+:root {
+  --sfb-primary: #3b49df;
+  --sfb-ok: #18a865;
+  --sfb-ok-bg: #e9f8f1;
+  --sfb-ok-border: #bfead7;
+  --sfb-card-border: #e5e7eb;
+  --sfb-spec-text: #4b5563;
+  --sfb-crumb: #6b7280;
+  --sfb-badge-bg: #eef2ff;
+  --sfb-badge-text: #25327a;
+  --sfb-crumb-bg: transparent;
+  --sfb-focus: #5b9cff;
+  --sfb-sticky-top: 88px;
+}
+
+/* Refined Card Base */
+.sfb-product-card {
+  padding: 12px 14px 10px;
+  border: 1px solid var(--sfb-card-border);
+  transition: all 0.18s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.sfb-product-card:hover {
+  border-color: var(--sfb-primary);
+  box-shadow: 0 4px 12px rgba(59, 73, 223, 0.12);
+}
+
+/* Selection State with Green Border and Tint */
+.sfb-product-card-selected {
+  border: 2px solid var(--sfb-ok-border);
+  background: var(--sfb-ok-bg);
+  padding: 11px 13px 9px; /* Compensate for thicker border */
+}
+
+.sfb-product-card-selected:hover {
+  border-color: var(--sfb-ok);
+  box-shadow: 0 4px 16px rgba(24, 168, 101, 0.2);
+}
+
+/* Animated "✓ ADDED" Indicator */
+.sfb-product-card-selected::after {
+  content: '✓ ADDED';
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  background: var(--sfb-ok);
+  color: white;
+  font-size: 10px;
+  font-weight: 700;
+  padding: 4px 8px;
+  border-radius: 999px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  animation: sfbPillPop 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+  box-shadow: 0 2px 6px rgba(24, 168, 101, 0.4);
+}
+
+@keyframes sfbPillPop {
+  0% {
+    opacity: 0;
+    transform: scale(0.5);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* Badge Strategy: Type = Chip, Category = Crumb */
+.sfb-card__head {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 8px;
+  flex-wrap: wrap;
+}
+
+.badge--type {
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 10px;
+  background: var(--sfb-badge-bg);
+  color: var(--sfb-badge-text);
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  border-radius: 999px;
+  border: 1px solid rgba(37, 50, 122, 0.15);
+}
+
+.crumb--category {
+  display: inline;
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--sfb-crumb);
+  background: var(--sfb-crumb-bg);
+}
+
+/* Refined Toolbar with Grid Layout */
+.sfb-products-toolbar {
+  display: grid;
+  grid-template-columns: auto 1fr auto auto;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.75rem;
+  background: var(--sfb-gray-50);
+  border-radius: 8px;
+}
+
+/* Toned-down Active Sidebar Category */
+.sfb-category-item-active {
+  background: var(--sfb-badge-bg);
+  color: var(--sfb-badge-text);
+  border-color: rgba(37, 50, 122, 0.2);
+}
+
+.sfb-category-item-active:hover {
+  background: #e0e7ff !important;
+  color: var(--sfb-badge-text) !important;
+}
+
+.sfb-category-item-active .sfb-category-count {
+  color: var(--sfb-badge-text);
+  opacity: 0.8;
+}
+
+/* Focus-visible States for Accessibility */
+.sfb-product-card:focus-visible {
+  outline: 3px solid var(--sfb-focus);
+  outline-offset: 2px;
+  box-shadow: 0 0 0 6px rgba(91, 156, 255, 0.15);
+}
+
+.sfb-category-item:focus-visible {
+  outline: 2px solid var(--sfb-focus);
+  outline-offset: 2px;
+}
+
+button:focus-visible,
+a:focus-visible {
+  outline: 2px solid var(--sfb-focus);
+  outline-offset: 2px;
+}
+
+/* Model Name Emphasis */
+.sfb-product-name {
+  font-weight: 700;
+  font-size: 15px;
+  margin: 0 0 8px;
+  color: #1a202c;
+}
+
+/* Specs Refinement */
+.sfb-card-specs {
+  margin-top: 8px;
+  margin-bottom: 10px;
+  font-size: 13px;
+  color: var(--sfb-spec-text);
+}
+
+/* Type Grouping Headers (Optional) */
+.sfb-type-subhead {
+  position: sticky;
+  top: var(--sfb-sticky-top);
+  z-index: 20;
+  background: var(--sfb-gray-100);
+  padding: 8px 12px;
+  margin: 16px 0 8px;
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  color: var(--sfb-gray-700);
+  border-left: 4px solid var(--sfb-primary);
+  border-radius: 4px;
+}
+
+.sfb-type-subhead:first-child {
+  margin-top: 0;
+}

@@ -521,17 +521,17 @@
         }
       }
 
-      // Build lineage badges
-      let lineageBadges = '';
-      if (product.category || product.type_label) {
+      // Build card head with new badge strategy: Type = chip, Category = crumb
+      let cardHead = '';
+      if (product.type_label || product.category) {
         const badges = [];
-        if (product.category) {
-          badges.push(`<span class="sfb-badge sfb-badge-category">${escapeHtml(product.category)}</span>`);
-        }
         if (product.type_label) {
-          badges.push(`<span class="sfb-badge sfb-badge-type">${escapeHtml(product.type_label)}</span>`);
+          badges.push(`<span class="badge--type">${escapeHtml(product.type_label)}</span>`);
         }
-        lineageBadges = `<div class="sfb-lineage-badges">${badges.join('')}</div>`;
+        if (product.category) {
+          badges.push(`<span class="crumb--category">${escapeHtml(product.category)}</span>`);
+        }
+        cardHead = `<div class="sfb-card__head">${badges.join('')}</div>`;
       }
 
       return `
@@ -541,10 +541,10 @@
              tabindex="0"
              aria-pressed="${isSelected ? 'true' : 'false'}"
              aria-label="${escapeHtml(product.model)} - ${isSelected ? 'Selected' : 'Not selected'}. ${product.category ? 'Category: ' + escapeHtml(product.category) + '.' : ''} Press Enter or Space to ${isSelected ? 'remove' : 'add'}.">
-          <button class="sr-only sfb-card__toggle" aria-hidden="true" tabindex="-1">
+          <button class="sfb-sr-only sfb-card__toggle" aria-hidden="true" tabindex="-1">
             ${isSelected ? 'Remove' : 'Add'} ${escapeHtml(product.model)}
           </button>
-          ${lineageBadges}
+          ${cardHead}
           <h4 class="sfb-product-name">${escapeHtml(product.model)}</h4>
           ${specsHtml}
         </div>
