@@ -1,0 +1,90 @@
+{
+  "title": "Plumbing — Pipe, Fixtures & Valves",
+  "categories": [
+    {
+      "title": "Pressure Pipe",
+      "types": [
+        {
+          "title": "Copper Tube (Type L)",
+          "items": [
+            { "title": "1/2\" Type L Copper", "meta": { "diameter": "1/2 in", "material": "Copper (Type L)", "connection": "Solder", "pressure_rating": "300 psi @ 100°F", "standard": "ASTM B88", "nsf": "NSF/ANSI 61" } },
+            { "title": "1\" Type L Copper",   "meta": { "diameter": "1 in",  "material": "Copper (Type L)", "connection": "Press",  "pressure_rating": "300 psi @ 100°F", "standard": "ASTM B88", "nsf": "NSF/ANSI 61" } }
+          ]
+        },
+        {
+          "title": "CPVC Hot/Cold",
+          "items": [
+            { "title": "3/4\" CPVC SDR11", "meta": { "diameter": "3/4 in", "material": "CPVC SDR11", "connection": "Solvent Weld", "temperature_rating": "200°F", "pressure_rating": "400 psi @ 73°F", "standard": "ASTM D2846", "nsf": "NSF/ANSI 61" } },
+            { "title": "1\" CPVC SDR11",  "meta": { "diameter": "1 in",   "material": "CPVC SDR11", "connection": "Solvent Weld", "temperature_rating": "200°F", "pressure_rating": "400 psi @ 73°F", "standard": "ASTM D2846", "nsf": "NSF/ANSI 61" } }
+          ]
+        },
+        {
+          "title": "PVC DWV",
+          "items": [
+            { "title": "3\" PVC DWV", "meta": { "diameter": "3 in", "material": "PVC DWV", "connection": "Solvent Weld", "application": "Drain/Waste/Vent", "standard": "ASTM D2665", "nsf": "NSF/ANSI 14" } },
+            { "title": "4\" PVC DWV", "meta": { "diameter": "4 in", "material": "PVC DWV", "connection": "Solvent Weld", "application": "Drain/Waste/Vent", "standard": "ASTM D2665", "nsf": "NSF/ANSI 14" } }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Valves",
+      "types": [
+        {
+          "title": "Ball Valves",
+          "items": [
+            { "title": "3/4\" Full-Port Brass", "meta": { "size": "3/4 in", "type": "Ball Valve", "port": "Full", "body": "Brass", "ends": "Sweat", "pressure_rating": "600 WOG", "standard": "ANSI/ASME B16.33" } },
+            { "title": "1\" Full-Port Brass",   "meta": { "size": "1 in",  "type": "Ball Valve", "port": "Full", "body": "Brass", "ends": "FNPT",  "pressure_rating": "600 WOG", "standard": "ANSI/ASME B16.33", "notes": "Lead-free" } }
+          ]
+        },
+        {
+          "title": "Check Valves",
+          "items": [
+            { "title": "2\" Swing Check", "meta": { "size": "2 in", "type": "Swing Check", "body": "Ductile Iron", "ends": "Flanged", "pressure_rating": "200 psi", "standard": "API 594" } }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Fixtures",
+      "types": [
+        {
+          "title": "Water Closets",
+          "items": [
+            { "title": "1.28 GPF Elongated, ADA", "meta": { "bowl": "Elongated", "flush": "1.28 gpf", "rough_in": "12 in", "height": "ADA", "trapway": "2-1/8 in", "standard": "ASME A112.19.2/CSA B45.1", "notes": "EPA WaterSense" } }
+          ]
+        },
+        {
+          "title": "Lavatory Faucets",
+          "items": [
+            { "title": "Centerset 0.5 GPM", "meta": { "mount": "4\" centerset", "flow_rate": "0.5 gpm", "control": "Metering", "finish": "Chrome", "standard": "ASME A112.18.1/CSA B125.1" } },
+            { "title": "Single-Hole 1.2 GPM", "meta": { "mount": "Single-hole", "flow_rate": "1.2 gpm", "control": "Single Lever", "finish": "Brushed Nickel", "standard": "ASME A112.18.1/CSA B125.1" } }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Water Heaters",
+      "types": [
+        {
+          "title": "Commercial Gas",
+          "items": [
+            { "title": "199k BTU Condensing", "meta": { "input_btu": "199,000", "type": "Gas, Condensing", "efficiency": "≥95% thermal", "venting": "PVC/CPVC", "storage": "Tankless", "standard": "AHRI 1240" } },
+            { "title": "100 Gal Standard",    "meta": { "capacity": "100 gal", "type": "Gas, Atmospheric", "efficiency": "Std", "venting": "B-vent", "storage": "Tank", "standard": "AHRI 1240" } }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Specialties",
+      "types": [
+        {
+          "title": "Backflow Preventers",
+          "items": [
+            { "title": "2\" RPZ Assembly", "meta": { "size": "2 in", "type": "Reduced Pressure Zone", "lead_free": "Yes", "approval": "ASSE 1013", "application": "Potable water" } }
+          ]
+        }
+      ]
+    }
+  ]
+}

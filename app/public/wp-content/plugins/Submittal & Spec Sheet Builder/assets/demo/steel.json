@@ -1,0 +1,164 @@
+{
+  "title": "Cold-Formed Steel",
+  "categories": [
+    {
+      "title": "Steel Beams",
+      "types": [
+        {
+          "title": "W-Beams",
+          "items": [
+            {
+              "title": "W8x24",
+              "meta": {
+                "size": "8\"",
+                "flange": "6.5\"",
+                "thickness": "0.4\"",
+                "ksi": "50"
+              }
+            },
+            {
+              "title": "W10x30",
+              "meta": {
+                "size": "10\"",
+                "flange": "8\"",
+                "thickness": "0.5\"",
+                "ksi": "50"
+              }
+            },
+            {
+              "title": "W12x35",
+              "meta": {
+                "size": "12\"",
+                "flange": "6.56\"",
+                "thickness": "0.52\"",
+                "ksi": "50",
+                "notes": "Suitable for medium-span construction"
+              }
+            }
+          ]
+        },
+        {
+          "title": "I-Beams",
+          "items": [
+            {
+              "title": "S12x35",
+              "meta": {
+                "size": "12\"",
+                "flange": "5.08\"",
+                "thickness": "0.544\"",
+                "ksi": "50"
+              }
+            },
+            {
+              "title": "S15x50",
+              "meta": {
+                "size": "15\"",
+                "flange": "5.64\"",
+                "thickness": "0.622\"",
+                "ksi": "50"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Fasteners",
+      "types": [
+        {
+          "title": "Hex Bolts",
+          "items": [
+            {
+              "title": "1/2\" x 2\"",
+              "meta": {
+                "size": "1/2\"",
+                "length": "2\"",
+                "grade": "Grade 5",
+                "finish": "Zinc Plated"
+              }
+            },
+            {
+              "title": "5/8\" x 3\"",
+              "meta": {
+                "size": "5/8\"",
+                "length": "3\"",
+                "grade": "Grade 8",
+                "finish": "Zinc Plated",
+                "notes": "Heavy-duty applications"
+              }
+            },
+            {
+              "title": "3/4\" x 4\"",
+              "meta": {
+                "size": "3/4\"",
+                "length": "4\"",
+                "grade": "Grade 5",
+                "finish": "Hot-Dip Galvanized"
+              }
+            }
+          ]
+        },
+        {
+          "title": "Wedge Anchors",
+          "items": [
+            {
+              "title": "3/8\" Wedge Anchor",
+              "meta": {
+                "size": "3/8\"",
+                "length": "3\"",
+                "ksi": "36",
+                "material": "Carbon Steel"
+              }
+            },
+            {
+              "title": "1/2\" Wedge Anchor",
+              "meta": {
+                "size": "1/2\"",
+                "length": "4\"",
+                "ksi": "36",
+                "material": "Carbon Steel"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Structural Angles",
+      "types": [
+        {
+          "title": "Equal Leg",
+          "items": [
+            {
+              "title": "L2x2x1/4",
+              "meta": {
+                "size": "2\" x 2\"",
+                "thickness": "1/4\"",
+                "ksi": "36",
+                "weight": "3.19 lb/ft"
+              }
+            },
+            {
+              "title": "L3x3x3/8",
+              "meta": {
+                "size": "3\" x 3\"",
+                "thickness": "3/8\"",
+                "ksi": "36",
+                "weight": "6.6 lb/ft"
+              }
+            },
+            {
+              "title": "L4x4x1/2",
+              "meta": {
+                "size": "4\" x 4\"",
+                "thickness": "1/2\"",
+                "ksi": "36",
+                "weight": "12.8 lb/ft"
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

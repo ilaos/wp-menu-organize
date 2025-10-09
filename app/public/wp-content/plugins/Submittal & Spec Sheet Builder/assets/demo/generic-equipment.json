@@ -1,0 +1,71 @@
+{
+  "title": "Data Sheets — Generic Equipment",
+  "categories": [
+    {
+      "title": "Pumps",
+      "types": [
+        {
+          "title": "Centrifugal Pumps",
+          "items": [
+            { "title": "CP-25 5HP 230V", "meta": { "flow": "25 gpm", "head": "80 ft", "power": "5 hp", "voltage": "230V", "phases": "1", "material": "Cast Iron", "standard": "ISO 5199" } },
+            { "title": "CP-60 7.5HP 460V", "meta": { "flow": "60 gpm", "head": "120 ft", "power": "7.5 hp", "voltage": "460V", "phases": "3", "material": "Ductile Iron", "standard": "ISO 5199", "notes": "Mechanical seal, carbon/ceramic" } }
+          ]
+        },
+        {
+          "title": "Submersible Pumps",
+          "items": [
+            { "title": "SP-2 1HP 120V", "meta": { "flow": "45 gpm", "head": "25 ft", "power": "1 hp", "voltage": "120V", "phases": "1", "material": "Stainless 304", "rating": "IP68" } }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Compressors",
+      "types": [
+        {
+          "title": "Rotary Screw",
+          "items": [
+            { "title": "RS-15 15HP 460V", "meta": { "capacity": "60 cfm @ 125 psig", "power": "15 hp", "voltage": "460V", "phases": "3", "drive": "VFD", "noise": "68 dBA", "standard": "ISO 1217" } },
+            { "title": "RS-30 30HP 460V", "meta": { "capacity": "120 cfm @ 125 psig", "power": "30 hp", "voltage": "460V", "phases": "3", "drive": "Direct", "noise": "70 dBA", "standard": "ISO 1217" } }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Power Generation",
+      "types": [
+        {
+          "title": "Diesel Generators",
+          "items": [
+            { "title": "GEN-50 50kW 277/480V", "meta": { "rating_kw": "50", "voltage": "277/480V", "phases": "3", "fuel": "Diesel", "tank": "150 gal", "sound_at_7m": "72 dBA", "standard": "ISO 8528-1" } },
+            { "title": "GEN-100 100kW 120/208V", "meta": { "rating_kw": "100", "voltage": "120/208V", "phases": "3", "fuel": "Diesel", "tank": "250 gal", "sound_at_7m": "74 dBA", "standard": "ISO 8528-1", "notes": "Block heater included" } }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Controls",
+      "types": [
+        {
+          "title": "Control Panels",
+          "items": [
+            { "title": "MCC-6 Bucket, 480V", "meta": { "enclosure": "NEMA 1", "voltage": "480V", "starters": "6 buckets", "control_power": "120V", "plc": "Yes", "ul_listing": "UL 845" } },
+            { "title": "VFD Panel 30HP, 480V", "meta": { "enclosure": "NEMA 12", "voltage": "480V", "drive_hp": "30", "bypass": "Yes", "harmonics": "IEEE-519 compliant", "ul_listing": "UL 508A" } }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Instrumentation",
+      "types": [
+        {
+          "title": "Sensors & Transmitters",
+          "items": [
+            { "title": "Pressure Transmitter 0–300 psi", "meta": { "range": "0–300 psi", "output": "4–20 mA", "supply": "24 VDC", "accuracy": "±0.25% FS", "process": "1/4\" NPT", "ingress": "IP67", "standard": "IEC 61326" } },
+            { "title": "RTD Temperature Probe Pt100", "meta": { "sensor": "Pt100, Class B", "output": "4–20 mA", "range": "-50…200°C", "supply": "24 VDC", "probe_length": "150 mm", "ingress": "IP65", "standard": "IEC 60751" } }
+          ]
+        }
+      ]
+    }
+  ]
+}

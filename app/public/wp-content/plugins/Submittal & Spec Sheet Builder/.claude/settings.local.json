@@ -1,0 +1,37 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(php -l:*)",
+      "Bash(where php)",
+      "WebFetch(domain:github.com)",
+      "Bash(curl:*)",
+      "Bash(php)",
+      "Bash(tar:*)",
+      "Bash(unzip:*)",
+      "Bash(test:*)",
+      "Bash(node:*)",
+      "Bash(cat:*)",
+      "Bash(tail:*)",
+      "Bash(wc:*)",
+      "Bash(ls:*)",
+      "Read(//c/Users/ishla/Local Sites/my-playground/app/public/**)",
+      "Bash(composer require:*)",
+      "Bash(if exist dompdf.zip del dompdf.zip)",
+      "Bash(php:*)",
+      "Bash(find:*)",
+      "Bash(head:*)",
+      "Bash(composer install:*)",
+      "Bash(where composer)",
+      "Read(//c/Program Files (x86)/Local/**)",
+      "Bash(\"/c/Program Files (x86)/Local/resources/extraResources/lightning-services/php-8.2.27+1/bin/win64/php.exe\" -r \"echo PHP_VERSION;\")",
+      "Bash(\"/c/Program Files (x86)/Local/resources/extraResources/lightning-services/php-8.2.27+1/bin/win64/php.exe\" \"/c/Program Files (x86)/Local/resources/extraResources/bin/composer/composer.phar\" install --no-dev)",
+      "Bash(\"/c/Program Files (x86)/Local/resources/extraResources/lightning-services/php-8.2.27+1/bin/win64/php.exe\" \"/c/Program Files (x86)/Local/resources/extraResources/bin/composer/composer.phar\" install --no-dev --ignore-platform-reqs --disable-tls)",
+      "Bash(\"/c/Program Files (x86)/Local/resources/extraResources/lightning-services/php-8.2.27+1/bin/win64/php.exe\" \"/c/Program Files (x86)/Local/resources/extraResources/bin/composer/composer.phar\" install --no-dev --ignore-platform-reqs)",
+      "Bash(\"/c/Program Files (x86)/Local/resources/extraResources/lightning-services/php-8.2.27+1/bin/win64/php.exe\" -l assets/css/frontend.css)",
+      "Bash(\"/c/Program Files (x86)/Local/resources/extraResources/lightning-services/php-8.2.27+1/bin/win64/php.exe\" -l \"C:\\Users\\ishla\\Local Sites\\my-playground\\app\\public\\wp-content\\plugins\\Submittal & Spec Sheet Builder\\assets\\css\\frontend.css\")",
+      "Bash(git add:*)"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}

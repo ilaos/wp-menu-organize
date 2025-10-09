@@ -1,0 +1,79 @@
+{
+  "title": "Electrical — Panels & Conduit",
+  "categories": [
+    {
+      "title": "Service Equipment",
+      "types": [
+        {
+          "title": "Main Switchboards",
+          "items": [
+            { "title": "MSB 1200A 480/277V 3Ø4W", "meta": { "rating_a": "1200", "voltage": "480/277V", "phases": "3Ø4W", "interrupt_rating": "65kAIC", "enclosure": "NEMA 1", "ul_listing": "UL 891", "notes": "Top feed; copper bus" } },
+            { "title": "MSB 2000A 208/120V 3Ø4W", "meta": { "rating_a": "2000", "voltage": "208/120V", "phases": "3Ø4W", "interrupt_rating": "65kAIC", "enclosure": "NEMA 1", "ul_listing": "UL 891" } }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Distribution Panels",
+      "types": [
+        {
+          "title": "Panelboards — Lighting",
+          "items": [
+            { "title": "LP-42C 225A 208/120V", "meta": { "rating_a": "225", "voltage": "208/120V", "spaces": "42", "main": "MLO", "enclosure": "NEMA 1", "ul_listing": "UL 67" } },
+            { "title": "LP-30S 400A 480/277V", "meta": { "rating_a": "400", "voltage": "480/277V", "spaces": "30", "main": "Main Breaker", "enclosure": "NEMA 1", "ul_listing": "UL 67" } }
+          ]
+        },
+        {
+          "title": "Panelboards — Power",
+          "items": [
+            { "title": "PP-18S 225A 480/277V", "meta": { "rating_a": "225", "voltage": "480/277V", "spaces": "18", "main": "MLO", "enclosure": "NEMA 1", "ul_listing": "UL 67" } },
+            { "title": "PP-42C 600A 208/120V", "meta": { "rating_a": "600", "voltage": "208/120V", "spaces": "42", "main": "Main Breaker", "enclosure": "NEMA 1", "ul_listing": "UL 67", "notes": "Copper bus; 100% rated main" } }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Transformers",
+      "types": [
+        {
+          "title": "Dry-Type Transformers",
+          "items": [
+            { "title": "TX 75kVA 480→208/120V", "meta": { "kva": "75", "primary": "480V", "secondary": "208/120V", "temp_rise": "150°C", "sound_level": "NEMA ST-20", "enclosure": "NEMA 2", "ul_listing": "UL 1561" } },
+            { "title": "TX 150kVA 480→208/120V", "meta": { "kva": "150", "primary": "480V", "secondary": "208/120V", "temp_rise": "150°C", "sound_level": "NEMA ST-20", "enclosure": "NEMA 2", "ul_listing": "UL 1561" } }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Conduit & Raceway",
+      "types": [
+        {
+          "title": "Rigid Metal Conduit (RMC)",
+          "items": [
+            { "title": "RMC 1\" x 10ft", "meta": { "trade_size": "1\"", "length": "10 ft", "material": "Galv. Steel", "threaded": "Yes", "standard": "ANSI C80.1", "ul_listing": "UL 6" } },
+            { "title": "RMC 2\" x 10ft", "meta": { "trade_size": "2\"", "length": "10 ft", "material": "Galv. Steel", "threaded": "Yes", "standard": "ANSI C80.1", "ul_listing": "UL 6" } }
+          ]
+        },
+        {
+          "title": "Electrical Metallic Tubing (EMT)",
+          "items": [
+            { "title": "EMT 3/4\" x 10ft", "meta": { "trade_size": "3/4\"", "length": "10 ft", "material": "Galv. Steel", "coating": "Zinc", "standard": "ANSI C80.3", "ul_listing": "UL 797" } },
+            { "title": "EMT 1-1/2\" x 10ft", "meta": { "trade_size": "1-1/2\"", "length": "10 ft", "material": "Galv. Steel", "coating": "Zinc", "standard": "ANSI C80.3", "ul_listing": "UL 797" } }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Wiring Devices",
+      "types": [
+        {
+          "title": "Receptacles & GFCI",
+          "items": [
+            { "title": "Spec Grade Duplex 20A 125V", "meta": { "rating_a": "20", "voltage": "125V", "grade": "Spec", "color": "Ivory", "ul_listing": "UL 498" } },
+            { "title": "GFCI Duplex 20A 125V",      "meta": { "rating_a": "20", "voltage": "125V", "gfci": "Yes", "indicator": "LED", "ul_listing": "UL 943" } }
+          ]
+        }
+      ]
+    }
+  ]
+}

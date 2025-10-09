@@ -1,0 +1,84 @@
+{
+  "title": "Manufacturing — Fasteners",
+  "categories": [
+    {
+      "title": "Bolts",
+      "types": [
+        {
+          "title": "Hex Head Bolts",
+          "items": [
+            { "title": "M8 x 25mm, Class 8.8, Zinc", "meta": { "size": "M8", "length": "25 mm", "thread": "1.25 mm", "material": "Carbon Steel", "finish": "Zinc", "strength_class": "8.8", "standard": "ISO 4014" } },
+            { "title": "M12 x 50mm, Class 10.9, Black", "meta": { "size": "M12", "length": "50 mm", "thread": "1.75 mm", "material": "Alloy Steel", "finish": "Black Oxide", "strength_class": "10.9", "standard": "ISO 4014", "notes": "For high clamp loads" } }
+          ]
+        },
+        {
+          "title": "Socket Head Cap Screws",
+          "items": [
+            { "title": "1/4-20 x 1\" SHCS, Alloy", "meta": { "size": "1/4-20", "length": "1 in", "drive": "Hex Socket", "material": "Alloy Steel", "finish": "Plain", "standard": "ASME B18.3" } },
+            { "title": "5/16-18 x 1-1/2\" SHCS, SS", "meta": { "size": "5/16-18", "length": "1-1/2 in", "drive": "Hex Socket", "material": "Stainless 18-8", "finish": "Passivated", "standard": "ASME B18.3" } }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Nuts",
+      "types": [
+        {
+          "title": "Hex Nuts",
+          "items": [
+            { "title": "M8 Hex Nut, Class 8, Zinc", "meta": { "size": "M8", "thread": "1.25 mm", "material": "Carbon Steel", "finish": "Zinc", "strength_class": "8", "standard": "ISO 4032" } },
+            { "title": "1/2-13 Hex Nut, Gr. 5, Zinc", "meta": { "size": "1/2-13", "thread": "UNC", "material": "Carbon Steel", "finish": "Zinc", "grade": "5", "standard": "ASME B18.2.2" } }
+          ]
+        },
+        {
+          "title": "Lock Nuts",
+          "items": [
+            { "title": "M10 Nylon Insert Lock Nut", "meta": { "size": "M10", "thread": "1.5 mm", "material": "Carbon Steel", "finish": "Zinc", "type": "Nylon Insert", "standard": "ISO 10511" } }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Washers",
+      "types": [
+        {
+          "title": "Flat Washers",
+          "items": [
+            { "title": "M8 Flat Washer, SS", "meta": { "size": "M8", "material": "Stainless 18-8", "hardness": "HV 200", "standard": "ISO 7089" } },
+            { "title": "1/2\" Flat Washer, Zinc", "meta": { "size": "1/2 in", "material": "Carbon Steel", "finish": "Zinc", "standard": "SAE J403" } }
+          ]
+        },
+        {
+          "title": "Spring (Split Lock) Washers",
+          "items": [
+            { "title": "M10 Split Lock Washer", "meta": { "size": "M10", "material": "Carbon Steel", "finish": "Zinc", "standard": "DIN 127" } }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Screws",
+      "types": [
+        {
+          "title": "Self-Drilling Screws",
+          "items": [
+            { "title": "#10-16 x 1\" Hex Washer, SD", "meta": { "size": "#10-16", "length": "1 in", "head": "Hex Washer", "point": "Self-Drilling", "material": "Carbon Steel", "finish": "Zinc", "standard": "SAE J78" } },
+            { "title": "#12-14 x 1-1/2\" Pan Head, SD", "meta": { "size": "#12-14", "length": "1-1/2 in", "head": "Pan", "point": "Self-Drilling", "material": "Carbon Steel", "finish": "Zinc", "standard": "SAE J78", "notes": "For 16–20 ga steel" } }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Anchors",
+      "types": [
+        {
+          "title": "Mechanical Anchors",
+          "items": [
+            { "title": "1/2\" Wedge Anchor, Carbon Steel", "meta": { "size": "1/2 in", "embedment": "2-1/4 in", "material": "Carbon Steel", "finish": "Zinc", "approval": "ICC-ES", "standard": "ACI 355.2" } },
+            { "title": "3/8\" Sleeve Anchor, SS", "meta": { "size": "3/8 in", "embedment": "1-7/8 in", "material": "Stainless 304", "finish": "Passivated", "approval": "ICC-ES" } }
+          ]
+        }
+      ]
+    }
+  ]
+}

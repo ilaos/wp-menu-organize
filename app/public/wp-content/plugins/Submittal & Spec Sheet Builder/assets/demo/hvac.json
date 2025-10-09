@@ -1,0 +1,74 @@
+{
+  "title": "HVAC Duct & Equipment",
+  "categories": [
+    {
+      "title": "Air Handling Units",
+      "types": [
+        {
+          "title": "Rooftop Units",
+          "items": [
+            { "title": "RTU-7.5T 208V", "meta": { "cfm": "3000", "tonnage": "7.5", "voltage": "208V", "phases": "3", "material": "Galv. Steel", "gauge": "18", "notes": "Economizer included" } },
+            { "title": "RTU-10T 460V",  "meta": { "cfm": "4000", "tonnage": "10",  "voltage": "460V", "phases": "3", "material": "Galv. Steel", "gauge": "18" } },
+            { "title": "RTU-15T 460V",  "meta": { "cfm": "6000", "tonnage": "15",  "voltage": "460V", "phases": "3", "material": "Galv. Steel", "gauge": "16" } }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Ductwork",
+      "types": [
+        {
+          "title": "Rectangular Duct",
+          "items": [
+            { "title": "24x12 Duct", "meta": { "size": "24x12 in", "gauge": "22", "material": "Galv. Steel", "seam": "Pittsburgh", "sealant": "SMACNA A", "pressure_class": "2 in. wg" } },
+            { "title": "36x18 Duct", "meta": { "size": "36x18 in", "gauge": "20", "material": "Galv. Steel", "seam": "Pittsburgh", "sealant": "SMACNA A", "pressure_class": "2 in. wg" } },
+            { "title": "48x24 Duct", "meta": { "size": "48x24 in", "gauge": "18", "material": "Galv. Steel", "seam": "Pittsburgh", "sealant": "SMACNA A", "pressure_class": "4 in. wg" } }
+          ]
+        },
+        {
+          "title": "Spiral Duct",
+          "items": [
+            { "title": "Ø14 Spiral", "meta": { "diameter": "14 in", "gauge": "24", "material": "Galv. Steel", "seam": "Spiral lock", "pressure_class": "2 in. wg" } },
+            { "title": "Ø24 Spiral", "meta": { "diameter": "24 in", "gauge": "22", "material": "Galv. Steel", "seam": "Spiral lock", "pressure_class": "4 in. wg" } }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Fittings",
+      "types": [
+        {
+          "title": "Elbows & Transitions",
+          "items": [
+            { "title": "Elbow 90° 24x24", "meta": { "size": "24x24 in", "gauge": "22", "radius": "1.5x", "material": "Galv. Steel" } },
+            { "title": "Transition 36→24", "meta": { "inlet": "36x18 in", "outlet": "24x12 in", "gauge": "20", "angle": "15°", "material": "Galv. Steel" } }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Fans",
+      "types": [
+        {
+          "title": "Centrifugal Fans",
+          "items": [
+            { "title": "CF-18 1.5HP 208V", "meta": { "cfm": "2400", "static": "1.5 in. wg", "hp": "1.5", "voltage": "208V", "phases": "3", "notes": "AMCA certified" } },
+            { "title": "CF-24 3HP 460V",   "meta": { "cfm": "4200", "static": "2.0 in. wg", "hp": "3.0", "voltage": "460V", "phases": "3" } }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Accessories",
+      "types": [
+        {
+          "title": "Volume Dampers",
+          "items": [
+            { "title": "VD-12x12 Manual", "meta": { "size": "12x12 in", "blade": "Opposed", "frame": "16 ga", "actuator": "Manual", "finish": "Zinc" } },
+            { "title": "VD-24x24 Auto",   "meta": { "size": "24x24 in", "blade": "Parallel", "frame": "16 ga", "actuator": "24V modulating", "finish": "Zinc" } }
+          ]
+        }
+      ]
+    }
+  ]
+}

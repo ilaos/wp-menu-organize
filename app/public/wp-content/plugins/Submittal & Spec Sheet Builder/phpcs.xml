@@ -1,0 +1,80 @@
+<?xml version="1.0"?>
+<ruleset name="Submittal Builder">
+	<description>PHPCS configuration for Submittal & Spec Sheet Builder plugin</description>
+
+	<!-- What to scan -->
+	<file>.</file>
+
+	<!-- Exclude paths -->
+	<exclude-pattern>*/node_modules/*</exclude-pattern>
+	<exclude-pattern>*/vendor/*</exclude-pattern>
+	<exclude-pattern>*/lib/*</exclude-pattern>
+	<exclude-pattern>*/assets/app.js</exclude-pattern>
+	<exclude-pattern>*/assets/admin.js</exclude-pattern>
+	<exclude-pattern>*/languages/*</exclude-pattern>
+
+	<!-- Show progress and use colors -->
+	<arg value="ps"/>
+	<arg name="colors"/>
+
+	<!-- Include the WordPress-Core ruleset -->
+	<rule ref="WordPress-Core">
+		<!-- Allow short array syntax -->
+		<exclude name="Generic.Arrays.DisallowShortArraySyntax"/>
+		<!-- Allow short ternary operator -->
+		<exclude name="WordPress.PHP.DisallowShortTernary"/>
+	</rule>
+
+	<!-- Include the WordPress-Extra ruleset -->
+	<rule ref="WordPress-Extra">
+		<!-- Exclude filename rules for main plugin file -->
+		<exclude name="WordPress.Files.FileName.InvalidClassFileName"/>
+		<exclude name="WordPress.Files.FileName.NotHyphenatedLowercase"/>
+	</rule>
+
+	<!-- Include WordPress-Docs ruleset -->
+	<rule ref="WordPress-Docs">
+		<!-- Allow missing @since tags for now -->
+		<exclude name="Squiz.Commenting.FunctionComment.MissingParamComment"/>
+		<exclude name="Squiz.Commenting.VariableComment.Missing"/>
+	</rule>
+
+	<!-- Check for PHP cross-version compatibility -->
+	<config name="testVersion" value="7.4-"/>
+	<rule ref="PHPCompatibility">
+		<!-- Exclude warnings about PHP 8.0+ features we're not using -->
+		<exclude name="PHPCompatibility.FunctionUse.NewFunctions.str_containsFound"/>
+	</rule>
+
+	<!-- WordPress-specific rules -->
+	<rule ref="WordPress.WP.I18n">
+		<properties>
+			<property name="text_domain" type="array">
+				<element value="submittal-builder"/>
+			</property>
+		</properties>
+	</rule>
+
+	<rule ref="WordPress.Security.EscapeOutput"/>
+	<rule ref="WordPress.Security.NonceVerification"/>
+	<rule ref="WordPress.Security.ValidatedSanitizedInput"/>
+
+	<!-- Allow short PHP tags in template files -->
+	<rule ref="Generic.PHP.DisallowShortOpenTag">
+		<exclude-pattern>*/templates/*.php</exclude-pattern>
+	</rule>
+
+	<!-- Increase line length limit for template files -->
+	<rule ref="Generic.Files.LineLength">
+		<properties>
+			<property name="lineLimit" value="150"/>
+			<property name="absoluteLineLimit" value="200"/>
+		</properties>
+		<exclude-pattern>*/templates/*.php</exclude-pattern>
+	</rule>
+
+	<!-- Allow multiple classes per file in includes directory -->
+	<rule ref="Generic.Files.OneObjectStructurePerFile">
+		<exclude-pattern>*/includes/*</exclude-pattern>
+	</rule>
+</ruleset>

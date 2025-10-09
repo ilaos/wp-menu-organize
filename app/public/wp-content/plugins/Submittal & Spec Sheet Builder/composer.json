@@ -1,0 +1,17 @@
+{
+    "name": "submittal-builder/plugin",
+    "description": "Submittal & Spec Sheet Builder WordPress Plugin",
+    "type": "wordpress-plugin",
+    "license": "GPL-2.0-or-later",
+    "require": {
+        "php": ">=7.4",
+        "dompdf/dompdf": "^2.0",
+        "masterminds/html5": "^2.8"
+    },
+    "config": {
+        "vendor-dir": "vendor",
+        "optimize-autoloader": true,
+        "sort-packages": true,
+        "secure-http": false
+    }
+}

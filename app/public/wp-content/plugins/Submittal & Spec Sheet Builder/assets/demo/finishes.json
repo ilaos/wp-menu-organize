@@ -1,0 +1,75 @@
+{
+  "title": "Architectural Finishes — Ceilings & Tile",
+  "categories": [
+    {
+      "title": "Acoustic Ceilings",
+      "types": [
+        {
+          "title": "Mineral Fiber Tiles",
+          "items": [
+            { "title": "24x24 Fine Fissured, White", "meta": { "size": "24x24 in", "thickness": "5/8 in", "nrc": "0.70", "cac": "35", "fire_rating": "Class A", "edge": "Square Lay-In", "notes": "Low VOC" } },
+            { "title": "24x48 Smooth Tegular, White", "meta": { "size": "24x48 in", "thickness": "3/4 in", "nrc": "0.80", "cac": "37", "fire_rating": "Class A", "edge": "Tegular" } }
+          ]
+        },
+        {
+          "title": "Metal Panels",
+          "items": [
+            { "title": "24x24 Micro-Perforated, Silver", "meta": { "size": "24x24 in", "material": "Aluminum", "perforation": "Micro", "nrc": "0.85 (with pad)", "finish": "Powder Coat", "fire_rating": "Class A" } }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Suspension Systems",
+      "types": [
+        {
+          "title": "Grid — Exposed Tee",
+          "items": [
+            { "title": "15/16\" Exposed Tee, White", "meta": { "face_width": "15/16 in", "material": "Steel", "finish": "Baked Enamel", "seismic": "I-III", "standard": "ASTM C635/C636" } },
+            { "title": "9/16\" Narrow Tee, Black", "meta": { "face_width": "9/16 in", "material": "Steel", "finish": "Powder Coat", "seismic": "I-III", "standard": "ASTM C635/C636" } }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Ceramic & Porcelain Tile",
+      "types": [
+        {
+          "title": "Floor Tile",
+          "items": [
+            { "title": "12x24 Porcelain, Grey", "meta": { "size": "12x24 in", "thickness": "10 mm", "pei": "IV", "cof": "≥0.60 (wet)", "water_absorption": "<0.5%", "standard": "ANSI A137.1", "notes": "Rectified" } },
+            { "title": "24x24 Porcelain, White", "meta": { "size": "24x24 in", "thickness": "10 mm", "pei": "IV", "cof": "≥0.60 (wet)", "water_absorption": "<0.5%", "standard": "ANSI A137.1" } }
+          ]
+        },
+        {
+          "title": "Wall Tile",
+          "items": [
+            { "title": "3x12 Ceramic Subway, White", "meta": { "size": "3x12 in", "thickness": "8 mm", "finish": "Gloss", "water_absorption": "10–20%", "standard": "ANSI A137.1" } }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Stone & Slab",
+      "types": [
+        {
+          "title": "Natural Stone",
+          "items": [
+            { "title": "Granite Slab G603", "meta": { "size": "96x26 in", "thickness": "30 mm", "finish": "Polished", "absorption": "0.3%", "density": "2.63 g/cm³", "standard": "ASTM C97/C99" } }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Accessories",
+      "types": [
+        {
+          "title": "Edge & Trim",
+          "items": [
+            { "title": "Aluminum Edge, 1/2\"", "meta": { "size": "1/2 in", "material": "Aluminum", "finish": "Anodized", "length": "8 ft", "standard": "ASTM B221" } }
+          ]
+        }
+      ]
+    }
+  ]
+}
