@@ -5930,29 +5930,7 @@ final class SFB_Plugin {
     }
   }
 
-  /** Return form + nodes (flat list) */
-  function api_get_form($req){
-    try {
-      $this->ensure_tables();
-      global $wpdb;
-      $form_id = intval($req['id']);
-      $forms = $wpdb->prefix.'sfb_forms';
-      $nodes = $wpdb->prefix.'sfb_nodes';
-
-      $form = $wpdb->get_row($wpdb->prepare("SELECT * FROM $forms WHERE id=%d", $form_id), ARRAY_A);
-      if (!$form) return new WP_Error('not_found','Form not found', ['status'=>404]);
-
-      $rows = $wpdb->get_results($wpdb->prepare("SELECT * FROM $nodes WHERE form_id=%d ORDER BY position ASC, id ASC", $form_id), ARRAY_A);
-      foreach ($rows as &$r) {
-        $r['settings'] = $r['settings_json'] ? json_decode($r['settings_json'], true) : [];
-        unset($r['settings_json']);
-      }
-      return ['ok'=>true,'form'=>$form,'nodes'=>$rows];
-    } catch (\Throwable $e) {
-      error_log('SFB api_get_form error: '.$e->getMessage());
-      return new WP_Error('server_error', $e->getMessage(), ['status'=>500]);
-    }
-  }
+  // Phase 3 Refactor: api_get_form() moved to SFB_Rest::get_form()
 
   /** Insert or update a node (title + settings.fields for model) */
   function api_save_node($req){
@@ -6281,37 +6259,7 @@ final class SFB_Plugin {
     }
   }
 
-  /** Get node history (last 20 changes) */
-  function api_node_history($req){
-    try {
-      $id = intval($req->get_param('id'));
-      if (!$id) return new WP_Error('bad_request', 'Missing id', ['status' => 400]);
-
-      // TODO: Implement actual history tracking with a history table
-      // For now, return mock data based on node modifications
-      global $wpdb;
-      $table = $wpdb->prefix . 'sfb_nodes';
-      $node = $wpdb->get_row($wpdb->prepare("SELECT * FROM $table WHERE id=%d", $id), ARRAY_A);
-
-      if (!$node) {
-        return new WP_Error('not_found', 'Node not found', ['status' => 404]);
-      }
-
-      // Mock history entries
-      $history = [
-        [
-          'action' => 'Node created',
-          'user' => get_userdata(get_current_user_id())->display_name ?? 'System',
-          'timestamp' => current_time('mysql')
-        ]
-      ];
-
-      return ['ok' => true, 'history' => $history];
-    } catch (\Throwable $e) {
-      error_log('SFB api_node_history error: ' . $e->getMessage());
-      return new WP_Error('server_error', $e->getMessage(), ['status' => 500]);
-    }
-  }
+  // Phase 3 Refactor: api_node_history() moved to SFB_Rest::get_node_history()
 
   /** Bulk delete nodes (recursively deletes children) */
   function api_bulk_delete($req){

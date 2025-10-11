@@ -67,7 +67,7 @@ final class SFB_Rest {
     register_rest_route('sfb/v1', '/form/(?P<id>\d+)', [
       'methods' => 'GET',
       'permission_callback' => '__return_true',
-      'callback' => [$sfb_plugin, 'api_get_form']
+      'callback' => [__CLASS__, 'get_form']
     ]);
 
     register_rest_route('sfb/v1', '/form/(?P<id>\d+)/export', [
@@ -122,7 +122,7 @@ final class SFB_Rest {
     register_rest_route('sfb/v1', '/node/history', [
       'methods' => 'GET',
       'permission_callback' => function() { return current_user_can('manage_options'); },
-      'callback' => [$sfb_plugin, 'api_node_history']
+      'callback' => [__CLASS__, 'get_node_history']
     ]);
 
     // Bulk Operations (Admin)
@@ -314,5 +314,80 @@ final class SFB_Rest {
       'drafts_rate_limit_sec' => 20,
       'drafts_privacy_note' => '',
     ];
+  }
+
+  // =========================================================================
+  // Phase 3: Catalog Read-Only REST Handlers (moved from main plugin file)
+  // =========================================================================
+
+  /**
+   * GET /form/{id} - Get full catalog/form data for display
+   *
+   * @param WP_REST_Request $req Request object with form ID
+   * @return array|WP_Error Response with form and nodes, or error
+   */
+  public static function get_form($req) {
+    try {
+      global $sfb_plugin, $wpdb;
+
+      // Ensure tables exist
+      if ($sfb_plugin && method_exists($sfb_plugin, 'ensure_tables')) {
+        $sfb_plugin->ensure_tables();
+      }
+
+      $form_id = intval($req['id']);
+      $forms = $wpdb->prefix.'sfb_forms';
+      $nodes = $wpdb->prefix.'sfb_nodes';
+
+      $form = $wpdb->get_row($wpdb->prepare("SELECT * FROM $forms WHERE id=%d", $form_id), ARRAY_A);
+      if (!$form) return new WP_Error('not_found','Form not found', ['status'=>404]);
+
+      $rows = $wpdb->get_results($wpdb->prepare("SELECT * FROM $nodes WHERE form_id=%d ORDER BY position ASC, id ASC", $form_id), ARRAY_A);
+      foreach ($rows as &$r) {
+        $r['settings'] = $r['settings_json'] ? json_decode($r['settings_json'], true) : [];
+        unset($r['settings_json']);
+      }
+      return ['ok'=>true,'form'=>$form,'nodes'=>$rows];
+    } catch (\Throwable $e) {
+      error_log('SFB api_get_form error: '.$e->getMessage());
+      return new WP_Error('server_error', $e->getMessage(), ['status'=>500]);
+    }
+  }
+
+  /**
+   * GET /node/history - Get node change history
+   *
+   * @param WP_REST_Request $req Request object with node ID
+   * @return array|WP_Error Response with history data, or error
+   */
+  public static function get_node_history($req) {
+    try {
+      $id = intval($req->get_param('id'));
+      if (!$id) return new WP_Error('bad_request', 'Missing id', ['status' => 400]);
+
+      // TODO: Implement actual history tracking with a history table
+      // For now, return mock data based on node modifications
+      global $wpdb;
+      $table = $wpdb->prefix . 'sfb_nodes';
+      $node = $wpdb->get_row($wpdb->prepare("SELECT * FROM $table WHERE id=%d", $id), ARRAY_A);
+
+      if (!$node) {
+        return new WP_Error('not_found', 'Node not found', ['status' => 404]);
+      }
+
+      // Mock history entries
+      $history = [
+        [
+          'action' => 'Node created',
+          'user' => get_userdata(get_current_user_id())->display_name ?? 'System',
+          'timestamp' => current_time('mysql')
+        ]
+      ];
+
+      return ['ok' => true, 'history' => $history];
+    } catch (\Throwable $e) {
+      error_log('SFB api_node_history error: ' . $e->getMessage());
+      return new WP_Error('server_error', $e->getMessage(), ['status' => 500]);
+    }
   }
 }
