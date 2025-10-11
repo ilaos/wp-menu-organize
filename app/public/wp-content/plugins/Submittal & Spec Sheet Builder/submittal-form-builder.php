@@ -94,6 +94,9 @@ final class SFB_Plugin {
     // Onboarding: form submission handler
     add_action('admin_init', [$this, 'handle_onboarding_setup']);
 
+    // Leads CSV export handler (must run early before any output)
+    add_action('admin_init', [$this, 'handle_leads_csv_export']);
+
     // Onboarding: welcome notice (dismissible, per-user)
     add_action('admin_notices', [$this, 'show_welcome_notice']);
     add_action('wp_ajax_sfb_dismiss_welcome', [$this, 'dismiss_welcome_notice']);
@@ -3139,12 +3142,6 @@ final class SFB_Plugin {
 
   /** Leads Page Renderer */
   function render_leads_page() {
-    // Handle CSV export
-    if (isset($_GET['action']) && $_GET['action'] === 'export_csv' && check_admin_referer('sfb_export_leads', 'nonce')) {
-      $this->export_leads_csv();
-      exit;
-    }
-
     // Get filter parameters
     $search = isset($_GET['s']) ? sanitize_text_field($_GET['s']) : '';
     $date_from = isset($_GET['date_from']) ? sanitize_text_field($_GET['date_from']) : '';
@@ -3426,70 +3423,6 @@ final class SFB_Plugin {
       'leads' => $leads ?: [],
       'total' => $total,
     ];
-  }
-
-  /** Export filtered leads to CSV */
-  private function export_leads_csv() {
-    if (!current_user_can('manage_options')) {
-      wp_die('Unauthorized', 'Error', ['response' => 403]);
-    }
-
-    // Get filter parameters
-    $search = isset($_GET['s']) ? sanitize_text_field($_GET['s']) : '';
-    $date_from = isset($_GET['date_from']) ? sanitize_text_field($_GET['date_from']) : '';
-    $date_to = isset($_GET['date_to']) ? sanitize_text_field($_GET['date_to']) : '';
-
-    // Get ALL filtered leads (no pagination for export)
-    $leads_data = $this->get_filtered_leads($search, $date_from, $date_to, 999999, 0);
-    $leads = $leads_data['leads'];
-
-    // Set headers for CSV download
-    header('Content-Type: text/csv; charset=utf-8');
-    header('Content-Disposition: attachment; filename=sfb-leads-' . date('Y-m-d-His') . '.csv');
-
-    $output = fopen('php://output', 'w');
-
-    // CSV headers
-    fputcsv($output, [
-      'Date',
-      'Email',
-      'Phone',
-      'Project Name',
-      'Items',
-      'Top Category',
-      'Consent',
-      'UTM Source',
-      'UTM Medium',
-      'UTM Campaign',
-      'UTM Term',
-      'UTM Content',
-      'IP Hash (partial)',
-    ]);
-
-    // CSV rows
-    foreach ($leads as $lead) {
-      $utm = json_decode($lead['utm_json'], true) ?: [];
-      $ip_partial = !empty($lead['ip_hash']) ? substr($lead['ip_hash'], 0, 8) . '...' : '';
-
-      fputcsv($output, [
-        $lead['created_at'],
-        $lead['email'],
-        $lead['phone'],
-        $lead['project_name'],
-        $lead['num_items'],
-        $lead['top_category'],
-        $lead['consent'] ? 'Yes' : 'No',
-        $utm['source'] ?? '',
-        $utm['medium'] ?? '',
-        $utm['campaign'] ?? '',
-        $utm['term'] ?? '',
-        $utm['content'] ?? '',
-        $ip_partial,
-      ]);
-    }
-
-    fclose($output);
-    exit;
   }
 
   /** Demo Tools Page Renderer */
@@ -4063,6 +3996,83 @@ final class SFB_Plugin {
 
     // Redirect to same page with success message
     wp_safe_redirect(admin_url('admin.php?page=sfb-onboarding&setup=done'));
+    exit;
+  }
+
+  /** Handle leads CSV export (runs early in admin_init to avoid header issues) */
+  function handle_leads_csv_export() {
+    // Check if this is a leads CSV export request
+    if (!isset($_GET['page']) || $_GET['page'] !== 'sfb-leads') return;
+    if (!isset($_GET['action']) || $_GET['action'] !== 'export_csv') return;
+    if (!isset($_GET['nonce'])) return;
+
+    // Verify nonce
+    if (!check_admin_referer('sfb_export_leads', 'nonce')) {
+      wp_die('Security check failed', 'Error', ['response' => 403]);
+    }
+
+    // Check capability
+    if (!current_user_can('manage_options')) {
+      wp_die('Unauthorized', 'Error', ['response' => 403]);
+    }
+
+    // Get filter parameters
+    $search = isset($_GET['s']) ? sanitize_text_field($_GET['s']) : '';
+    $date_from = isset($_GET['date_from']) ? sanitize_text_field($_GET['date_from']) : '';
+    $date_to = isset($_GET['date_to']) ? sanitize_text_field($_GET['date_to']) : '';
+
+    // Get ALL filtered leads (no pagination for export)
+    $leads_data = $this->get_filtered_leads($search, $date_from, $date_to, 999999, 0);
+    $leads = $leads_data['leads'];
+
+    // Set headers for CSV download
+    header('Content-Type: text/csv; charset=utf-8');
+    header('Content-Disposition: attachment; filename=sfb-leads-' . date('Y-m-d-His') . '.csv');
+    header('Pragma: no-cache');
+    header('Expires: 0');
+
+    $output = fopen('php://output', 'w');
+
+    // CSV headers
+    fputcsv($output, [
+      'Date',
+      'Email',
+      'Phone',
+      'Project Name',
+      'Items',
+      'Top Category',
+      'Consent',
+      'UTM Source',
+      'UTM Medium',
+      'UTM Campaign',
+      'UTM Term',
+      'UTM Content',
+      'IP Hash (partial)',
+    ]);
+
+    // CSV rows
+    foreach ($leads as $lead) {
+      $utm = json_decode($lead['utm_json'], true) ?: [];
+      $ip_partial = !empty($lead['ip_hash']) ? substr($lead['ip_hash'], 0, 8) . '...' : '';
+
+      fputcsv($output, [
+        $lead['created_at'],
+        $lead['email'],
+        $lead['phone'],
+        $lead['project_name'],
+        $lead['num_items'],
+        $lead['top_category'],
+        $lead['consent'] ? 'Yes' : 'No',
+        $utm['source'] ?? '',
+        $utm['medium'] ?? '',
+        $utm['campaign'] ?? '',
+        $utm['term'] ?? '',
+        $utm['content'] ?? '',
+        $ip_partial,
+      ]);
+    }
+
+    fclose($output);
     exit;
   }
 
