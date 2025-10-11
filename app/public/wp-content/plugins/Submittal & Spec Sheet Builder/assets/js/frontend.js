@@ -196,7 +196,7 @@
     }
 
     if (elements.generatePdfBtn) {
-      elements.generatePdfBtn.addEventListener('click', handleGeneratePDF);
+      elements.generatePdfBtn.addEventListener('click', () => handleGeneratePDF());
     }
 
     // Review clear all button
@@ -223,7 +223,7 @@
     }
 
     if (elements.generatePdfStickyBtn) {
-      elements.generatePdfStickyBtn.addEventListener('click', handleGeneratePDF);
+      elements.generatePdfStickyBtn.addEventListener('click', () => handleGeneratePDF());
     }
 
     // Sticky actions scroll detection
@@ -541,9 +541,10 @@
              tabindex="0"
              aria-pressed="${isSelected ? 'true' : 'false'}"
              aria-label="${escapeHtml(product.model)} - ${isSelected ? 'Selected' : 'Not selected'}. ${product.category ? 'Category: ' + escapeHtml(product.category) + '.' : ''} Press Enter or Space to ${isSelected ? 'remove' : 'add'}.">
-          <button class="sfb-sr-only sfb-card__toggle" aria-hidden="true" tabindex="-1">
-            ${isSelected ? 'Remove' : 'Add'} ${escapeHtml(product.model)}
+          <button class="sfb-sr-only sfb-card__toggle" aria-pressed="${isSelected ? 'true' : 'false'}">
+            Toggle selection for ${escapeHtml(product.model)}
           </button>
+          <div class="sfb-card__selected-indicator" aria-hidden="true">✓ ADDED</div>
           ${cardHead}
           <h4 class="sfb-product-name">${escapeHtml(product.model)}</h4>
           ${specsHtml}
@@ -619,6 +620,12 @@
     if (card) {
       card.classList.toggle('sfb-product-card-selected', isSelected);
       card.setAttribute('aria-pressed', isSelected ? 'true' : 'false');
+
+      // Update SR button aria-pressed
+      const srBtn = card.querySelector('.sfb-card__toggle');
+      if (srBtn) {
+        srBtn.setAttribute('aria-pressed', isSelected ? 'true' : 'false');
+      }
 
       // Update aria-label
       const product = state.productsMap.get(compositeKey);
@@ -728,7 +735,8 @@
 
     // Step-specific actions
     if (step === 2) {
-      renderReview();
+      // Let review.js handle rendering (it auto-initializes)
+      // Don't call renderReview() - review.js will handle it
     }
 
     // Hide tray on step 2+
@@ -949,7 +957,7 @@
   }
 
   // ========== Generate PDF ==========
-  async function handleGeneratePDF() {
+  async function handleGeneratePDF(skipLeadCapture = false) {
     console.log('[SFB] Generate PDF clicked');
     console.log('[SFB] Selected products size:', state.selected.size);
     console.log('[SFB] Selected products:', state.selectedProducts);
@@ -959,26 +967,51 @@
       return;
     }
 
+    // Check if lead capture is enabled (Pro feature)
+    const leadCaptureEnabled = elements.app?.dataset.leadCapture === '1';
+
+    if (leadCaptureEnabled && !skipLeadCapture && typeof window.SFB_LeadCapture !== 'undefined') {
+      console.log('[SFB] Lead capture enabled, showing modal');
+
+      // Prepare PDF data to pass to modal
+      const pdfData = {
+        projectName: state.projectName || '',
+        products: Array.from(state.selectedProducts.values())
+      };
+
+      // Open lead capture modal
+      window.SFB_LeadCapture.openModal(pdfData);
+      return; // Stop here - will continue after lead submission
+    }
+
     // Show loading overlay
     if (elements.loadingOverlay) {
       elements.loadingOverlay.style.display = 'flex';
     }
 
     try {
-      // Prepare payload
-      const products = Array.from(state.selectedProducts.values());
-      console.log('[SFB] Products array for PDF:', products);
-
-      const productsData = products.map(p => ({ id: p.id, node_id: p.node_id || p.id }));
+      // Collect review payload if available (quantities, notes, overrides)
+      let review = null;
+      if (typeof window.SFB_collectReviewPayload === 'function') {
+        review = window.SFB_collectReviewPayload(state.projectName || '');
+        console.log('[SFB] Review payload collected:', review);
+      }
 
       const formData = new FormData();
       formData.append('action', 'sfb_generate_frontend_pdf');
       formData.append('nonce', elements.nonce);
-      formData.append('products', JSON.stringify(productsData)); // Single JSON.stringify
-      formData.append('project_name', state.projectName || '');
-      formData.append('notes', state.projectNotes || '');
 
-      console.log('[SFB] PDF payload products:', JSON.stringify(productsData));
+      if (review) {
+        // Use review payload (includes quantities, notes, overrides)
+        formData.append('review', JSON.stringify(review));
+      } else {
+        // Fallback to legacy format
+        const products = Array.from(state.selectedProducts.values());
+        const productsData = products.map(p => ({ id: p.id, node_id: p.node_id || p.id }));
+        formData.append('products', JSON.stringify(productsData));
+        formData.append('project_name', state.projectName || '');
+        formData.append('notes', state.projectNotes || '');
+      }
 
       // Generate PDF via AJAX with robust error handling
       const response = await fetch(elements.ajaxUrl, {
@@ -1106,7 +1139,7 @@
                 .join(' · ') : '';
 
             return `
-              <div class="sfb-tray-product-item" data-composite-key="${escapeHtml(product.composite_key)}">
+              <div class="sfb-tray-product-item" data-composite-key="${escapeHtml(product.composite_key)}" role="listitem">
                 <div class="sfb-tray-product-info">
                   <div class="sfb-tray-product-name">${escapeHtml(product.model)}</div>
                   ${specs ? `<div class="sfb-tray-product-specs">${escapeHtml(specs)}</div>` : ''}
@@ -1120,8 +1153,8 @@
 
           return `
             <div class="sfb-tray-group">
-              <div class="sfb-tray-group__title">${escapeHtml(category)}</div>
-              <div class="sfb-tray-group__list">${productsHtml}</div>
+              <h3 class="sfb-tray-group__title" role="heading" aria-level="3">${escapeHtml(category)}</h3>
+              <div class="sfb-tray-group__list" role="list">${productsHtml}</div>
             </div>
           `;
         }).join('');
@@ -1142,9 +1175,19 @@
   function toggleTray() {
     if (elements.tray) {
       const isCollapsed = elements.tray.classList.toggle('sfb-tray--collapsed');
-      // Persist collapsed state
+
+      // Update ARIA attributes for accessibility
+      if (elements.trayToggleBtn) {
+        elements.trayToggleBtn.setAttribute('aria-expanded', isCollapsed ? 'false' : 'true');
+        elements.trayToggleBtn.setAttribute('aria-label', isCollapsed ?
+          'Open selection tray' :
+          'Close selection tray'
+        );
+      }
+
+      // Persist collapsed state to localStorage (per site, not per project)
       try {
-        sessionStorage.setItem('sfb_tray_collapsed', isCollapsed ? '1' : '0');
+        localStorage.setItem('sfb_tray_collapsed', isCollapsed ? '1' : '0');
       } catch (e) {
         console.warn('Failed to save tray state:', e);
       }
@@ -1199,8 +1242,8 @@
         state.pendingRestoreKeys = keys;
       }
 
-      // Restore tray collapsed state
-      const trayCollapsed = sessionStorage.getItem('sfb_tray_collapsed');
+      // Restore tray collapsed state from localStorage
+      const trayCollapsed = localStorage.getItem('sfb_tray_collapsed');
       if (trayCollapsed === '1' && elements.tray) {
         elements.tray.classList.add('sfb-tray--collapsed');
       }
@@ -1248,5 +1291,23 @@
   } else {
     init();
   }
+
+  // Expose state and productsMap for review.js
+  window.sfbState = state;
+  window.sfbProductsMap = state.productsMap;
+
+  // Expose API for lead capture integration (Pro feature)
+  window.SFB = window.SFB || {};
+  window.SFB.continueWithPdfGeneration = async function() {
+    // This is called after lead capture is submitted
+    // Continue with the PDF generation that was interrupted
+    try {
+      // Note: lead submission already happened in lead-capture.js
+      // Just proceed with the actual PDF generation, skipping lead capture this time
+      await handleGeneratePDF(true); // skipLeadCapture = true
+    } catch (error) {
+      console.error('[SFB] Error continuing with PDF generation:', error);
+    }
+  };
 
 })();

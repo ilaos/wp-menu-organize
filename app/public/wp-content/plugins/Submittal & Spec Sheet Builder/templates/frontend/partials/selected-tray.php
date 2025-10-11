@@ -15,13 +15,16 @@ if (!defined('ABSPATH')) exit;
     <h3 class="sfb-tray-title">
       Selected <span id="sfb-tray-count-header">(0)</span>
     </h3>
-    <button id="sfb-tray-toggle" class="sfb-tray-toggle" type="button" aria-label="<?php esc_attr_e('Toggle tray', 'submittal-builder'); ?>">
-      <span class="sfb-tray-icon">▼</span>
+    <button id="sfb-tray-toggle" class="sfb-tray-toggle" type="button"
+            aria-label="<?php esc_attr_e('Close selection tray', 'submittal-builder'); ?>"
+            aria-expanded="true"
+            aria-controls="sfb-tray-body">
+      <span class="sfb-tray-icon" aria-hidden="true">▼</span>
     </button>
   </div>
 
-  <div class="sfb-tray-body">
-    <div id="sfb-tray-products-list" class="sfb-tray-products-list">
+  <div id="sfb-tray-body" class="sfb-tray-body">
+    <div id="sfb-tray-products-list" class="sfb-tray-products-list" role="list" aria-label="<?php esc_attr_e('Selected products', 'submittal-builder'); ?>">
       <div class="sfb-tray-empty">
         <p><?php esc_html_e('No products selected yet', 'submittal-builder'); ?></p>
       </div>
