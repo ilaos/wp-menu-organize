@@ -41,6 +41,11 @@ require_once plugin_dir_path(__FILE__) . 'Includes/class-sfb-rest.php';
 require_once plugin_dir_path(__FILE__) . 'Includes/class-sfb-pdf.php';
 require_once plugin_dir_path(__FILE__) . 'Includes/class-sfb-ajax.php';
 
+// Phase 7 Refactor: Load admin action classes
+require_once plugin_dir_path(__FILE__) . 'Includes/class-sfb-branding.php';
+require_once plugin_dir_path(__FILE__) . 'Includes/class-sfb-drafts.php';
+require_once plugin_dir_path(__FILE__) . 'Includes/class-sfb-tools.php';
+
 /**
  * Helper function to ensure string type (prevents null deprecation warnings in PHP 8.1+)
  * @param mixed $v Value to convert to string
@@ -4142,7 +4147,7 @@ final class SFB_Plugin {
     }
   }
 
-  /** AJAX handler for purging expired drafts */
+  /** AJAX handler for purging expired drafts (Phase 7: delegates to SFB_Drafts) */
   function ajax_purge_expired_drafts() {
     // Check permission
     if (!current_user_can('manage_options')) {
@@ -4152,27 +4157,19 @@ final class SFB_Plugin {
     // Verify nonce
     check_ajax_referer('sfb_purge');
 
-    // Perform purge
-    $purged_count = $this->purge_expired_drafts();
-
-    // Get updated stats
-    $stats = $this->get_draft_stats();
-
-    // Build message
-    $msg = $purged_count > 0
-      ? sprintf(__('✅ Purged %d expired draft(s) at %s', 'submittal-builder'), $purged_count, current_time('g:i A'))
-      : __('⚠️ Nothing to purge — all clear', 'submittal-builder');
+    // Delegate to SFB_Drafts class (Phase 7 refactor)
+    $result = SFB_Drafts::purge_expired();
 
     wp_send_json_success([
-      'message' => $msg,
-      'stats_text' => $stats['text'],
-      'purged' => $purged_count,
-      'total' => $stats['total'],
-      'expired' => $stats['expired']
+      'message' => $result['message'],
+      'stats_text' => $result['data']['stats_text'],
+      'purged' => $result['data']['purged'],
+      'total' => $result['data']['total'],
+      'expired' => $result['data']['expired']
     ]);
   }
 
-  /** AJAX handler for smoke test */
+  /** AJAX handler for smoke test (Phase 7: delegates to SFB_Tools) */
   function ajax_run_smoke_test() {
     // Check permission
     if (!current_user_can('manage_options')) {
@@ -4182,21 +4179,18 @@ final class SFB_Plugin {
     // Verify nonce
     check_ajax_referer('sfb_smoke');
 
-    // Run smoke test
-    $result = $this->run_draft_smoke_test();
+    // Delegate to SFB_Tools class (Phase 7 refactor)
+    $result = SFB_Tools::run_smoke_test();
 
     if (!$result['success']) {
       wp_send_json_error(['message' => '❌ ' . $result['message']]);
     }
 
-    // Get updated stats
-    $stats = $this->get_draft_stats();
-
     wp_send_json_success([
-      'message' => __('✅ Smoke test passed at ', 'submittal-builder') . current_time('g:i A'),
-      'stats_text' => $stats['text'],
-      'total' => $stats['total'],
-      'expired' => $stats['expired']
+      'message' => $result['message'],
+      'stats_text' => $result['data']['stats_text'],
+      'total' => $result['data']['total'],
+      'expired' => $result['data']['expired']
     ]);
   }
 
@@ -4587,7 +4581,7 @@ final class SFB_Plugin {
     }
   }
 
-  /** AJAX handler for saving brand settings */
+  /** AJAX handler for saving brand settings (Phase 7: delegates to SFB_Branding) */
   function ajax_save_brand() {
     // Clean output buffer to prevent stray output corrupting JSON
     if (function_exists('ob_get_length') && ob_get_length()) {
@@ -4609,19 +4603,18 @@ final class SFB_Plugin {
         wp_send_json_error(['message' => __('Invalid JSON data', 'submittal-builder')], 400);
       }
 
-      // Sanitize using helper function
-      $sanitized = sfb_sanitize_brand_settings($data);
+      // Delegate to SFB_Branding class (Phase 7 refactor)
+      $result = SFB_Branding::save($data);
 
-      // Save to database
-      $saved = update_option('sfb_brand_settings', $sanitized, false);
-
-      error_log('[SFB] Brand settings saved: ' . ($saved ? 'success' : 'no change'));
-
-      wp_send_json_success([
-        'saved' => $saved,
-        'settings' => $sanitized,
-        'message' => __('Brand settings saved successfully', 'submittal-builder')
-      ]);
+      if ($result['success']) {
+        wp_send_json_success([
+          'saved' => $result['data']['saved'],
+          'settings' => $result['data']['settings'],
+          'message' => $result['message']
+        ]);
+      } else {
+        wp_send_json_error(['message' => $result['message']], 500);
+      }
 
     } catch (\Throwable $e) {
       error_log('[SFB] Brand save error: ' . $e->getMessage() . "\n" . $e->getTraceAsString());
