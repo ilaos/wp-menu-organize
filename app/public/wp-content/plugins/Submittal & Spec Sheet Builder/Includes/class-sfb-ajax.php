@@ -60,9 +60,9 @@ final class SFB_Ajax {
     add_action('wp_ajax_sfb_list_products', [$plugin, 'ajax_list_products']);
     add_action('wp_ajax_nopriv_sfb_list_products', [$plugin, 'ajax_list_products']);
 
-    // Generate PDF from frontend
-    add_action('wp_ajax_sfb_generate_frontend_pdf', [$plugin, 'ajax_generate_frontend_pdf']);
-    add_action('wp_ajax_nopriv_sfb_generate_frontend_pdf', [$plugin, 'ajax_generate_frontend_pdf']);
+    // Generate PDF from frontend (Phase 6: route through SFB_Pdf facade)
+    add_action('wp_ajax_sfb_generate_frontend_pdf', ['SFB_Pdf', 'generate_frontend_pdf']);
+    add_action('wp_ajax_nopriv_sfb_generate_frontend_pdf', ['SFB_Pdf', 'generate_frontend_pdf']);
   }
 
   /**

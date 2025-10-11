@@ -22,24 +22,40 @@ final class SFB_Pdf {
   }
 
   /**
-   * Generate a PDF packet
+   * Generate PDF from frontend AJAX (Phase 6 facade)
    *
-   * Thin wrapper around existing PDF generation logic.
-   * Forwards to the Professional_PDF_Generator class.
+   * Centralized entry point for frontend PDF generation.
+   * Delegates to the plugin instance's ajax_generate_frontend_pdf() method.
    *
-   * @param array $products Array of selected products
-   * @param array $meta Metadata (project name, branding, etc.)
-   * @return array Result with 'success', 'url', 'path', etc.
+   * @return void Sends JSON response via wp_send_json_success/error
    */
-  public static function generate($products, $meta = []) {
-    // Ensure PDF generator is loaded
-    if (!class_exists('Professional_PDF_Generator')) {
-      require_once plugin_dir_path(__FILE__) . 'pdf-generator.php';
+  public static function generate_frontend_pdf() {
+    global $sfb_plugin;
+
+    if ($sfb_plugin && method_exists($sfb_plugin, 'ajax_generate_frontend_pdf')) {
+      $sfb_plugin->ajax_generate_frontend_pdf();
+    } else {
+      wp_send_json_error(['message' => __('PDF generator not available', 'submittal-builder')], 500);
+    }
+  }
+
+  /**
+   * Generate PDF packet from REST API (Phase 6 facade)
+   *
+   * Centralized entry point for REST API PDF generation.
+   * Delegates to the plugin instance's api_generate_packet() method.
+   *
+   * @param WP_REST_Request $req Request object with packet data
+   * @return array|WP_Error Response or error
+   */
+  public static function generate_packet($req) {
+    global $sfb_plugin;
+
+    if ($sfb_plugin && method_exists($sfb_plugin, 'api_generate_packet')) {
+      return $sfb_plugin->api_generate_packet($req);
     }
 
-    // Forward to existing generator
-    $generator = new Professional_PDF_Generator();
-    return $generator->generate($products, $meta);
+    return new WP_Error('pdf_unavailable', __('PDF generator not available', 'submittal-builder'), ['status' => 500]);
   }
 
   /**

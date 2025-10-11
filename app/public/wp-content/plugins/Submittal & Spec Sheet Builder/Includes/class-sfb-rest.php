@@ -150,11 +150,11 @@ final class SFB_Rest {
       'callback' => [$sfb_plugin, 'api_bulk_export']
     ]);
 
-    // PDF Generation (Public)
+    // PDF Generation (Public - Phase 6: route through SFB_Pdf facade)
     register_rest_route('sfb/v1', '/generate', [
       'methods' => 'POST',
       'permission_callback' => '__return_true', // public submission allowed
-      'callback' => [$sfb_plugin, 'api_generate_packet']
+      'callback' => ['SFB_Pdf', 'generate_packet']
     ]);
 
     // Drafts (Pro - Public with nonce)
