@@ -492,6 +492,21 @@ final class SFB_Plugin {
       );
     }
 
+    // 3.6 Leads (Pro feature - only show if lead capture is enabled)
+    $show_leads = ($license_status === 'active' || (defined('SFB_PRO_DEV') && SFB_PRO_DEV) || (function_exists('sfb_is_pro_active') && sfb_is_pro_active())) &&
+                  get_option('sfb_lead_capture_enabled', false);
+    if ($show_leads) {
+      add_submenu_page(
+        'sfb',
+        __('Leads', 'submittal-builder'),
+        __('Leads', 'submittal-builder'),
+        'manage_options',
+        'sfb-leads',
+        [$this, 'render_leads_page'],
+        3
+      );
+    }
+
     // 4. Settings
     add_submenu_page(
       'sfb',
@@ -3120,6 +3135,361 @@ final class SFB_Plugin {
     });
     </script>
     <?php
+  }
+
+  /** Leads Page Renderer */
+  function render_leads_page() {
+    // Handle CSV export
+    if (isset($_GET['action']) && $_GET['action'] === 'export_csv' && check_admin_referer('sfb_export_leads', 'nonce')) {
+      $this->export_leads_csv();
+      exit;
+    }
+
+    // Get filter parameters
+    $search = isset($_GET['s']) ? sanitize_text_field($_GET['s']) : '';
+    $date_from = isset($_GET['date_from']) ? sanitize_text_field($_GET['date_from']) : '';
+    $date_to = isset($_GET['date_to']) ? sanitize_text_field($_GET['date_to']) : '';
+    $paged = isset($_GET['paged']) ? max(1, intval($_GET['paged'])) : 1;
+    $per_page = 25;
+    $offset = ($paged - 1) * $per_page;
+
+    // Get filtered leads
+    $leads_data = $this->get_filtered_leads($search, $date_from, $date_to, $per_page, $offset);
+    $leads = $leads_data['leads'];
+    $total_leads = $leads_data['total'];
+    $total_pages = ceil($total_leads / $per_page);
+
+    // Build export URL with current filters
+    $export_url = add_query_arg([
+      'page' => 'sfb-leads',
+      'action' => 'export_csv',
+      'nonce' => wp_create_nonce('sfb_export_leads'),
+      's' => $search,
+      'date_from' => $date_from,
+      'date_to' => $date_to,
+    ], admin_url('admin.php'));
+
+    ?>
+    <div class="wrap sfb-leads-wrap">
+      <h1><?php esc_html_e('Leads', 'submittal-builder'); ?></h1>
+
+      <!-- Stats Summary -->
+      <div class="sfb-stats-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin: 20px 0;">
+        <div class="sfb-stat-card" style="background: white; padding: 20px; border: 1px solid #ddd; border-radius: 8px;">
+          <div style="font-size: 32px; font-weight: 700; color: #2271b1;"><?php echo esc_html($total_leads); ?></div>
+          <div style="color: #666; font-size: 13px; margin-top: 4px;"><?php esc_html_e('Total Leads', 'submittal-builder'); ?></div>
+        </div>
+      </div>
+
+      <!-- Filters -->
+      <form method="get" class="sfb-leads-filters" style="background: white; padding: 16px; border: 1px solid #ddd; border-radius: 8px; margin: 20px 0;">
+        <input type="hidden" name="page" value="sfb-leads">
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr 1fr auto; gap: 12px; align-items: end;">
+          <div>
+            <label for="sfb-search" style="display: block; margin-bottom: 4px; font-weight: 600; font-size: 13px;">
+              <?php esc_html_e('Search', 'submittal-builder'); ?>
+            </label>
+            <input
+              type="text"
+              id="sfb-search"
+              name="s"
+              value="<?php echo esc_attr($search); ?>"
+              placeholder="<?php esc_attr_e('Email, Project, UTM...', 'submittal-builder'); ?>"
+              style="width: 100%;">
+          </div>
+
+          <div>
+            <label for="date-from" style="display: block; margin-bottom: 4px; font-weight: 600; font-size: 13px;">
+              <?php esc_html_e('From Date', 'submittal-builder'); ?>
+            </label>
+            <input type="date" id="date-from" name="date_from" value="<?php echo esc_attr($date_from); ?>" style="width: 100%;">
+          </div>
+
+          <div>
+            <label for="date-to" style="display: block; margin-bottom: 4px; font-weight: 600; font-size: 13px;">
+              <?php esc_html_e('To Date', 'submittal-builder'); ?>
+            </label>
+            <input type="date" id="date-to" name="date_to" value="<?php echo esc_attr($date_to); ?>" style="width: 100%;">
+          </div>
+
+          <div style="display: flex; gap: 8px;">
+            <button type="submit" class="button button-primary"><?php esc_html_e('Filter', 'submittal-builder'); ?></button>
+            <a href="<?php echo esc_url(admin_url('admin.php?page=sfb-leads')); ?>" class="button"><?php esc_html_e('Reset', 'submittal-builder'); ?></a>
+          </div>
+        </div>
+      </form>
+
+      <!-- Export Button -->
+      <div style="margin: 16px 0;">
+        <a href="<?php echo esc_url($export_url); ?>" class="button">
+          <span class="dashicons dashicons-download" style="margin-top: 3px;"></span>
+          <?php esc_html_e('Export to CSV', 'submittal-builder'); ?>
+        </a>
+      </div>
+
+      <!-- Leads Table -->
+      <?php if (empty($leads)): ?>
+        <div class="sfb-empty-state" style="background: white; padding: 60px 20px; text-align: center; border: 1px solid #ddd; border-radius: 8px;">
+          <p style="font-size: 18px; color: #666; margin: 0;">
+            <?php echo $search || $date_from || $date_to
+              ? esc_html__('No leads found matching your filters.', 'submittal-builder')
+              : esc_html__('No leads captured yet.', 'submittal-builder'); ?>
+          </p>
+        </div>
+      <?php else: ?>
+        <table class="wp-list-table widefat fixed striped" style="margin-top: 16px;">
+          <thead>
+            <tr>
+              <th style="width: 140px;"><?php esc_html_e('Date', 'submittal-builder'); ?></th>
+              <th><?php esc_html_e('Email', 'submittal-builder'); ?></th>
+              <th><?php esc_html_e('Phone', 'submittal-builder'); ?></th>
+              <th><?php esc_html_e('Project', 'submittal-builder'); ?></th>
+              <th style="width: 80px; text-align: center;"><?php esc_html_e('Items', 'submittal-builder'); ?></th>
+              <th><?php esc_html_e('Top Category', 'submittal-builder'); ?></th>
+              <th style="width: 80px; text-align: center;"><?php esc_html_e('Consent', 'submittal-builder'); ?></th>
+              <th><?php esc_html_e('UTM', 'submittal-builder'); ?></th>
+              <th style="width: 100px;"><?php esc_html_e('Actions', 'submittal-builder'); ?></th>
+            </tr>
+          </thead>
+          <tbody>
+            <?php foreach ($leads as $lead):
+              $utm_data = json_decode($lead['utm_json'], true);
+              $utm_display = [];
+              if (!empty($utm_data['source'])) $utm_display[] = 'src:' . $utm_data['source'];
+              if (!empty($utm_data['medium'])) $utm_display[] = 'med:' . $utm_data['medium'];
+              if (!empty($utm_data['campaign'])) $utm_display[] = 'camp:' . $utm_data['campaign'];
+              $utm_str = !empty($utm_display) ? implode(' / ', $utm_display) : '—';
+            ?>
+              <tr>
+                <td><?php echo esc_html(date('M j, Y g:ia', strtotime($lead['created_at']))); ?></td>
+                <td><strong><?php echo esc_html($lead['email']); ?></strong></td>
+                <td><?php echo esc_html($lead['phone'] ?: '—'); ?></td>
+                <td><?php echo esc_html($lead['project_name'] ?: '—'); ?></td>
+                <td style="text-align: center;"><?php echo esc_html($lead['num_items']); ?></td>
+                <td><?php echo esc_html($lead['top_category'] ?: '—'); ?></td>
+                <td style="text-align: center;">
+                  <?php echo $lead['consent'] ? '<span style="color: #46b450;">✓</span>' : '—'; ?>
+                </td>
+                <td style="font-size: 11px; color: #666;"><?php echo esc_html($utm_str); ?></td>
+                <td>
+                  <button type="button" class="button button-small sfb-view-details" data-lead-id="<?php echo esc_attr($lead['id']); ?>">
+                    <?php esc_html_e('Details', 'submittal-builder'); ?>
+                  </button>
+                </td>
+              </tr>
+            <?php endforeach; ?>
+          </tbody>
+        </table>
+
+        <!-- Pagination -->
+        <?php if ($total_pages > 1): ?>
+          <div class="tablenav" style="margin-top: 16px;">
+            <div class="tablenav-pages">
+              <span class="displaying-num"><?php printf(_n('%s lead', '%s leads', $total_leads, 'submittal-builder'), number_format_i18n($total_leads)); ?></span>
+              <?php
+              $page_links = paginate_links([
+                'base' => add_query_arg('paged', '%#%'),
+                'format' => '',
+                'prev_text' => '&laquo;',
+                'next_text' => '&raquo;',
+                'total' => $total_pages,
+                'current' => $paged,
+              ]);
+              if ($page_links) {
+                echo '<span class="pagination-links">' . $page_links . '</span>';
+              }
+              ?>
+            </div>
+          </div>
+        <?php endif; ?>
+      <?php endif; ?>
+    </div>
+
+    <!-- Details Modal -->
+    <div id="sfb-lead-details-modal" style="display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.7); z-index: 100000; align-items: center; justify-content: center;">
+      <div style="background: white; border-radius: 8px; max-width: 600px; width: 90%; max-height: 80vh; overflow-y: auto; box-shadow: 0 4px 12px rgba(0,0,0,0.3);">
+        <div style="padding: 20px; border-bottom: 1px solid #ddd; display: flex; justify-content: space-between; align-items: center;">
+          <h2 style="margin: 0;"><?php esc_html_e('Lead Details', 'submittal-builder'); ?></h2>
+          <button type="button" class="sfb-close-modal" style="background: none; border: none; font-size: 24px; cursor: pointer; color: #666;">&times;</button>
+        </div>
+        <div id="sfb-lead-details-content" style="padding: 20px;">
+          <!-- Content loaded via JS -->
+        </div>
+      </div>
+    </div>
+
+    <script>
+    jQuery(document).ready(function($) {
+      // View details
+      $('.sfb-view-details').on('click', function() {
+        var leadId = $(this).data('lead-id');
+        var lead = <?php echo wp_json_encode($leads); ?>[leadId - 1]; // Simple lookup
+
+        // Find the lead by ID
+        var leadData = null;
+        <?php foreach ($leads as $lead): ?>
+          if (<?php echo (int)$lead['id']; ?> === leadId) {
+            leadData = <?php echo wp_json_encode($lead); ?>;
+          }
+        <?php endforeach; ?>
+
+        if (!leadData) return;
+
+        var utm = JSON.parse(leadData.utm_json || '{}');
+        var ipHash = leadData.ip_hash ? leadData.ip_hash.substring(0, 8) + '...' : '—';
+
+        var html = '<table class="form-table">';
+        html += '<tr><th><?php esc_html_e('Date', 'submittal-builder'); ?></th><td>' + new Date(leadData.created_at).toLocaleString() + '</td></tr>';
+        html += '<tr><th><?php esc_html_e('Email', 'submittal-builder'); ?></th><td><strong>' + leadData.email + '</strong></td></tr>';
+        html += '<tr><th><?php esc_html_e('Phone', 'submittal-builder'); ?></th><td>' + (leadData.phone || '—') + '</td></tr>';
+        html += '<tr><th><?php esc_html_e('Project Name', 'submittal-builder'); ?></th><td>' + (leadData.project_name || '—') + '</td></tr>';
+        html += '<tr><th><?php esc_html_e('Items', 'submittal-builder'); ?></th><td>' + leadData.num_items + '</td></tr>';
+        html += '<tr><th><?php esc_html_e('Top Category', 'submittal-builder'); ?></th><td>' + (leadData.top_category || '—') + '</td></tr>';
+        html += '<tr><th><?php esc_html_e('Consent', 'submittal-builder'); ?></th><td>' + (leadData.consent ? '<?php esc_html_e('Yes', 'submittal-builder'); ?>' : '<?php esc_html_e('No', 'submittal-builder'); ?>') + '</td></tr>';
+        html += '<tr><th><?php esc_html_e('UTM Source', 'submittal-builder'); ?></th><td>' + (utm.source || '—') + '</td></tr>';
+        html += '<tr><th><?php esc_html_e('UTM Medium', 'submittal-builder'); ?></th><td>' + (utm.medium || '—') + '</td></tr>';
+        html += '<tr><th><?php esc_html_e('UTM Campaign', 'submittal-builder'); ?></th><td>' + (utm.campaign || '—') + '</td></tr>';
+        html += '<tr><th><?php esc_html_e('UTM Term', 'submittal-builder'); ?></th><td>' + (utm.term || '—') + '</td></tr>';
+        html += '<tr><th><?php esc_html_e('UTM Content', 'submittal-builder'); ?></th><td>' + (utm.content || '—') + '</td></tr>';
+        html += '<tr><th><?php esc_html_e('IP Hash (first 8)', 'submittal-builder'); ?></th><td><code>' + ipHash + '</code></td></tr>';
+        html += '</table>';
+
+        $('#sfb-lead-details-content').html(html);
+        $('#sfb-lead-details-modal').css('display', 'flex');
+      });
+
+      // Close modal
+      $('.sfb-close-modal, #sfb-lead-details-modal').on('click', function(e) {
+        if (e.target === this) {
+          $('#sfb-lead-details-modal').hide();
+        }
+      });
+    });
+    </script>
+
+    <style>
+    .sfb-stats-grid .sfb-stat-card {
+      transition: transform 0.2s;
+    }
+    .sfb-stats-grid .sfb-stat-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    }
+    </style>
+    <?php
+  }
+
+  /** Get filtered leads with search and date range */
+  private function get_filtered_leads($search = '', $date_from = '', $date_to = '', $limit = 25, $offset = 0) {
+    global $wpdb;
+    $table = $wpdb->prefix . 'sfb_leads';
+
+    // Build WHERE clause
+    $where = ['1=1'];
+    $params = [];
+
+    // Search filter
+    if (!empty($search)) {
+      $where[] = '(email LIKE %s OR project_name LIKE %s OR utm_json LIKE %s)';
+      $search_term = '%' . $wpdb->esc_like($search) . '%';
+      $params[] = $search_term;
+      $params[] = $search_term;
+      $params[] = $search_term;
+    }
+
+    // Date range filters
+    if (!empty($date_from)) {
+      $where[] = 'created_at >= %s';
+      $params[] = $date_from . ' 00:00:00';
+    }
+    if (!empty($date_to)) {
+      $where[] = 'created_at <= %s';
+      $params[] = $date_to . ' 23:59:59';
+    }
+
+    $where_sql = implode(' AND ', $where);
+
+    // Get total count
+    $count_sql = "SELECT COUNT(*) FROM $table WHERE $where_sql";
+    if (!empty($params)) {
+      $count_sql = $wpdb->prepare($count_sql, $params);
+    }
+    $total = (int) $wpdb->get_var($count_sql);
+
+    // Get paginated results
+    $leads_sql = "SELECT * FROM $table WHERE $where_sql ORDER BY created_at DESC LIMIT %d OFFSET %d";
+    $leads_params = array_merge($params, [$limit, $offset]);
+    $leads = $wpdb->get_results($wpdb->prepare($leads_sql, $leads_params), ARRAY_A);
+
+    return [
+      'leads' => $leads ?: [],
+      'total' => $total,
+    ];
+  }
+
+  /** Export filtered leads to CSV */
+  private function export_leads_csv() {
+    if (!current_user_can('manage_options')) {
+      wp_die('Unauthorized', 'Error', ['response' => 403]);
+    }
+
+    // Get filter parameters
+    $search = isset($_GET['s']) ? sanitize_text_field($_GET['s']) : '';
+    $date_from = isset($_GET['date_from']) ? sanitize_text_field($_GET['date_from']) : '';
+    $date_to = isset($_GET['date_to']) ? sanitize_text_field($_GET['date_to']) : '';
+
+    // Get ALL filtered leads (no pagination for export)
+    $leads_data = $this->get_filtered_leads($search, $date_from, $date_to, 999999, 0);
+    $leads = $leads_data['leads'];
+
+    // Set headers for CSV download
+    header('Content-Type: text/csv; charset=utf-8');
+    header('Content-Disposition: attachment; filename=sfb-leads-' . date('Y-m-d-His') . '.csv');
+
+    $output = fopen('php://output', 'w');
+
+    // CSV headers
+    fputcsv($output, [
+      'Date',
+      'Email',
+      'Phone',
+      'Project Name',
+      'Items',
+      'Top Category',
+      'Consent',
+      'UTM Source',
+      'UTM Medium',
+      'UTM Campaign',
+      'UTM Term',
+      'UTM Content',
+      'IP Hash (partial)',
+    ]);
+
+    // CSV rows
+    foreach ($leads as $lead) {
+      $utm = json_decode($lead['utm_json'], true) ?: [];
+      $ip_partial = !empty($lead['ip_hash']) ? substr($lead['ip_hash'], 0, 8) . '...' : '';
+
+      fputcsv($output, [
+        $lead['created_at'],
+        $lead['email'],
+        $lead['phone'],
+        $lead['project_name'],
+        $lead['num_items'],
+        $lead['top_category'],
+        $lead['consent'] ? 'Yes' : 'No',
+        $utm['source'] ?? '',
+        $utm['medium'] ?? '',
+        $utm['campaign'] ?? '',
+        $utm['term'] ?? '',
+        $utm['content'] ?? '',
+        $ip_partial,
+      ]);
+    }
+
+    fclose($output);
+    exit;
   }
 
   /** Demo Tools Page Renderer */
