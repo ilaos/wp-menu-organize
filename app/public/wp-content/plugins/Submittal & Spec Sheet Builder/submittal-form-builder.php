@@ -31,6 +31,9 @@ require_once plugin_dir_path(__FILE__) . 'Includes/pdf-generator.php';
 // Load branding helpers
 require_once plugin_dir_path(__FILE__) . 'Includes/branding-helpers.php';
 
+// Load industry pack helpers
+require_once plugin_dir_path(__FILE__) . 'Includes/industry-pack-helpers.php';
+
 // Load lead capture (Pro feature)
 require_once plugin_dir_path(__FILE__) . 'Includes/lead-capture.php';
 
@@ -5316,6 +5319,12 @@ final class SFB_Plugin {
       'nonce'     => wp_create_nonce('sfb_frontend'),
     ];
 
+    // Add industry packs for builder page
+    if ($page === 'sfb') {
+      $localized_data['industryPacks'] = sfb_get_industry_packs();
+      $localized_data['defaultIndustryPack'] = sfb_get_user_last_industry_pack();
+    }
+
     // Add brand settings for branding page
     if ($page === 'sfb-branding') {
       $brand = sfb_get_brand_settings();
@@ -5656,6 +5665,15 @@ final class SFB_Plugin {
     $with_branding = $req->get_param('with_branding');
     $with_branding = is_null($with_branding) ? true : (bool)$with_branding;
 
+    // NEW: Get industry pack parameter (defaults to user's last or default pack)
+    $industry_pack = $req->get_param('industry_pack');
+    if (!$industry_pack) {
+      $industry_pack = sfb_get_user_last_industry_pack();
+    }
+
+    // Save user's last selected pack for future
+    sfb_save_user_last_industry_pack($industry_pack);
+
     // Start timer
     $t0 = microtime(true);
 
@@ -5675,115 +5693,153 @@ final class SFB_Plugin {
       }
     }
 
-    // Choose sizes
-    $cfg = [
-      'small'  => ['cats'=>3, 'prods'=>2, 'types'=>2, 'models'=>5],
-      'medium' => ['cats'=>5, 'prods'=>3, 'types'=>3, 'models'=>8],
-      'large'  => ['cats'=>8, 'prods'=>5, 'types'=>6, 'models'=>12],
-    ][$size] ?? ['cats'=>5, 'prods'=>3, 'types'=>3, 'models'=>8];
-
-    // Generators (helpers): make titles and fields
-    $makeCategory = fn($i) => ["Framing & Drywall", "Roofing & Decking", "Floor Systems", "Wall Panels", "Structural Columns", "Trusses & Joists", "Curtain Wall Components", "Cold-Formed Studs"][$i % 8];
-    $makeProduct  = fn($c,$i) => ["Standard Studs","Track","Shaftwall","Furring","Deflection Connectors"][$i % 5] . " (C{$c}P{$i})";
-    $makeType     = fn($p,$i) => ["20 Gauge","25 Gauge","30 mil","33 mil","43 mil","54 mil"][$i % 6] . " (T{$p}{$i})";
-    $makeModel    = fn($t,$i) => sprintf("%sS%s-%s",
-                        [250,300,362,400,450,600,800,1000][$i % 8],
-                        [125,150,162,200][$i % 4],
-                        [20,25,30,33,43,54,68,97][$i % 8]
-                      );
-
-    $makeFields   = function($i){
-      // Realistic lists
-      $sizes   = ['2-1/2"', '3"', '3-5/8"', '4"', '6"', '8"', '10"'];
-      $flange  = ['1-1/4"', '1-1/2"', '2"'];
-      $thicks  = ['20 mil (25 ga)', '30 mil (20 ga)', '33 mil (20 ga+)', '43 mil (18 ga)', '54 mil (16 ga)', '68 mil (14 ga)', '97 mil (12 ga)'];
-      $ksiVals = [33, 50];
-
-      // Pick values with variety
-      $sz  = $sizes[$i % count($sizes)];
-      $fl  = $flange[$i % count($flange)];
-      $th  = $thicks[$i % count($thicks)];
-      $k   = $ksiVals[$i % count($ksiVals)];
-
-      return json_encode([
-        'fields' => [
-          'size'      => $sz,
-          'flange'    => $fl,
-          'thickness' => $th,
-          'ksi'       => $k,
-        ]
-      ], JSON_UNESCAPED_SLASHES);
-    };
-
-    // Insert categories
-    $catIds = [];
-    for ($c=1; $c <= $cfg['cats']; $c++) {
-      $wpdb->insert($nodes_table, [
-        'form_id'=>$form_id, 'parent_id'=>0, 'node_type'=>'category',
-        'title'=>$makeCategory($c), 'slug'=>sanitize_title($makeCategory($c)), 'position'=>$c*10, 'settings_json'=>null
-      ], ['%d','%d','%s','%s','%s','%d','%s']);
-      $catIds[$c] = (int) $wpdb->insert_id;
+    // Load industry pack JSON
+    $json_file = plugin_dir_path(__FILE__) . 'assets/demo/' . $industry_pack . '.json';
+    if (!file_exists($json_file)) {
+      return new WP_Error('pack_not_found', __('Industry pack not found', 'submittal-builder'), ['status' => 404]);
     }
 
-    // Insert products
-    $prodIds = [];
-    for ($c=1; $c <= $cfg['cats']; $c++) {
-      for ($p=1; $p <= $cfg['prods']; $p++) {
-        $title = $makeProduct($c,$p);
+    $pack_data = json_decode(file_get_contents($json_file), true);
+    if (!$pack_data || !isset($pack_data['categories'])) {
+      return new WP_Error('invalid_pack', __('Invalid pack format', 'submittal-builder'), ['status' => 500]);
+    }
+
+    // Size limits for how many categories/types/items to load
+    $size_limits = [
+      'small'  => ['max_categories' => 2, 'max_types' => 2, 'max_items' => 2],
+      'medium' => ['max_categories' => 999, 'max_types' => 999, 'max_items' => 999], // Load all
+      'large'  => ['max_categories' => 999, 'max_types' => 999, 'max_items' => 999],  // Load all
+    ][$size] ?? ['max_categories' => 999, 'max_types' => 999, 'max_items' => 999];
+
+    // Seed from industry pack JSON
+    $stats = ['categories' => 0, 'types' => 0, 'models' => 0];
+    $position = 0;
+    $category_count = 0;
+
+    foreach ($pack_data['categories'] as $cat_data) {
+      // Apply size limit for categories
+      if ($category_count >= $size_limits['max_categories']) {
+        break;
+      }
+      $category_count++;
+
+      $cat_slug = sanitize_title($cat_data['title']);
+
+      // In merge mode, check if category already exists
+      $cat_id = null;
+      if ($mode === 'merge') {
+        $cat_id = $wpdb->get_var($wpdb->prepare(
+          "SELECT id FROM {$nodes_table} WHERE form_id = %d AND node_type = 'category' AND slug = %s LIMIT 1",
+          $form_id,
+          $cat_slug
+        ));
+      }
+
+      if (!$cat_id) {
         $wpdb->insert($nodes_table, [
-          'form_id'=>$form_id, 'parent_id'=>$catIds[$c], 'node_type'=>'product',
-          'title'=>$title, 'slug'=>sanitize_title($title), 'position'=>$p*10, 'settings_json'=>null
-        ], ['%d','%d','%s','%s','%s','%d','%s']);
-        $prodIds[$c.'-'.$p] = (int) $wpdb->insert_id;
+          'form_id' => $form_id,
+          'parent_id' => null,
+          'node_type' => 'category',
+          'title' => $cat_data['title'],
+          'slug' => $cat_slug,
+          'position' => $position++,
+          'settings_json' => json_encode(['_demo_seed' => 1, '_demo_pack' => $industry_pack])
+        ]);
+        $cat_id = $wpdb->insert_id;
+        $stats['categories']++;
       }
-    }
 
-    // Insert types
-    $typeIds = [];
-    for ($c=1; $c <= $cfg['cats']; $c++) {
-      for ($p=1; $p <= $cfg['prods']; $p++) {
-        for ($t=1; $t <= $cfg['types']; $t++) {
-          $title = $makeType($p,$t);
-          $wpdb->insert($nodes_table, [
-            'form_id'=>$form_id, 'parent_id'=>$prodIds[$c.'-'.$p], 'node_type'=>'type',
-            'title'=>$title, 'slug'=>sanitize_title($title), 'position'=>$t*10, 'settings_json'=>null
-          ], ['%d','%d','%s','%s','%s','%d','%s']);
-          $typeIds[$c.'-'.$p.'-'.$t] = (int) $wpdb->insert_id;
-        }
-      }
-    }
+      // Insert types
+      if (isset($cat_data['types']) && is_array($cat_data['types'])) {
+        $type_pos = 0;
+        $type_count = 0;
 
-    // Insert models (batched)
-    $modelRows = [];
-    for ($c=1; $c <= $cfg['cats']; $c++) {
-      for ($p=1; $p <= $cfg['prods']; $p++) {
-        for ($t=1; $t <= $cfg['types']; $t++) {
-          for ($m=1; $m <= $cfg['models']; $m++) {
-            $title = $makeModel($t,$m);
-            $modelRows[] = [
-              $form_id, $typeIds[$c.'-'.$p.'-'.$t], 'model',
-              $title, sanitize_title($title), $m*10, $makeFields($m)
-            ];
+        foreach ($cat_data['types'] as $type_data) {
+          // Apply size limit for types
+          if ($type_count >= $size_limits['max_types']) {
+            break;
+          }
+          $type_count++;
+
+          $type_slug = sanitize_title($type_data['title']);
+
+          // In merge mode, check if type already exists
+          $type_id = null;
+          if ($mode === 'merge') {
+            $type_id = $wpdb->get_var($wpdb->prepare(
+              "SELECT id FROM {$nodes_table} WHERE form_id = %d AND parent_id = %d AND node_type = 'type' AND slug = %s LIMIT 1",
+              $form_id,
+              $cat_id,
+              $type_slug
+            ));
+          }
+
+          if (!$type_id) {
+            $wpdb->insert($nodes_table, [
+              'form_id' => $form_id,
+              'parent_id' => $cat_id,
+              'node_type' => 'type',
+              'title' => $type_data['title'],
+              'slug' => $type_slug,
+              'position' => $type_pos++,
+              'settings_json' => json_encode(['_demo_seed' => 1, '_demo_pack' => $industry_pack])
+            ]);
+            $type_id = $wpdb->insert_id;
+            $stats['types']++;
+          }
+
+          // Insert items (models)
+          if (isset($type_data['items']) && is_array($type_data['items'])) {
+            $item_pos = 0;
+            $item_count = 0;
+
+            foreach ($type_data['items'] as $item_data) {
+              // Apply size limit for items
+              if ($item_count >= $size_limits['max_items']) {
+                break;
+              }
+              $item_count++;
+
+              $item_slug = sanitize_title($item_data['title']);
+
+              // In merge mode, check if item already exists
+              if ($mode === 'merge') {
+                $exists = $wpdb->get_var($wpdb->prepare(
+                  "SELECT id FROM {$nodes_table} WHERE form_id = %d AND parent_id = %d AND node_type = 'model' AND slug = %s LIMIT 1",
+                  $form_id,
+                  $type_id,
+                  $item_slug
+                ));
+
+                if ($exists) {
+                  continue;
+                }
+              }
+
+              // Build settings_json with meta fields
+              $settings = [
+                '_demo_seed' => 1,
+                '_demo_pack' => $industry_pack
+              ];
+
+              if (isset($item_data['meta']) && is_array($item_data['meta'])) {
+                $settings['fields'] = $item_data['meta'];
+              }
+
+              $wpdb->insert($nodes_table, [
+                'form_id' => $form_id,
+                'parent_id' => $type_id,
+                'node_type' => 'model',
+                'title' => $item_data['title'],
+                'slug' => $item_slug,
+                'position' => $item_pos++,
+                'settings_json' => json_encode($settings, JSON_UNESCAPED_SLASHES)
+              ]);
+
+              $stats['models']++;
+            }
           }
         }
-      }
-    }
-    // Batch insert models
-    if (!empty($modelRows)) {
-      $chunk = 200;
-      for ($i=0; $i < count($modelRows); $i += $chunk) {
-        $part = array_slice($modelRows, $i, $chunk);
-        $values = [];
-        $place = [];
-        foreach ($part as $r) {
-          $values = array_merge($values, $r);
-          $place[] = "(%d,%d,%s,%s,%s,%d,%s)";
-        }
-        $sql = $wpdb->prepare(
-          "INSERT INTO {$nodes_table} (form_id,parent_id,node_type,title,slug,position,settings_json) VALUES " . implode(',', $place),
-          $values
-        );
-        $wpdb->query($sql);
       }
     }
 
@@ -5808,13 +5864,14 @@ final class SFB_Plugin {
       'form_id' => $form_id,
       'size' => $size,
       'mode' => $mode,
+      'industry_pack' => $industry_pack,
       'branding' => $with_branding,
       'elapsed_ms' => $elapsed,
       'counts' => [
-        'categories' => $cfg['cats'],
-        'products' => $cfg['cats'] * $cfg['prods'],
-        'types' => $cfg['cats'] * $cfg['prods'] * $cfg['types'],
-        'models' => $cfg['cats'] * $cfg['prods'] * $cfg['types'] * $cfg['models'],
+        'categories' => $stats['categories'],
+        'products' => 0, // No separate product level in new schema
+        'types' => $stats['types'],
+        'models' => $stats['models'],
       ],
     ];
   }
@@ -6808,23 +6865,9 @@ final class SFB_Plugin {
     ];
   }
 
-  /** Get available industry packs */
+  /** Get available industry packs (delegates to helper function) */
   private function get_available_packs() {
-    $demo_dir = plugin_dir_path(__FILE__) . 'assets/demo/';
-    $packs = [];
-
-    if (!is_dir($demo_dir)) {
-      return $packs;
-    }
-
-    $files = glob($demo_dir . '*.json');
-    foreach ($files as $file) {
-      $key = basename($file, '.json');
-      $data = json_decode(file_get_contents($file), true);
-      $packs[$key] = $data['title'] ?? ucfirst($key);
-    }
-
-    return $packs;
+    return sfb_get_industry_packs();
   }
 
   /** Seed industry pack from JSON */

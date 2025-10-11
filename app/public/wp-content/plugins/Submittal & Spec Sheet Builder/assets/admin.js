@@ -1570,7 +1570,13 @@
     const [moveModal, setMoveModal] = useState({ open: false, targetId: null, options: [] });
 
     // Sample catalog modal state
-    const [catalogModal, setCatalogModal] = useState({ open: false, mode: 'replace', size: 'medium', withBranding: true });
+    const [catalogModal, setCatalogModal] = useState({
+      open: false,
+      mode: 'replace',
+      size: 'medium',
+      withBranding: true,
+      industryPack: (window.SFB && SFB.defaultIndustryPack) || 'electrical'
+    });
 
     // Wipe/Delete All modal state
     const [showWipeModal, setShowWipeModal] = useState(false);
@@ -1765,7 +1771,13 @@
     }
 
     function openCatalogModal(){
-      setCatalogModal({ open: true, mode: 'replace', size: 'medium', withBranding: true });
+      setCatalogModal({
+        open: true,
+        mode: 'replace',
+        size: 'medium',
+        withBranding: true,
+        industryPack: (window.SFB && SFB.defaultIndustryPack) || 'electrical'
+      });
     }
 
     async function loadSampleCatalog(){
@@ -1778,10 +1790,17 @@
             form_id: 1,
             mode: catalogModal.mode,
             size: catalogModal.size,
-            with_branding: catalogModal.withBranding
+            with_branding: catalogModal.withBranding,
+            industry_pack: catalogModal.industryPack
           }
         });
-        setCatalogModal({ open: false, mode: 'replace', size: 'medium', withBranding: true });
+        setCatalogModal({
+          open: false,
+          mode: 'replace',
+          size: 'medium',
+          withBranding: true,
+          industryPack: catalogModal.industryPack // Preserve last selected pack
+        });
         await load();
         if (res?.counts) {
           const total = res.counts.categories + res.counts.products + res.counts.types + res.counts.models;
@@ -2714,7 +2733,13 @@
       // Sample Catalog Modal
       catalogModal.open && h('div', {
         className: 'sfb-modal-overlay',
-        onClick: () => setCatalogModal({ open: false, mode: 'replace', size: 'medium', withBranding: true })
+        onClick: () => setCatalogModal({
+          open: false,
+          mode: 'replace',
+          size: 'medium',
+          withBranding: true,
+          industryPack: catalogModal.industryPack
+        })
       },
         h('div', {
           className: 'sfb-modal sfb-catalog-modal',
@@ -2722,6 +2747,26 @@
         },
           h('h3', null, 'Load Sample Catalog'),
           h('div', {className: 'sfb-modal-body'},
+            // Industry Pack selector
+            h('div', {className: 'sfb-catalog-option-group'},
+              h('label', {className: 'sfb-catalog-label'}, 'Industry Pack:'),
+              h('div', {className: 'sfb-catalog-select-wrapper'},
+                h('select', {
+                  className: 'sfb-catalog-select',
+                  value: catalogModal.industryPack,
+                  onChange: (e) => setCatalogModal(prev => ({...prev, industryPack: e.target.value}))
+                },
+                  window.SFB && SFB.industryPacks
+                    ? Object.entries(SFB.industryPacks).map(([key, title]) =>
+                        h('option', {key, value: key}, title)
+                      )
+                    : h('option', {value: 'electrical'}, 'Electrical — Panels & Conduit')
+                ),
+                h('p', {className: 'sfb-catalog-hint'},
+                  'Choose an industry-specific demo catalog. Each pack includes 3–5 categories with realistic products and metadata.'
+                )
+              )
+            ),
             h('div', {className: 'sfb-catalog-option-group'},
               h('label', {className: 'sfb-catalog-label'}, 'Mode:'),
               h('div', {className: 'sfb-catalog-radio-group'},
@@ -2801,7 +2846,13 @@
           h('div', {className: 'sfb-modal-footer'},
             h('button', {
               className: 'button',
-              onClick: () => setCatalogModal({ open: false, mode: 'replace', size: 'medium', withBranding: true })
+              onClick: () => setCatalogModal({
+                open: false,
+                mode: 'replace',
+                size: 'medium',
+                withBranding: true,
+                industryPack: catalogModal.industryPack
+              })
             }, 'Cancel'),
             h('button', {
               className: 'button button-primary',
