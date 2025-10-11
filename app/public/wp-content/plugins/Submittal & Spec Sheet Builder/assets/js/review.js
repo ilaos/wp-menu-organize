@@ -35,6 +35,18 @@
     return div.innerHTML;
   }
 
+  /**
+   * Enrich item with specs from global products map if missing
+   * @param {Object} item - Product item to enrich
+   */
+  function enrichWithSpecs(item) {
+    if (item?.specs && Object.keys(item.specs).length) return item;
+    const pid = item.product_id || item.id || item.node_id;
+    const src = window.SFB?.productsById?.get(pid);
+    if (src?.specs) item.specs = src.specs;
+    return item;
+  }
+
   function showToast(message, duration = 2500) {
     if (!toastEl) return;
     toastEl.textContent = message;
@@ -132,7 +144,8 @@
       rootSel.appendChild(header);
 
       keys.forEach(k => {
-        const p = window.sfbProductsMap?.get(k);
+        let p = window.sfbProductsMap?.get(k);
+        if (p) p = enrichWithSpecs(p);
         const { quantity = 1, note = '' } = selectedMap.get(k) || {};
         const row = document.createElement('div');
         row.className = 'sfb-row';

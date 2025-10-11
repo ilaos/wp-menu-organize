@@ -296,6 +296,10 @@
         console.log('[SFB] Deduplicated products:', state.productsMap.size);
         console.log('[SFB] Categories:', Array.from(state.byCategory.keys()));
 
+        // Expose catalog to Review step
+        window.SFB = window.SFB || {};
+        window.SFB.productsById = state.productsMap;
+
         if (state.productsMap.size > 0) {
           const firstKey = state.productsMap.keys().next().value;
           const firstProduct = state.productsMap.get(firstKey);
