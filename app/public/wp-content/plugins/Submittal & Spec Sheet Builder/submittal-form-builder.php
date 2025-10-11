@@ -34,6 +34,12 @@ require_once plugin_dir_path(__FILE__) . 'Includes/branding-helpers.php';
 // Load lead capture (Pro feature)
 require_once plugin_dir_path(__FILE__) . 'Includes/lead-capture.php';
 
+// Phase 1 Refactor: Load modular classes
+require_once plugin_dir_path(__FILE__) . 'Includes/class-sfb-admin.php';
+require_once plugin_dir_path(__FILE__) . 'Includes/class-sfb-render.php';
+require_once plugin_dir_path(__FILE__) . 'Includes/class-sfb-rest.php';
+require_once plugin_dir_path(__FILE__) . 'Includes/class-sfb-pdf.php';
+
 /**
  * Helper function to ensure string type (prevents null deprecation warnings in PHP 8.1+)
  * @param mixed $v Value to convert to string
@@ -61,11 +67,15 @@ final class SFB_Plugin {
 
   private function __construct() {
     register_activation_hook(__FILE__, [$this, 'activate']);
-    add_action('admin_menu', [$this, 'admin_menu']);
-    add_shortcode('submittal_builder', [$this, 'shortcode_render']);
+
+    // Phase 1 Refactor: These hooks are now handled by modular classes
+    // See SFB_Admin::init(), SFB_Render::init(), SFB_Rest::init()
+    // add_action('admin_menu', [$this, 'admin_menu']); // Now in SFB_Admin
+    // add_shortcode('submittal_builder', [$this, 'shortcode_render']); // Now in SFB_Render
+    // add_action('rest_api_init', [$this, 'register_routes']); // Now in SFB_Rest
+
     add_action('admin_enqueue_scripts', [$this, 'enqueue_admin']);
     add_action('wp_enqueue_scripts', [$this, 'enqueue_front']);
-    add_action('rest_api_init', [$this, 'register_routes']); // stub for later
     add_action('template_redirect', [$this, 'handle_tracking_redirect']); // tracking links
 
     // Load translations
@@ -7943,7 +7953,16 @@ final class SFB_Plugin {
 
 }
 
-SFB_Plugin::instance();
+// Instantiate main plugin class and store in global for modular classes
+$GLOBALS['sfb_plugin'] = SFB_Plugin::instance();
+
+// Phase 1 Refactor: Initialize modular classes on plugins_loaded
+add_action('plugins_loaded', function() {
+  SFB_Admin::init();
+  SFB_Render::init();
+  SFB_Rest::init();
+  SFB_Pdf::init();
+}, 10);
 
 /**
  * Plugin Deactivation Hook
