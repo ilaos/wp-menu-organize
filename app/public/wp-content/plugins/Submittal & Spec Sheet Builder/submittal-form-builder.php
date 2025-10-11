@@ -31,6 +31,9 @@ require_once plugin_dir_path(__FILE__) . 'Includes/pdf-generator.php';
 // Load branding helpers
 require_once plugin_dir_path(__FILE__) . 'Includes/branding-helpers.php';
 
+// Load lead capture (Pro feature)
+require_once plugin_dir_path(__FILE__) . 'Includes/lead-capture.php';
+
 /**
  * Helper function to ensure string type (prevents null deprecation warnings in PHP 8.1+)
  * @param mixed $v Value to convert to string
@@ -108,6 +111,10 @@ final class SFB_Plugin {
     add_action('wp_ajax_sfb_generate_frontend_pdf', [$this, 'ajax_generate_frontend_pdf']);
     add_action('wp_ajax_nopriv_sfb_generate_frontend_pdf', [$this, 'ajax_generate_frontend_pdf']);
 
+    // Lead Capture AJAX handlers (Pro feature - public + logged in)
+    add_action('wp_ajax_sfb_submit_lead', ['SFB_Lead_Capture', 'ajax_submit_lead']);
+    add_action('wp_ajax_nopriv_sfb_submit_lead', ['SFB_Lead_Capture', 'ajax_submit_lead']);
+
     // Branding AJAX handler
     add_action('wp_ajax_sfb_save_brand', [$this, 'ajax_save_brand']);
 
@@ -149,7 +156,7 @@ final class SFB_Plugin {
 
     $forms  = $wpdb->prefix . 'sfb_forms';
     $nodes  = $wpdb->prefix . 'sfb_nodes';
-    $shares = $wpdb->prefix . 'sfb_shares';
+    $leads  = $wpdb->prefix . 'sfb_leads';
 
     require_once ABSPATH . 'wp-admin/includes/upgrade.php';
 
@@ -193,23 +200,31 @@ final class SFB_Plugin {
       error_log('SFB ensure_tables NODES error: ' . $wpdb->last_error);
     }
 
-    // 3) Shares  (UNIQUE token; do NOT also add plain KEY token)
-    $sql_shares = "
-      CREATE TABLE $shares (
+    // 3) Shares table REMOVED - Shareable Drafts uses custom post type 'sfb_draft' instead
+    // Legacy table removed in v1.0.2 - was created but never used
+
+    // 4) Leads (Pro feature: Lead Capture)
+    $sql_leads = "
+      CREATE TABLE $leads (
         id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
-        form_id BIGINT UNSIGNED NOT NULL,
-        token VARCHAR(64) NOT NULL,
-        payload_json LONGTEXT NOT NULL,
         created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-        expires_at DATETIME NULL,
+        email VARCHAR(190) NOT NULL,
+        phone VARCHAR(50) NULL,
+        project_name VARCHAR(190) NULL,
+        num_items INT UNSIGNED DEFAULT 0,
+        top_category VARCHAR(190) NULL,
+        consent TINYINT(1) DEFAULT 0,
+        utm_json TEXT NULL,
+        ip_hash VARCHAR(64) NULL,
         PRIMARY KEY  (id),
-        KEY form_id (form_id),
-        UNIQUE KEY token (token)
+        KEY email (email),
+        KEY created_at (created_at),
+        KEY ip_hash (ip_hash)
       ) $charset;
     ";
-    dbDelta($sql_shares);
+    dbDelta($sql_leads);
     if (!empty($wpdb->last_error)) {
-      error_log('SFB ensure_tables SHARES error: ' . $wpdb->last_error);
+      error_log('SFB ensure_tables LEADS error: ' . $wpdb->last_error);
     }
   }
 
@@ -223,9 +238,36 @@ final class SFB_Plugin {
       wp_die('Tracking link not found.', 'Not Found', ['response' => 404]);
     }
     $rec = $all[$token];
-    // Simple redirect to file
+
+    // Track this view
+    if (!isset($rec['views'])) {
+      $rec['views'] = [];
+    }
+    $rec['views'][] = [
+      'timestamp' => current_time('mysql'),
+      'ip' => $this->hash_ip($_SERVER['REMOTE_ADDR'] ?? ''),
+      'user_agent' => substr(sanitize_text_field($_SERVER['HTTP_USER_AGENT'] ?? ''), 0, 255)
+    ];
+
+    // Update view count
+    if (!isset($rec['view_count'])) {
+      $rec['view_count'] = 0;
+    }
+    $rec['view_count']++;
+    $rec['last_viewed'] = current_time('mysql');
+
+    // Save updated record
+    $all[$token] = $rec;
+    update_option('sfb_packets', $all, false);
+
+    // Redirect to file
     wp_redirect($rec['file']);
     exit;
+  }
+
+  /** Hash IP for privacy (SHA-256) */
+  private function hash_ip($ip) {
+    return hash('sha256', $ip . wp_salt('auth'));
   }
 
   /** License management */
@@ -334,65 +376,6 @@ final class SFB_Plugin {
     ];
   }
 
-  /** Try to append external PDFs using FPDI (if available) */
-  private function try_append_external_pdfs($pdf_path, $items) {
-    // Require FPDI if present
-    $fpdi_autoload = plugin_dir_path(__FILE__) . 'lib/fpdi/autoload.php';
-    if (!file_exists($fpdi_autoload)) return; // silently skip
-    require_once $fpdi_autoload;
-
-    // Collect external PDFs
-    $external = [];
-    foreach ($items as $it) {
-      $urls = $it['meta']['pdf_urls'] ?? [];
-      if (is_array($urls)) {
-        foreach ($urls as $u) {
-          $external[] = $u;
-        }
-      }
-    }
-    if (!$external) return;
-
-    // Create a new combined PDF (packet + externals)
-    $tmp_in = $pdf_path;
-    $tmp_out = preg_replace('~\.pdf$~i', '_merged.pdf', $pdf_path);
-
-    try {
-      $pdf = new \setasign\Fpdi\Fpdi();
-
-      // Import main packet pages
-      $pageCount = $pdf->setSourceFile($tmp_in);
-      for ($i=1; $i<=$pageCount; $i++) {
-        $tpl = $pdf->importPage($i);
-        $size = $pdf->getTemplateSize($tpl);
-        $pdf->AddPage($size['orientation'], [$size['width'], $size['height']]);
-        $pdf->useTemplate($tpl);
-      }
-
-      // Import external PDFs
-      foreach ($external as $u) {
-        $tmp = download_url($u);
-        if (is_wp_error($tmp)) continue;
-
-        $extPageCount = $pdf->setSourceFile($tmp);
-        for ($i=1; $i<=$extPageCount; $i++) {
-          $tpl = $pdf->importPage($i);
-          $size = $pdf->getTemplateSize($tpl);
-          $pdf->AddPage($size['orientation'], [$size['width'], $size['height']]);
-          $pdf->useTemplate($tpl);
-        }
-        @unlink($tmp);
-      }
-
-      $pdf->Output($tmp_out, 'F');
-      // Replace original with merged
-      @unlink($tmp_in);
-      @rename($tmp_out, $pdf_path);
-    } catch (\Throwable $e) {
-      // If merge fails, keep original packet; no exception outward
-      error_log('[SFB] PDF merge skipped: ' . $e->getMessage());
-    }
-  }
 
   /** Check if Dompdf is available */
   private function dompdf_available() {
@@ -486,6 +469,25 @@ final class SFB_Plugin {
         'manage_options',
         'sfb-demo-tools',
         [$this, 'render_demo_tools_page'],
+        3
+      );
+    }
+
+    // 3.5 Tracking (Pro feature)
+    // Check license directly to work with Demo Tools
+    $lic = get_option('sfb_license', []);
+    $license_status = $lic['status'] ?? '';
+    $show_tracking = ($license_status === 'active') ||
+                     (defined('SFB_PRO_DEV') && SFB_PRO_DEV) ||
+                     (function_exists('sfb_is_pro_active') && sfb_is_pro_active());
+    if ($show_tracking) {
+      add_submenu_page(
+        'sfb',
+        __('Tracking', 'submittal-builder'),
+        __('Tracking', 'submittal-builder'),
+        'manage_options',
+        'sfb-tracking',
+        [$this, 'render_tracking_page'],
         3
       );
     }
@@ -1953,6 +1955,48 @@ final class SFB_Plugin {
           </div>
         </div>
 
+        <!-- Lead Capture Card (Pro) -->
+        <div class="sfb-card">
+          <h2>📧 <?php echo esc_html__('Lead Capture (Pro)', 'submittal-builder'); ?></h2>
+          <p class="sfb-muted">
+            <?php echo esc_html__('Capture user contact information before allowing PDF downloads. Stores leads in the database and sends email notifications.', 'submittal-builder'); ?>
+          </p>
+
+          <!-- Enable Lead Capture -->
+          <div class="sfb-setting-row">
+            <div class="sfb-setting-icon">🎯</div>
+            <div class="sfb-setting-content">
+              <label class="sfb-checkbox-label">
+                <input type="checkbox"
+                       name="sfb_lead_capture_enabled"
+                       value="1"
+                       <?php checked(get_option('sfb_lead_capture_enabled', false)); ?>>
+                <span class="sfb-setting-title"><?php esc_html_e('Enable lead capture modal', 'submittal-builder'); ?></span>
+              </label>
+              <p class="sfb-setting-desc">
+                <?php esc_html_e('When enabled, users must enter their email (and optionally phone) before downloading PDFs. Leads are stored in the database with timestamp, IP hash, and UTM tracking.', 'submittal-builder'); ?>
+              </p>
+            </div>
+          </div>
+
+          <!-- BCC Admin Email -->
+          <div class="sfb-setting-row">
+            <div class="sfb-setting-icon">📬</div>
+            <div class="sfb-setting-content">
+              <label class="sfb-checkbox-label">
+                <input type="checkbox"
+                       name="sfb_lead_bcc_admin"
+                       value="1"
+                       <?php checked(get_option('sfb_lead_bcc_admin', false)); ?>>
+                <span class="sfb-setting-title"><?php esc_html_e('BCC admin on lead emails', 'submittal-builder'); ?></span>
+              </label>
+              <p class="sfb-setting-desc">
+                <?php printf(esc_html__('When enabled, all lead notification emails will BCC %s', 'submittal-builder'), '<code>' . esc_html(get_option('admin_email')) . '</code>'); ?>
+              </p>
+            </div>
+          </div>
+        </div>
+
         <!-- Sticky Save Button -->
         <div class="sfb-sticky-save">
           <button type="submit" class="button button-primary button-large">
@@ -2341,6 +2385,46 @@ final class SFB_Plugin {
         ['key' => $key, 'label' => $label]
       );
     }
+
+    // Add Lead Capture section (Pro feature)
+    add_settings_section(
+      'sfb_section_lead_capture',
+      __('Lead Capture (Pro)', 'submittal-builder'),
+      [$this, 'render_lead_capture_section_desc'],
+      'sfb_settings_page'
+    );
+
+    // Lead capture enabled toggle
+    register_setting('sfb_settings_group', 'sfb_lead_capture_enabled', [
+      'sanitize_callback' => function($value) {
+        return !empty($value);
+      },
+      'default' => false
+    ]);
+
+    add_settings_field(
+      'sfb_lead_capture_enabled',
+      __('Enable Lead Capture', 'submittal-builder'),
+      [$this, 'render_lead_capture_enabled_field'],
+      'sfb_settings_page',
+      'sfb_section_lead_capture'
+    );
+
+    // BCC admin email toggle
+    register_setting('sfb_settings_group', 'sfb_lead_bcc_admin', [
+      'sanitize_callback' => function($value) {
+        return !empty($value);
+      },
+      'default' => false
+    ]);
+
+    add_settings_field(
+      'sfb_lead_bcc_admin',
+      __('BCC Admin on Lead Emails', 'submittal-builder'),
+      [$this, 'render_lead_bcc_admin_field'],
+      'sfb_settings_page',
+      'sfb_section_lead_capture'
+    );
   }
 
   /** Sanitize settings callback */
@@ -2546,6 +2630,39 @@ final class SFB_Plugin {
     <?php
   }
 
+  /** Lead Capture Section Description */
+  function render_lead_capture_section_desc() {
+    ?>
+    <p><?php esc_html_e('Capture user contact information before allowing PDF downloads. Stores leads in the database and sends email notifications.', 'submittal-builder'); ?></p>
+    <?php
+  }
+
+  /** Lead Capture Enabled Field */
+  function render_lead_capture_enabled_field() {
+    $enabled = get_option('sfb_lead_capture_enabled', false);
+    $checked = !empty($enabled) ? 'checked' : '';
+    ?>
+    <label>
+      <input type="checkbox" name="sfb_lead_capture_enabled" value="1" <?php echo $checked; ?>>
+      <?php esc_html_e('Show lead capture modal before PDF generation', 'submittal-builder'); ?>
+    </label>
+    <span class="sfb-field-desc"><?php esc_html_e('When enabled, users must enter their email (and optionally phone) before downloading PDFs. Leads are stored in the database.', 'submittal-builder'); ?></span>
+    <?php
+  }
+
+  /** BCC Admin Field */
+  function render_lead_bcc_admin_field() {
+    $enabled = get_option('sfb_lead_bcc_admin', false);
+    $checked = !empty($enabled) ? 'checked' : '';
+    ?>
+    <label>
+      <input type="checkbox" name="sfb_lead_bcc_admin" value="1" <?php echo $checked; ?>>
+      <?php esc_html_e('BCC site admin email on lead notification emails', 'submittal-builder'); ?>
+    </label>
+    <span class="sfb-field-desc"><?php printf(esc_html__('When enabled, all lead notification emails will BCC %s', 'submittal-builder'), get_option('admin_email')); ?></span>
+    <?php
+  }
+
   /** Upgrade Page Renderer */
   function render_upgrade_page() {
     include plugin_dir_path(__FILE__) . 'templates/admin/upgrade.php';
@@ -2666,6 +2783,342 @@ final class SFB_Plugin {
       </div>
       <?php endif; ?>
     </div>
+    <?php
+  }
+
+  /** Tracking Page Renderer (Pro) */
+  function render_tracking_page() {
+    // Get all tracking links
+    $all_packets = get_option('sfb_packets', []);
+
+    // Calculate comprehensive stats
+    $total_packets = count($all_packets);
+    $total_views = 0;
+    $packets_with_views = 0;
+    $unique_recipients = [];
+    $recent_views = [];
+
+    foreach ($all_packets as $token => $packet) {
+      $view_count = $packet['view_count'] ?? 0;
+      $total_views += $view_count;
+      if ($view_count > 0) {
+        $packets_with_views++;
+      }
+
+      // Track unique recipients
+      $email = $packet['email_to'] ?? '';
+      if ($email && !in_array($email, $unique_recipients)) {
+        $unique_recipients[] = $email;
+      }
+
+      // Collect recent views
+      if (!empty($packet['views']) && is_array($packet['views'])) {
+        foreach ($packet['views'] as $view) {
+          $recent_views[] = [
+            'timestamp' => $view['timestamp'] ?? '',
+            'project' => $packet['project'] ?? __('(No Project Name)', 'submittal-builder'),
+            'token' => $token
+          ];
+        }
+      }
+    }
+
+    // Sort recent views by timestamp (newest first)
+    usort($recent_views, function($a, $b) {
+      return strtotime($b['timestamp']) - strtotime($a['timestamp']);
+    });
+    $recent_views = array_slice($recent_views, 0, 5); // Top 5 most recent
+
+    // Calculate engagement rate
+    $engagement_rate = $total_packets > 0 ? ($packets_with_views / $total_packets) * 100 : 0;
+
+    // Sort packets by creation date (newest first)
+    uasort($all_packets, function($a, $b) {
+      return strtotime($b['created'] ?? '') - strtotime($a['created'] ?? '');
+    });
+
+    ?>
+    <div class="wrap sfb-tracking">
+      <style>
+        .sfb-tracking .sfb-stat-card {
+          background: #fff;
+          border: 1px solid #e5e5e5;
+          border-radius: 8px;
+          padding: 20px;
+          box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+          transition: all 0.2s ease;
+        }
+        .sfb-tracking .sfb-stat-card:hover {
+          box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+          transform: translateY(-2px);
+        }
+        .sfb-tracking .sfb-stat-number {
+          font-size: 32px;
+          font-weight: 700;
+          color: #2271b1;
+          line-height: 1;
+          margin: 10px 0 5px 0;
+        }
+        .sfb-tracking .sfb-stat-label {
+          font-size: 13px;
+          color: #646970;
+          text-transform: uppercase;
+          letter-spacing: 0.5px;
+          font-weight: 600;
+        }
+        .sfb-tracking .sfb-stat-icon {
+          font-size: 24px;
+          margin-bottom: 5px;
+        }
+        .sfb-tracking .sfb-stat-sublabel {
+          font-size: 12px;
+          color: #999;
+          margin-top: 5px;
+        }
+        .sfb-tracking .sfb-activity-item {
+          padding: 12px 0;
+          border-bottom: 1px solid #f0f0f1;
+          display: flex;
+          align-items: center;
+          gap: 12px;
+        }
+        .sfb-tracking .sfb-activity-item:last-child {
+          border-bottom: none;
+        }
+        .sfb-tracking .sfb-activity-time {
+          font-size: 11px;
+          color: #999;
+          min-width: 140px;
+        }
+        .sfb-tracking .sfb-activity-project {
+          font-weight: 500;
+          color: #2271b1;
+        }
+        .sfb-tracking .sfb-engagement-bar {
+          height: 8px;
+          background: #f0f0f1;
+          border-radius: 4px;
+          overflow: hidden;
+          margin-top: 8px;
+        }
+        .sfb-tracking .sfb-engagement-fill {
+          height: 100%;
+          background: linear-gradient(90deg, #2271b1, #72aee6);
+          transition: width 0.6s ease;
+        }
+        .sfb-tracking .sfb-btn-copy {
+          padding: 4px 12px;
+          font-size: 12px;
+          border-radius: 4px;
+          background: #f0f0f1;
+          border: 1px solid #c3c4c7;
+          cursor: pointer;
+          transition: all 0.2s;
+        }
+        .sfb-tracking .sfb-btn-copy:hover {
+          background: #2271b1;
+          color: white;
+          border-color: #2271b1;
+        }
+        .sfb-tracking .sfb-btn-copy.copied {
+          background: #00a32a;
+          color: white;
+          border-color: #00a32a;
+        }
+        .sfb-tracking .sfb-view-badge {
+          display: inline-flex;
+          align-items: center;
+          gap: 5px;
+          padding: 5px 10px;
+          border-radius: 12px;
+          font-size: 13px;
+          font-weight: 600;
+        }
+        .sfb-tracking .sfb-view-badge.high {
+          background: #d4edda;
+          color: #155724;
+        }
+        .sfb-tracking .sfb-view-badge.medium {
+          background: #fff3cd;
+          color: #856404;
+        }
+        .sfb-tracking .sfb-view-badge.low {
+          background: #f8f9fa;
+          color: #666;
+        }
+        .sfb-tracking .sfb-empty-state {
+          text-align: center;
+          padding: 60px 20px;
+          background: #f9f9f9;
+          border-radius: 8px;
+          border: 2px dashed #ddd;
+        }
+        .sfb-tracking .sfb-empty-icon {
+          font-size: 48px;
+          margin-bottom: 15px;
+          opacity: 0.5;
+        }
+      </style>
+
+      <h1><?php echo esc_html__('📊 Tracking & Analytics', 'submittal-builder'); ?></h1>
+      <p class="description">
+        <?php echo esc_html__('Monitor engagement and track PDF views in real-time.', 'submittal-builder'); ?>
+      </p>
+
+      <!-- Enhanced Summary Stats -->
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 20px; margin-top: 25px;">
+        <div class="sfb-stat-card">
+          <div class="sfb-stat-icon">🔗</div>
+          <div class="sfb-stat-label"><?php esc_html_e('Total Links', 'submittal-builder'); ?></div>
+          <div class="sfb-stat-number"><?php echo esc_html(number_format($total_packets)); ?></div>
+          <div class="sfb-stat-sublabel">
+            <?php printf(esc_html__('%d active tracking links', 'submittal-builder'), $total_packets); ?>
+          </div>
+        </div>
+
+        <div class="sfb-stat-card">
+          <div class="sfb-stat-icon">👁️</div>
+          <div class="sfb-stat-label"><?php esc_html_e('Total Views', 'submittal-builder'); ?></div>
+          <div class="sfb-stat-number"><?php echo esc_html(number_format($total_views)); ?></div>
+          <div class="sfb-stat-sublabel">
+            <?php printf(esc_html__('%s avg per link', 'submittal-builder'), $total_packets > 0 ? number_format($total_views / $total_packets, 1) : '0'); ?>
+          </div>
+        </div>
+
+        <div class="sfb-stat-card">
+          <div class="sfb-stat-icon">✅</div>
+          <div class="sfb-stat-label"><?php esc_html_e('Engagement Rate', 'submittal-builder'); ?></div>
+          <div class="sfb-stat-number"><?php echo esc_html(number_format($engagement_rate, 0)); ?>%</div>
+          <div class="sfb-engagement-bar">
+            <div class="sfb-engagement-fill" style="width: <?php echo esc_attr($engagement_rate); ?>%;"></div>
+          </div>
+          <div class="sfb-stat-sublabel">
+            <?php printf(esc_html__('%d of %d links viewed', 'submittal-builder'), $packets_with_views, $total_packets); ?>
+          </div>
+        </div>
+
+        <div class="sfb-stat-card">
+          <div class="sfb-stat-icon">📧</div>
+          <div class="sfb-stat-label"><?php esc_html_e('Recipients', 'submittal-builder'); ?></div>
+          <div class="sfb-stat-number"><?php echo esc_html(number_format(count($unique_recipients))); ?></div>
+          <div class="sfb-stat-sublabel">
+            <?php esc_html_e('unique email addresses', 'submittal-builder'); ?>
+          </div>
+        </div>
+      </div>
+
+      <?php if (!empty($recent_views)): ?>
+      <!-- Recent Activity -->
+      <div class="sfb-card" style="margin-top: 30px;">
+        <h2>⚡ <?php echo esc_html__('Recent Activity', 'submittal-builder'); ?></h2>
+        <div style="margin-top: 15px;">
+          <?php foreach ($recent_views as $view): ?>
+            <div class="sfb-activity-item">
+              <span class="sfb-activity-time"><?php echo esc_html(human_time_diff(strtotime($view['timestamp']), current_time('timestamp')) . ' ago'); ?></span>
+              <span style="color: #999;">•</span>
+              <span class="sfb-activity-project"><?php echo esc_html($view['project']); ?></span>
+              <span style="color: #999;">viewed</span>
+            </div>
+          <?php endforeach; ?>
+        </div>
+      </div>
+      <?php endif; ?>
+
+      <!-- Tracking Links Table -->
+      <div class="sfb-card" style="margin-top: 30px;">
+        <h2>🔗 <?php echo esc_html__('All Tracking Links', 'submittal-builder'); ?></h2>
+
+        <?php if (empty($all_packets)): ?>
+          <div class="sfb-empty-state">
+            <div class="sfb-empty-icon">📭</div>
+            <h3><?php esc_html_e('No Tracking Links Yet', 'submittal-builder'); ?></h3>
+            <p style="color: #666; max-width: 500px; margin: 10px auto;">
+              <?php esc_html_e('Tracking links are automatically created when you use Auto-Email to send PDFs. Start sending PDFs to see engagement analytics here.', 'submittal-builder'); ?>
+            </p>
+          </div>
+        <?php else: ?>
+          <table class="wp-list-table widefat fixed striped" style="margin-top: 15px;">
+            <thead>
+              <tr>
+                <th style="width: 20%;"><?php esc_html_e('Project', 'submittal-builder'); ?></th>
+                <th style="width: 18%;"><?php esc_html_e('Recipient', 'submittal-builder'); ?></th>
+                <th style="width: 12%;"><?php esc_html_e('Created', 'submittal-builder'); ?></th>
+                <th style="width: 10%;"><?php esc_html_e('Engagement', 'submittal-builder'); ?></th>
+                <th style="width: 12%;"><?php esc_html_e('Last Viewed', 'submittal-builder'); ?></th>
+                <th style="width: 28%;"><?php esc_html_e('Tracking Link', 'submittal-builder'); ?></th>
+              </tr>
+            </thead>
+            <tbody>
+              <?php foreach ($all_packets as $token => $packet): ?>
+                <?php
+                $project = $packet['project'] ?? __('(No Project Name)', 'submittal-builder');
+                $email_to = $packet['email_to'] ?? __('(Unknown)', 'submittal-builder');
+                $created = $packet['created'] ?? '';
+                $view_count = $packet['view_count'] ?? 0;
+                $last_viewed = $packet['last_viewed'] ?? null;
+                $tracking_url = add_query_arg(['sfb_view' => $token], home_url('/'));
+
+                // Format dates
+                $created_formatted = $created ? wp_date('M j, Y', strtotime($created)) : '—';
+                $last_viewed_formatted = $last_viewed ? human_time_diff(strtotime($last_viewed), current_time('timestamp')) . ' ago' : '—';
+
+                // Determine badge style
+                $badge_class = $view_count >= 5 ? 'high' : ($view_count >= 1 ? 'medium' : 'low');
+                $badge_icon = $view_count >= 5 ? '🔥' : ($view_count >= 1 ? '✓' : '○');
+                ?>
+                <tr>
+                  <td><strong><?php echo esc_html($project); ?></strong></td>
+                  <td style="font-size: 13px;"><?php echo esc_html($email_to); ?></td>
+                  <td style="font-size: 13px; color: #666;"><?php echo esc_html($created_formatted); ?></td>
+                  <td>
+                    <span class="sfb-view-badge <?php echo esc_attr($badge_class); ?>">
+                      <?php echo $badge_icon; ?> <?php echo esc_html($view_count); ?>
+                    </span>
+                  </td>
+                  <td style="font-size: 13px; color: #666;"><?php echo esc_html($last_viewed_formatted); ?></td>
+                  <td>
+                    <div style="display: flex; gap: 8px; align-items: center;">
+                      <input type="text" readonly value="<?php echo esc_attr($tracking_url); ?>"
+                             class="sfb-tracking-url"
+                             style="flex: 1; font-size: 11px; font-family: monospace; padding: 6px 8px; border: 1px solid #ddd; border-radius: 4px; background: #f9f9f9;"
+                             onclick="this.select();">
+                      <button type="button" class="sfb-btn-copy" data-url="<?php echo esc_attr($tracking_url); ?>">
+                        <?php esc_html_e('Copy', 'submittal-builder'); ?>
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              <?php endforeach; ?>
+            </tbody>
+          </table>
+        <?php endif; ?>
+      </div>
+    </div>
+
+    <script>
+    jQuery(document).ready(function($) {
+      // Copy to clipboard functionality
+      $('.sfb-btn-copy').on('click', function() {
+        var btn = $(this);
+        var url = btn.data('url');
+
+        // Create temporary input
+        var temp = $('<input>');
+        $('body').append(temp);
+        temp.val(url).select();
+        document.execCommand('copy');
+        temp.remove();
+
+        // Visual feedback
+        var originalText = btn.text();
+        btn.addClass('copied').text('<?php esc_html_e('Copied!', 'submittal-builder'); ?>');
+
+        setTimeout(function() {
+          btn.removeClass('copied').text(originalText);
+        }, 2000);
+      });
+    });
+    </script>
     <?php
   }
 
@@ -3566,22 +4019,40 @@ final class SFB_Plugin {
         wp_send_json_error(['message' => __('Invalid security token', 'submittal-builder')], 403);
       }
 
-      // --- Decode products once with proper error handling ---
-      $products_raw = isset($_POST['products']) ? wp_unslash($_POST['products']) : '[]';
-      $products = json_decode($products_raw, true);
+      // --- Check for new review payload format (includes quantities and notes) ---
+      $review_raw = isset($_POST['review']) ? wp_unslash($_POST['review']) : '';
+      $review = $review_raw ? json_decode($review_raw, true) : null;
 
-      if (json_last_error() !== JSON_ERROR_NONE || !is_array($products)) {
-        error_log('[SFB] Invalid JSON in products payload: ' . json_last_error_msg());
-        wp_send_json_error(['message' => __('Invalid products payload', 'submittal-builder')], 400);
+      $project_name = '';
+      $notes = '';
+      $products = [];
+
+      if ($review && is_array($review)) {
+        // New format: review payload with quantities and notes
+        $project_name = sanitize_text_field($review['project']['name'] ?? '');
+        $notes = sanitize_textarea_field($review['project']['notes'] ?? '');
+        $products = is_array($review['products'] ?? null) ? $review['products'] : [];
+
+        error_log('[SFB] Using review payload format with ' . count($products) . ' products');
+      } else {
+        // Legacy format: direct products array
+        $products_raw = isset($_POST['products']) ? wp_unslash($_POST['products']) : '[]';
+        $products = json_decode($products_raw, true);
+
+        if (json_last_error() !== JSON_ERROR_NONE || !is_array($products)) {
+          error_log('[SFB] Invalid JSON in products payload: ' . json_last_error_msg());
+          wp_send_json_error(['message' => __('Invalid products payload', 'submittal-builder')], 400);
+        }
+
+        $project_name = isset($_POST['project_name']) ? sanitize_text_field(wp_unslash($_POST['project_name'])) : '';
+        $notes = isset($_POST['notes']) ? sanitize_textarea_field(wp_unslash($_POST['notes'])) : '';
+
+        error_log('[SFB] Using legacy payload format with ' . count($products) . ' products');
       }
 
       if (empty($products)) {
         wp_send_json_error(['message' => __('No products selected', 'submittal-builder')], 400);
       }
-
-      // Get project details
-      $project_name = isset($_POST['project_name']) ? sanitize_text_field(wp_unslash($_POST['project_name'])) : '';
-      $notes = isset($_POST['notes']) ? sanitize_textarea_field(wp_unslash($_POST['notes'])) : '';
 
       // --- Extract and validate product IDs safely ---
       $product_ids = [];
@@ -3623,27 +4094,54 @@ final class SFB_Plugin {
         wp_send_json_error(['message' => __('No products found in database', 'submittal-builder')], 400);
       }
 
+      // Create a map of product IDs to their quantity/note from review payload
+      $product_meta_map = [];
+      if ($review && is_array($review['products'] ?? null)) {
+        foreach ($review['products'] as $rp) {
+          $id = isset($rp['id']) ? (int)$rp['id'] : (isset($rp['node_id']) ? (int)$rp['node_id'] : 0);
+          if ($id) {
+            $product_meta_map[$id] = [
+              'quantity' => isset($rp['quantity']) ? max(1, (int)$rp['quantity']) : 1,
+              'note' => isset($rp['note']) ? sanitize_textarea_field($rp['note']) : ''
+            ];
+          }
+        }
+      }
+
       // Format products for PDF generator with safe array access
       $formatted_products = [];
       foreach ($full_products as $product) {
+        $product_id = isset($product['id']) ? (int)$product['id'] : 0;
+
         // Safely decode the settings_json
         $settings_json = isset($product['settings_json']) ? $product['settings_json'] : '{}';
         $settings = json_decode($settings_json, true);
         if (json_last_error() !== JSON_ERROR_NONE) {
-          error_log('[SFB] Invalid JSON in product settings for ID ' . ($product['id'] ?? 'unknown') . ': ' . json_last_error_msg());
+          error_log('[SFB] Invalid JSON in product settings for ID ' . $product_id . ': ' . json_last_error_msg());
           $settings = [];
         }
 
         // Extract specs from settings
         $specs = isset($settings['fields']) ? $settings['fields'] : [];
-        $note = isset($settings['note']) ? $settings['note'] : '';
+        $base_note = isset($settings['note']) ? $settings['note'] : '';
+
+        // Get quantity and note from review payload if available
+        $quantity = 1;
+        $note = $base_note;
+        if (isset($product_meta_map[$product_id])) {
+          $quantity = $product_meta_map[$product_id]['quantity'];
+          // User note from review overrides base note if present
+          if (!empty($product_meta_map[$product_id]['note'])) {
+            $note = $product_meta_map[$product_id]['note'];
+          }
+        }
 
         // Get product path/category from parent hierarchy
         $path = $this->get_node_breadcrumb($product['id']);
 
         $formatted_products[] = [
-          'id' => isset($product['id']) ? (int)$product['id'] : 0,
-          'node_id' => isset($product['id']) ? (int)$product['id'] : 0,
+          'id' => $product_id,
+          'node_id' => $product_id,
           'name' => isset($product['title']) ? $product['title'] : __('Unnamed Product', 'submittal-builder'),
           'title' => isset($product['title']) ? $product['title'] : __('Unnamed Product', 'submittal-builder'),
           'category' => isset($path[0]) ? $path[0] : __('Uncategorized', 'submittal-builder'),
@@ -3652,10 +4150,11 @@ final class SFB_Plugin {
           'specifications' => $specs, // Alias for compatibility
           'note' => $note,
           'description' => $note, // Alias for compatibility
+          'quantity' => $quantity,
         ];
       }
 
-      // Get branding
+      // Get purchaser branding (always use site settings, no overrides)
       $settings = get_option('sfb_settings', []);
 
       // --- Require composer autoload with guard ---
@@ -3672,6 +4171,7 @@ final class SFB_Plugin {
       $html = SFB_PDF_Generator::generate_packet([
         'products' => $formatted_products,
         'project_name' => $project_name,
+        'project_notes' => $notes,
         'branding' => $settings,
         'pro_active' => sfb_is_pro_active(),
       ]);
@@ -4511,6 +5011,9 @@ final class SFB_Plugin {
     // Register new frontend builder assets
     wp_register_style('sfb-frontend', plugins_url('assets/css/frontend.css', __FILE__), [], self::VERSION);
     wp_register_script('sfb-frontend', plugins_url('assets/js/frontend.js', __FILE__), [], self::VERSION, true);
+
+    // Register lead capture script (Pro feature - loaded when modal is present)
+    wp_register_script('sfb-lead-capture', plugins_url('assets/js/lead-capture.js', __FILE__), [], self::VERSION, true);
   }
 
   /** Shortcode: [submittal_builder id="1"] */
@@ -5926,11 +6429,6 @@ final class SFB_Plugin {
       $pdf = $dompdf->output();
       file_put_contents($path, $pdf);
 
-      // Try to append external PDFs (if FPDI available and items have pdf_urls)
-      if (sfb_feature_enabled('ext_merge')) {
-        $this->try_append_external_pdfs($path, $items);
-      }
-
       $url = trailingslashit($upload['baseurl']).'sfb/'.$fname;
 
       // --- Automation: Archive, Tracking, Email ---
@@ -5948,13 +6446,18 @@ final class SFB_Plugin {
         $archived = true;
       }
 
-      // 2) Create tracking link (Pro)
-      if (sfb_feature_enabled('tracking') && $meta['track']) {
+      // 2) Create tracking link (Pro) - Automatic when auto-email is enabled
+      // Tracking is only useful when we know who's viewing (via email capture)
+      if (sfb_feature_enabled('tracking') && $meta['send_email'] && !empty($meta['email_to'])) {
         $token = wp_generate_password(20, false);
         $rec = [
           'file' => $url,
           'project' => (string)($meta['project'] ?? ''),
           'created' => current_time('mysql'),
+          'view_count' => 0,
+          'last_viewed' => null,
+          'views' => [],
+          'email_to' => $meta['email_to'] // Store recipient email for reference
         ];
         $all = get_option('sfb_packets', []);
         $all[$token] = $rec;
