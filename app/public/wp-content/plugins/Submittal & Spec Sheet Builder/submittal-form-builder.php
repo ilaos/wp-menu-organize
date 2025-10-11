@@ -39,6 +39,7 @@ require_once plugin_dir_path(__FILE__) . 'Includes/class-sfb-admin.php';
 require_once plugin_dir_path(__FILE__) . 'Includes/class-sfb-render.php';
 require_once plugin_dir_path(__FILE__) . 'Includes/class-sfb-rest.php';
 require_once plugin_dir_path(__FILE__) . 'Includes/class-sfb-pdf.php';
+require_once plugin_dir_path(__FILE__) . 'Includes/class-sfb-ajax.php';
 
 /**
  * Helper function to ensure string type (prevents null deprecation warnings in PHP 8.1+)
@@ -109,27 +110,15 @@ final class SFB_Plugin {
 
     // Onboarding: welcome notice (dismissible, per-user)
     add_action('admin_notices', [$this, 'show_welcome_notice']);
-    add_action('wp_ajax_sfb_dismiss_welcome', [$this, 'dismiss_welcome_notice']);
+    // Phase 5 Refactor: AJAX dismiss hook moved to SFB_Ajax::init()
 
     // License status notices
     add_action('admin_notices', [$this, 'show_license_notices']);
 
-    // Tools page AJAX handlers
-    add_action('wp_ajax_sfb_purge_expired_drafts', [$this, 'ajax_purge_expired_drafts']);
-    add_action('wp_ajax_sfb_run_smoke_test', [$this, 'ajax_run_smoke_test']);
-
-    // Frontend AJAX handlers (public + logged in)
-    add_action('wp_ajax_sfb_list_products', [$this, 'ajax_list_products']);
-    add_action('wp_ajax_nopriv_sfb_list_products', [$this, 'ajax_list_products']);
-    add_action('wp_ajax_sfb_generate_frontend_pdf', [$this, 'ajax_generate_frontend_pdf']);
-    add_action('wp_ajax_nopriv_sfb_generate_frontend_pdf', [$this, 'ajax_generate_frontend_pdf']);
-
-    // Lead Capture AJAX handlers (Pro feature - public + logged in)
-    add_action('wp_ajax_sfb_submit_lead', ['SFB_Lead_Capture', 'ajax_submit_lead']);
-    add_action('wp_ajax_nopriv_sfb_submit_lead', ['SFB_Lead_Capture', 'ajax_submit_lead']);
-
-    // Branding AJAX handler
-    add_action('wp_ajax_sfb_save_brand', [$this, 'ajax_save_brand']);
+    // Phase 5 Refactor: All AJAX hooks moved to SFB_Ajax class
+    // Admin AJAX: sfb_dismiss_welcome, sfb_purge_expired_drafts, sfb_run_smoke_test, sfb_save_brand
+    // Frontend AJAX: sfb_list_products, sfb_generate_frontend_pdf (both with nopriv)
+    // Lead Capture AJAX: sfb_submit_lead (with nopriv)
 
     // Test PDF generation handler
     add_action('admin_post_sfb_test_pdf', [$this, 'generate_test_pdf']);
@@ -7550,6 +7539,7 @@ add_action('plugins_loaded', function() {
   SFB_Render::init();
   SFB_Rest::init();
   SFB_Pdf::init();
+  SFB_Ajax::init();  // Phase 5: AJAX hooks
 }, 10);
 
 /**
