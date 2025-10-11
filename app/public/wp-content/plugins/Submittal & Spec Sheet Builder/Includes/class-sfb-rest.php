@@ -28,7 +28,7 @@ final class SFB_Rest {
   public static function register_routes() {
     global $sfb_plugin;
 
-    if (!$sfb_plugin || !($sfb_plugin instanceof Submittal_Form_Builder)) {
+    if (!$sfb_plugin || !($sfb_plugin instanceof SFB_Plugin)) {
       return;
     }
 

@@ -31,7 +31,7 @@ final class SFB_Render {
   public static function render_shortcode($atts = []) {
     global $sfb_plugin;
 
-    if (!$sfb_plugin || !($sfb_plugin instanceof Submittal_Form_Builder)) {
+    if (!$sfb_plugin || !($sfb_plugin instanceof SFB_Plugin)) {
       return '<p>' . esc_html__('Submittal Builder is not properly initialized.', 'submittal-builder') . '</p>';
     }
 
