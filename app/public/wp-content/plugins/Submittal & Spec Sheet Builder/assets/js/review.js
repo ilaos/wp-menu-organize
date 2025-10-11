@@ -41,11 +41,29 @@
    * @param {string} compositeKey - The composite key to look up full product data
    */
   function enrichWithSpecs(item, compositeKey) {
-    if (item?.specs && Object.keys(item.specs).length) return item;
+    console.log('[enrichWithSpecs] Input:', {
+      hasSpecs: !!item?.specs,
+      specsKeys: item?.specs ? Object.keys(item.specs) : null,
+      compositeKey,
+      globalMapExists: !!window.SFB?.productsById
+    });
+
+    if (item?.specs && Object.keys(item.specs).length) {
+      console.log('[enrichWithSpecs] Item already has specs, returning as-is');
+      return item;
+    }
+
     // Try to get full product data from the global products map using composite_key
     const src = window.SFB?.productsById?.get(compositeKey);
+    console.log('[enrichWithSpecs] Lookup result:', {
+      found: !!src,
+      hasSpecs: !!src?.specs,
+      specs: src?.specs
+    });
+
     if (src?.specs) {
       item.specs = src.specs;
+      console.log('[enrichWithSpecs] Enriched specs:', item.specs);
     }
     return item;
   }
@@ -65,13 +83,19 @@
   }
 
   function fmtSpecs(specs) {
-    if (!specs || typeof specs !== 'object') return '';
+    console.log('[fmtSpecs] Input specs:', specs);
+    if (!specs || typeof specs !== 'object') {
+      console.log('[fmtSpecs] No specs or invalid type, returning empty');
+      return '';
+    }
     const parts = [];
     if (specs.Size || specs.size) parts.push(`Size ${specs.Size || specs.size}`);
     if (specs.Thickness || specs.thickness) parts.push(`Thick ${specs.Thickness || specs.thickness}`);
     if (specs.Flange || specs.flange) parts.push(`Flange ${specs.Flange || specs.flange}`);
     if (specs.KSI || specs.ksi) parts.push(`KSI: ${specs.KSI || specs.ksi}`);
-    return parts.join(' • ');
+    const result = parts.join(' • ');
+    console.log('[fmtSpecs] Output:', result, 'parts:', parts);
+    return result;
   }
 
   function groupByType(keys) {
@@ -148,9 +172,13 @@
 
       keys.forEach(k => {
         let p = window.sfbProductsMap?.get(k);
+        console.log('[SFB Review] Before enrichment - key:', k, 'product:', p, 'specs:', p?.specs);
         if (p) {
           // Enrich with specs if missing
           p = enrichWithSpecs(p, k);
+          console.log('[SFB Review] After enrichment - specs:', p?.specs);
+          const formattedSpecs = fmtSpecs(p?.specs || {});
+          console.log('[SFB Review] Formatted specs output:', formattedSpecs);
         }
         const { quantity = 1, note = '' } = selectedMap.get(k) || {};
         const row = document.createElement('div');
@@ -159,6 +187,9 @@
         row.setAttribute('tabindex', '0');
         row.dataset.key = k;
 
+        const specsHtml = fmtSpecs(p?.specs || {});
+        console.log('[SFB Review] Final specs HTML for row:', specsHtml);
+
         row.innerHTML = `
           <div class="sfb-row__left">
             <div class="sfb-row__badges">
@@ -166,7 +197,7 @@
               <span class="crumb--category">${escapeHtml(p?.category || '')}</span>
             </div>
             <div class="sfb-row__title">${escapeHtml(p?.model || k)}</div>
-            <div class="sfb-row__meta">${fmtSpecs(p?.specs || {})}</div>
+            <div class="sfb-row__meta">${specsHtml}</div>
           </div>
           <div class="sfb-row__right">
             <label class="sr-only" for="qty-${escapeHtml(k)}">Quantity for ${escapeHtml(p?.model || '')}</label>
@@ -293,6 +324,12 @@
 
   renderSelected();
   persistSelection(); // Sets CTA disabled state if needed
+
+  // Listen for products loaded event and re-render
+  window.addEventListener('sfb-products-loaded', () => {
+    console.log('[SFB Review] Products loaded event received, re-rendering...');
+    renderSelected();
+  });
 
   // ---- Brand Preview Initialization ----
   function initBrandPreview() {

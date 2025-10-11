@@ -310,6 +310,9 @@
         renderProducts();
         // Restore selected products from sessionStorage
         restoreSelectedProducts();
+
+        // Trigger event for review.js to re-render now that products are loaded
+        window.dispatchEvent(new CustomEvent('sfb-products-loaded'));
       } else {
         showError('Failed to load products: ' + (data.data?.message || 'Unknown error'));
       }
