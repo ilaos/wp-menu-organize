@@ -38,12 +38,15 @@
   /**
    * Enrich item with specs from global products map if missing
    * @param {Object} item - Product item to enrich
+   * @param {string} compositeKey - The composite key to look up full product data
    */
-  function enrichWithSpecs(item) {
+  function enrichWithSpecs(item, compositeKey) {
     if (item?.specs && Object.keys(item.specs).length) return item;
-    const pid = item.product_id || item.id || item.node_id;
-    const src = window.SFB?.productsById?.get(pid);
-    if (src?.specs) item.specs = src.specs;
+    // Try to get full product data from the global products map using composite_key
+    const src = window.SFB?.productsById?.get(compositeKey);
+    if (src?.specs) {
+      item.specs = src.specs;
+    }
     return item;
   }
 
@@ -145,7 +148,10 @@
 
       keys.forEach(k => {
         let p = window.sfbProductsMap?.get(k);
-        if (p) p = enrichWithSpecs(p);
+        if (p) {
+          // Enrich with specs if missing
+          p = enrichWithSpecs(p, k);
+        }
         const { quantity = 1, note = '' } = selectedMap.get(k) || {};
         const row = document.createElement('div');
         row.className = 'sfb-row';
