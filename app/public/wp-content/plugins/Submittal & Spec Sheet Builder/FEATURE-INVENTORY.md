@@ -93,6 +93,14 @@
 - ✅ **Selected Products Tray** - Sticky sidebar showing selections
   - File: `templates/frontend/partials/selected-tray.php`
 
+- ✅ **Load Sample Catalog Modal** - Quick demo data loading from admin builder
+  - Industry Pack selector (7 industry-specific catalogs)
+  - Mode selection (Replace/Merge)
+  - Size selection (Small/Medium/Large)
+  - Optional sample branding
+  - Remembers user's last selected pack
+  - File: `assets/admin.js` (lines 2744-2763)
+
 #### **Privacy & Security**
 - ✅ **No Data Collection** - Zero external tracking
 - ✅ **GDPR Compliant** - Full user control
@@ -231,6 +239,75 @@
 
 ---
 
+### Agency Features (Agency License Only)
+
+**Agency Library - Save as Pack** (NEW 2025-10-11)
+- **Fast onboarding** for multi-site deployments
+- **Save current catalog as reusable Pack:**
+  - "💼 Save as Pack" button in Builder toolbar (Agency-gated)
+  - Modal with name input and options:
+    - Include branding settings (logo, colors, company info)
+    - Include product notes/descriptions
+  - Saves to `sfb_agency_packs` option with metadata
+- **Agency Library page** (`admin.php?page=sfb-agency-library`)
+  - Lists all saved Packs with name, product count, branding indicator, last updated
+  - Export JSON button for each Pack (nonce-secured download)
+  - Delete button with confirmation (removes from database)
+  - Empty state with call-to-action to create first Pack
+  - Info box explaining how to use Packs on other sites
+- **Seeder integration:**
+  - `/sfb/v1/form/seed` endpoint accepts `agency_pack_id` parameter
+  - Loads Pack from database instead of industry pack JSON
+  - Applies branding if Pack includes it and `with_branding` is true
+  - Remaps node IDs on import to avoid conflicts
+  - Works with existing replace/merge modes
+- **Files:**
+  - Admin menu: `Includes/class-sfb-admin.php:136-147`
+  - Library page: `submittal-form-builder.php:2071-2212`
+  - Save button: `assets/admin.js:2574-2578`
+  - Modal UI: `assets/admin.js:2920-2998`
+  - Save handler: `submittal-form-builder.php:6602-6683`
+  - Export handler: `submittal-form-builder.php:5066-5107`
+  - Seeder: `submittal-form-builder.php:6159-6260`
+  - AJAX registration: `Includes/class-sfb-ajax.php:76-78`
+- **Data Structure:**
+  ```php
+  [
+    'id' => 'uuid',
+    'name' => 'Pack Name',
+    'counts' => ['products' => 123, 'nodes' => 456],
+    'has_branding' => true/false,
+    'updated_at' => '2025-10-11 12:34:56',
+    'data' => [
+      'form' => [...],
+      'nodes' => [...],
+      'branding' => [...] // optional
+    ]
+  ]
+  ```
+- **User Flow:**
+  1. Create Pack: Builder → "💼 Save as Pack" → Enter name + options → Save
+  2. Export JSON: Agency Library → Click "Export JSON" → Downloads `Pack-Name.json`
+  3. Use on another site: Welcome → Load Sample Catalog → Upload JSON → Seeds catalog + branding
+- **Security:**
+  - All endpoints require `manage_options` + `sfb_is_agency_license()`
+  - Nonce verification on export and delete
+  - Input sanitization on all user data
+  - Graceful degradation for non-Agency users (features hidden)
+
+**Brand Presets** (Agency feature - implemented previously)
+- Save multiple brand configurations as reusable presets
+- Apply presets to current branding with one click
+- Set default preset for automatic use in Review + PDFs
+- **Admin page:** Branding → Brand Presets section
+- **Files:**
+  - Backend: `Includes/class-sfb-branding.php` (preset CRUD methods)
+  - Frontend: `assets/js/review.js:299-589` (preset switcher)
+  - Template: `templates/frontend/builder.php:107-149` (data localization)
+- **Storage:** `sfb_brand_presets` option
+
+---
+
 ## Admin Features
 
 ### Admin Menu Pages
@@ -260,6 +337,12 @@
    - Function: `render_demo_tools_page()`
    - Slug: `sfb-demo-tools`
    - Only visible when `SFB_DEV_MODE` constant is true
+   - Features:
+     - Industry Pack selector (Electrical, HVAC, Plumbing, Steel, Fasteners, Finishes, Generic Equipment)
+     - Demo size selection (Small, Medium, Large)
+     - Branding toggle
+     - Draft creation option
+     - Uses centralized industry pack registry (`Includes/industry-pack-helpers.php`)
    - Testing utilities for development
 
 5. **Settings**
@@ -294,7 +377,10 @@
   - REST: `/form/import` - Import catalog from JSON
 
 - **Catalog Management**
-  - REST: `/form/seed` - Seed demo data
+  - REST: `/form/seed` - Seed demo data from industry-specific packs
+    - Supports `industry_pack` parameter (electrical, hvac, plumbing, steel, fasteners, finishes, generic-equipment)
+    - Loads from JSON files in `assets/demo/*.json`
+    - Persists user's last selected pack in user meta (`sfb_last_industry_pack`)
   - REST: `/form/wipe` - Delete all catalog data
   - REST: `/node/create`, `/node/save`, `/node/delete`
   - REST: `/node/reorder`, `/node/duplicate`, `/node/move`
@@ -501,6 +587,15 @@ CREATE TABLE wp_sfb_leads (
    - Color picker with presets
    - Company info fields
    - Footer text customization
+   - Brand Presets section (Agency only)
+
+2.5 **Agency Library** (`admin.php?page=sfb-agency-library`) **(Agency only - NEW 2025-10-11)**
+   - View all saved Agency Packs
+   - Pack table with name, products, branding, updated date
+   - Export JSON for each Pack
+   - Delete Packs with confirmation
+   - Empty state with "Go to Builder" CTA
+   - Only visible to Agency license holders
 
 3. **Settings** (`admin.php?page=sfb-settings`)
    - Draft configuration
@@ -630,6 +725,13 @@ All templates use PHP with inline CSS for PDF generation via DomPDF:
   - Functions: `sfb_get_brand_settings()`, `sfb_brand_presets()`
   - Migration from old `sfb_branding` to new `sfb_brand_settings` format
 
+**Industry Packs:**
+- `Includes/industry-pack-helpers.php` - Industry pack registry (Single source of truth)
+  - Functions: `sfb_get_industry_packs()`, `sfb_get_default_industry_pack()`, `sfb_get_user_last_industry_pack()`, `sfb_save_user_last_industry_pack()`
+  - Scans `assets/demo/*.json` files
+  - Shared between Demo Tools panel and Builder modal
+  - User preference persistence via user meta
+
 **PDF Generation:**
 - `Includes/pdf-generator.php` - Professional PDF generator
   - Uses DomPDF library
@@ -664,6 +766,35 @@ These files exist but are empty (1 line each):
 - Purpose: HTML-to-PDF conversion
 - License: LGPL 2.1
 - No external dependencies required
+
+---
+
+### Demo Data (Industry Packs)
+
+**Available Industry Packs:**
+- `assets/demo/electrical.json` - Electrical — Panels & Conduit
+- `assets/demo/hvac.json` - HVAC — Duct & Diffusers
+- `assets/demo/plumbing.json` - Plumbing — Pipes & Fixtures
+- `assets/demo/steel.json` - Structural Steel — Beams & Columns
+- `assets/demo/fasteners.json` - Fasteners & Hardware
+- `assets/demo/finishes.json` - Finishes & Coatings
+- `assets/demo/generic-equipment.json` - Generic Equipment
+
+**Pack Structure:**
+Each JSON file contains:
+- `title` - Display name for the pack
+- `categories[]` - Array of product categories
+  - `title` - Category name
+  - `types[]` - Array of product types
+    - `title` - Type name
+    - `items[]` - Array of specific models
+      - `title` - Model name
+      - `meta{}` - Specification key-value pairs
+
+**Registry Management:**
+- File: `Includes/industry-pack-helpers.php`
+- Dynamic scanning of `assets/demo/*.json` files
+- No hardcoded pack lists (fully extensible)
 
 ---
 
@@ -733,6 +864,9 @@ These files exist but are empty (1 line each):
 
 **Transients:**
 - `sfb_license_check_cache` - 12-hour cache of license validation
+
+**User Meta:**
+- `sfb_last_industry_pack` - User's last selected industry pack (for persistence across sessions)
 
 **External Links (Customizable):**
 - `sfb_link_account`

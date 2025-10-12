@@ -48,6 +48,33 @@ final class SFB_Ajax {
 
     // Branding save handler
     add_action('wp_ajax_sfb_save_brand', [$plugin, 'ajax_save_brand']);
+
+    // Brand Presets (Agency feature)
+    self::register_brand_preset_hooks();
+
+    // Agency Packs (Agency feature)
+    self::register_agency_pack_hooks($plugin);
+  }
+
+  /**
+   * Register brand preset AJAX hooks (Agency feature)
+   */
+  private static function register_brand_preset_hooks() {
+    add_action('wp_ajax_sfb_preset_create', ['SFB_Branding', 'ajax_create_preset']);
+    add_action('wp_ajax_sfb_preset_list', ['SFB_Branding', 'ajax_list_presets']);
+    add_action('wp_ajax_sfb_preset_apply', ['SFB_Branding', 'ajax_apply_preset']);
+    add_action('wp_ajax_sfb_preset_rename', ['SFB_Branding', 'ajax_rename_preset']);
+    add_action('wp_ajax_sfb_preset_delete', ['SFB_Branding', 'ajax_delete_preset']);
+    add_action('wp_ajax_sfb_preset_set_default', ['SFB_Branding', 'ajax_set_default_preset']);
+  }
+
+  /**
+   * Register agency pack AJAX hooks (Agency feature)
+   *
+   * @param SFB_Plugin $plugin Main plugin instance
+   */
+  private static function register_agency_pack_hooks($plugin) {
+    add_action('wp_ajax_sfb_pack_export', [$plugin, 'ajax_export_pack']);
   }
 
   /**

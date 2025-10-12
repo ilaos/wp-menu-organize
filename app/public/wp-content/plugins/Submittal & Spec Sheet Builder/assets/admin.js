@@ -1578,6 +1578,15 @@
       industryPack: (window.SFB && SFB.defaultIndustryPack) || 'electrical'
     });
 
+    // Save as Pack modal state (Agency feature)
+    const [packModal, setPackModal] = useState({
+      open: false,
+      name: '',
+      includeBranding: true,
+      includeNotes: false,
+      saving: false
+    });
+
     // Wipe/Delete All modal state
     const [showWipeModal, setShowWipeModal] = useState(false);
     const [wipeBranding, setWipeBranding] = useState(false);
@@ -1812,6 +1821,46 @@
         alert('Failed to load sample catalog: ' + (err?.message || err));
       } finally {
         setLoading(false);
+      }
+    }
+
+    // Agency feature: Save current catalog as Pack
+    async function saveAsPack(){
+      if (!packModal.name.trim()) {
+        alert('Please enter a Pack name.');
+        return;
+      }
+
+      try {
+        setPackModal(prev => ({...prev, saving: true}));
+
+        const res = await wp.apiFetch({
+          path: '/sfb/v1/pack/save',
+          method: 'POST',
+          data: {
+            name: packModal.name.trim(),
+            include_branding: packModal.includeBranding,
+            include_notes: packModal.includeNotes
+          }
+        });
+
+        // Close modal and reset
+        setPackModal({
+          open: false,
+          name: '',
+          includeBranding: true,
+          includeNotes: false,
+          saving: false
+        });
+
+        if (res?.pack) {
+          const productCount = res.pack.counts?.products || 0;
+          showToast(`Pack "${res.pack.name}" created with ${productCount} products!`);
+        }
+      } catch (err) {
+        console.error('Save Pack error:', err);
+        alert('Failed to save Pack: ' + (err?.message || err));
+        setPackModal(prev => ({...prev, saving: false}));
       }
     }
 
@@ -2560,7 +2609,13 @@
             onClick:()=> selected && deleteNode(selected.id)
           },'Delete'),
           h('button',{className:'button',onClick:exportJSON},'Export JSON'),
-          h('button',{className:'button',onClick:importJSON},'Import JSON')
+          h('button',{className:'button',onClick:importJSON},'Import JSON'),
+          // Agency feature: Save as Pack
+          (window.SFB && SFB.isAgency) && h('button',{
+            className:'button button-primary',
+            onClick:()=> setPackModal({...packModal, open:true}),
+            style: {marginLeft: '8px'}
+          },'💼 Save as Pack')
         ),
         // Search & Filter Toolbar
         h('div',{className:'sfb-tree-toolbar'},
@@ -2858,6 +2913,86 @@
               className: 'button button-primary',
               onClick: loadSampleCatalog
             }, 'Load Catalog')
+          )
+        )
+      ),
+
+      // Agency feature: Save as Pack modal
+      packModal.open && h('div', {
+        className: 'sfb-modal-overlay',
+        onClick: () => setPackModal({open: false, name: '', includeBranding: true, includeNotes: false, saving: false})
+      },
+        h('div', {
+          className: 'sfb-modal sfb-pack-modal',
+          onClick: (e) => e.stopPropagation()
+        },
+          h('h3', null, '💼 Save Current Catalog as Agency Pack'),
+          h('div', {className: 'sfb-modal-body'},
+            h('div', {className: 'sfb-catalog-option-group'},
+              h('label', {className: 'sfb-catalog-label'}, 'Pack Name:'),
+              h('input', {
+                type: 'text',
+                className: 'sfb-pack-name-input',
+                placeholder: 'e.g., Client A - Full Catalog',
+                value: packModal.name,
+                onChange: (e) => setPackModal(prev => ({...prev, name: e.target.value})),
+                onKeyDown: (e) => {
+                  if (e.key === 'Enter' && !packModal.saving) {
+                    saveAsPack();
+                  }
+                },
+                style: {width: '100%', padding: '10px', fontSize: '14px', borderRadius: '4px', border: '1px solid #ddd'}
+              }),
+              h('p', {className: 'sfb-catalog-hint'},
+                'Choose a descriptive name for this Pack. You\'ll be able to identify it later when seeding other sites.'
+              )
+            ),
+            h('div', {className: 'sfb-catalog-option-group'},
+              h('label', {className: 'sfb-catalog-checkbox'},
+                h('input', {
+                  type: 'checkbox',
+                  checked: packModal.includeBranding,
+                  onChange: (e) => setPackModal(prev => ({...prev, includeBranding: e.target.checked}))
+                }),
+                h('span', null, 'Include branding settings'),
+                h('small', {style: {display: 'block', marginLeft: '24px', color: '#6b7280'}},
+                  'Save current logo, colors, and company info with this Pack'
+                )
+              )
+            ),
+            h('div', {className: 'sfb-catalog-option-group'},
+              h('label', {className: 'sfb-catalog-checkbox'},
+                h('input', {
+                  type: 'checkbox',
+                  checked: packModal.includeNotes,
+                  onChange: (e) => setPackModal(prev => ({...prev, includeNotes: e.target.checked}))
+                }),
+                h('span', null, 'Include product notes/descriptions'),
+                h('small', {style: {display: 'block', marginLeft: '24px', color: '#6b7280'}},
+                  'Include all custom notes and descriptions (increases Pack size)'
+                )
+              )
+            ),
+            h('div', {style: {padding: '12px', background: '#f0f9ff', borderRadius: '6px', marginTop: '16px'}},
+              h('p', {style: {margin: 0, fontSize: '13px', color: '#0c4a6e'}},
+                h('strong', null, '💡 Tip: '),
+                'After saving, export your Pack as JSON from ',
+                h('strong', null, 'Agency Library'),
+                ' to use on other sites during onboarding.'
+              )
+            )
+          ),
+          h('div', {className: 'sfb-modal-footer'},
+            h('button', {
+              className: 'button',
+              onClick: () => setPackModal({open: false, name: '', includeBranding: true, includeNotes: false, saving: false}),
+              disabled: packModal.saving
+            }, 'Cancel'),
+            h('button', {
+              className: 'button button-primary',
+              onClick: saveAsPack,
+              disabled: packModal.saving || !packModal.name.trim()
+            }, packModal.saving ? 'Saving...' : 'Save Pack')
           )
         )
       ),
@@ -3170,6 +3305,9 @@
       includeCover: document.querySelector('input[name*="[cover_default]"]'),
       footerText: document.getElementById('sfb-footer-text'),
 
+      // Agency features (Phase B)
+      useDefaultPreset: document.getElementById('sfb-use-default-preset'),
+
       // Live Preview elements
       previewHeader: document.getElementById('sfb-preview-header'),
       previewLogo: document.getElementById('sfb-preview-logo'),
@@ -3407,6 +3545,14 @@
     if (elements.footerText) {
       elements.footerText.addEventListener('input', (e) => {
         Brand.state.visual.footer_text = e.target.value;
+        scheduleAutosave();
+      });
+    }
+
+    // Use default preset toggle (Agency - Phase B)
+    if (elements.useDefaultPreset) {
+      elements.useDefaultPreset.addEventListener('change', (e) => {
+        Brand.state.use_default_preset = e.target.checked;
         scheduleAutosave();
       });
     }

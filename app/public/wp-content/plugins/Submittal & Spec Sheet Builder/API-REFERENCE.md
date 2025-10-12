@@ -1,7 +1,7 @@
 # REST API Reference
 ## Submittal & Spec Sheet Builder v1.0.0
 
-Complete documentation for all 27 REST API endpoints available in the plugin.
+Complete documentation for all 29 REST API endpoints and AJAX handlers available in the plugin.
 
 ---
 
@@ -16,6 +16,7 @@ Complete documentation for all 27 REST API endpoints available in the plugin.
 - [Import/Export](#importexport)
 - [PDF Generation](#pdf-generation)
 - [Draft Management (Pro)](#draft-management-pro)
+- [Agency Features (Agency)](#agency-features-agency)
 - [Settings](#settings)
 - [License Management](#license-management)
 
@@ -191,57 +192,127 @@ wp.apiFetch({ path: '/sfb/v1/status' })
 ## Form Management
 
 ### POST /sfb/v1/form/seed
-Generate sample catalog data for testing/demo purposes.
+Generate sample catalog data for testing/demo purposes from industry-specific packs or Agency Packs.
 
 **Permission:** Admin (`manage_options`)
 
 **Request Body:**
 ```json
 {
+  "form_id": 1,
+  "industry_pack": "electrical",
   "size": "medium",
   "mode": "replace",
-  "branding": true,
-  "draft": false
+  "with_branding": true
+}
+```
+
+**Request Body (Agency Pack):**
+```json
+{
+  "form_id": 1,
+  "agency_pack_id": "550e8400-e29b-41d4-a716-446655440000",
+  "mode": "replace",
+  "with_branding": true
 }
 ```
 
 **Parameters:**
-- `size` (string, required) - Catalog size: `small` (3 cats), `medium` (5 cats), `large` (8 cats)
-- `mode` (string, optional) - `replace` (wipe existing) or `merge` (append). Default: `replace`
-- `branding` (boolean, optional) - Apply branding preset. Default: `false`
-- `draft` (boolean, optional) - Create demo draft with selections. Default: `false`
+- `form_id` (int, optional) - Target form ID. Default: `1`
+- `industry_pack` (string, optional) - Industry pack key to load. Available packs: `electrical`, `hvac`, `plumbing`, `steel`, `fasteners`, `finishes`, `generic-equipment`. Default: User's last selected pack or `electrical`
+- `agency_pack_id` (string, optional) - **Agency feature:** Load from saved Agency Pack instead of industry pack. Requires Agency license.
+- `size` (string, optional) - Catalog size: `small` (limited subset), `medium` (full pack), `large` (full pack). Default: `medium`. Ignored when using `agency_pack_id`.
+- `mode` (string, optional) - `replace` (wipe existing) or `merge` (append). Default: `merge`
+- `with_branding` (boolean, optional) - Apply sample branding preset (industry packs) or Pack's included branding (Agency Packs). Default: `true`
 
-**Response:**
+**Response (Industry Pack):**
 ```json
 {
   "ok": true,
-  "stats": {
+  "form_id": 1,
+  "size": "medium",
+  "mode": "replace",
+  "industry_pack": "electrical",
+  "branding": true,
+  "elapsed_ms": 482,
+  "counts": {
     "categories": 5,
-    "products": 18,
-    "types": 42,
-    "models": 89,
-    "seconds": 0.482
-  },
-  "draft_url": "https://yoursite.com/submittal-form?sfb_draft=abc123def456"
+    "products": 0,
+    "types": 18,
+    "models": 42
+  }
+}
+```
+
+**Response (Agency Pack):**
+```json
+{
+  "ok": true,
+  "form_id": 1,
+  "mode": "replace",
+  "elapsed_ms": 312,
+  "pack_type": "agency",
+  "counts": {
+    "categories": 12,
+    "products": 48,
+    "types": 24,
+    "models": 96
+  }
 }
 ```
 
 **Response Fields:**
-- `stats` (object) - Count of nodes created
-- `draft_url` (string, optional) - Shareable draft URL (if `draft: true` and Pro active)
+- `form_id` (int) - Form ID that was seeded
+- `industry_pack` (string) - Industry pack that was loaded (industry packs only)
+- `pack_type` (string) - `"agency"` if loaded from Agency Pack
+- `counts` (object) - Count of nodes created by type
+- `elapsed_ms` (int) - Time taken to seed data in milliseconds
+
+**Industry Packs:**
+Each industry pack is a curated JSON file in `assets/demo/` with realistic products:
+- `electrical` - Panels, conduit, transformers, wiring devices
+- `hvac` - Duct, diffusers, fans, controls
+- `plumbing` - Pipes, fixtures, valves, pumps
+- `steel` - Structural steel, connections, fasteners
+- `fasteners` - Bolts, screws, anchors, rivets
+- `finishes` - Paint, coatings, sealants
+- `generic-equipment` - Generic mechanical/electrical equipment
+
+**User Persistence:**
+The selected industry pack is automatically saved to the current user's meta and will be remembered as the default for future seed operations.
 
 **Use Cases:**
-- Testing with realistic data
-- Demo environments
-- Quick setup for trials
+- Testing with realistic industry-specific data
+- Demo environments for different verticals
+- Quick setup for trials with relevant products
 
 **Example:**
 ```javascript
+// Load electrical industry pack in replace mode
 wp.apiFetch({
   path: '/sfb/v1/form/seed',
   method: 'POST',
-  data: { size: 'medium', mode: 'replace', branding: true }
-}).then(data => console.log('Created', data.stats.models, 'models'));
+  data: {
+    form_id: 1,
+    industry_pack: 'electrical',
+    size: 'medium',
+    mode: 'replace',
+    with_branding: true
+  }
+}).then(data => {
+  console.log('Loaded', data.industry_pack, 'pack');
+  console.log('Created', data.counts.models, 'models');
+});
+
+// Merge HVAC data into existing catalog
+wp.apiFetch({
+  path: '/sfb/v1/form/seed',
+  method: 'POST',
+  data: {
+    industry_pack: 'hvac',
+    mode: 'merge' // Append to existing data
+  }
+});
 ```
 
 ---
@@ -1159,6 +1230,175 @@ Update an existing draft.
 - Updating shared draft
 - Saving incremental changes
 - Collaborative editing
+
+---
+
+## Agency Features (Agency)
+
+**Note:** All Agency endpoints require an active Agency license.
+
+### POST /sfb/v1/pack/save
+Save current catalog as a reusable Agency Pack for fast multi-site deployment.
+
+**Permission:** Admin with Agency license
+
+**Agency Feature:** Requires `sfb_is_agency_license()` to return `true`
+
+**Request Body:**
+```json
+{
+  "name": "My Construction Pack",
+  "include_branding": true,
+  "include_notes": false
+}
+```
+
+**Parameters:**
+- `name` (string, required) - Pack display name
+- `include_branding` (boolean, optional) - Include current branding settings (logo, colors, company info) in Pack. Default: `true`
+- `include_notes` (boolean, optional) - Include product notes/descriptions in Pack. Default: `false`
+
+**Response:**
+```json
+{
+  "ok": true,
+  "pack": {
+    "id": "550e8400-e29b-41d4-a716-446655440000",
+    "name": "My Construction Pack",
+    "counts": {
+      "products": 48,
+      "nodes": 180
+    },
+    "has_branding": true,
+    "updated_at": "2025-10-11 14:32:15"
+  }
+}
+```
+
+**Response Fields:**
+- `pack.id` (string) - UUID identifier for the Pack
+- `pack.name` (string) - Pack display name
+- `pack.counts` (object) - Node counts by type
+- `pack.has_branding` (boolean) - Whether Pack includes branding
+- `pack.updated_at` (string) - MySQL datetime of creation
+
+**Storage:**
+Packs are stored in WordPress options table under `sfb_agency_packs` key. Each Pack contains:
+- Metadata (id, name, counts, timestamps)
+- Complete node tree with all settings
+- Optional branding settings object
+- Optional product notes/descriptions
+
+**Use Cases:**
+- Save production-ready catalog for deployment to client sites
+- Create industry-specific templates for agency clients
+- Backup complete catalog with branding
+- Fast onboarding for new installations
+
+**Example:**
+```javascript
+// Save current catalog as Pack
+wp.apiFetch({
+  path: '/sfb/v1/pack/save',
+  method: 'POST',
+  data: {
+    name: 'Industrial HVAC Pack',
+    include_branding: true,
+    include_notes: false
+  }
+}).then(data => {
+  console.log('Pack created:', data.pack.id);
+  console.log('Products saved:', data.pack.counts.products);
+});
+```
+
+---
+
+### AJAX: sfb_pack_export
+Export an Agency Pack as JSON file download.
+
+**Permission:** Admin with Agency license
+
+**Agency Feature:** Requires Agency license
+
+**Method:** GET with AJAX action
+
+**URL Format:**
+```
+/wp-admin/admin-ajax.php?action=sfb_pack_export&pack_id={pack_id}&_wpnonce={nonce}
+```
+
+**Parameters:**
+- `pack_id` (string, required) - Pack UUID to export
+- `_wpnonce` (string, required) - WordPress nonce generated with `'sfb_export_pack_' . $pack_id`
+
+**Response:**
+- **Content-Type:** `application/json`
+- **Content-Disposition:** `attachment; filename="{pack_name}.json"`
+- **Body:** Complete Pack JSON structure
+
+**Pack JSON Structure:**
+```json
+{
+  "form": {
+    "id": 1,
+    "title": "Submittal Form 1"
+  },
+  "nodes": [
+    {
+      "id": 42,
+      "parent_id": null,
+      "node_type": "category",
+      "title": "Framing",
+      "slug": "framing",
+      "position": 1,
+      "settings": {}
+    }
+  ],
+  "branding": {
+    "logo_url": "https://example.com/logo.png",
+    "company_name": "ABC Corp",
+    "primary_color": "#7c3aed"
+  }
+}
+```
+
+**Security:**
+- Nonce verification required (one-time use per Pack)
+- Admin capability check
+- Agency license validation
+- Pack ID sanitization
+
+**Use Cases:**
+- Download Pack for deployment to another site
+- Backup Packs externally
+- Share Packs with team members
+- Version control for catalog templates
+
+**Example:**
+```javascript
+// Generate download link with nonce
+const packId = '550e8400-e29b-41d4-a716-446655440000';
+const nonce = wp.createNonce('sfb_export_pack_' + packId);
+const downloadUrl = `/wp-admin/admin-ajax.php?action=sfb_pack_export&pack_id=${packId}&_wpnonce=${nonce}`;
+
+// Trigger download
+window.location.href = downloadUrl;
+```
+
+**Integration with Seeder:**
+Exported JSON can be uploaded to another site and seeded using:
+```javascript
+wp.apiFetch({
+  path: '/sfb/v1/form/seed',
+  method: 'POST',
+  data: {
+    agency_pack_id: '{pack_id_from_imported_json}',
+    mode: 'replace',
+    with_branding: true
+  }
+});
+```
 
 ---
 

@@ -903,6 +903,59 @@ final class SFB_Plugin {
           </div>
         </div>
       </div>
+
+      <?php
+      // Brand Presets Section (Agency only)
+      $is_agency = SFB_Branding::is_agency_license();
+      if ($is_agency):
+      ?>
+      <!-- Brand Presets (Agency Feature) -->
+      <div class="sfb-card" style="margin-top: 32px;">
+        <h2>💼 <?php esc_html_e('Brand Presets', 'submittal-builder'); ?> <span style="background:#7c3aed;color:#fff;font-size:11px;padding:4px 8px;border-radius:4px;font-weight:600;margin-left:8px;">AGENCY</span></h2>
+        <p class="sfb-muted">
+          <?php esc_html_e('Save and manage multiple brand configurations. Perfect for agencies managing multiple clients.', 'submittal-builder'); ?>
+        </p>
+
+        <!-- Create Preset -->
+        <div style="margin-bottom: 24px;">
+          <div style="display:flex;gap:12px;align-items:center;">
+            <input type="text"
+                   id="sfb-new-preset-name"
+                   placeholder="<?php esc_attr_e('Preset name (e.g., Client A)', 'submittal-builder'); ?>"
+                   style="flex:1;max-width:300px;">
+            <button type="button" class="button button-primary" id="sfb-create-preset">
+              <?php esc_html_e('Save Current as Preset', 'submittal-builder'); ?>
+            </button>
+          </div>
+          <p style="color:#6b7280;font-size:13px;margin:8px 0 0 0;">
+            <?php esc_html_e('Saves your current branding settings with a name you can apply later.', 'submittal-builder'); ?>
+          </p>
+        </div>
+
+        <!-- Presets List -->
+        <div id="sfb-presets-list">
+          <p style="text-align:center;color:#9ca3af;padding:20px;">
+            <?php esc_html_e('Loading presets...', 'submittal-builder'); ?>
+          </p>
+        </div>
+
+        <!-- Auto-Apply Default Preset Toggle -->
+        <div style="margin-top:24px;padding-top:24px;border-top:1px solid #e5e7eb;">
+          <label style="display:flex;align-items:center;gap:8px;cursor:pointer;">
+            <input type="checkbox"
+                   id="sfb-use-default-preset"
+                   name="<?php echo esc_attr($this->option_key()); ?>[use_default_preset]"
+                   value="1"
+                   <?php checked(get_option('sfb_brand_use_default_on_pdf', false)); ?>>
+            <strong><?php esc_html_e('Use default preset automatically', 'submittal-builder'); ?></strong>
+          </label>
+          <p style="color:#6b7280;font-size:13px;margin:8px 0 0 28px;">
+            <?php esc_html_e('When a default Brand Preset is set, use it for the Review preview and generated PDFs. You can still change branding anytime.', 'submittal-builder'); ?>
+          </p>
+        </div>
+      </div>
+      <?php endif; ?>
+
     </div>
 
     <script>
@@ -1129,6 +1182,239 @@ final class SFB_Plugin {
       if (initialPreset && SFB_PRESETS[initialPreset]) {
         applyPreviewHeaderStyle(SFB_PRESETS[initialPreset].style);
       }
+
+      // ========================================================================
+      // BRAND PRESETS (Agency Feature)
+      // ========================================================================
+
+      <?php if ($is_agency): ?>
+      const presetNonce = '<?php echo wp_create_nonce('sfb_brand_presets'); ?>';
+
+      // Load presets on page load
+      function loadPresets() {
+        $.ajax({
+          url: ajaxurl,
+          type: 'POST',
+          data: {
+            action: 'sfb_preset_list',
+            nonce: presetNonce
+          },
+          success: function(response) {
+            if (response.success && response.data.presets) {
+              renderPresets(response.data.presets);
+            } else {
+              $('#sfb-presets-list').html('<p style="text-align:center;color:#dc2626;padding:20px;">Error loading presets.</p>');
+            }
+          },
+          error: function() {
+            $('#sfb-presets-list').html('<p style="text-align:center;color:#dc2626;padding:20px;">Failed to load presets.</p>');
+          }
+        });
+      }
+
+      // Render presets list
+      function renderPresets(presets) {
+        if (!presets || presets.length === 0) {
+          $('#sfb-presets-list').html('<p style="text-align:center;color:#9ca3af;padding:20px;"><?php esc_html_e('No presets saved yet. Save your current branding as a preset above.', 'submittal-builder'); ?></p>');
+          return;
+        }
+
+        let html = '<table class="widefat striped" style="margin-top:16px;"><thead><tr>';
+        html += '<th><?php esc_html_e('Name', 'submittal-builder'); ?></th>';
+        html += '<th><?php esc_html_e('Updated', 'submittal-builder'); ?></th>';
+        html += '<th><?php esc_html_e('Actions', 'submittal-builder'); ?></th>';
+        html += '<th style="width:80px;text-align:center;"><?php esc_html_e('Default', 'submittal-builder'); ?></th>';
+        html += '</tr></thead><tbody>';
+
+        presets.forEach(function(preset) {
+          const updatedDate = new Date(preset.updated_at).toLocaleDateString();
+          html += '<tr>';
+          html += '<td><strong>' + escapeHtml(preset.name) + '</strong></td>';
+          html += '<td>' + updatedDate + '</td>';
+          html += '<td>';
+          html += '<button class="button button-small sfb-apply-preset" data-id="' + preset.id + '" style="margin-right:4px;"><?php esc_html_e('Apply', 'submittal-builder'); ?></button>';
+          html += '<button class="button button-small sfb-rename-preset" data-id="' + preset.id + '" data-name="' + escapeHtml(preset.name) + '" style="margin-right:4px;"><?php esc_html_e('Rename', 'submittal-builder'); ?></button>';
+          html += '<button class="button button-small button-link-delete sfb-delete-preset" data-id="' + preset.id + '" data-name="' + escapeHtml(preset.name) + '"><?php esc_html_e('Delete', 'submittal-builder'); ?></button>';
+          html += '</td>';
+          html += '<td style="text-align:center;"><input type="checkbox" class="sfb-default-preset" data-id="' + preset.id + '" ' + (preset.is_default ? 'checked' : '') + '></td>';
+          html += '</tr>';
+        });
+
+        html += '</tbody></table>';
+        $('#sfb-presets-list').html(html);
+      }
+
+      // HTML escape helper
+      function escapeHtml(text) {
+        const div = document.createElement('div');
+        div.textContent = text;
+        return div.innerHTML;
+      }
+
+      // Create preset
+      $('#sfb-create-preset').on('click', function() {
+        const name = $('#sfb-new-preset-name').val().trim();
+        if (!name) {
+          alert('<?php esc_html_e('Please enter a preset name.', 'submittal-builder'); ?>');
+          return;
+        }
+
+        $.ajax({
+          url: ajaxurl,
+          type: 'POST',
+          data: {
+            action: 'sfb_preset_create',
+            nonce: presetNonce,
+            name: name
+          },
+          beforeSend: function() {
+            $('#sfb-create-preset').prop('disabled', true).text('<?php esc_html_e('Saving...', 'submittal-builder'); ?>');
+          },
+          success: function(response) {
+            if (response.success) {
+              $('#sfb-new-preset-name').val('');
+              loadPresets();
+              alert(response.data.message);
+            } else {
+              alert(response.data.message || '<?php esc_html_e('Failed to create preset.', 'submittal-builder'); ?>');
+            }
+          },
+          error: function() {
+            alert('<?php esc_html_e('Server error. Please try again.', 'submittal-builder'); ?>');
+          },
+          complete: function() {
+            $('#sfb-create-preset').prop('disabled', false).text('<?php esc_html_e('Save Current as Preset', 'submittal-builder'); ?>');
+          }
+        });
+      });
+
+      // Apply preset
+      $(document).on('click', '.sfb-apply-preset', function() {
+        const id = $(this).data('id');
+        if (!confirm('<?php esc_html_e('Apply this preset? Your current branding will be replaced.', 'submittal-builder'); ?>')) {
+          return;
+        }
+
+        $.ajax({
+          url: ajaxurl,
+          type: 'POST',
+          data: {
+            action: 'sfb_preset_apply',
+            nonce: presetNonce,
+            id: id
+          },
+          beforeSend: function() {
+            $('.sfb-apply-preset').prop('disabled', true);
+          },
+          success: function(response) {
+            if (response.success) {
+              alert(response.data.message);
+              location.reload();
+            } else {
+              alert(response.data.message || '<?php esc_html_e('Failed to apply preset.', 'submittal-builder'); ?>');
+            }
+          },
+          error: function() {
+            alert('<?php esc_html_e('Server error. Please try again.', 'submittal-builder'); ?>');
+          },
+          complete: function() {
+            $('.sfb-apply-preset').prop('disabled', false);
+          }
+        });
+      });
+
+      // Rename preset
+      $(document).on('click', '.sfb-rename-preset', function() {
+        const id = $(this).data('id');
+        const oldName = $(this).data('name');
+        const newName = prompt('<?php esc_html_e('Enter new name:', 'submittal-builder'); ?>', oldName);
+
+        if (!newName || newName === oldName) {
+          return;
+        }
+
+        $.ajax({
+          url: ajaxurl,
+          type: 'POST',
+          data: {
+            action: 'sfb_preset_rename',
+            nonce: presetNonce,
+            id: id,
+            name: newName
+          },
+          success: function(response) {
+            if (response.success) {
+              loadPresets();
+            } else {
+              alert(response.data.message || '<?php esc_html_e('Failed to rename preset.', 'submittal-builder'); ?>');
+            }
+          },
+          error: function() {
+            alert('<?php esc_html_e('Server error. Please try again.', 'submittal-builder'); ?>');
+          }
+        });
+      });
+
+      // Delete preset
+      $(document).on('click', '.sfb-delete-preset', function() {
+        const id = $(this).data('id');
+        const name = $(this).data('name');
+
+        if (!confirm('<?php esc_html_e('Delete preset', 'submittal-builder'); ?> "' + name + '"?')) {
+          return;
+        }
+
+        $.ajax({
+          url: ajaxurl,
+          type: 'POST',
+          data: {
+            action: 'sfb_preset_delete',
+            nonce: presetNonce,
+            id: id
+          },
+          success: function(response) {
+            if (response.success) {
+              loadPresets();
+            } else {
+              alert(response.data.message || '<?php esc_html_e('Failed to delete preset.', 'submittal-builder'); ?>');
+            }
+          },
+          error: function() {
+            alert('<?php esc_html_e('Server error. Please try again.', 'submittal-builder'); ?>');
+          }
+        });
+      });
+
+      // Set default preset
+      $(document).on('change', '.sfb-default-preset', function() {
+        const id = $(this).data('id');
+        const isDefault = $(this).is(':checked');
+
+        $.ajax({
+          url: ajaxurl,
+          type: 'POST',
+          data: {
+            action: 'sfb_preset_set_default',
+            nonce: presetNonce,
+            id: id,
+            is_default: isDefault ? 1 : 0
+          },
+          success: function(response) {
+            if (response.success) {
+              loadPresets();
+            } else {
+              alert(response.data.message || '<?php esc_html_e('Failed to update default preset.', 'submittal-builder'); ?>');
+            }
+          },
+          error: function() {
+            alert('<?php esc_html_e('Server error. Please try again.', 'submittal-builder'); ?>');
+          }
+        });
+      });
+
+      // Load presets on page load
+      loadPresets();
+      <?php endif; ?>
 
     });
     </script>
@@ -1777,6 +2063,149 @@ final class SFB_Plugin {
           font-size: 13px;
           padding: 12px 16px;
         }
+      }
+    </style>
+    <?php
+  }
+
+  /** Agency Library Page Renderer */
+  function render_agency_library_page() {
+    // Security check
+    if (!sfb_is_agency_license()) {
+      wp_die(__('This feature requires an Agency license.', 'submittal-builder'));
+    }
+
+    // Get all agency packs
+    $packs = get_option('sfb_agency_packs', []);
+
+    // Handle delete action
+    if (isset($_GET['action']) && $_GET['action'] === 'delete' && isset($_GET['pack_id']) && check_admin_referer('sfb_delete_pack_' . $_GET['pack_id'])) {
+      $pack_id = sanitize_text_field($_GET['pack_id']);
+      $packs = array_filter($packs, function($pack) use ($pack_id) {
+        return $pack['id'] !== $pack_id;
+      });
+      update_option('sfb_agency_packs', array_values($packs), false);
+
+      // Redirect to remove query params
+      wp_redirect(admin_url('admin.php?page=sfb-agency-library&deleted=1'));
+      exit;
+    }
+
+    ?>
+    <div class="wrap sfb-admin-page">
+      <h1 class="wp-heading-inline">
+        📦 <?php esc_html_e('Agency Library', 'submittal-builder'); ?>
+        <span style="background:#7c3aed;color:#fff;font-size:11px;padding:4px 8px;border-radius:4px;font-weight:600;margin-left:8px;vertical-align:middle;">AGENCY</span>
+      </h1>
+
+      <?php if (isset($_GET['deleted'])): ?>
+        <div class="notice notice-success is-dismissible" style="margin-top:20px;">
+          <p><?php esc_html_e('Pack deleted successfully.', 'submittal-builder'); ?></p>
+        </div>
+      <?php endif; ?>
+
+      <p class="description" style="margin-top:12px;margin-bottom:24px;">
+        <?php esc_html_e('Reusable catalog Packs created from your sites. Use these to quickly seed new sites with pre-configured catalogs and branding.', 'submittal-builder'); ?>
+      </p>
+
+      <?php if (empty($packs)): ?>
+        <!-- Empty state -->
+        <div class="sfb-card" style="padding:48px;text-align:center;background:#f9fafb;">
+          <div style="font-size:48px;margin-bottom:16px;opacity:0.3;">📦</div>
+          <h2 style="margin:0 0 12px 0;color:#374151;">
+            <?php esc_html_e('No Agency Packs yet', 'submittal-builder'); ?>
+          </h2>
+          <p style="color:#6b7280;margin-bottom:24px;max-width:500px;margin-left:auto;margin-right:auto;">
+            <?php esc_html_e('Create reusable Packs from your Builder catalog. Go to Builder → Save as Pack to get started.', 'submittal-builder'); ?>
+          </p>
+          <a href="<?php echo esc_url(admin_url('admin.php?page=sfb')); ?>" class="button button-primary">
+            <?php esc_html_e('Go to Builder', 'submittal-builder'); ?>
+          </a>
+        </div>
+      <?php else: ?>
+        <!-- Packs list table -->
+        <div class="sfb-card">
+          <table class="wp-list-table widefat fixed striped">
+            <thead>
+              <tr>
+                <th style="width:40%;"><?php esc_html_e('Pack Name', 'submittal-builder'); ?></th>
+                <th style="width:15%;"><?php esc_html_e('Products', 'submittal-builder'); ?></th>
+                <th style="width:15%;"><?php esc_html_e('Branding', 'submittal-builder'); ?></th>
+                <th style="width:15%;"><?php esc_html_e('Updated', 'submittal-builder'); ?></th>
+                <th style="width:15%;"><?php esc_html_e('Actions', 'submittal-builder'); ?></th>
+              </tr>
+            </thead>
+            <tbody>
+              <?php foreach ($packs as $pack):
+                $product_count = $pack['counts']['products'] ?? 0;
+                $has_branding = !empty($pack['has_branding']);
+                $updated = $pack['updated_at'] ?? '';
+                $pack_id = $pack['id'];
+                $pack_name = $pack['name'] ?? 'Unnamed Pack';
+              ?>
+                <tr>
+                  <td>
+                    <strong><?php echo esc_html($pack_name); ?></strong>
+                  </td>
+                  <td>
+                    <?php echo esc_html(number_format($product_count)); ?>
+                  </td>
+                  <td>
+                    <?php if ($has_branding): ?>
+                      <span style="color:#10b981;">✓ <?php esc_html_e('Included', 'submittal-builder'); ?></span>
+                    <?php else: ?>
+                      <span style="color:#9ca3af;">—</span>
+                    <?php endif; ?>
+                  </td>
+                  <td>
+                    <?php echo $updated ? esc_html(human_time_diff(strtotime($updated), current_time('timestamp')) . ' ago') : '—'; ?>
+                  </td>
+                  <td>
+                    <a href="<?php echo esc_url(wp_nonce_url(admin_url('admin-ajax.php?action=sfb_pack_export&pack_id=' . urlencode($pack_id)), 'sfb_export_pack_' . $pack_id)); ?>"
+                       class="button button-small"
+                       download="<?php echo esc_attr(sanitize_file_name($pack_name) . '.json'); ?>">
+                      <?php esc_html_e('Export JSON', 'submittal-builder'); ?>
+                    </a>
+                    <a href="<?php echo esc_url(wp_nonce_url(admin_url('admin.php?page=sfb-agency-library&action=delete&pack_id=' . urlencode($pack_id)), 'sfb_delete_pack_' . $pack_id)); ?>"
+                       class="button button-small button-link-delete"
+                       onclick="return confirm('<?php esc_attr_e('Are you sure you want to delete this Pack? This cannot be undone.', 'submittal-builder'); ?>');">
+                      <?php esc_html_e('Delete', 'submittal-builder'); ?>
+                    </a>
+                  </td>
+                </tr>
+              <?php endforeach; ?>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Info box -->
+        <div class="sfb-card" style="margin-top:24px;background:#f0f9ff;border-left:4px solid #0ea5e9;">
+          <p style="margin:0;color:#0c4a6e;">
+            <strong><?php esc_html_e('💡 Using Packs:', 'submittal-builder'); ?></strong>
+            <?php esc_html_e('Export a Pack as JSON and use it during onboarding on another site. Go to Welcome → Load Sample Catalog → Upload JSON to seed.', 'submittal-builder'); ?>
+          </p>
+        </div>
+      <?php endif; ?>
+    </div>
+
+    <style>
+      .sfb-admin-page {
+        max-width: 1200px;
+      }
+      .sfb-card {
+        background: white;
+        border: 1px solid #e5e7eb;
+        border-radius: 8px;
+        padding: 24px;
+        margin-top: 20px;
+      }
+      .button-link-delete {
+        color: #dc2626 !important;
+        border-color: #dc2626 !important;
+      }
+      .button-link-delete:hover {
+        background: #dc2626 !important;
+        color: white !important;
       }
     </style>
     <?php
@@ -4492,6 +4921,15 @@ final class SFB_Plugin {
       // Get purchaser branding (always use site settings, no overrides)
       $settings = get_option('sfb_settings', []);
 
+      // Agency - Phase B: Use default brand preset if enabled
+      if (sfb_is_agency_license() && get_option('sfb_brand_use_default_on_pdf', false)) {
+        $default_preset = SFB_Branding::get_default_preset();
+        if ($default_preset && !empty($default_preset['data'])) {
+          $settings = $default_preset['data'];
+          error_log('[SFB] Using default brand preset: ' . $default_preset['name']);
+        }
+      }
+
       // --- Require composer autoload with guard ---
       $autoload = plugin_dir_path(__FILE__) . 'vendor/autoload.php';
       if (!file_exists($autoload)) {
@@ -4623,6 +5061,49 @@ final class SFB_Plugin {
       error_log('[SFB] Brand save error: ' . $e->getMessage() . "\n" . $e->getTraceAsString());
       wp_send_json_error(['message' => __('Server error saving brand settings', 'submittal-builder')], 500);
     }
+  }
+
+  /** Agency feature: Export Pack as JSON download */
+  function ajax_export_pack() {
+    // Security checks
+    if (!current_user_can('manage_options')) {
+      wp_die(__('Unauthorized.', 'submittal-builder'));
+    }
+
+    if (!sfb_is_agency_license()) {
+      wp_die(__('Agency Packs require an Agency license.', 'submittal-builder'));
+    }
+
+    // Verify nonce
+    $pack_id = isset($_GET['pack_id']) ? sanitize_text_field($_GET['pack_id']) : '';
+    if (!$pack_id || !check_admin_referer('sfb_export_pack_' . $pack_id)) {
+      wp_die(__('Invalid request.', 'submittal-builder'));
+    }
+
+    // Get pack
+    $packs = get_option('sfb_agency_packs', []);
+    $pack = null;
+    foreach ($packs as $p) {
+      if ($p['id'] === $pack_id) {
+        $pack = $p;
+        break;
+      }
+    }
+
+    if (!$pack) {
+      wp_die(__('Pack not found.', 'submittal-builder'));
+    }
+
+    // Prepare JSON
+    $json = wp_json_encode($pack['data'], JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
+
+    // Send as download
+    $filename = sanitize_file_name($pack['name']) . '.json';
+    header('Content-Type: application/json');
+    header('Content-Disposition: attachment; filename="' . $filename . '"');
+    header('Content-Length: ' . strlen($json));
+    echo $json;
+    exit;
   }
 
   /** Generate test PDF (admin-post handler) */
@@ -5317,6 +5798,7 @@ final class SFB_Plugin {
       'restNonce' => wp_create_nonce('wp_rest'),
       'ajax_url'  => admin_url('admin-ajax.php'),
       'nonce'     => wp_create_nonce('sfb_frontend'),
+      'isAgency'  => sfb_is_agency_license(),
     ];
 
     // Add industry packs for builder page
@@ -5588,6 +6070,15 @@ final class SFB_Plugin {
       'permission_callback' => function(){ return current_user_can('manage_options'); }
     ]);
 
+    // Agency feature: Save Pack
+    register_rest_route('sfb/v1','/pack/save', [
+      'methods' => 'POST',
+      'callback' => [$this,'api_save_pack'],
+      'permission_callback' => function(){
+        return current_user_can('manage_options') && sfb_is_agency_license();
+      }
+    ]);
+
     register_rest_route('sfb/v1','/generate',[
       'methods'  => 'POST',
       'permission_callback' => '__return_true', // public submission allowed
@@ -5665,14 +6156,19 @@ final class SFB_Plugin {
     $with_branding = $req->get_param('with_branding');
     $with_branding = is_null($with_branding) ? true : (bool)$with_branding;
 
-    // NEW: Get industry pack parameter (defaults to user's last or default pack)
+    // Agency feature: Check if loading from Agency Pack
+    $agency_pack_id = $req->get_param('agency_pack_id');
+
+    // Get industry pack parameter (defaults to user's last or default pack)
     $industry_pack = $req->get_param('industry_pack');
-    if (!$industry_pack) {
+    if (!$industry_pack && !$agency_pack_id) {
       $industry_pack = sfb_get_user_last_industry_pack();
     }
 
-    // Save user's last selected pack for future
-    sfb_save_user_last_industry_pack($industry_pack);
+    // Save user's last selected pack for future (only for industry packs)
+    if ($industry_pack) {
+      sfb_save_user_last_industry_pack($industry_pack);
+    }
 
     // Start timer
     $t0 = microtime(true);
@@ -5693,13 +6189,87 @@ final class SFB_Plugin {
       }
     }
 
-    // Load industry pack JSON
+    // Load pack data (Agency Pack or Industry Pack)
+    if ($agency_pack_id) {
+      // Load from Agency Pack - use direct node import
+      $packs = get_option('sfb_agency_packs', []);
+      $agency_pack = null;
+      foreach ($packs as $p) {
+        if ($p['id'] === $agency_pack_id) {
+          $agency_pack = $p;
+          break;
+        }
+      }
+
+      if (!$agency_pack) {
+        return new WP_Error('pack_not_found', __('Agency Pack not found', 'submittal-builder'), ['status' => 404]);
+      }
+
+      $pack_data = $agency_pack['data'];
+
+      // If agency pack has branding, apply it (if with_branding is true)
+      if ($with_branding && isset($pack_data['branding'])) {
+        update_option('sfb_brand_settings', $pack_data['branding'], false);
+      }
+
+      // Agency packs store raw nodes - import them directly
+      if (isset($pack_data['nodes']) && is_array($pack_data['nodes'])) {
+        $nodes = $pack_data['nodes'];
+        $id_map = [];
+        $counts = ['categories' => 0, 'products' => 0, 'types' => 0, 'models' => 0];
+
+        foreach ($nodes as $node) {
+          $old_id = $node['id'];
+          $old_parent = $node['parent_id'] ?? null;
+
+          // Map parent ID
+          $new_parent = null;
+          if ($old_parent && isset($id_map[$old_parent])) {
+            $new_parent = $id_map[$old_parent];
+          }
+
+          // Insert node
+          $wpdb->insert($nodes_table, [
+            'form_id' => $form_id,
+            'parent_id' => $new_parent,
+            'node_type' => $node['node_type'],
+            'title' => $node['title'],
+            'slug' => $node['slug'] ?? sanitize_title($node['title']),
+            'position' => $node['position'] ?? 0,
+            'settings_json' => is_array($node['settings']) ? json_encode($node['settings']) : ($node['settings_json'] ?? '{}')
+          ]);
+
+          $new_id = $wpdb->insert_id;
+          $id_map[$old_id] = $new_id;
+
+          // Count by type
+          if ($node['node_type'] === 'category') $counts['categories']++;
+          elseif ($node['node_type'] === 'product') $counts['products']++;
+          elseif ($node['node_type'] === 'type') $counts['types']++;
+          elseif ($node['node_type'] === 'model') $counts['models']++;
+        }
+
+        $elapsed = round((microtime(true) - $t0) * 1000);
+
+        return [
+          'ok' => true,
+          'counts' => $counts,
+          'elapsed_ms' => $elapsed,
+          'pack_type' => 'agency'
+        ];
+      }
+
+      return new WP_Error('invalid_pack', __('Invalid Agency Pack format', 'submittal-builder'), ['status' => 500]);
+    }
+
+    // Load from industry pack JSON
     $json_file = plugin_dir_path(__FILE__) . 'assets/demo/' . $industry_pack . '.json';
     if (!file_exists($json_file)) {
       return new WP_Error('pack_not_found', __('Industry pack not found', 'submittal-builder'), ['status' => 404]);
     }
 
     $pack_data = json_decode(file_get_contents($json_file), true);
+
     if (!$pack_data || !isset($pack_data['categories'])) {
       return new WP_Error('invalid_pack', __('Invalid pack format', 'submittal-builder'), ['status' => 500]);
     }
@@ -6148,6 +6718,89 @@ final class SFB_Plugin {
     } catch (\Throwable $e) {
       error_log('SFB api_bulk_export error: ' . $e->getMessage());
       return new WP_Error('server_error', $e->getMessage(), ['status' => 500]);
+    }
+  }
+
+  /** Agency feature: Save current catalog as reusable Pack */
+  function api_save_pack($req){
+    try {
+      $this->ensure_tables();
+      global $wpdb;
+
+      $p = $req->get_json_params();
+      $name = sanitize_text_field($p['name'] ?? '');
+      $include_branding = !empty($p['include_branding']);
+      $include_notes = !empty($p['include_notes']);
+
+      if (empty($name)) {
+        return new WP_Error('bad_request', 'Pack name is required', ['status' => 400]);
+      }
+
+      // Get all nodes for form 1 (main catalog)
+      $nodes_table = $wpdb->prefix . 'sfb_nodes';
+      $all_nodes = $wpdb->get_results($wpdb->prepare(
+        "SELECT * FROM $nodes_table WHERE form_id=%d ORDER BY position ASC", 1
+      ), ARRAY_A);
+
+      // Parse settings_json and optionally strip notes
+      $product_count = 0;
+      foreach($all_nodes as &$node){
+        $node['settings'] = json_decode($node['settings_json'] ?? '{}', true);
+        unset($node['settings_json']);
+
+        // Count products
+        if (in_array($node['node_type'], ['product', 'type', 'model'], true)) {
+          $product_count++;
+        }
+
+        // Strip notes if not including
+        if (!$include_notes && isset($node['settings']['note'])) {
+          unset($node['settings']['note']);
+        }
+      }
+      unset($node);
+
+      // Build Pack data
+      $pack_data = [
+        'form' => ['id' => 1, 'title' => 'Submittal Form 1'],
+        'nodes' => $all_nodes
+      ];
+
+      // Include branding if requested
+      if ($include_branding) {
+        $pack_data['branding'] = sfb_get_brand_settings();
+      }
+
+      // Create Pack record
+      $pack = [
+        'id' => wp_generate_uuid4(),
+        'name' => $name,
+        'counts' => [
+          'products' => $product_count,
+          'nodes' => count($all_nodes)
+        ],
+        'has_branding' => $include_branding,
+        'updated_at' => current_time('mysql'),
+        'data' => $pack_data
+      ];
+
+      // Save to database
+      $packs = get_option('sfb_agency_packs', []);
+      $packs[] = $pack;
+      update_option('sfb_agency_packs', $packs, false);
+
+      error_log('[SFB] Agency Pack created: ' . $name . ' (' . $product_count . ' products)');
+
+      // Return without full data (too large)
+      unset($pack['data']);
+
+      return [
+        'ok' => true,
+        'pack' => $pack
+      ];
+    } catch (\Throwable $e) {
+      error_log('SFB api_save_pack error: ' . $e->getMessage());
+      return new WP_Error('server_error', $e->getMessage(), ['status'=>500]);
     }
   }
 

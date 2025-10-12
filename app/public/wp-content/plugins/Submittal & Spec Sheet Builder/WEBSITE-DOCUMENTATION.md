@@ -17,12 +17,13 @@
 5. [Admin Settings](#admin-settings)
 6. [Product Management](#product-management)
 7. [Branding Customization](#branding-customization)
-8. [PDF Generation](#pdf-generation)
-9. [Keyboard Shortcuts](#keyboard-shortcuts)
-10. [Troubleshooting](#troubleshooting)
-11. [Developer Resources](#developer-resources)
-12. [FAQ](#faq)
-13. [Support](#support)
+8. [Agency Features](#agency-features)
+9. [PDF Generation](#pdf-generation)
+10. [Keyboard Shortcuts](#keyboard-shortcuts)
+11. [Troubleshooting](#troubleshooting)
+12. [Developer Resources](#developer-resources)
+13. [FAQ](#faq)
+14. [Support](#support)
 
 ---
 
@@ -40,7 +41,7 @@ A submittal packet is a collection of product specification sheets, typically re
 
 ### How It Works
 
-1. **Import Your Product Catalog** - Bulk import products with specifications
+1. **Build Your Product Catalog** - Add products with specifications through the admin interface
 2. **Customers Select Products** - Interactive product browser with search and filters
 3. **Generate PDF Packets** - Professional, branded PDFs with all specifications
 4. **Download & Share** - Instant download of complete submittal packets
@@ -52,11 +53,11 @@ A submittal packet is a collection of product specification sheets, typically re
 ### 🎯 Core Features
 
 #### Product Catalog Management
-- Import products from CSV/Excel
+- Add products through admin interface
 - Hierarchical category organization (Categories → Types → Products)
 - Unlimited custom specifications per product
-- Bulk editing and updates
 - Product search and filtering
+- Category management
 
 #### Interactive Product Browser
 - **Gallery & List Views** - Toggle between visual grid or compact list
@@ -373,17 +374,11 @@ Before generating, verify:
 
 #### Product Catalog
 
-**Import Products:**
-- Click "Import CSV/Excel"
-- Map columns to fields
-- Review preview
-- Import products
-
-**Product Table:**
-- View all products
-- Edit inline
-- Bulk actions (delete, update)
-- Export to CSV
+**Manage Products:**
+- Add products via admin interface
+- View all products in table
+- Edit products inline
+- Delete products as needed
 
 #### Frontend Settings
 
@@ -522,27 +517,13 @@ Category (e.g., "C-Studs")
    - Specifications (key-value pairs)
 3. **Click "Save Product"**
 
-#### Bulk Import
-
-**CSV Format:**
-```csv
-model,category,type,sku,size,thickness,flange,ksi
-362S162-20,C-Studs,20 Gauge,CS-362-20,3-5/8",33 mil,1-5/8",50
-```
-
-**Import Steps:**
-1. Click "Import Products"
-2. Upload CSV file
-3. Map columns to fields
-4. Preview import (first 5 rows)
-5. Click "Import"
-6. Review results
+#### Adding Multiple Products
 
 **Best Practices:**
-- First row should be column headers
 - Use consistent category/type names
 - Include SKU for easier searching
-- Add as many specs as needed
+- Add comprehensive specifications
+- Organize products systematically
 
 ### Editing Products
 
@@ -553,20 +534,16 @@ model,category,type,sku,size,thickness,flange,ksi
 3. Modify fields
 4. Click "Update Product"
 
-#### Bulk Edit
+#### Bulk Actions
 
 1. Select multiple products (checkboxes)
-2. Choose "Bulk Edit" from dropdown
-3. Select fields to update
-4. Apply changes
-5. Click "Update"
+2. Choose action from dropdown
+3. Apply changes
 
-**Bulk Actions:**
-- Edit selected
-- Delete selected
+**Available Actions:**
+- Delete selected products
 - Change category
 - Change type
-- Export to CSV
 
 ### Product Specifications
 
@@ -692,6 +669,249 @@ Add any specification you need:
 - Street address (optional)
 - City, State, ZIP
 - Multi-line format supported
+
+---
+
+## Agency Features
+
+**Note:** Agency features are only available with an active Agency license. Agency tier is designed for multi-site deployments and white-label resellers.
+
+### What is an Agency Pack?
+
+An Agency Pack is a complete, reusable catalog template that includes:
+- All products, categories, types, and models
+- Complete specifications and custom fields
+- Optional branding settings (logo, colors, company info)
+- Optional product notes and descriptions
+
+**Perfect For:**
+- **Multi-Site Deployments** - Deploy identical catalogs across client sites
+- **Fast Onboarding** - Get new installations up and running in minutes
+- **Standardization** - Ensure consistency across all client sites
+- **White-Label Solutions** - Deploy pre-configured catalogs with client branding
+
+---
+
+### Agency Library
+
+**Location:** WordPress Admin → **Submittal Builder** → **📦 Agency Library**
+
+The Agency Library is your central hub for managing reusable catalog templates.
+
+#### Viewing Your Packs
+
+**Pack Table Shows:**
+- **Pack Name** - Descriptive name for identification
+- **Products** - Number of products included
+- **Branding** - Checkmark (✓) if Pack includes branding settings
+- **Updated** - Last modified date
+- **Actions** - Export JSON or Delete buttons
+
+**Empty State:**
+- Appears when you haven't created any Packs yet
+- "Go to Builder" button for quick access
+- Instructions for creating your first Pack
+
+#### Creating an Agency Pack
+
+**Step 1: Build Your Catalog**
+1. Go to: **Submittal Builder** (admin page)
+2. Add all products, categories, and types
+3. Configure branding settings (logo, colors, company info)
+4. Add product notes and descriptions as needed
+5. Test to ensure everything works correctly
+
+**Step 2: Save as Pack**
+1. In the Builder admin page, click **💼 Save as Pack** button (top toolbar)
+2. Modal opens with save options
+3. Enter Pack name (e.g., "Industrial HVAC Starter Kit")
+4. Choose options:
+   - **Include branding settings** - Logo, colors, company info
+   - **Include product notes** - Descriptions and internal notes
+5. Click **Save Pack**
+6. Success message appears with product count
+
+**What Gets Saved:**
+- ✅ All categories, types, products, models
+- ✅ Complete node hierarchy and relationships
+- ✅ All specification fields and values
+- ✅ Product positions and sort order
+- ✅ Branding settings (if checkbox enabled)
+- ✅ Product notes (if checkbox enabled)
+- ❌ Generated PDFs (these are created fresh on each site)
+- ❌ User data or license info
+- ❌ WordPress settings unrelated to catalog
+
+#### Exporting Agency Packs
+
+**Download Pack as JSON:**
+1. Go to: **Agency Library** page
+2. Find the Pack you want to export
+3. Click **Export JSON** button
+4. JSON file downloads automatically
+5. Filename: `{pack-name}.json` (e.g., `Industrial-HVAC-Starter-Kit.json`)
+
+**JSON File Contains:**
+- Complete Pack data structure
+- All nodes with full metadata
+- Optional branding settings
+- Ready for import on any site
+
+**File Size:**
+- Typical Pack: 50-200KB
+- Large Pack (100+ products): 500KB-1MB
+- Depends on specification count and notes
+
+**Security:**
+- Download protected by WordPress nonce
+- One-time use link per export
+- Admin capability required
+- Agency license validation
+
+#### Deploying Packs to Client Sites
+
+**Step 1: Install Plugin on Client Site**
+1. Install Submittal & Spec Sheet Builder plugin
+2. Activate Agency license on client site
+3. Ensure `sfb_is_agency_license()` returns true
+
+**Step 2: Import Pack JSON**
+1. Upload JSON file to client site (via FTP or file manager)
+2. Note the Pack ID from JSON file
+3. Or: Add Pack to `sfb_agency_packs` option via import tool
+
+**Step 3: Load Sample Catalog**
+1. Go to: **Submittal Builder** admin page
+2. Click **Load Sample Catalog** button
+3. Select **"From Agency Pack"** tab in modal
+4. Choose Pack from dropdown (shows all imported Packs)
+5. Select mode:
+   - **Replace** - Wipes existing catalog and imports Pack
+   - **Merge** - Adds Pack to existing catalog
+6. Toggle **Apply Branding** (if Pack includes branding)
+7. Click **Load Catalog**
+8. Wait for import to complete (usually 5-15 seconds)
+
+**What Happens During Import:**
+- Old node IDs are remapped to avoid conflicts
+- Parent relationships are preserved
+- Branding settings are applied (if enabled)
+- Product positions are maintained
+- All specifications are copied
+
+**Result:**
+- Client site has complete, ready-to-use catalog
+- All products immediately available for selection
+- Branding matches Pack settings (if included)
+- Ready to generate PDFs immediately
+
+#### Managing Packs
+
+**Renaming Packs:**
+- Currently not directly supported in UI
+- Must delete and recreate with new name
+- Or edit via WordPress options table (advanced users)
+
+**Deleting Packs:**
+1. Go to: **Agency Library**
+2. Find Pack to delete
+3. Click **Delete** button
+4. Confirm deletion
+5. Pack removed from database immediately
+
+**Caution:**
+- Deletion is permanent (no trash/undo)
+- Does NOT affect sites where Pack was already deployed
+- Only removes Pack from current site's library
+
+#### Best Practices
+
+**Pack Naming:**
+- Use descriptive names: "Electrical - Full Catalog"
+- Include version numbers: "HVAC Pack v2.3"
+- Date for tracking: "Plumbing 2025-Q1"
+- Client-specific: "ACME Corp Standard Catalog"
+
+**Branding Strategy:**
+- **Include Branding** - For white-label deployments with consistent brand
+- **Exclude Branding** - When clients will provide their own branding
+- Test both scenarios before mass deployment
+
+**Notes Strategy:**
+- **Include Notes** - For internal teams who need product context
+- **Exclude Notes** - For client-facing sites to keep catalogs lean
+- Notes can add significant file size
+
+**Version Control:**
+- Keep JSON files in version control (Git)
+- Tag releases: `pack-hvac-v1.0.json`
+- Document changes in commit messages
+- Maintain changelog for Pack updates
+
+**Testing Before Deployment:**
+1. Create Pack on staging site
+2. Export JSON
+3. Import to test site
+4. Verify all products loaded correctly
+5. Generate test PDF to confirm branding
+6. Deploy to production only after validation
+
+---
+
+### Agency Pack Workflow Example
+
+**Scenario:** Deploy standard HVAC catalog to 5 client sites
+
+**One-Time Setup:**
+1. Build master HVAC catalog on agency site
+2. Add all 150 products with specifications
+3. Configure sample branding (optional)
+4. Save as Pack: "HVAC Master Catalog v1"
+5. Export JSON file
+6. Store in secure location (cloud storage or Git)
+
+**For Each Client Site:**
+1. Install plugin + activate Agency license (2 minutes)
+2. Upload Pack JSON to site (1 minute)
+3. Load Pack via "Load Sample Catalog" (30 seconds)
+4. Customize client branding (5 minutes)
+5. Test PDF generation (2 minutes)
+6. **Total Time:** ~10 minutes per site vs hours of manual entry
+
+**Maintenance:**
+1. Update master catalog on agency site
+2. Add new products, update specs
+3. Save as Pack: "HVAC Master Catalog v2"
+4. Export JSON
+5. Send to clients for reimport
+6. Clients can merge (add new products) or replace (full update)
+
+---
+
+### Agency License Requirements
+
+**To Access Agency Features:**
+- Active Agency license key
+- License must be activated on current site
+- Or: `SFB_AGENCY_DEV` constant set to `true` (development)
+
+**Feature Visibility:**
+- **Agency Library** menu only visible to Agency license holders
+- **Save as Pack** button only appears for Agency users
+- Export/Delete actions require Agency validation
+- Seeder accepts `agency_pack_id` only with Agency license
+
+**License Validation:**
+- Checked via `sfb_is_agency_license()` function
+- Validates against license server
+- Falls back to dev constant if enabled
+- Failed validation: 403 Forbidden error
+
+**Upgrading to Agency:**
+- Contact sales for Agency license key
+- Activate key in **License & Support** page
+- Features unlock immediately upon activation
+- No plugin reinstall required
 
 ---
 
@@ -1306,11 +1526,8 @@ A: Yes! Compatible with:
 **Q: How many products can I add?**
 A: No hard limit. Tested with 1,000+ products. Performance depends on server resources.
 
-**Q: What file formats for import?**
-A: CSV and Excel (.xlsx). Tab-delimited and pipe-delimited also supported.
-
-**Q: Can I export products?**
-A: Yes. Go to Products → Export. Choose CSV or Excel format.
+**Q: Can I bulk import products?**
+A: Products are added individually through the admin interface. For large catalogs, contact support about programmatic import options.
 
 **Q: Is it translation-ready?**
 A: Yes! POT file included. Compatible with WPML, Polylang, and TranslatePress.

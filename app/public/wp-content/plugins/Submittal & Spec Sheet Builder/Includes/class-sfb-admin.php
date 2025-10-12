@@ -133,6 +133,19 @@ final class SFB_Admin {
       5
     );
 
+    // 5.5 Agency Library (Agency feature only)
+    if (sfb_is_agency_license()) {
+      add_submenu_page(
+        'sfb',
+        __('Agency Library', 'submittal-builder'),
+        __('📦 Agency Library', 'submittal-builder'),
+        'manage_options',
+        'sfb-agency-library',
+        [$sfb_plugin, 'render_agency_library_page'],
+        5.5
+      );
+    }
+
     // 6. Last slot: Adaptive based on license state
     $last_position = 999;
 
