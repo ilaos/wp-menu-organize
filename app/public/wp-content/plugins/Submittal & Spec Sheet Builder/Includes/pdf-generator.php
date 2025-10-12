@@ -25,11 +25,12 @@ class SFB_PDF_Generator {
    */
   public static function generate_packet($args = []) {
     $defaults = [
-      'products'     => [],
-      'project_name' => '',
-      'branding'     => [],
-      'pro_active'   => false,
-      'paper_size'   => 'letter', // letter or a4
+      'products'      => [],
+      'project_name'  => '',
+      'project_notes' => '',
+      'branding'      => [],
+      'pro_active'    => false,
+      'paper_size'    => 'letter', // letter or a4
     ];
 
     $args = wp_parse_args($args, $defaults);
@@ -56,7 +57,7 @@ class SFB_PDF_Generator {
     self::render_table_of_contents($grouped_products);
 
     // Render summary page
-    self::render_summary_page($grouped_products, $branding);
+    self::render_summary_page($grouped_products, $branding, $args['project_notes']);
 
     // Render product specification pages
     self::render_product_pages($grouped_products, $branding, $args['project_name']);
@@ -760,8 +761,9 @@ class SFB_PDF_Generator {
    *
    * @param array $grouped_products Products grouped by category
    * @param array $branding Branding settings
+   * @param string $project_notes Optional project notes
    */
-  private static function render_summary_page($grouped_products, $branding) {
+  private static function render_summary_page($grouped_products, $branding, $project_notes = '') {
     $total_products = 0;
     foreach ($grouped_products as $products) {
       $total_products += count($products);
@@ -781,6 +783,13 @@ class SFB_PDF_Generator {
     ?>
   </p>
 
+  <?php if (!empty($project_notes)): ?>
+    <div class="product-description" style="margin: 20px 0;">
+      <strong><?php esc_html_e('Project Notes:', 'submittal-builder'); ?></strong><br/>
+      <?php echo nl2br(esc_html($project_notes)); ?>
+    </div>
+  <?php endif; ?>
+
   <?php foreach ($grouped_products as $category => $products):
     $category_slug = sanitize_title($category);
   ?>
@@ -795,8 +804,9 @@ class SFB_PDF_Generator {
       <table class="sfb-table">
         <thead>
           <tr>
-            <th style="width: 40%;"><?php esc_html_e('Product Name', 'submittal-builder'); ?></th>
-            <th style="width: 30%;"><?php esc_html_e('Key Specifications', 'submittal-builder'); ?></th>
+            <th style="width: 8%;"><?php esc_html_e('Qty', 'submittal-builder'); ?></th>
+            <th style="width: 35%;"><?php esc_html_e('Product Name', 'submittal-builder'); ?></th>
+            <th style="width: 27%;"><?php esc_html_e('Key Specifications', 'submittal-builder'); ?></th>
             <th style="width: 30%;"><?php esc_html_e('Notes', 'submittal-builder'); ?></th>
           </tr>
         </thead>
@@ -805,6 +815,7 @@ class SFB_PDF_Generator {
             $product_name = $product['title'] ?? $product['name'] ?? __('Unnamed Product', 'submittal-builder');
             $specs = $product['specs'] ?? $product['specifications'] ?? [];
             $note = $product['note'] ?? $product['description'] ?? '';
+            $quantity = $product['quantity'] ?? 1;
 
             // Get first 2-3 key specs for summary
             $key_specs = array_slice($specs, 0, 3, true);
@@ -815,6 +826,7 @@ class SFB_PDF_Generator {
             $spec_text = implode('; ', $spec_summary);
           ?>
           <tr>
+            <td style="text-align: center; font-weight: 600;"><?php echo esc_html($quantity); ?></td>
             <td><strong><?php echo esc_html($product_name); ?></strong></td>
             <td style="font-size: 9pt;"><?php echo esc_html($spec_text); ?></td>
             <td style="font-size: 9pt; font-style: italic;"><?php echo esc_html(wp_trim_words($note, 10)); ?></td>
@@ -860,6 +872,7 @@ class SFB_PDF_Generator {
     $description = $product['description'] ?? $product['note'] ?? '';
     $image_url = $product['image'] ?? $product['image_url'] ?? '';
     $subcategory = $product['path'][1] ?? '';
+    $quantity = $product['quantity'] ?? 1;
     ?>
 <div class="product-page">
   <!-- Page Header (shown on all product pages) -->
@@ -877,7 +890,14 @@ class SFB_PDF_Generator {
     <div class="product-category-badge">
       <?php echo esc_html($category); ?><?php echo $subcategory ? ' / ' . esc_html($subcategory) : ''; ?>
     </div>
-    <h2 id="sfb-prod-<?php echo esc_attr($product_id); ?>" class="product-title"><?php echo esc_html($product_name); ?></h2>
+    <h2 id="sfb-prod-<?php echo esc_attr($product_id); ?>" class="product-title">
+      <?php echo esc_html($product_name); ?>
+    </h2>
+    <?php if ($quantity > 1): ?>
+      <div class="product-subtitle">
+        <strong><?php esc_html_e('Quantity:', 'submittal-builder'); ?></strong> <?php echo esc_html($quantity); ?>
+      </div>
+    <?php endif; ?>
   </div>
 
   <!-- Product Image (if available) -->
@@ -926,12 +946,13 @@ class SFB_PDF_Generator {
    * @param bool $pro_active Whether Pro license is active
    */
   private static function render_page_numbers($branding, $pro_active = false) {
-    // Get footer text
+    // Get footer text - centralized via helper function
     $footerText = '';
     if ($pro_active && !empty($branding['footer_text'])) {
       $footerText = $branding['footer_text'];
     } else {
-      $footerText = __('Generated using Submittal & Spec Sheet Builder for WordPress', 'submittal-builder');
+      // Use centralized brand credit helper (plain-text for PDF)
+      $footerText = sfb_brand_credit_plain('pdf');
     }
     ?>
 <div class="sfb-page-footer">

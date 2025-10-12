@@ -65,8 +65,8 @@ final class SFB_Admin {
       2
     );
 
-    // 3. Demo Tools (dev mode only)
-    if (defined('SFB_DEV_MODE') && SFB_DEV_MODE) {
+    // 3. Demo Tools (dev mode only - hidden in handoff mode)
+    if (defined('SFB_DEV_MODE') && SFB_DEV_MODE && !sfb_is_client_handoff_mode()) {
       add_submenu_page(
         'sfb',
         __('Demo Tools', 'submittal-builder'),
@@ -133,16 +133,27 @@ final class SFB_Admin {
       5
     );
 
-    // 5.5 Agency Library (Agency feature only)
+    // 5.5 Agency (Agency feature only - combines settings + library)
     if (sfb_is_agency_license()) {
       add_submenu_page(
         'sfb',
-        __('Agency Library', 'submittal-builder'),
-        __('📦 Agency Library', 'submittal-builder'),
+        __('Agency', 'submittal-builder'),
+        __('💼 Agency', 'submittal-builder'),
         'manage_options',
-        'sfb-agency-library',
-        [$sfb_plugin, 'render_agency_library_page'],
+        'sfb-agency',
+        [$sfb_plugin, 'render_agency_page'],
         5.5
+      );
+
+      // 5.6 Agency Analytics (Agency feature only)
+      add_submenu_page(
+        'sfb',
+        __('Agency Analytics', 'submittal-builder'),
+        __('📊 Agency Analytics', 'submittal-builder'),
+        'manage_options',
+        'sfb-agency-analytics',
+        [$sfb_plugin, 'render_agency_analytics_page'],
+        5.6
       );
     }
 

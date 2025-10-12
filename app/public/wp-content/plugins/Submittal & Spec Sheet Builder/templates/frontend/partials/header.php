@@ -11,7 +11,16 @@ if (!defined('ABSPATH')) exit;
 <div class="sfb-builder-header">
   <div class="sfb-header-left">
     <h1 class="sfb-builder-title">
-      <?php esc_html_e('Submittal & Spec Sheet Builder', 'submittal-builder'); ?>
+      <?php
+      // Pro feature: Show site name when lead capture is enabled
+      if (class_exists('SFB_Lead_Capture') && SFB_Lead_Capture::is_enabled()) {
+        $site_name = get_bloginfo('name');
+        /* translators: %s: Site name */
+        printf(esc_html__('%s\'s Submittal & Spec Sheet Builder', 'submittal-builder'), esc_html($site_name));
+      } else {
+        esc_html_e('Submittal & Spec Sheet Builder', 'submittal-builder');
+      }
+      ?>
     </h1>
     <div class="sfb-project-field-compact">
       <label for="sfb-header-project" class="sfb-sr-only"><?php esc_html_e('Project Name', 'submittal-builder'); ?></label>

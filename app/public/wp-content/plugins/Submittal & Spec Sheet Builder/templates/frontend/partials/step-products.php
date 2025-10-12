@@ -14,6 +14,9 @@ if (!defined('ABSPATH')) exit;
     <p class="sfb-step-description">
       <?php esc_html_e('Select the products you want to include in your submittal packet.', 'submittal-builder'); ?>
     </p>
+    <p class="sfb-help" style="margin:6px 0 14px; color:#6b7280; font-size:13px;">
+      <?php esc_html_e('After you pick items, the Review screen lets you set quantities and add notes before you download your PDF.', 'submittal-builder'); ?>
+    </p>
   </div>
 
   <div class="sfb-products-layout">
@@ -51,7 +54,11 @@ if (!defined('ABSPATH')) exit;
     <!-- Main Content: Product Grid -->
     <main class="sfb-products-main">
       <div class="sfb-products-toolbar">
-        <div class="sfb-results-info">
+        <div class="sfb-toolbar__search">
+          <!-- Search moved here for better alignment -->
+        </div>
+
+        <div class="sfb-toolbar__count">
           <span id="sfb-results-count"><?php esc_html_e('Loading products...', 'submittal-builder'); ?></span>
         </div>
 
@@ -65,7 +72,7 @@ if (!defined('ABSPATH')) exit;
           </button>
         </div>
 
-        <div class="sfb-view-toggle">
+        <div class="sfb-toolbar__viewtoggle sfb-view-toggle">
           <button type="button" class="sfb-view-btn sfb-view-grid active" data-view="grid" aria-label="<?php esc_attr_e('Grid view', 'submittal-builder'); ?>">
             <span class="sfb-icon-grid">⊞</span>
           </button>

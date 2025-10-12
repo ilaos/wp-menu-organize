@@ -96,6 +96,15 @@ class SFB_Lead_Capture {
 
     $lead_id = $wpdb->insert_id;
 
+    // Track lead capture for Agency Analytics (non-PII)
+    if (class_exists('SFB_Agency_Analytics')) {
+      SFB_Agency_Analytics::track_lead_captured([
+        'phone' => $phone,
+        'num_items' => $num_items,
+        'top_category' => $top_category,
+      ]);
+    }
+
     // Send email to user (will be triggered after PDF generation)
     $email_sent = self::send_lead_email($email, $project_name, $num_items);
 
@@ -127,6 +136,21 @@ class SFB_Lead_Capture {
     $settings = get_option('sfb_settings', []);
     $company_name = $settings['company_name'] ?? get_bloginfo('name');
 
+    // Apply white-label email settings if enabled
+    $brand_settings = sfb_get_brand_settings();
+    if (sfb_is_white_label_enabled()) {
+      // Override From name/address using filters
+      add_filter('wp_mail_from_name', function($from_name) use ($brand_settings) {
+        $custom_from_name = $brand_settings['white_label']['email_from_name'] ?? '';
+        return !empty($custom_from_name) ? $custom_from_name : $from_name;
+      }, 999);
+
+      add_filter('wp_mail_from', function($from_email) use ($brand_settings) {
+        $custom_from_address = $brand_settings['white_label']['email_from_address'] ?? '';
+        return !empty($custom_from_address) && is_email($custom_from_address) ? $custom_from_address : $from_email;
+      }, 999);
+    }
+
     // Email subject
     $subject = sprintf(
       __('Your %s Submittal Packet', 'submittal-builder'),
@@ -155,6 +179,17 @@ We\'ll follow up with you soon about this project.
       $company_name,
       current_time('F j, Y g:i a')
     );
+
+    // Add subtle branding credit for Free tier (respects white-label)
+    if (!sfb_is_white_label_enabled()) {
+      $message .= "\n\n" . sfb_brand_credit_plain('email');
+    } else {
+      // Add custom footer or subtle credit if configured
+      $credit = sfb_brand_credit_plain('email');
+      if (!empty($credit)) {
+        $message .= "\n\n" . $credit;
+      }
+    }
 
     // Set headers
     $headers = ['Content-Type: text/plain; charset=UTF-8'];

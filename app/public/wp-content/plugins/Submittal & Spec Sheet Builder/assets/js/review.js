@@ -301,6 +301,216 @@
     const container = document.getElementById('sfb-brand-preview-container');
     if (!container) return;
 
+    // Agency - Phase B & C: Check for Agency presets
+    const useDefaultPreset = window.SFB_BRAND?.useDefault || false;
+    const defaultPreset = window.SFB_BRAND?.defaultPreset || null;
+    const allPresets = window.SFB_BRAND?.presets || [];
+
+    // Phase C: Show preset switcher if presets exist
+    if (allPresets.length > 0) {
+      renderPresetSwitcher(allPresets, defaultPreset, useDefaultPreset);
+      return;
+    }
+
+    // Fallback: Normal theme selector (for non-Agency users)
+    renderDefaultThemeSelector();
+  }
+
+  // Phase C: Render preset switcher UI
+  function renderPresetSwitcher(presets, defaultPreset, useDefault) {
+    const container = document.getElementById('sfb-brand-preview-container');
+    if (!container) return;
+
+    // Determine active preset (session override or default)
+    const sessionPresetId = sessionStorage.getItem('sfb-active-preset-id');
+    let activePreset = null;
+
+    if (sessionPresetId) {
+      activePreset = presets.find(p => p.id === sessionPresetId);
+    }
+
+    if (!activePreset && useDefault && defaultPreset) {
+      activePreset = defaultPreset;
+    }
+
+    if (!activePreset && presets.length > 0) {
+      activePreset = presets[0];
+    }
+
+    const activeColor = activePreset?.data?.visual?.primary_color || '#7861FF';
+    const activeName = activePreset?.name || 'No preset';
+
+    // Build UI with pill + dropdown
+    container.innerHTML = `
+      <div class="sfb-preset-switcher-wrapper">
+        <!-- Current preset pill -->
+        <div class="sfb-brand-preview-preset-pill"
+             style="background: ${escapeHtml(activeColor)}20;
+                    border: 1px solid ${escapeHtml(activeColor)};
+                    color: ${escapeHtml(activeColor)};
+                    padding: 12px 16px;
+                    border-radius: 8px;
+                    font-size: 13px;
+                    font-weight: 600;
+                    display: flex;
+                    align-items: center;
+                    gap: 8px;
+                    margin-bottom: 12px;">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
+            <path d="M8 2a6 6 0 100 12A6 6 0 008 2zm0 11a5 5 0 110-10 5 5 0 010 10zM9 8a1 1 0 11-2 0 1 1 0 012 0z"/>
+          </svg>
+          <span id="sfb-preset-pill-name">Preset: ${escapeHtml(activeName)}</span>
+        </div>
+
+        <!-- Preset dropdown -->
+        <div style="margin-bottom: 16px;">
+          <label for="sfb-preset-selector" style="display: block; font-size: 13px; font-weight: 600; color: #374151; margin-bottom: 8px;">
+            Preview branding
+          </label>
+          <select id="sfb-preset-selector"
+                  style="width: 100%;
+                         padding: 10px 12px;
+                         border: 1px solid #d1d5db;
+                         border-radius: 6px;
+                         font-size: 14px;
+                         background: white;
+                         cursor: pointer;">
+            ${presets.map(preset => `
+              <option value="${escapeHtml(preset.id)}"
+                      ${preset.id === activePreset?.id ? 'selected' : ''}>
+                ${escapeHtml(preset.name)}${preset.is_default ? ' (Default)' : ''}
+              </option>
+            `).join('')}
+          </select>
+          <p style="font-size: 12px; color: #6b7280; margin-top: 8px;">
+            Preview only – changes won't affect saved presets or future PDFs.
+          </p>
+        </div>
+
+        <!-- Apply as default button (if not already default) -->
+        <div id="sfb-preset-apply-default-container"></div>
+      </div>
+    `;
+
+    // Apply initial preset styling
+    applyThemeColor(activeColor);
+
+    // Attach change handler
+    const selector = document.getElementById('sfb-preset-selector');
+    if (selector) {
+      selector.addEventListener('change', (e) => {
+        const presetId = e.target.value;
+        const preset = presets.find(p => p.id === presetId);
+        if (preset) {
+          switchPreset(preset);
+        }
+      });
+    }
+
+    // Update "Apply as default" button
+    updateApplyDefaultButton(activePreset, defaultPreset);
+  }
+
+  // Phase C: Switch preset (session-only)
+  function switchPreset(preset) {
+    const color = preset.data?.visual?.primary_color || '#7861FF';
+    const name = preset.name || 'Unnamed';
+
+    // Update session storage
+    sessionStorage.setItem('sfb-active-preset-id', preset.id);
+
+    // Update pill text
+    const pillName = document.getElementById('sfb-preset-pill-name');
+    if (pillName) {
+      pillName.textContent = `Preset: ${name}`;
+    }
+
+    // Update pill color
+    const pill = document.querySelector('.sfb-brand-preview-preset-pill');
+    if (pill) {
+      pill.style.background = `${color}20`;
+      pill.style.borderColor = color;
+      pill.style.color = color;
+    }
+
+    // Apply theme color to preview elements
+    applyThemeColor(color);
+
+    // Update "Apply as default" button
+    const defaultPreset = window.SFB_BRAND?.defaultPreset || null;
+    updateApplyDefaultButton(preset, defaultPreset);
+
+    // Show toast
+    showToast(`Preview updated: ${name}`);
+  }
+
+  // Phase C: Update "Apply as default" button visibility
+  function updateApplyDefaultButton(activePreset, defaultPreset) {
+    const container = document.getElementById('sfb-preset-apply-default-container');
+    if (!container) return;
+
+    const isAlreadyDefault = activePreset?.id === defaultPreset?.id;
+    const useDefault = window.SFB_BRAND?.useDefault || false;
+
+    if (isAlreadyDefault && useDefault) {
+      // Already the active default - show info message
+      container.innerHTML = `
+        <div style="padding: 12px;
+                    background: #f0fdf4;
+                    border: 1px solid #86efac;
+                    border-radius: 6px;
+                    font-size: 13px;
+                    color: #166534;
+                    display: flex;
+                    align-items: center;
+                    gap: 8px;">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
+            <path fill-rule="evenodd" d="M10.293 3.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L12.586 9H3a1 1 0 110-2h9.586l-2.293-2.293a1 1 0 010-1.414z" clip-rule="evenodd"/>
+          </svg>
+          This is your current default preset
+        </div>
+      `;
+    } else {
+      // Show button to apply as default
+      container.innerHTML = `
+        <button id="sfb-apply-default-btn"
+                type="button"
+                style="width: 100%;
+                       padding: 10px 16px;
+                       background: #7c3aed;
+                       color: white;
+                       border: none;
+                       border-radius: 6px;
+                       font-size: 14px;
+                       font-weight: 600;
+                       cursor: pointer;
+                       transition: background 0.2s;"
+                onmouseover="this.style.background='#6d28d9'"
+                onmouseout="this.style.background='#7c3aed'">
+          Apply as default preset
+        </button>
+        <p style="font-size: 12px; color: #6b7280; margin-top: 8px; text-align: center;">
+          Opens Branding settings to save as default
+        </p>
+      `;
+
+      // Attach click handler
+      const applyBtn = document.getElementById('sfb-apply-default-btn');
+      if (applyBtn) {
+        applyBtn.addEventListener('click', () => {
+          // Deep-link to branding page with preset ID
+          const adminUrl = window.location.origin + '/wp-admin/admin.php?page=submittal-builder&tab=branding';
+          window.open(adminUrl, '_blank');
+        });
+      }
+    }
+  }
+
+  // Fallback: Default theme selector (for non-Agency users)
+  function renderDefaultThemeSelector() {
+    const container = document.getElementById('sfb-brand-preview-container');
+    if (!container) return;
+
     const themes = [
       { key: 'engineering', name: 'Engineering', color: '#7861FF', desc: 'Classic industrial blue accent' },
       { key: 'architectural', name: 'Architectural', color: '#0ea5e9', desc: 'Modern sky blue for design work' },
@@ -334,21 +544,19 @@
     container.querySelectorAll('.sfb-brand-preview-theme').forEach(themeEl => {
       themeEl.addEventListener('click', () => {
         const themeKey = themeEl.dataset.theme;
-        selectTheme(themeKey);
+        selectTheme(themeKey, themes);
       });
 
       themeEl.addEventListener('keydown', (e) => {
         if (e.key === 'Enter' || e.key === ' ') {
           e.preventDefault();
           const themeKey = themeEl.dataset.theme;
-          selectTheme(themeKey);
+          selectTheme(themeKey, themes);
         }
       });
     });
 
-    function selectTheme(themeKey) {
-      activeTheme = themeKey;
-
+    function selectTheme(themeKey, themes) {
       // Update active state
       container.querySelectorAll('.sfb-brand-preview-theme').forEach(el => {
         const isActive = el.dataset.theme === themeKey;
@@ -356,31 +564,27 @@
         el.setAttribute('aria-pressed', isActive ? 'true' : 'false');
       });
 
-      // Apply preview styles to Review step
-      applyThemePreview(themeKey);
+      // Apply preview styles
+      const theme = themes.find(t => t.key === themeKey);
+      if (theme) {
+        applyThemeColor(theme.color);
+      }
     }
+  }
 
-    function applyThemePreview(themeKey) {
-      const themeColors = {
-        engineering: '#7861FF',
-        architectural: '#0ea5e9',
-        corporate: '#10b981'
-      };
+  // Helper to apply color to preview elements
+  function applyThemeColor(color) {
+    // Apply to review group titles
+    document.querySelectorAll('.sfb-selected__group-title').forEach(el => {
+      el.style.color = color;
+      el.style.borderBottomColor = color;
+    });
 
-      const color = themeColors[themeKey] || themeColors.engineering;
-
-      // Apply to review group titles
-      document.querySelectorAll('.sfb-selected__group-title').forEach(el => {
-        el.style.color = color;
-        el.style.borderBottomColor = color;
-      });
-
-      // Apply to badges if present
-      document.querySelectorAll('.badge--type').forEach(el => {
-        el.style.background = `${color}20`;
-        el.style.color = color;
-      });
-    }
+    // Apply to badges if present
+    document.querySelectorAll('.badge--type').forEach(el => {
+      el.style.background = `${color}20`;
+      el.style.color = color;
+    });
   }
 
   // Initialize brand preview after a short delay to ensure DOM is ready

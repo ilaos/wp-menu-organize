@@ -54,13 +54,13 @@ final class SFB_Rest {
     // Catalog Management (Admin)
     register_rest_route('sfb/v1', '/form/seed', [
       'methods' => 'POST',
-      'permission_callback' => function() { return current_user_can('manage_options'); },
+      'permission_callback' => function() { return current_user_can('edit_sfb_catalog'); },
       'callback' => [$sfb_plugin, 'api_seed_sample_catalog']
     ]);
 
     register_rest_route('sfb/v1', '/form/wipe', [
       'methods' => 'POST',
-      'permission_callback' => function() { return current_user_can('manage_options'); },
+      'permission_callback' => function() { return current_user_can('edit_sfb_catalog'); },
       'callback' => [$sfb_plugin, 'api_wipe_form']
     ]);
 
@@ -85,37 +85,37 @@ final class SFB_Rest {
     // Node Operations (Admin)
     register_rest_route('sfb/v1', '/node/save', [
       'methods' => 'POST',
-      'permission_callback' => function() { return current_user_can('manage_options'); },
+      'permission_callback' => function() { return current_user_can('edit_sfb_catalog'); },
       'callback' => [__CLASS__, 'save_node']
     ]);
 
     register_rest_route('sfb/v1', '/node/create', [
       'methods' => 'POST',
-      'permission_callback' => function() { return current_user_can('manage_options'); },
+      'permission_callback' => function() { return current_user_can('edit_sfb_catalog'); },
       'callback' => [__CLASS__, 'create_node']
     ]);
 
     register_rest_route('sfb/v1', '/node/delete', [
       'methods' => 'POST',
-      'permission_callback' => function() { return current_user_can('manage_options'); },
+      'permission_callback' => function() { return current_user_can('edit_sfb_catalog'); },
       'callback' => [__CLASS__, 'delete_node']
     ]);
 
     register_rest_route('sfb/v1', '/node/reorder', [
       'methods' => 'POST',
-      'permission_callback' => function() { return current_user_can('manage_options'); },
+      'permission_callback' => function() { return current_user_can('edit_sfb_catalog'); },
       'callback' => [__CLASS__, 'reorder_node']
     ]);
 
     register_rest_route('sfb/v1', '/node/duplicate', [
       'methods' => 'POST',
-      'permission_callback' => function() { return current_user_can('manage_options'); },
+      'permission_callback' => function() { return current_user_can('edit_sfb_catalog'); },
       'callback' => [__CLASS__, 'duplicate_node']
     ]);
 
     register_rest_route('sfb/v1', '/node/move', [
       'methods' => 'POST',
-      'permission_callback' => function() { return current_user_can('manage_options'); },
+      'permission_callback' => function() { return current_user_can('edit_sfb_catalog'); },
       'callback' => [__CLASS__, 'move_node']
     ]);
 
@@ -128,25 +128,25 @@ final class SFB_Rest {
     // Bulk Operations (Admin)
     register_rest_route('sfb/v1', '/bulk/delete', [
       'methods' => 'POST',
-      'permission_callback' => function() { return current_user_can('manage_options'); },
+      'permission_callback' => function() { return current_user_can('edit_sfb_catalog'); },
       'callback' => [$sfb_plugin, 'api_bulk_delete']
     ]);
 
     register_rest_route('sfb/v1', '/bulk/move', [
       'methods' => 'POST',
-      'permission_callback' => function() { return current_user_can('manage_options'); },
+      'permission_callback' => function() { return current_user_can('edit_sfb_catalog'); },
       'callback' => [$sfb_plugin, 'api_bulk_move']
     ]);
 
     register_rest_route('sfb/v1', '/bulk/duplicate', [
       'methods' => 'POST',
-      'permission_callback' => function() { return current_user_can('manage_options'); },
+      'permission_callback' => function() { return current_user_can('edit_sfb_catalog'); },
       'callback' => [$sfb_plugin, 'api_bulk_duplicate']
     ]);
 
     register_rest_route('sfb/v1', '/bulk/export', [
       'methods' => 'POST',
-      'permission_callback' => function() { return current_user_can('manage_options'); },
+      'permission_callback' => function() { return current_user_can('edit_sfb_catalog'); },
       'callback' => [$sfb_plugin, 'api_bulk_export']
     ]);
 

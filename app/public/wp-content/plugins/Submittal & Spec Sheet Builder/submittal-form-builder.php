@@ -34,6 +34,9 @@ require_once plugin_dir_path(__FILE__) . 'Includes/branding-helpers.php';
 // Load industry pack helpers
 require_once plugin_dir_path(__FILE__) . 'Includes/industry-pack-helpers.php';
 
+// Load agency analytics (Agency feature)
+require_once plugin_dir_path(__FILE__) . 'Includes/agency-analytics.php';
+
 // Load lead capture (Pro feature)
 require_once plugin_dir_path(__FILE__) . 'Includes/lead-capture.php';
 
@@ -86,6 +89,12 @@ final class SFB_Plugin {
     add_action('admin_enqueue_scripts', [$this, 'enqueue_admin']);
     add_action('wp_enqueue_scripts', [$this, 'enqueue_front']);
     add_action('template_redirect', [$this, 'handle_tracking_redirect']); // tracking links
+
+    // Admin notices
+    add_action('admin_notices', [$this, 'show_handoff_mode_banner']);
+
+    // Custom capability enforcement
+    add_filter('map_meta_cap', [$this, 'map_sfb_capabilities'], 10, 4);
 
     // Load translations
     add_action('init', [$this, 'load_textdomain']);
@@ -160,8 +169,35 @@ final class SFB_Plugin {
   /** Create DB tables we'll use later */
   function activate() {
     $this->ensure_tables();
+    $this->ensure_operator_role();
     // Set flag for first-time activation redirect
     update_option('sfb_just_activated', 1, false);
+  }
+
+  /** Create SFB Operator role if missing */
+  function ensure_operator_role() {
+    // Check if role already exists
+    if (get_role('sfb_operator')) {
+      return; // Already created
+    }
+
+    // Create Operator role with limited capabilities
+    add_role(
+      'sfb_operator',
+      __('Submittal Builder Operator', 'submittal-builder'),
+      [
+        'read' => true, // Basic WordPress capability
+        // Custom SFB capabilities (enforced via map_meta_cap)
+        'use_sfb_builder' => true,
+        'view_sfb_leads' => true,
+        'view_sfb_tracking' => true,
+        'edit_sfb_branding' => false,
+        'edit_sfb_catalog' => false,
+        'access_sfb_agency' => false,
+      ]
+    );
+
+    error_log('[SFB] Created sfb_operator role');
   }
 
   /** Create SFB tables if missing (safe + idempotent) */
@@ -851,6 +887,110 @@ final class SFB_Plugin {
               </div>
             </div>
 
+            <?php
+            // White-Label Mode Card (Agency only)
+            $is_agency = SFB_Branding::is_agency_license();
+            if ($is_agency):
+              $white_label_settings = $options['white_label'] ?? sfb_brand_defaults()['white_label'];
+            ?>
+            <!-- White-Label Mode (Agency Feature) -->
+            <div class="sfb-card sfb-white-label-card">
+              <h2>
+                🏷️ <?php echo esc_html__('White-Label Mode', 'submittal-builder'); ?>
+                <span class="sfb-agency-badge">AGENCY</span>
+              </h2>
+              <p class="sfb-muted">
+                <?php echo esc_html__('Remove plugin branding from PDFs, emails, and frontend. Perfect for agencies presenting to clients.', 'submittal-builder'); ?>
+              </p>
+
+              <!-- Enable White-Label Toggle -->
+              <div class="sfb-field-group">
+                <label class="sfb-checkbox-wrapper">
+                  <input type="checkbox"
+                         id="sfb-white-label-enabled"
+                         name="<?php echo esc_attr($this->option_key()); ?>[white_label][enabled]"
+                         value="1"
+                         <?php checked(!empty($white_label_settings['enabled'])); ?>>
+                  <span class="sfb-checkbox-label">
+                    <strong><?php esc_html_e('Enable White-Label Mode', 'submittal-builder'); ?></strong>
+                    <small><?php esc_html_e('Hide all "Generated with Submittal & Spec Sheet Builder" credits from PDFs, emails, and frontend.', 'submittal-builder'); ?></small>
+                  </span>
+                </label>
+              </div>
+
+              <!-- White-Label Settings (shown when enabled) -->
+              <div id="sfb-white-label-settings" style="display: <?php echo !empty($white_label_settings['enabled']) ? 'block' : 'none'; ?>; padding-left: 24px; margin-top: 16px; border-left: 3px solid #7c3aed;">
+
+                <!-- Custom Footer Text -->
+                <div class="sfb-field-group">
+                  <label class="sfb-field-label" for="sfb-white-label-footer">
+                    <?php esc_html_e('Custom PDF Footer Text', 'submittal-builder'); ?>
+                    <span class="sfb-field-optional">(<?php esc_html_e('optional', 'submittal-builder'); ?>)</span>
+                  </label>
+                  <p class="sfb-field-hint">
+                    <?php esc_html_e('Replace the default footer with your own text. Leave blank to remove footer text entirely.', 'submittal-builder'); ?>
+                  </p>
+                  <input type="text"
+                         id="sfb-white-label-footer"
+                         name="<?php echo esc_attr($this->option_key()); ?>[white_label][custom_footer]"
+                         value="<?php echo esc_attr($white_label_settings['custom_footer']); ?>"
+                         class="sfb-text-input"
+                         placeholder="<?php esc_attr_e('e.g., Prepared by Your Company', 'submittal-builder'); ?>">
+                </div>
+
+                <!-- Email From Name -->
+                <div class="sfb-field-group">
+                  <label class="sfb-field-label" for="sfb-white-label-email-name">
+                    <?php esc_html_e('Email From Name', 'submittal-builder'); ?>
+                    <span class="sfb-field-optional">(<?php esc_html_e('optional', 'submittal-builder'); ?>)</span>
+                  </label>
+                  <p class="sfb-field-hint">
+                    <?php esc_html_e('Customize the sender name for lead capture emails. Leave blank to use site name.', 'submittal-builder'); ?>
+                  </p>
+                  <input type="text"
+                         id="sfb-white-label-email-name"
+                         name="<?php echo esc_attr($this->option_key()); ?>[white_label][email_from_name]"
+                         value="<?php echo esc_attr($white_label_settings['email_from_name']); ?>"
+                         class="sfb-text-input"
+                         placeholder="<?php echo esc_attr(get_bloginfo('name')); ?>">
+                </div>
+
+                <!-- Email From Address -->
+                <div class="sfb-field-group">
+                  <label class="sfb-field-label" for="sfb-white-label-email-address">
+                    <?php esc_html_e('Email From Address', 'submittal-builder'); ?>
+                    <span class="sfb-field-optional">(<?php esc_html_e('optional', 'submittal-builder'); ?>)</span>
+                  </label>
+                  <p class="sfb-field-hint">
+                    <?php esc_html_e('Customize the sender email address. Leave blank to use WordPress default.', 'submittal-builder'); ?>
+                  </p>
+                  <input type="email"
+                         id="sfb-white-label-email-address"
+                         name="<?php echo esc_attr($this->option_key()); ?>[white_label][email_from_address]"
+                         value="<?php echo esc_attr($white_label_settings['email_from_address']); ?>"
+                         class="sfb-text-input"
+                         placeholder="<?php echo esc_attr(get_option('admin_email')); ?>">
+                </div>
+
+                <!-- Show Subtle Credit Toggle -->
+                <div class="sfb-field-group">
+                  <label class="sfb-checkbox-wrapper">
+                    <input type="checkbox"
+                           id="sfb-white-label-show-credit"
+                           name="<?php echo esc_attr($this->option_key()); ?>[white_label][show_subtle_credit]"
+                           value="1"
+                           <?php checked(!empty($white_label_settings['show_subtle_credit'])); ?>>
+                    <span class="sfb-checkbox-label">
+                      <strong><?php esc_html_e('Show subtle credit', 'submittal-builder'); ?></strong>
+                      <small><?php esc_html_e('Display a small "Powered by" credit in PDFs and emails (not shown on frontend).', 'submittal-builder'); ?></small>
+                    </span>
+                  </label>
+                </div>
+
+              </div>
+            </div>
+            <?php endif; ?>
+
             <!-- Save Section -->
             <div class="sfb-save-section">
               <p class="sfb-save-message">
@@ -912,9 +1052,10 @@ final class SFB_Plugin {
       </div>
 
       <?php
-      // Brand Presets Section (Agency only)
+      // Brand Presets Section (Agency only - hidden in handoff mode)
       $is_agency = SFB_Branding::is_agency_license();
-      if ($is_agency):
+      $handoff_mode = sfb_is_client_handoff_mode();
+      if ($is_agency && !$handoff_mode):
       ?>
       <!-- Brand Presets (Agency Feature) -->
       <div class="sfb-card" style="margin-top: 32px;">
@@ -2075,64 +2216,280 @@ final class SFB_Plugin {
     <?php
   }
 
-  /** Agency Library Page Renderer */
-  function render_agency_library_page() {
+  /** Consolidated Agency Page Renderer (Settings + Library) */
+  function render_agency_page() {
     // Security check
     if (!sfb_is_agency_license()) {
       wp_die(__('This feature requires an Agency license.', 'submittal-builder'));
     }
 
-    // Get all agency packs
-    $packs = get_option('sfb_agency_packs', []);
+    // Handle operator role assignment form submission
+    if (isset($_POST['sfb_save_operator_roles']) && isset($_POST['sfb_operator_roles_nonce']) && wp_verify_nonce($_POST['sfb_operator_roles_nonce'], 'sfb_assign_operator_roles')) {
+      $selected_operator_ids = isset($_POST['operator_users']) ? array_map('intval', $_POST['operator_users']) : [];
+      $all_non_admin_users = get_users(['role__not_in' => ['administrator']]);
 
-    // Handle delete action
+      foreach ($all_non_admin_users as $user) {
+        $should_be_operator = in_array($user->ID, $selected_operator_ids, true);
+        $current_roles = $user->roles;
+        $is_currently_operator = in_array('sfb_operator', $current_roles, true);
+
+        if ($should_be_operator && !$is_currently_operator) {
+          // Assign operator role
+          $user->set_role('sfb_operator');
+          error_log('[SFB] Assigned sfb_operator role to user ' . $user->ID);
+        } elseif (!$should_be_operator && $is_currently_operator) {
+          // Remove operator role - restore to subscriber (or previous role)
+          $user->set_role('subscriber');
+          error_log('[SFB] Removed sfb_operator role from user ' . $user->ID);
+        }
+      }
+
+      $operator_roles_saved = true;
+    }
+
+    // Handle handoff mode form submission
+    if (isset($_POST['sfb_agency_settings_nonce']) && wp_verify_nonce($_POST['sfb_agency_settings_nonce'], 'sfb_save_agency_settings')) {
+      $old_handoff_mode = get_option('sfb_client_handoff_mode', false);
+      $new_handoff_mode = !empty($_POST['sfb_client_handoff_mode']);
+
+      // Save handoff mode setting
+      update_option('sfb_client_handoff_mode', $new_handoff_mode, false);
+
+      // Handle default role switching when handoff mode changes
+      if ($old_handoff_mode !== $new_handoff_mode) {
+        if ($new_handoff_mode) {
+          // Enabling handoff mode: switch to sfb_operator
+          $current_default_role = get_option('default_role');
+
+          // Save the current default role so we can restore it later
+          update_option('sfb_handoff_previous_role', $current_default_role, false);
+
+          // Set default role to sfb_operator
+          update_option('default_role', 'sfb_operator');
+
+          error_log('[SFB] Handoff Mode enabled: Default role changed from ' . $current_default_role . ' to sfb_operator');
+        } else {
+          // Disabling handoff mode: restore previous role
+          $previous_role = get_option('sfb_handoff_previous_role', 'subscriber');
+
+          // Restore previous default role
+          update_option('default_role', $previous_role);
+
+          // Clean up the stored previous role
+          delete_option('sfb_handoff_previous_role');
+
+          error_log('[SFB] Handoff Mode disabled: Default role restored to ' . $previous_role);
+        }
+      }
+
+      $settings_saved = true;
+    }
+
+    // Handle delete pack action
     if (isset($_GET['action']) && $_GET['action'] === 'delete' && isset($_GET['pack_id']) && check_admin_referer('sfb_delete_pack_' . $_GET['pack_id'])) {
       $pack_id = sanitize_text_field($_GET['pack_id']);
+      $packs = get_option('sfb_agency_packs', []);
       $packs = array_filter($packs, function($pack) use ($pack_id) {
         return $pack['id'] !== $pack_id;
       });
       update_option('sfb_agency_packs', array_values($packs), false);
 
       // Redirect to remove query params
-      wp_redirect(admin_url('admin.php?page=sfb-agency-library&deleted=1'));
+      wp_redirect(admin_url('admin.php?page=sfb-agency&deleted=1'));
       exit;
     }
 
+    // Get current settings
+    $handoff_mode = get_option('sfb_client_handoff_mode', false);
+    $packs = get_option('sfb_agency_packs', []);
+
     ?>
-    <div class="wrap sfb-admin-page">
+    <div class="wrap sfb-agency-wrap">
       <h1 class="wp-heading-inline">
-        📦 <?php esc_html_e('Agency Library', 'submittal-builder'); ?>
-        <span style="background:#7c3aed;color:#fff;font-size:11px;padding:4px 8px;border-radius:4px;font-weight:600;margin-left:8px;vertical-align:middle;">AGENCY</span>
+        💼 <?php esc_html_e('Agency', 'submittal-builder'); ?>
+        <span class="sfb-agency-badge">AGENCY</span>
       </h1>
 
-      <?php if (isset($_GET['deleted'])): ?>
-        <div class="notice notice-success is-dismissible" style="margin-top:20px;">
-          <p><?php esc_html_e('Pack deleted successfully.', 'submittal-builder'); ?></p>
-        </div>
-      <?php endif; ?>
-
       <p class="description" style="margin-top:12px;margin-bottom:24px;">
-        <?php esc_html_e('Reusable catalog Packs created from your sites. Use these to quickly seed new sites with pre-configured catalogs and branding.', 'submittal-builder'); ?>
+        <?php esc_html_e('Manage client handoff settings and reusable catalog Packs for your agency.', 'submittal-builder'); ?>
       </p>
 
-      <?php if (empty($packs)): ?>
-        <!-- Empty state -->
-        <div class="sfb-card" style="padding:48px;text-align:center;background:#f9fafb;">
-          <div style="font-size:48px;margin-bottom:16px;opacity:0.3;">📦</div>
-          <h2 style="margin:0 0 12px 0;color:#374151;">
-            <?php esc_html_e('No Agency Packs yet', 'submittal-builder'); ?>
+      <?php if (isset($settings_saved)): ?>
+      <div class="notice notice-success is-dismissible" style="margin-bottom: 20px;">
+        <p><strong>✅ <?php echo esc_html__('Agency settings saved successfully!', 'submittal-builder'); ?></strong></p>
+      </div>
+      <?php endif; ?>
+
+      <?php if (isset($operator_roles_saved)): ?>
+      <div class="notice notice-success is-dismissible" style="margin-bottom: 20px;">
+        <p><strong>✅ <?php echo esc_html__('Operator roles updated successfully!', 'submittal-builder'); ?></strong></p>
+      </div>
+      <?php endif; ?>
+
+      <?php if (isset($_GET['deleted'])): ?>
+      <div class="notice notice-success is-dismissible" style="margin-bottom: 20px;">
+        <p><?php esc_html_e('Pack deleted successfully.', 'submittal-builder'); ?></p>
+      </div>
+      <?php endif; ?>
+
+      <!-- Client Handoff Mode Section -->
+      <form method="post" action="">
+        <?php wp_nonce_field('sfb_save_agency_settings', 'sfb_agency_settings_nonce'); ?>
+
+        <div class="sfb-card sfb-handoff-card">
+          <h2>
+            🤝 <?php echo esc_html__('Client Handoff Mode', 'submittal-builder'); ?>
           </h2>
-          <p style="color:#6b7280;margin-bottom:24px;max-width:500px;margin-left:auto;margin-right:auto;">
-            <?php esc_html_e('Create reusable Packs from your Builder catalog. Go to Builder → Save as Pack to get started.', 'submittal-builder'); ?>
+          <p class="sfb-muted">
+            <?php echo esc_html__('One-click toggle to make the site safe for client use. Hides agency-specific features while maintaining full functionality for clients.', 'submittal-builder'); ?>
           </p>
-          <a href="<?php echo esc_url(admin_url('admin.php?page=sfb')); ?>" class="button button-primary">
-            <?php esc_html_e('Go to Builder', 'submittal-builder'); ?>
-          </a>
+
+          <!-- Enable Handoff Mode Toggle -->
+          <div class="sfb-field-group" style="margin-top:24px;">
+            <label class="sfb-checkbox-wrapper">
+              <input type="checkbox"
+                     id="sfb-client-handoff-mode"
+                     name="sfb_client_handoff_mode"
+                     value="1"
+                     <?php checked($handoff_mode); ?>>
+              <span class="sfb-checkbox-label">
+                <strong><?php esc_html_e('Enable Client Handoff Mode', 'submittal-builder'); ?></strong>
+                <small><?php esc_html_e('Hide Agency Packs and Brand Presets management from the admin interface.', 'submittal-builder'); ?></small>
+              </span>
+            </label>
+          </div>
+
+          <!-- What Changes Info Box -->
+          <div class="sfb-info-box" style="margin-top:24px;">
+            <div class="sfb-info-box-header">
+              <strong>ℹ️ <?php esc_html_e('What changes when enabled?', 'submittal-builder'); ?></strong>
+            </div>
+            <div class="sfb-info-box-content">
+              <ul class="sfb-info-list">
+                <li>
+                  <span class="sfb-info-icon">📦</span>
+                  <strong><?php esc_html_e('Agency Packs', 'submittal-builder'); ?>:</strong>
+                  <?php esc_html_e('Section below hidden (your saved Packs remain safe)', 'submittal-builder'); ?>
+                </li>
+                <li>
+                  <span class="sfb-info-icon">🎨</span>
+                  <strong><?php esc_html_e('Brand Presets', 'submittal-builder'); ?>:</strong>
+                  <?php esc_html_e('Management panel hidden on Branding page (active preset still works)', 'submittal-builder'); ?>
+                </li>
+                <li>
+                  <span class="sfb-info-icon">✅</span>
+                  <strong><?php esc_html_e('Client Access', 'submittal-builder'); ?>:</strong>
+                  <?php esc_html_e('Full access to Builder, Settings, Branding, Tracking, and Leads', 'submittal-builder'); ?>
+                </li>
+                <li>
+                  <span class="sfb-info-icon">🌐</span>
+                  <strong><?php esc_html_e('Frontend', 'submittal-builder'); ?>:</strong>
+                  <?php esc_html_e('No changes - frontend remains identical', 'submittal-builder'); ?>
+                </li>
+              </ul>
+              <p class="sfb-info-note">
+                <?php esc_html_e('Toggle off anytime to instantly restore full agency access. All data remains intact.', 'submittal-builder'); ?>
+              </p>
+            </div>
+          </div>
+
+          <!-- Save Button -->
+          <div style="margin-top:24px;">
+            <button type="submit" class="button button-primary button-large">
+              <?php esc_html_e('Save Handoff Settings', 'submittal-builder'); ?>
+            </button>
+          </div>
         </div>
-      <?php else: ?>
-        <!-- Packs list table -->
-        <div class="sfb-card">
-          <table class="wp-list-table widefat fixed striped">
+      </form>
+
+      <!-- Assign Operator Role Tool -->
+      <div class="sfb-card" style="margin-top:32px; border: 2px solid #e0e7ff; background: linear-gradient(to bottom, #f5f7ff, #fff);">
+        <h2>👥 <?php esc_html_e('Assign Operator Role', 'submittal-builder'); ?></h2>
+        <p class="sfb-muted">
+          <?php esc_html_e('Assign the Operator role to users who should have limited access. Operators can use the Builder, view Tracking & Leads, but cannot edit Catalog, Branding, or Agency features.', 'submittal-builder'); ?>
+        </p>
+
+        <?php
+        // Get all users except admins
+        $users = get_users(['role__not_in' => ['administrator']]);
+        $operator_users = get_users(['role' => 'sfb_operator']);
+        $operator_ids = wp_list_pluck($operator_users, 'ID');
+        ?>
+
+        <?php if (empty($users)): ?>
+          <div style="padding:24px;text-align:center;background:#f9fafb;border-radius:8px;margin-top:24px;">
+            <p style="color:#6b7280;margin:0;">
+              <?php esc_html_e('No non-administrator users found.', 'submittal-builder'); ?>
+            </p>
+          </div>
+        <?php else: ?>
+          <form method="post" action="" style="margin-top:24px;">
+            <?php wp_nonce_field('sfb_assign_operator_roles', 'sfb_operator_roles_nonce'); ?>
+
+            <div style="max-height:300px;overflow-y:auto;border:1px solid #e2e8f0;border-radius:6px;padding:16px;background:#fff;">
+              <?php foreach ($users as $user):
+                $is_operator = in_array($user->ID, $operator_ids, true);
+                $current_role = !empty($user->roles) ? ucfirst($user->roles[0]) : 'No Role';
+              ?>
+                <label style="display:flex;align-items:center;padding:12px;margin-bottom:8px;background:#f9fafb;border-radius:6px;cursor:pointer;transition:background 0.2s;" class="sfb-operator-checkbox-wrapper">
+                  <input
+                    type="checkbox"
+                    name="operator_users[]"
+                    value="<?php echo esc_attr($user->ID); ?>"
+                    <?php checked($is_operator); ?>
+                    style="margin:0 12px 0 0;">
+                  <div style="flex:1;">
+                    <strong><?php echo esc_html($user->display_name); ?></strong>
+                    <span style="color:#64748b;font-size:13px;margin-left:8px;">(<?php echo esc_html($user->user_email); ?>)</span>
+                    <br>
+                    <span style="color:#64748b;font-size:12px;">
+                      <?php echo esc_html(sprintf(__('Current role: %s', 'submittal-builder'), $current_role)); ?>
+                    </span>
+                  </div>
+                </label>
+              <?php endforeach; ?>
+            </div>
+
+            <div style="margin-top:16px;padding:12px;background:#fef3c7;border:1px solid #fbbf24;border-radius:6px;">
+              <p style="margin:0;font-size:13px;color:#78350f;">
+                ℹ️ <?php esc_html_e('Assigning the Operator role will replace the user\'s current role. Use this in combination with Handoff Mode to restrict user access.', 'submittal-builder'); ?>
+              </p>
+            </div>
+
+            <div style="margin-top:24px;">
+              <button type="submit" name="sfb_save_operator_roles" class="button button-primary">
+                <?php esc_html_e('Update Operator Roles', 'submittal-builder'); ?>
+              </button>
+            </div>
+          </form>
+        <?php endif; ?>
+      </div>
+
+      <?php if (!$handoff_mode): ?>
+      <!-- Agency Packs Section (hidden in handoff mode) -->
+      <div class="sfb-card" style="margin-top:32px;">
+        <h2>📦 <?php esc_html_e('Agency Packs', 'submittal-builder'); ?></h2>
+        <p class="sfb-muted">
+          <?php esc_html_e('Reusable catalog Packs created from your sites. Use these to quickly seed new sites with pre-configured catalogs and branding.', 'submittal-builder'); ?>
+        </p>
+
+        <?php if (empty($packs)): ?>
+          <!-- Empty state -->
+          <div style="padding:48px;text-align:center;background:#f9fafb;border-radius:8px;margin-top:24px;">
+            <div style="font-size:48px;margin-bottom:16px;opacity:0.3;">📦</div>
+            <h3 style="margin:0 0 12px 0;color:#374151;">
+              <?php esc_html_e('No Agency Packs yet', 'submittal-builder'); ?>
+            </h3>
+            <p style="color:#6b7280;margin-bottom:24px;max-width:500px;margin-left:auto;margin-right:auto;">
+              <?php esc_html_e('Create reusable Packs from your Builder catalog. Go to Builder → Save as Pack to get started.', 'submittal-builder'); ?>
+            </p>
+            <a href="<?php echo esc_url(admin_url('admin.php?page=sfb')); ?>" class="button button-primary">
+              <?php esc_html_e('Go to Builder', 'submittal-builder'); ?>
+            </a>
+          </div>
+        <?php else: ?>
+          <!-- Packs list table -->
+          <table class="wp-list-table widefat fixed striped" style="margin-top:24px;">
             <thead>
               <tr>
                 <th style="width:40%;"><?php esc_html_e('Pack Name', 'submittal-builder'); ?></th>
@@ -2173,7 +2530,7 @@ final class SFB_Plugin {
                        download="<?php echo esc_attr(sanitize_file_name($pack_name) . '.json'); ?>">
                       <?php esc_html_e('Export JSON', 'submittal-builder'); ?>
                     </a>
-                    <a href="<?php echo esc_url(wp_nonce_url(admin_url('admin.php?page=sfb-agency-library&action=delete&pack_id=' . urlencode($pack_id)), 'sfb_delete_pack_' . $pack_id)); ?>"
+                    <a href="<?php echo esc_url(wp_nonce_url(admin_url('admin.php?page=sfb-agency&action=delete&pack_id=' . urlencode($pack_id)), 'sfb_delete_pack_' . $pack_id)); ?>"
                        class="button button-small button-link-delete"
                        onclick="return confirm('<?php esc_attr_e('Are you sure you want to delete this Pack? This cannot be undone.', 'submittal-builder'); ?>');">
                       <?php esc_html_e('Delete', 'submittal-builder'); ?>
@@ -2183,28 +2540,65 @@ final class SFB_Plugin {
               <?php endforeach; ?>
             </tbody>
           </table>
-        </div>
 
-        <!-- Info box -->
-        <div class="sfb-card" style="margin-top:24px;background:#f0f9ff;border-left:4px solid #0ea5e9;">
-          <p style="margin:0;color:#0c4a6e;">
-            <strong><?php esc_html_e('💡 Using Packs:', 'submittal-builder'); ?></strong>
-            <?php esc_html_e('Export a Pack as JSON and use it during onboarding on another site. Go to Welcome → Load Sample Catalog → Upload JSON to seed.', 'submittal-builder'); ?>
-          </p>
-        </div>
+          <!-- Info box -->
+          <div style="margin-top:24px;padding:16px;background:#f0f9ff;border-left:4px solid #0ea5e9;border-radius:8px;">
+            <p style="margin:0;color:#0c4a6e;font-size:13px;">
+              <strong><?php esc_html_e('💡 Using Packs:', 'submittal-builder'); ?></strong>
+              <?php esc_html_e('Export a Pack as JSON and use it during onboarding on another site. Go to Welcome → Load Sample Catalog → Upload JSON to seed.', 'submittal-builder'); ?>
+            </p>
+          </div>
+        <?php endif; ?>
+      </div>
       <?php endif; ?>
     </div>
 
     <style>
-      .sfb-admin-page {
+      .sfb-agency-wrap {
         max-width: 1200px;
       }
-      .sfb-card {
-        background: white;
-        border: 1px solid #e5e7eb;
+      .sfb-handoff-card {
+        border: 2px solid #dbeafe !important;
+        background: linear-gradient(to bottom, #eff6ff, #fff) !important;
+      }
+      .sfb-info-box {
+        background: #f0f9ff;
+        border: 1px solid #bae6fd;
         border-radius: 8px;
-        padding: 24px;
-        margin-top: 20px;
+        padding: 16px 20px;
+      }
+      .sfb-info-box-header {
+        color: #0c4a6e;
+        margin-bottom: 12px;
+        font-size: 14px;
+      }
+      .sfb-info-box-content {
+        color: #0369a1;
+      }
+      .sfb-info-list {
+        list-style: none;
+        padding: 0;
+        margin: 0 0 16px 0;
+      }
+      .sfb-info-list li {
+        padding: 8px 0;
+        display: flex;
+        align-items: flex-start;
+        gap: 8px;
+        font-size: 13px;
+        line-height: 1.6;
+      }
+      .sfb-info-icon {
+        flex-shrink: 0;
+        font-size: 16px;
+      }
+      .sfb-info-note {
+        margin: 0;
+        padding: 12px;
+        background: rgba(14, 165, 233, 0.1);
+        border-left: 3px solid #0ea5e9;
+        border-radius: 4px;
+        font-size: 13px;
       }
       .button-link-delete {
         color: #dc2626 !important;
@@ -3393,6 +3787,180 @@ final class SFB_Plugin {
       </div>
       <?php endif; ?>
     </div>
+    <?php
+  }
+
+  /** Agency Analytics Page Renderer (Agency) */
+  function render_agency_analytics_page() {
+    // Security check
+    if (!sfb_is_agency_license()) {
+      wp_die(__('This feature requires an Agency license.', 'submittal-builder'));
+    }
+
+    // Get filter (default to 30 days)
+    $days = isset($_GET['days']) ? intval($_GET['days']) : 30;
+    if (!in_array($days, [7, 30, 90], true)) {
+      $days = 30;
+    }
+
+    // Get analytics data
+    $analytics = SFB_Agency_Analytics::get_analytics($days);
+
+    ?>
+    <div class="wrap sfb-analytics-wrap">
+      <h1 class="wp-heading-inline">
+        📊 <?php esc_html_e('Agency Analytics', 'submittal-builder'); ?>
+        <span class="sfb-agency-badge">AGENCY</span>
+      </h1>
+
+      <p class="description" style="margin-top:12px;margin-bottom:24px;">
+        <?php esc_html_e('Monitor PDF generation, lead capture, and product popularity across your agency sites.', 'submittal-builder'); ?>
+      </p>
+
+      <!-- Date Range Filter -->
+      <div style="margin-bottom:24px;">
+        <label for="sfb-analytics-days" style="margin-right:8px;font-weight:600;">
+          <?php esc_html_e('Date Range:', 'submittal-builder'); ?>
+        </label>
+        <select id="sfb-analytics-days" onchange="window.location.href='<?php echo esc_js(admin_url('admin.php?page=sfb-agency-analytics&days=')); ?>' + this.value;">
+          <option value="7" <?php selected($days, 7); ?>><?php esc_html_e('Last 7 days', 'submittal-builder'); ?></option>
+          <option value="30" <?php selected($days, 30); ?>><?php esc_html_e('Last 30 days', 'submittal-builder'); ?></option>
+          <option value="90" <?php selected($days, 90); ?>><?php esc_html_e('Last 90 days', 'submittal-builder'); ?></option>
+        </select>
+      </div>
+
+      <!-- Stats Cards -->
+      <div class="sfb-stats-grid" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:20px;margin-bottom:32px;">
+        <!-- PDFs Generated -->
+        <div class="sfb-card" style="text-align:center;padding:24px;border:2px solid #e0e7ff;background:linear-gradient(to bottom,#f5f7ff,#fff);">
+          <div style="font-size:48px;font-weight:700;color:#4f46e5;margin-bottom:8px;">
+            <?php echo esc_html(number_format($analytics['pdf_count'])); ?>
+          </div>
+          <div style="font-size:14px;font-weight:600;color:#6b7280;text-transform:uppercase;letter-spacing:0.5px;">
+            <?php esc_html_e('PDFs Generated', 'submittal-builder'); ?>
+          </div>
+        </div>
+
+        <!-- Leads Captured -->
+        <div class="sfb-card" style="text-align:center;padding:24px;border:2px solid #dcfce7;background:linear-gradient(to bottom,#f0fdf4,#fff);">
+          <div style="font-size:48px;font-weight:700;color:#16a34a;margin-bottom:8px;">
+            <?php echo esc_html(number_format($analytics['lead_count'])); ?>
+          </div>
+          <div style="font-size:14px;font-weight:600;color:#6b7280;text-transform:uppercase;letter-spacing:0.5px;">
+            <?php esc_html_e('Leads Captured', 'submittal-builder'); ?>
+          </div>
+        </div>
+
+        <!-- Last Heartbeat -->
+        <div class="sfb-card" style="text-align:center;padding:24px;">
+          <div style="font-size:16px;font-weight:600;color:#374151;margin-bottom:8px;">
+            <?php if ($analytics['last_heartbeat']): ?>
+              <?php echo esc_html(human_time_diff(strtotime($analytics['last_heartbeat']), current_time('timestamp')) . ' ago'); ?>
+            <?php else: ?>
+              <?php esc_html_e('Never', 'submittal-builder'); ?>
+            <?php endif; ?>
+          </div>
+          <div style="font-size:14px;font-weight:600;color:#6b7280;text-transform:uppercase;letter-spacing:0.5px;">
+            <?php esc_html_e('Last Heartbeat', 'submittal-builder'); ?>
+          </div>
+        </div>
+      </div>
+
+      <!-- Current Site Info -->
+      <div class="sfb-card" style="margin-bottom:32px;">
+        <h2><?php esc_html_e('📍 Current Site', 'submittal-builder'); ?></h2>
+        <table class="widefat" style="margin-top:16px;">
+          <tbody>
+            <tr>
+              <td style="width:200px;font-weight:600;"><?php esc_html_e('Site URL:', 'submittal-builder'); ?></td>
+              <td><?php echo esc_html($analytics['site_url']); ?></td>
+            </tr>
+            <tr>
+              <td style="font-weight:600;"><?php esc_html_e('Plugin Version:', 'submittal-builder'); ?></td>
+              <td><?php echo esc_html($analytics['version']); ?></td>
+            </tr>
+            <tr>
+              <td style="font-weight:600;"><?php esc_html_e('Site ID:', 'submittal-builder'); ?></td>
+              <td><code><?php echo esc_html(substr($analytics['site_id'], 0, 16) . '...'); ?></code></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Top Products -->
+      <?php if (!empty($analytics['top_products'])): ?>
+      <div class="sfb-card">
+        <h2><?php esc_html_e('🏆 Top 5 Products', 'submittal-builder'); ?></h2>
+        <p class="sfb-muted">
+          <?php echo esc_html(sprintf(__('Most frequently selected products in the last %d days', 'submittal-builder'), $days)); ?>
+        </p>
+
+        <div style="margin-top:24px;display:flex;flex-wrap:wrap;gap:12px;">
+          <?php foreach ($analytics['top_products'] as $product): ?>
+            <div style="display:inline-flex;align-items:center;gap:8px;padding:8px 16px;background:#f3f4f6;border:1px solid #d1d5db;border-radius:20px;">
+              <span style="font-weight:600;color:#374151;">
+                <?php echo esc_html($product['title']); ?>
+              </span>
+              <span style="display:inline-block;padding:2px 8px;background:#4f46e5;color:#fff;border-radius:12px;font-size:11px;font-weight:700;">
+                <?php echo esc_html(number_format($product['count'])); ?>
+              </span>
+            </div>
+          <?php endforeach; ?>
+        </div>
+      </div>
+      <?php else: ?>
+      <div class="sfb-card">
+        <h2><?php esc_html_e('🏆 Top 5 Products', 'submittal-builder'); ?></h2>
+        <div style="padding:48px;text-align:center;background:#f9fafb;border-radius:8px;margin-top:24px;">
+          <div style="font-size:48px;margin-bottom:16px;opacity:0.3;">📦</div>
+          <p style="color:#6b7280;margin:0;">
+            <?php esc_html_e('No product data yet. Products will appear here once PDFs are generated.', 'submittal-builder'); ?>
+          </p>
+        </div>
+      </div>
+      <?php endif; ?>
+
+      <!-- Info Box -->
+      <div style="margin-top:32px;padding:16px;background:#fef3c7;border-left:4px solid #fbbf24;border-radius:8px;">
+        <p style="margin:0;font-size:13px;color:#78350f;">
+          <strong><?php esc_html_e('ℹ️ Privacy Notice:', 'submittal-builder'); ?></strong>
+          <?php esc_html_e('Analytics track counts only - no personally identifiable information (PII) from leads is stored or transmitted. Product names and counts are aggregated for insights.', 'submittal-builder'); ?>
+        </p>
+      </div>
+    </div>
+
+    <style>
+      .sfb-analytics-wrap {
+        max-width: 1200px;
+      }
+      .sfb-analytics-wrap .sfb-card {
+        background: #fff;
+        border: 1px solid #e5e7eb;
+        border-radius: 8px;
+        padding: 24px;
+      }
+      .sfb-analytics-wrap .sfb-card h2 {
+        margin: 0 0 12px 0;
+        font-size: 20px;
+        font-weight: 600;
+        color: #111827;
+      }
+      .sfb-analytics-wrap .sfb-muted {
+        color: #6b7280;
+        margin: 0;
+        font-size: 14px;
+      }
+      .sfb-agency-badge {
+        display: inline-block;
+        background: #7c3aed;
+        color: #fff;
+        font-size: 11px;
+        padding: 4px 8px;
+        border-radius: 4px;
+        font-weight: 600;
+        margin-left: 8px;
+      }
+    </style>
     <?php
   }
 
@@ -5410,6 +5978,11 @@ final class SFB_Plugin {
         // Return URL
         $url = trailingslashit($upload_dir['baseurl']) . 'sfb/' . $filename;
 
+        // Track PDF generation for Agency Analytics
+        if (class_exists('SFB_Agency_Analytics')) {
+          SFB_Agency_Analytics::track_pdf_generated($product_ids);
+        }
+
         wp_send_json_success([
           'url' => $url,
           'filename' => $filename,
@@ -5445,6 +6018,11 @@ final class SFB_Plugin {
         wp_send_json_error(['message' => __('Invalid security token', 'submittal-builder')], 403);
       }
 
+      // Check capability
+      if (!current_user_can('edit_sfb_branding')) {
+        wp_send_json_error(['message' => __('You do not have permission to edit branding settings', 'submittal-builder')], 403);
+      }
+
       // Get and decode data
       $data_raw = isset($_POST['data']) ? wp_unslash($_POST['data']) : '{}';
       $data = json_decode($data_raw, true);
@@ -5476,7 +6054,7 @@ final class SFB_Plugin {
   /** Agency feature: Export Pack as JSON download */
   function ajax_export_pack() {
     // Security checks
-    if (!current_user_can('manage_options')) {
+    if (!current_user_can('access_sfb_agency')) {
       wp_die(__('Unauthorized.', 'submittal-builder'));
     }
 
@@ -6172,6 +6750,107 @@ final class SFB_Plugin {
       <p><a href="' . esc_url(add_query_arg('page', 'sfb-upgrade', admin_url('admin.php'))) . '">Upgrade to Pro</a></p>
       <p><a href="' . esc_url(wp_nonce_url(add_query_arg('action', 'sfb_test_pdf', admin_url('admin-post.php')), 'sfb_test_pdf')) . '">Test PDF</a></p>
     ');
+  }
+
+  /**
+   * Show Client Handoff Mode banner when active
+   */
+  function show_handoff_mode_banner() {
+    // Only show for Agency license holders
+    if (!sfb_is_agency_license()) {
+      return;
+    }
+
+    // Only show if handoff mode is enabled
+    if (!sfb_is_client_handoff_mode()) {
+      return;
+    }
+
+    // Only show on plugin pages
+    $screen = get_current_screen();
+    if (!$screen || strpos($screen->base, 'sfb') === false) {
+      return;
+    }
+
+    // Don't show on Agency page (they can see the toggle there)
+    if (isset($_GET['page']) && $_GET['page'] === 'sfb-agency') {
+      return;
+    }
+
+    ?>
+    <div class="notice notice-info sfb-handoff-banner" style="display: flex; align-items: center; gap: 16px; padding: 12px 16px; border-left: 4px solid #0ea5e9; background: #f0f9ff;">
+      <div style="flex: 1;">
+        <p style="margin: 0; font-weight: 600; color: #0c4a6e;">
+          🤝 <?php esc_html_e('Client Handoff Mode Active', 'submittal-builder'); ?>
+        </p>
+        <p style="margin: 4px 0 0 0; font-size: 13px; color: #0369a1;">
+          <?php esc_html_e('Agency-specific features are currently hidden. All data is safe and can be restored instantly.', 'submittal-builder'); ?>
+        </p>
+      </div>
+      <a href="<?php echo esc_url(admin_url('admin.php?page=sfb-agency')); ?>"
+         class="button button-primary"
+         style="flex-shrink: 0;">
+        <?php esc_html_e('Return to Agency Mode', 'submittal-builder'); ?>
+      </a>
+    </div>
+    <?php
+  }
+
+  /**
+   * Map custom SFB capabilities to WordPress primitives
+   *
+   * This enforces our custom capability system for the Operator role.
+   * Custom caps: use_sfb_builder, view_sfb_leads, view_sfb_tracking,
+   * edit_sfb_branding, edit_sfb_catalog, access_sfb_agency
+   *
+   * @param array  $caps    Required primitive capabilities
+   * @param string $cap     Capability being checked
+   * @param int    $user_id User ID
+   * @param array  $args    Additional context
+   * @return array Modified capabilities
+   */
+  function map_sfb_capabilities($caps, $cap, $user_id, $args) {
+    // Define our custom SFB capabilities
+    $custom_caps = [
+      'use_sfb_builder',
+      'view_sfb_leads',
+      'view_sfb_tracking',
+      'edit_sfb_branding',
+      'edit_sfb_catalog',
+      'access_sfb_agency',
+    ];
+
+    // Only handle our custom capabilities
+    if (!in_array($cap, $custom_caps, true)) {
+      return $caps;
+    }
+
+    // Get user
+    $user = get_userdata($user_id);
+    if (!$user || !$user->exists()) {
+      return ['do_not_allow'];
+    }
+
+    // Check if user's role explicitly has this capability
+    foreach ($user->roles as $role_name) {
+      $role = get_role($role_name);
+      if ($role && isset($role->capabilities[$cap])) {
+        // If role explicitly grants or denies, respect that
+        if ($role->capabilities[$cap]) {
+          return ['exist']; // Grant capability
+        } else {
+          return ['do_not_allow']; // Deny capability
+        }
+      }
+    }
+
+    // Admins and editors always have access unless explicitly denied
+    if ($user->has_cap('manage_options')) {
+      return ['exist'];
+    }
+
+    // Default: deny
+    return ['do_not_allow'];
   }
 
   /** Enqueue admin assets only on our pages */
@@ -8710,6 +9389,7 @@ add_action('plugins_loaded', function() {
   SFB_Rest::init();
   SFB_Pdf::init();
   SFB_Ajax::init();  // Phase 5: AJAX hooks
+  SFB_Agency_Analytics::init();  // Agency Analytics: Event tracking & heartbeat
 }, 10);
 
 /**

@@ -86,6 +86,11 @@ if (!defined('ABSPATH')) exit;
     </button>
   </div>
 
+  <!-- Subtle branding credit (Free tier) -->
+  <div class="sfb-frontend-credit" style="text-align: center; margin-top: 16px; padding-bottom: 24px;">
+    <?php echo sfb_brand_credit('frontend'); ?>
+  </div>
+
   <!-- Toast notification container -->
   <div id="sfb-toast" class="sfb-toast" role="status" aria-live="polite"></div>
 

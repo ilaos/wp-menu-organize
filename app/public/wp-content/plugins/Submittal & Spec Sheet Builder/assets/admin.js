@@ -3557,6 +3557,20 @@
       });
     }
 
+    // White-Label Mode Toggle (Agency - MVP)
+    const whiteLabelToggle = document.getElementById('sfb-white-label-enabled');
+    const whiteLabelSettings = document.getElementById('sfb-white-label-settings');
+    if (whiteLabelToggle && whiteLabelSettings) {
+      whiteLabelToggle.addEventListener('change', (e) => {
+        // Show/hide white-label settings based on toggle
+        if (e.target.checked) {
+          whiteLabelSettings.style.display = 'block';
+        } else {
+          whiteLabelSettings.style.display = 'none';
+        }
+      });
+    }
+
     // Logo upload using WordPress media library
     if (elements.uploadLogo) {
       elements.uploadLogo.addEventListener('click', (e) => {

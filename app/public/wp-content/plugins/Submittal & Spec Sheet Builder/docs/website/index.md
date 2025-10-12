@@ -72,7 +72,6 @@ Learn how to add, edit, import, and organize your product catalog.
 
 - Product structure and hierarchy
 - Adding products manually
-- Bulk import from CSV/Excel
 - Editing and organizing products
 - Product specifications
 - Categories and types
@@ -147,7 +146,7 @@ Quick answers to common questions.
 
 ### Popular Topics
 
-- [How to import products →](./product-management.md#bulk-import)
+- [How to add products →](./product-management.md#adding-products)
 - [Customizing your brand →](./branding-pdfs.md#branding-customization)
 - [PDF generation troubleshooting →](./troubleshooting.md#pdf-generation-fails)
 - [Keyboard shortcuts →](./user-guide.md#keyboard-shortcuts)
@@ -182,7 +181,7 @@ Quick answers to common questions.
 This documentation is maintained by WebStuff Guy Labs and covers:
 
 - ✅ Complete feature guide
-- ✅ Step-by-step tutorials
+- ✅ Step-by-step instructions
 - ✅ Troubleshooting solutions
 - ✅ Developer resources
 - ✅ Best practices

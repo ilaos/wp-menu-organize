@@ -45,18 +45,18 @@ A submittal packet is a collection of product specification sheets, typically re
 
 The plugin follows a simple 3-step process:
 
-### Step 1: Import Your Product Catalog
+### Step 1: Build Your Product Catalog
 
 ```
-Admin Dashboard → Submittal Builder → Products → Import
+Admin Dashboard → Submittal Builder → Products
 ```
 
-- Upload CSV or Excel file with your products
-- Map columns to product fields
-- Import hundreds of products in minutes
+- Add products through the admin interface
 - Organize with categories and types
+- Define custom specifications for each product
+- Build your catalog systematically
 
-**What You Can Import:**
+**What You Can Add:**
 - Product model numbers
 - Specifications (size, thickness, KSI, etc.)
 - Categories and types
@@ -130,23 +130,17 @@ Submittal Builder → Settings → Branding
 3. **Add Company Info** - Name, website, contact details
 4. Click "Save Changes"
 
-### 3. Import Products (1 min)
+### 3. Add Products (1 min)
 
-**Option A: Sample Data (for testing)**
 ```
-Submittal Builder → Products → Import Sample Data
-```
-
-**Option B: Your Products**
-```
-Submittal Builder → Products → Import → Upload CSV
+Submittal Builder → Products → Add New
 ```
 
-Sample CSV format:
-```csv
-model,category,type,sku,size,thickness
-362S162-20,C-Studs,20 Gauge,CS-362,3-5/8",33 mil
-```
+Add a few sample products to test with:
+- Enter product model number
+- Select category and type
+- Add specifications (size, thickness, etc.)
+- Save product
 
 ### 4. Create Builder Page (30 sec)
 
@@ -311,7 +305,7 @@ Products have flexible key-value specifications:
 
 ✅ **Do:**
 - Place builder on prominent page
-- Add instructions or video tutorial
+- Add clear instructions for users
 - Test with real users
 - Monitor generated PDFs
 - Clean up old PDFs regularly
@@ -399,11 +393,11 @@ Products have flexible key-value specifications:
 ## Features at a Glance
 
 ### ✅ Product Management
-- Import from CSV/Excel
+- Add products via admin interface
 - Unlimited products
 - Hierarchical organization
-- Bulk editing
 - Category management
+- Custom specifications
 
 ### ✅ Frontend Builder
 - Interactive product browser
@@ -439,35 +433,6 @@ Products have flexible key-value specifications:
 - Screen reader support
 - High contrast
 - Focus indicators
-
----
-
-## Video Tutorials
-
-_(Coming Soon)_
-
-We're creating video tutorials to help you get started even faster:
-
-- **5-Minute Setup** - Install to first PDF
-- **Product Import** - CSV preparation and import
-- **Branding Setup** - Logo and colors
-- **Using the Builder** - End-user walkthrough
-- **Admin Deep Dive** - All settings explained
-
-Subscribe to our [YouTube channel](https://youtube.com/@webstuffguylabs) for updates.
-
----
-
-## Success Stories
-
-> "We went from spending 2-3 hours creating submittal packets to 5 minutes. Game changer for our sales team."
-> — John D., Structural Steel Distributor
-
-> "Our contractors love it. They can generate their own packets anytime, and everything is branded perfectly."
-> — Sarah M., C-Stud Manufacturer
-
-> "Cut our RFQ response time from days to hours. The search functionality is incredibly fast."
-> — Mike R., Building Products Supplier
 
 ---
 

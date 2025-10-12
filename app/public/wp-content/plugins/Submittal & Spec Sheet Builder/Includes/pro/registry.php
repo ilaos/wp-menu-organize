@@ -131,8 +131,8 @@ function sfb_features(): array {
     'themes'       => ['label'=>'Brand Themes (Arch/Corp)','group'=>'Branding','pro'=>true,'desc'=>'Architectural and Corporate PDF themes with custom accents.','since'=>'1.0.0'],
     'watermark'    => ['label'=>'PDF Watermark','group'=>'Branding','pro'=>true,'desc'=>'Apply custom watermark to every page.','since'=>'1.0.0'],
     'signature'    => ['label'=>'Approval Signature Block','group'=>'Branding','pro'=>true,'desc'=>'Approval/signature block with name, title, date.','since'=>'1.0.0'],
-    'ext_merge'    => ['label'=>'Append External PDFs','group'=>'Data','pro'=>true,'desc'=>'Append vendor/manufacturer PDFs after sheets using FPDI.','since'=>'1.0.0'],
     'server_drafts'=> ['label'=>'Shareable Drafts','group'=>'Data','pro'=>true,'desc'=>'Save selections to server and share via short URL. Drafts auto-expire after 45 days.','since'=>'1.0.0'],
+    'lead_capture' => ['label'=>'Lead Capture & CRM','group'=>'Data','pro'=>true,'desc'=>'Collect email/phone before PDF download with UTM tracking, rate limiting, honeypot protection, and CSV export.','since'=>'1.0.2'],
     // Free
     'summary'      => ['label'=>'Summary Page','group'=>'Core','pro'=>false,'desc'=>'Front summary grouped by category with key specs.','since'=>'1.0.0'],
     'toc'          => ['label'=>'Table of Contents','group'=>'Core','pro'=>false,'desc'=>'Clickable internal TOC for fast navigation.','since'=>'1.0.0'],
@@ -179,4 +179,38 @@ function sfb_bootstrap_changelog(): void {
   // Let add-ons append their notes
   $reg =& sfb_pro_registry();
   $reg['changelog'] = apply_filters('sfb_pro_changelog', $reg['changelog']);
+}
+
+/**
+ * Check if current license is Agency tier
+ *
+ * @return bool True if agency license
+ */
+function sfb_is_agency_license(): bool {
+  // Dev override
+  if (defined('SFB_AGENCY_DEV') && SFB_AGENCY_DEV) {
+    return true;
+  }
+
+  // Use the SFB_Branding class if available
+  if (class_exists('SFB_Branding')) {
+    return SFB_Branding::is_agency_license();
+  }
+
+  // Fallback: Check license data directly
+  if (function_exists('sfb_get_license_data')) {
+    $license = sfb_get_license_data();
+
+    // Check if license has agency tier flag
+    if (!empty($license['tier']) && $license['tier'] === 'agency') {
+      return true;
+    }
+
+    // Fallback: Check product variation or SKU if available
+    if (!empty($license['product_name']) && stripos($license['product_name'], 'agency') !== false) {
+      return true;
+    }
+  }
+
+  return false;
 }
