@@ -306,6 +306,53 @@
   - Template: `templates/frontend/builder.php:107-149` (data localization)
 - **Storage:** `sfb_brand_presets` option
 
+**Weekly Lead Export Scheduler** (NEW 2025-10-11)
+- **Automated weekly email** delivery of new leads in CSV format
+- **Settings UI** in Settings → Weekly Lead Export (Agency):
+  - Enable/disable toggle
+  - Recipient email address
+  - Day of week selector (Monday-Sunday)
+  - Time of day picker (respects site timezone)
+  - Manual "Send Now" button for testing
+- **Cron job** scheduled weekly:
+  - Respects site timezone
+  - Auto-schedules when enabled
+  - Auto-unschedules when disabled
+  - Hook: `sfb_weekly_lead_export`
+- **Duplicate prevention:**
+  - New database column: `last_export_sent` in `wp_sfb_leads`
+  - Only includes leads where `last_export_sent IS NULL`
+  - Marks leads as sent after successful email
+- **Email content:**
+  - CSV attachment with all lead data
+  - Filename: `sfb-leads-weekly-YYYY-MM-DD-HHmmss.csv`
+  - Subject: `[Site Name] Weekly Lead Export - N New Leads`
+  - Body includes summary, date range, generation timestamp
+  - CSV columns match Leads page export
+- **Files:**
+  - Settings UI: `submittal-form-builder.php:2413-2568`
+  - CSS styles: `submittal-form-builder.php:2759-2790`
+  - Database schema: `submittal-form-builder.php:218-235`
+  - Hook registration: `submittal-form-builder.php:119-122`
+  - Core functions: `submittal-form-builder.php:4546-4757`
+  - Cron scheduling: `submittal-form-builder.php:7608-7677`
+- **Settings storage:**
+  - `sfb_lead_weekly_export_enabled` (boolean)
+  - `sfb_lead_weekly_export_email` (string)
+  - `sfb_lead_weekly_export_day` (string, default: 'monday')
+  - `sfb_lead_weekly_export_time` (string, default: '09:00')
+- **Security:**
+  - AJAX nonce verification for "Send Now"
+  - Admin capability check (`manage_options`)
+  - Agency license validation
+  - Email format validation
+- **User Flow:**
+  1. Enable: Settings → Weekly Lead Export → Toggle "Enable weekly lead CSV email"
+  2. Configure: Enter recipient email, select day/time
+  3. Test: Click "Send Now" to verify configuration
+  4. Automated: Cron sends weekly emails with new leads only
+  5. Monitor: Check email for weekly reports
+
 ---
 
 ## Admin Features

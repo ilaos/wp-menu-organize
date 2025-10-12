@@ -116,6 +116,11 @@ final class SFB_Plugin {
     // Leads CSV export handler (must run early before any output)
     add_action('admin_init', [$this, 'handle_leads_csv_export']);
 
+    // Weekly Lead Export (Agency feature)
+    add_action('wp', [$this, 'schedule_weekly_lead_export_cron']);
+    add_action('sfb_weekly_lead_export', [$this, 'cron_send_weekly_export']);
+    add_action('wp_ajax_sfb_send_weekly_export_now', [$this, 'ajax_send_weekly_export_now']);
+
     // Onboarding: welcome notice (dismissible, per-user)
     add_action('admin_notices', [$this, 'show_welcome_notice']);
     // Phase 5 Refactor: AJAX dismiss hook moved to SFB_Ajax::init()
@@ -226,10 +231,12 @@ final class SFB_Plugin {
         consent TINYINT(1) DEFAULT 0,
         utm_json TEXT NULL,
         ip_hash VARCHAR(64) NULL,
+        last_export_sent DATETIME NULL,
         PRIMARY KEY  (id),
         KEY email (email),
         KEY created_at (created_at),
-        KEY ip_hash (ip_hash)
+        KEY ip_hash (ip_hash),
+        KEY last_export_sent (last_export_sent)
       ) $charset;
     ";
     dbDelta($sql_leads);
@@ -2410,6 +2417,163 @@ final class SFB_Plugin {
           </div>
         </div>
 
+        <!-- Weekly Lead Export Card (Agency) -->
+        <?php if (sfb_is_agency_license() || (defined('SFB_AGENCY_DEV') && SFB_AGENCY_DEV)): ?>
+        <div class="sfb-card">
+          <h2>📅 <?php echo esc_html__('Weekly Lead Export (Agency)', 'submittal-builder'); ?></h2>
+          <p class="sfb-muted">
+            <?php echo esc_html__('Automatically send a CSV of new leads each week to a configured email address. Ideal for project managers who need regular lead reports.', 'submittal-builder'); ?>
+          </p>
+
+          <!-- Enable Weekly Export -->
+          <div class="sfb-setting-row">
+            <div class="sfb-setting-icon">✉️</div>
+            <div class="sfb-setting-content">
+              <label class="sfb-checkbox-label">
+                <input type="checkbox"
+                       name="sfb_lead_weekly_export_enabled"
+                       value="1"
+                       id="sfb-weekly-export-enabled"
+                       <?php checked(get_option('sfb_lead_weekly_export_enabled', false)); ?>>
+                <span class="sfb-setting-title"><?php esc_html_e('Enable weekly lead CSV email', 'submittal-builder'); ?></span>
+              </label>
+              <p class="sfb-setting-desc">
+                <?php esc_html_e('When enabled, a CSV file with new leads will be emailed weekly. Only leads that haven\'t been sent before will be included.', 'submittal-builder'); ?>
+              </p>
+            </div>
+          </div>
+
+          <!-- Email Address -->
+          <div class="sfb-setting-row">
+            <div class="sfb-setting-icon">📧</div>
+            <div class="sfb-setting-content">
+              <label class="sfb-setting-title" for="sfb-weekly-export-email">
+                <?php esc_html_e('Recipient email address', 'submittal-builder'); ?>
+              </label>
+              <p class="sfb-setting-desc" style="margin-top: 4px;">
+                <?php esc_html_e('Email address to receive weekly lead exports. Typically your project manager or sales team.', 'submittal-builder'); ?>
+              </p>
+              <input type="email"
+                     id="sfb-weekly-export-email"
+                     name="sfb_lead_weekly_export_email"
+                     value="<?php echo esc_attr(get_option('sfb_lead_weekly_export_email', '')); ?>"
+                     class="sfb-text-input"
+                     placeholder="<?php esc_attr_e('project-manager@yourcompany.com', 'submittal-builder'); ?>">
+            </div>
+          </div>
+
+          <!-- Day and Time -->
+          <div class="sfb-setting-row">
+            <div class="sfb-setting-icon">🕐</div>
+            <div class="sfb-setting-content">
+              <label class="sfb-setting-title">
+                <?php esc_html_e('Schedule (site timezone)', 'submittal-builder'); ?>
+              </label>
+              <p class="sfb-setting-desc" style="margin-top: 4px;">
+                <?php
+                $tz = wp_timezone_string();
+                printf(
+                  esc_html__('Choose when to send the weekly export. Time is in %s timezone.', 'submittal-builder'),
+                  '<strong>' . esc_html($tz) . '</strong>'
+                );
+                ?>
+              </p>
+              <div style="display: flex; gap: 12px; margin-top: 8px;">
+                <div style="flex: 1;">
+                  <label for="sfb-weekly-export-day" style="display: block; font-size: 12px; color: #6b7280; margin-bottom: 4px;">
+                    <?php esc_html_e('Day of week', 'submittal-builder'); ?>
+                  </label>
+                  <select id="sfb-weekly-export-day"
+                          name="sfb_lead_weekly_export_day"
+                          class="sfb-select-input">
+                    <?php
+                    $current_day = get_option('sfb_lead_weekly_export_day', 'monday');
+                    $days = [
+                      'monday' => __('Monday', 'submittal-builder'),
+                      'tuesday' => __('Tuesday', 'submittal-builder'),
+                      'wednesday' => __('Wednesday', 'submittal-builder'),
+                      'thursday' => __('Thursday', 'submittal-builder'),
+                      'friday' => __('Friday', 'submittal-builder'),
+                      'saturday' => __('Saturday', 'submittal-builder'),
+                      'sunday' => __('Sunday', 'submittal-builder'),
+                    ];
+                    foreach ($days as $value => $label) {
+                      printf(
+                        '<option value="%s" %s>%s</option>',
+                        esc_attr($value),
+                        selected($current_day, $value, false),
+                        esc_html($label)
+                      );
+                    }
+                    ?>
+                  </select>
+                </div>
+                <div style="flex: 1;">
+                  <label for="sfb-weekly-export-time" style="display: block; font-size: 12px; color: #6b7280; margin-bottom: 4px;">
+                    <?php esc_html_e('Time of day', 'submittal-builder'); ?>
+                  </label>
+                  <input type="time"
+                         id="sfb-weekly-export-time"
+                         name="sfb_lead_weekly_export_time"
+                         value="<?php echo esc_attr(get_option('sfb_lead_weekly_export_time', '09:00')); ?>"
+                         class="sfb-text-input">
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Manual Send Button -->
+          <div class="sfb-setting-row" style="background: #eef2ff; border: 1px solid #c7d2fe;">
+            <div class="sfb-setting-icon">🚀</div>
+            <div class="sfb-setting-content">
+              <div style="display: flex; justify-content: space-between; align-items: center;">
+                <div>
+                  <div class="sfb-setting-title"><?php esc_html_e('Test weekly export', 'submittal-builder'); ?></div>
+                  <p class="sfb-setting-desc" style="margin-top: 4px;">
+                    <?php esc_html_e('Send a test email now with all new leads. Use this to verify your configuration before the scheduled run.', 'submittal-builder'); ?>
+                  </p>
+                </div>
+                <button type="button"
+                        id="sfb-send-now-btn"
+                        class="button button-secondary"
+                        style="white-space: nowrap;">
+                  <?php esc_html_e('Send Now', 'submittal-builder'); ?>
+                </button>
+              </div>
+              <div id="sfb-send-now-result" style="margin-top: 12px; display: none;"></div>
+            </div>
+          </div>
+        </div>
+
+        <script>
+        jQuery(function($) {
+          $('#sfb-send-now-btn').on('click', function() {
+            var btn = $(this);
+            var result = $('#sfb-send-now-result');
+
+            btn.prop('disabled', true).text('<?php esc_html_e('Sending...', 'submittal-builder'); ?>');
+            result.hide();
+
+            $.post(ajaxurl, {
+              action: 'sfb_send_weekly_export_now',
+              nonce: '<?php echo wp_create_nonce('sfb_send_weekly_export_now'); ?>'
+            }, function(response) {
+              btn.prop('disabled', false).text('<?php esc_html_e('Send Now', 'submittal-builder'); ?>');
+
+              if (response.success) {
+                result.html('<div class="notice notice-success inline" style="margin: 0; padding: 8px 12px;"><p style="margin: 0;"><strong>✅ ' + response.data.message + '</strong></p></div>').show();
+              } else {
+                result.html('<div class="notice notice-error inline" style="margin: 0; padding: 8px 12px;"><p style="margin: 0;"><strong>❌ ' + response.data + '</strong></p></div>').show();
+              }
+            }).fail(function() {
+              btn.prop('disabled', false).text('<?php esc_html_e('Send Now', 'submittal-builder'); ?>');
+              result.html('<div class="notice notice-error inline" style="margin: 0; padding: 8px 12px;"><p style="margin: 0;"><strong>❌ Failed to send. Please try again.</strong></p></div>').show();
+            });
+          });
+        });
+        </script>
+        <?php endif; ?>
+
         <!-- Sticky Save Button -->
         <div class="sfb-sticky-save">
           <button type="submit" class="button button-primary button-large">
@@ -2594,6 +2758,39 @@ final class SFB_Plugin {
       }
 
       .sfb-textarea:focus {
+        outline: none;
+        border-color: #7c3aed;
+        box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.1);
+      }
+
+      .sfb-text-input {
+        width: 100%;
+        max-width: 400px;
+        padding: 8px 12px;
+        border: 1px solid #d1d5db;
+        border-radius: 6px;
+        font-size: 14px;
+        transition: border-color 0.15s;
+      }
+
+      .sfb-text-input:focus {
+        outline: none;
+        border-color: #7c3aed;
+        box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.1);
+      }
+
+      .sfb-select-input {
+        width: 100%;
+        padding: 8px 12px;
+        border: 1px solid #d1d5db;
+        border-radius: 6px;
+        font-size: 14px;
+        background: #fff;
+        cursor: pointer;
+        transition: border-color 0.15s;
+      }
+
+      .sfb-select-input:focus {
         outline: none;
         border-color: #7c3aed;
         box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.1);
@@ -4349,6 +4546,219 @@ final class SFB_Plugin {
         'message' => 'Test failed with exception: ' . $e->getMessage()
       ];
     }
+  }
+
+  /** Weekly Lead Export: AJAX handler for "Send Now" button */
+  function ajax_send_weekly_export_now() {
+    // Security checks
+    if (!check_admin_referer('sfb_send_weekly_export_now', 'nonce')) {
+      wp_send_json_error('Security check failed');
+    }
+
+    if (!current_user_can('manage_options')) {
+      wp_send_json_error('Unauthorized');
+    }
+
+    if (!sfb_is_agency_license() && !(defined('SFB_AGENCY_DEV') && SFB_AGENCY_DEV)) {
+      wp_send_json_error('This feature requires an Agency license');
+    }
+
+    // Send the export
+    $result = $this->send_weekly_lead_export();
+
+    if ($result['success']) {
+      wp_send_json_success(['message' => $result['message']]);
+    } else {
+      wp_send_json_error($result['message']);
+    }
+  }
+
+  /** Weekly Lead Export: Cron callback */
+  function cron_send_weekly_export() {
+    // Check if feature is enabled
+    if (!get_option('sfb_lead_weekly_export_enabled', false)) {
+      return;
+    }
+
+    // Check Agency license
+    if (!sfb_is_agency_license() && !(defined('SFB_AGENCY_DEV') && SFB_AGENCY_DEV)) {
+      error_log('[SFB] Weekly export skipped: Agency license required');
+      return;
+    }
+
+    // Send the export
+    $result = $this->send_weekly_lead_export();
+
+    if ($result['success']) {
+      error_log('[SFB] Weekly lead export sent successfully: ' . $result['message']);
+    } else {
+      error_log('[SFB] Weekly lead export failed: ' . $result['message']);
+    }
+  }
+
+  /** Weekly Lead Export: Core sending logic */
+  function send_weekly_lead_export() {
+    global $wpdb;
+
+    // Check if feature is enabled
+    if (!get_option('sfb_lead_weekly_export_enabled', false)) {
+      return [
+        'success' => false,
+        'message' => 'Weekly export is not enabled. Enable it in Settings first.'
+      ];
+    }
+
+    // Get recipient email
+    $recipient_email = get_option('sfb_lead_weekly_export_email', '');
+    if (empty($recipient_email) || !is_email($recipient_email)) {
+      return [
+        'success' => false,
+        'message' => 'Invalid recipient email address. Please configure in Settings.'
+      ];
+    }
+
+    // Get new leads (where last_export_sent is NULL)
+    $leads_table = $wpdb->prefix . 'sfb_leads';
+    $new_leads = $wpdb->get_results(
+      "SELECT * FROM $leads_table
+       WHERE last_export_sent IS NULL
+       ORDER BY created_at ASC",
+      ARRAY_A
+    );
+
+    if (empty($new_leads)) {
+      return [
+        'success' => false,
+        'message' => 'No new leads to export. All leads have already been sent.'
+      ];
+    }
+
+    // Generate CSV content
+    $csv_content = $this->generate_csv_content($new_leads);
+
+    // Generate filename
+    $filename = 'sfb-leads-weekly-' . date('Y-m-d-His') . '.csv';
+
+    // Email subject and body
+    $site_name = get_bloginfo('name');
+    $subject = sprintf('[%s] Weekly Lead Export - %d New Leads', $site_name, count($new_leads));
+
+    $body = sprintf(
+      "Hello,\n\n" .
+      "Attached is your weekly lead export from %s.\n\n" .
+      "Summary:\n" .
+      "- Total new leads: %d\n" .
+      "- Date range: %s to %s\n" .
+      "- Export generated: %s\n\n" .
+      "This export includes only leads that haven't been sent before.\n\n" .
+      "---\n" .
+      "Submittal & Spec Sheet Builder\n" .
+      "%s",
+      $site_name,
+      count($new_leads),
+      $new_leads[0]['created_at'],
+      end($new_leads)['created_at'],
+      current_time('mysql'),
+      home_url()
+    );
+
+    // Prepare email with attachment
+    $headers = ['Content-Type: text/plain; charset=UTF-8'];
+
+    // Create temporary file for attachment
+    $temp_file = wp_tempnam($filename);
+    file_put_contents($temp_file, $csv_content);
+
+    // Send email
+    $sent = wp_mail(
+      $recipient_email,
+      $subject,
+      $body,
+      $headers,
+      [$temp_file]
+    );
+
+    // Clean up temp file
+    @unlink($temp_file);
+
+    if (!$sent) {
+      return [
+        'success' => false,
+        'message' => 'Failed to send email. Check your WordPress email configuration.'
+      ];
+    }
+
+    // Mark leads as sent
+    $lead_ids = wp_list_pluck($new_leads, 'id');
+    $lead_ids_str = implode(',', array_map('intval', $lead_ids));
+    $now = current_time('mysql');
+
+    $wpdb->query(
+      "UPDATE $leads_table
+       SET last_export_sent = '$now'
+       WHERE id IN ($lead_ids_str)"
+    );
+
+    return [
+      'success' => true,
+      'message' => sprintf(
+        'Successfully sent %d leads to %s',
+        count($new_leads),
+        $recipient_email
+      )
+    ];
+  }
+
+  /** Generate CSV content from leads array */
+  function generate_csv_content($leads) {
+    // Create memory stream
+    $output = fopen('php://memory', 'w');
+
+    // CSV headers (matching the leads page export)
+    fputcsv($output, [
+      'Date',
+      'Email',
+      'Phone',
+      'Project Name',
+      'Items',
+      'Top Category',
+      'Consent',
+      'UTM Source',
+      'UTM Medium',
+      'UTM Campaign',
+      'UTM Term',
+      'UTM Content',
+      'IP Hash (partial)',
+    ]);
+
+    // CSV rows
+    foreach ($leads as $lead) {
+      $utm = json_decode($lead['utm_json'], true) ?: [];
+      $ip_partial = !empty($lead['ip_hash']) ? substr($lead['ip_hash'], 0, 8) . '...' : '';
+
+      fputcsv($output, [
+        $lead['created_at'],
+        $lead['email'],
+        $lead['phone'] ?? '',
+        $lead['project_name'] ?? '',
+        $lead['num_items'] ?? 0,
+        $lead['top_category'] ?? '',
+        !empty($lead['consent']) ? 'Yes' : 'No',
+        $utm['source'] ?? '',
+        $utm['medium'] ?? '',
+        $utm['campaign'] ?? '',
+        $utm['term'] ?? '',
+        $utm['content'] ?? '',
+        $ip_partial,
+      ]);
+    }
+
+    // Get CSV content
+    rewind($output);
+    $csv_content = stream_get_contents($output);
+    fclose($output);
+
+    return $csv_content;
   }
 
   /** Redirect to onboarding page on first activation */
@@ -7193,6 +7603,77 @@ final class SFB_Plugin {
     if (!wp_next_scheduled('sfb_purge_expired_drafts')) {
       wp_schedule_event(time(), 'daily', 'sfb_purge_expired_drafts');
     }
+  }
+
+  /** Schedule weekly lead export cron */
+  function schedule_weekly_lead_export_cron() {
+    // Only schedule if feature is enabled and Agency license
+    $enabled = get_option('sfb_lead_weekly_export_enabled', false);
+    $is_agency = sfb_is_agency_license() || (defined('SFB_AGENCY_DEV') && SFB_AGENCY_DEV);
+
+    $event_scheduled = wp_next_scheduled('sfb_weekly_lead_export');
+
+    if ($enabled && $is_agency && !$event_scheduled) {
+      // Get day and time from settings
+      $day = get_option('sfb_lead_weekly_export_day', 'monday');
+      $time = get_option('sfb_lead_weekly_export_time', '09:00');
+
+      // Calculate next occurrence
+      $next_run = $this->calculate_next_weekly_run($day, $time);
+
+      // Schedule weekly event
+      wp_schedule_event($next_run, 'weekly', 'sfb_weekly_lead_export');
+
+      error_log('[SFB] Weekly lead export cron scheduled for: ' . date('Y-m-d H:i:s', $next_run));
+    } elseif (!$enabled && $event_scheduled) {
+      // Feature disabled - unschedule
+      wp_unschedule_event($event_scheduled, 'sfb_weekly_lead_export');
+      error_log('[SFB] Weekly lead export cron unscheduled (feature disabled)');
+    }
+  }
+
+  /** Calculate next weekly run timestamp based on day/time */
+  function calculate_next_weekly_run($day, $time) {
+    // Day names to numbers (1 = Monday, 7 = Sunday)
+    $day_map = [
+      'monday' => 1,
+      'tuesday' => 2,
+      'wednesday' => 3,
+      'thursday' => 4,
+      'friday' => 5,
+      'saturday' => 6,
+      'sunday' => 7
+    ];
+
+    $target_day = $day_map[$day] ?? 1;
+
+    // Parse time (e.g., "09:00")
+    list($hour, $minute) = explode(':', $time);
+
+    // Get site timezone
+    $tz = new DateTimeZone(wp_timezone_string());
+
+    // Current time in site timezone
+    $now = new DateTime('now', $tz);
+    $current_day = (int)$now->format('N'); // 1-7 (Monday-Sunday)
+
+    // Calculate days until target day
+    $days_ahead = $target_day - $current_day;
+    if ($days_ahead <= 0) {
+      $days_ahead += 7; // Next week
+    }
+
+    // Create target datetime
+    $target = clone $now;
+    $target->modify("+{$days_ahead} days");
+    $target->setTime((int)$hour, (int)$minute, 0);
+
+    // If target is in the past (same day but time passed), add 7 days
+    if ($target <= $now && $days_ahead === 0) {
+      $target->modify('+7 days');
+    }
+
+    return $target->getTimestamp();
   }
 
   /** Purge expired drafts (cron callback) */
