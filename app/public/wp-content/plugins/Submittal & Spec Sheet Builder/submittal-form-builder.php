@@ -5140,6 +5140,39 @@ final class SFB_Plugin {
         </form>
       </div>
 
+      <!-- License Debug Info (Temp) -->
+      <div class="card" style="max-width: 800px; background: #e0f2fe; border-left: 4px solid #0284c7;">
+        <h2 style="margin-top: 0;">
+          <?php echo esc_html__('🔍 License Debug Info', 'submittal-builder'); ?>
+          <span style="font-size: 12px; font-weight: normal; color: #0c4a6e;">
+            — <?php echo esc_html__('Temp Debugging', 'submittal-builder'); ?>
+          </span>
+        </h2>
+
+        <?php
+        $debug_lic = get_option('sfb_license', []);
+        $is_agency_check = function_exists('sfb_is_agency_license') ? sfb_is_agency_license() : 'Function not found';
+        $is_pro_check = function_exists('sfb_is_pro_active') ? sfb_is_pro_active() : 'Function not found';
+        ?>
+
+        <div style="font-family: monospace; font-size: 12px;">
+          <p><strong>Raw License Option:</strong></p>
+          <pre style="background: #f0f9ff; padding: 10px; border: 1px solid #0284c7; overflow-x: auto;"><?php print_r($debug_lic); ?></pre>
+
+          <p><strong>Function Checks:</strong></p>
+          <ul style="list-style: none; padding-left: 0;">
+            <li>sfb_is_agency_license(): <strong style="color: <?php echo $is_agency_check === true ? '#16a34a' : '#dc2626'; ?>"><?php echo $is_agency_check === true ? '✅ TRUE' : ($is_agency_check === false ? '❌ FALSE' : '⚠️ ' . esc_html($is_agency_check)); ?></strong></li>
+            <li>sfb_is_pro_active(): <strong style="color: <?php echo $is_pro_check === true ? '#16a34a' : '#dc2626'; ?>"><?php echo $is_pro_check === true ? '✅ TRUE' : ($is_pro_check === false ? '❌ FALSE' : '⚠️ ' . esc_html($is_pro_check)); ?></strong></li>
+          </ul>
+
+          <p><strong>Expected Values for Agency:</strong></p>
+          <ul style="list-style: none; padding-left: 0;">
+            <li>status = 'active': <?php echo isset($debug_lic['status']) && $debug_lic['status'] === 'active' ? '✅' : '❌'; ?></li>
+            <li>tier = 'agency': <?php echo isset($debug_lic['tier']) && $debug_lic['tier'] === 'agency' ? '✅' : '❌'; ?></li>
+          </ul>
+        </div>
+      </div>
+
       <!-- Preview Sample PDF -->
       <div class="card" style="max-width: 800px;">
         <h2><?php echo esc_html__('Preview Sample PDF', 'submittal-builder'); ?></h2>
