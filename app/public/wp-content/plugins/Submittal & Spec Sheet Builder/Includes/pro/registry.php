@@ -200,7 +200,7 @@ function sfb_is_agency_license(): bool {
     return SFB_Branding::is_agency_license();
   }
 
-  // Fallback: Check license data directly
+  // Check via WooCommerce license API if available
   if (function_exists('sfb_get_license_data')) {
     $license = sfb_get_license_data();
 
@@ -213,6 +213,12 @@ function sfb_is_agency_license(): bool {
     if (!empty($license['product_name']) && stripos($license['product_name'], 'agency') !== false) {
       return true;
     }
+  }
+
+  // Final fallback: Check license option directly
+  $lic = get_option('sfb_license', []);
+  if (!empty($lic['tier']) && $lic['tier'] === 'agency') {
+    return true;
   }
 
   return false;
