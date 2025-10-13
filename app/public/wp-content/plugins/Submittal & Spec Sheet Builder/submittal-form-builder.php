@@ -4822,8 +4822,17 @@ final class SFB_Plugin {
           delete_option('sfb_license');
           wp_cache_delete('sfb_license', 'options');
           $license_test_result = __('License set to Free (empty). Menu will show "⭐ Upgrade".', 'submittal-builder');
+
+          // Check for dev constant overrides
+          $dev_warnings = [];
           if (defined('SFB_PRO_DEV') && SFB_PRO_DEV) {
-            $license_test_result .= ' ' . __('Note: SFB_PRO_DEV is enabled, which overrides license checks.', 'submittal-builder');
+            $dev_warnings[] = 'SFB_PRO_DEV';
+          }
+          if (defined('SFB_AGENCY_DEV') && SFB_AGENCY_DEV) {
+            $dev_warnings[] = 'SFB_AGENCY_DEV';
+          }
+          if (!empty($dev_warnings)) {
+            $license_test_result .= ' ' . sprintf(__('WARNING: %s constant(s) active - overriding license checks!', 'submittal-builder'), implode(', ', $dev_warnings));
           }
           break;
 
@@ -4835,19 +4844,44 @@ final class SFB_Plugin {
           ], false);
           wp_cache_delete('sfb_license', 'options');
           $license_test_result = __('License set to Expired. Menu will show "Manage License".', 'submittal-builder');
+
+          // Check for dev constant overrides
+          $dev_warnings = [];
           if (defined('SFB_PRO_DEV') && SFB_PRO_DEV) {
-            $license_test_result .= ' ' . __('Note: SFB_PRO_DEV is enabled, which may override this.', 'submittal-builder');
+            $dev_warnings[] = 'SFB_PRO_DEV';
+          }
+          if (defined('SFB_AGENCY_DEV') && SFB_AGENCY_DEV) {
+            $dev_warnings[] = 'SFB_AGENCY_DEV';
+          }
+          if (!empty($dev_warnings)) {
+            $license_test_result .= ' ' . sprintf(__('WARNING: %s constant(s) active - may override this state!', 'submittal-builder'), implode(', ', $dev_warnings));
           }
           break;
 
         case 'active':
           update_option('sfb_license', [
-            'key' => 'DEMO-ACTIVE-KEY-' . substr(md5(time()), 0, 8),
+            'key' => 'DEMO-PRO-KEY-' . substr(md5(time()), 0, 8),
             'email' => 'pro@example.com',
             'status' => 'active'
           ], false);
           wp_cache_delete('sfb_license', 'options');
-          $license_test_result = __('License set to Active (Pro). Menu will show "License & Support".', 'submittal-builder');
+          $license_test_result = __('License set to Active (Pro). Pro features enabled.', 'submittal-builder');
+
+          // Check for agency dev constant
+          if (defined('SFB_AGENCY_DEV') && SFB_AGENCY_DEV) {
+            $license_test_result .= ' ' . __('WARNING: SFB_AGENCY_DEV is active - Agency features will still show!', 'submittal-builder');
+          }
+          break;
+
+        case 'agency':
+          update_option('sfb_license', [
+            'key' => 'DEMO-AGENCY-KEY-' . substr(md5(time()), 0, 8),
+            'email' => 'agency@example.com',
+            'status' => 'active',
+            'tier' => 'agency'
+          ], false);
+          wp_cache_delete('sfb_license', 'options');
+          $license_test_result = __('License set to Active (Agency). All Pro + Agency features enabled.', 'submittal-builder');
           break;
       }
     }
@@ -5049,7 +5083,7 @@ final class SFB_Plugin {
           <?php echo esc_html__('Test different license states to see how the admin menu adapts. Changes take effect immediately.', 'submittal-builder'); ?>
         </p>
 
-        <form method="post" style="display: flex; gap: 8px; align-items: center;">
+        <form method="post" style="display: flex; flex-wrap: wrap; gap: 8px; align-items: center;">
           <?php wp_nonce_field('sfb_test_license_state'); ?>
 
           <button type="submit" name="sfb_test_license_state" value="1" class="button" onclick="document.querySelector('input[name=license_state]').value='free'">
@@ -5061,27 +5095,48 @@ final class SFB_Plugin {
           </button>
 
           <button type="submit" name="sfb_test_license_state" value="1" class="button" onclick="document.querySelector('input[name=license_state]').value='active'">
-            <?php echo esc_html__('Set to Active', 'submittal-builder'); ?>
+            <?php echo esc_html__('Set to Pro', 'submittal-builder'); ?>
+          </button>
+
+          <button type="submit" name="sfb_test_license_state" value="1" class="button button-primary" onclick="document.querySelector('input[name=license_state]').value='agency'" style="background: #7c3aed; border-color: #7c3aed;">
+            <?php echo esc_html__('Set to Agency', 'submittal-builder'); ?>
           </button>
 
           <input type="hidden" name="license_state" value="">
 
-          <span style="margin-left: 12px; color: #856404; font-size: 12px;">
+          <div style="width: 100%; margin-top: 8px; color: #856404; font-size: 12px;">
             <?php
             $current_lic = get_option('sfb_license', []);
             $current_status = $current_lic['status'] ?? 'none';
+            $current_tier = $current_lic['tier'] ?? '';
+
+            // Display current state
             if (empty($current_lic)) {
-              echo '📍 ' . esc_html__('Current: Free (no license)', 'submittal-builder');
+              echo '📍 <strong>' . esc_html__('Current: Free (no license)', 'submittal-builder') . '</strong>';
             } else {
-              echo '📍 ' . sprintf(esc_html__('Current: %s', 'submittal-builder'), esc_html(ucfirst($current_status)));
+              if ($current_status === 'active' && $current_tier === 'agency') {
+                echo '📍 <strong>' . esc_html__('Current: Active (Agency)', 'submittal-builder') . '</strong>';
+              } elseif ($current_status === 'active') {
+                echo '📍 <strong>' . esc_html__('Current: Active (Pro)', 'submittal-builder') . '</strong>';
+              } else {
+                echo '📍 <strong>' . sprintf(esc_html__('Current: %s', 'submittal-builder'), esc_html(ucfirst($current_status))) . '</strong>';
+              }
             }
 
-            // Show SFB_PRO_DEV warning
+            // Show dev constant warnings
+            $dev_warnings = [];
             if (defined('SFB_PRO_DEV') && SFB_PRO_DEV) {
-              echo '<br><strong style="color: #dc2626;">⚠️ ' . esc_html__('SFB_PRO_DEV is ACTIVE - overrides all license checks!', 'submittal-builder') . '</strong>';
+              $dev_warnings[] = 'SFB_PRO_DEV';
+            }
+            if (defined('SFB_AGENCY_DEV') && SFB_AGENCY_DEV) {
+              $dev_warnings[] = 'SFB_AGENCY_DEV';
+            }
+            if (!empty($dev_warnings)) {
+              echo '<br><strong style="color: #dc2626;">⚠️ ' . sprintf(esc_html__('%s constant(s) ACTIVE - overriding all license checks!', 'submittal-builder'), implode(', ', $dev_warnings)) . '</strong>';
+              echo '<br><span style="color: #856404;">' . esc_html__('Remove from wp-config.php to test license states properly.', 'submittal-builder') . '</span>';
             }
             ?>
-          </span>
+          </div>
         </form>
       </div>
 
