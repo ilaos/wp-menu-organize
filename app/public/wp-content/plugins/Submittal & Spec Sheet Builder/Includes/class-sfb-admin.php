@@ -203,7 +203,7 @@ final class SFB_Admin {
       add_submenu_page(
         'sfb',
         __('Upgrade to Pro', 'submittal-builder'),
-        __('P Upgrade', 'submittal-builder'),
+        __('⭐ Upgrade', 'submittal-builder'),
         'manage_options',
         'sfb-upgrade',
         [$sfb_plugin, 'render_upgrade_page'],
