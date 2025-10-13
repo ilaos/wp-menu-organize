@@ -366,6 +366,132 @@ add_filter('sfb_links', function($links) {
 
 ---
 
+### Branding & Analytics (Agency)
+
+#### `sfb_brand_credit_text`
+Customize the plugin credit string shown in PDFs, emails, admin, and frontend.
+
+**Since:** 1.0.3 (White-Label Mode)
+
+**Parameters:**
+- `$text` (string) - Default credit text
+- `$context` (string) - Where the credit appears: `pdf`, `email`, `admin`, or `frontend`
+- `$site_name` (string) - Current site name
+
+**Returns:** (string) Modified credit text
+
+**Default Text by Context:**
+- `pdf`: "Generated with Submittal & Spec Sheet Builder"
+- `email`: "Powered by Submittal & Spec Sheet Builder"
+- `frontend`: "Built with Submittal & Spec Sheet Builder"
+- `admin`: "Submittal & Spec Sheet Builder"
+
+**Example - Custom Credit by Context:**
+```php
+add_filter('sfb_brand_credit_text', function($text, $context, $site_name) {
+    switch ($context) {
+        case 'pdf':
+            return 'Professional Submittal Documentation';
+        case 'email':
+            return 'Automated by ' . $site_name;
+        case 'frontend':
+            return ''; // Remove frontend credit entirely
+        default:
+            return $text;
+    }
+}, 10, 3);
+```
+
+**Example - Client-Specific Credits:**
+```php
+add_filter('sfb_brand_credit_text', function($text, $context, $site_name) {
+    // Map sites to custom credits
+    $credits = [
+        'acmecorp.com'   => 'ACME Corp Submittal System',
+        'betallc.com'    => 'Beta Construction Platform',
+    ];
+
+    $host = parse_url(get_site_url(), PHP_URL_HOST);
+
+    return $credits[$host] ?? $text;
+}, 10, 3);
+```
+
+**Example - Conditional Credits:**
+```php
+add_filter('sfb_brand_credit_text', function($text, $context, $site_name) {
+    // Show credit only in admin
+    if ($context !== 'admin') {
+        return ''; // Hide in PDF, email, frontend
+    }
+
+    return $text;
+}, 10, 3);
+```
+
+**Use Cases:**
+- White-label customization
+- Client-specific branding
+- Context-aware credit placement
+- Agency deployments
+
+---
+
+#### `sfb_enable_remote_analytics`
+Control whether non-PII analytics are sent to remote aggregator.
+
+**Since:** 1.0.3 (Agency Analytics)
+
+**Parameters:** None
+
+**Returns:** (bool) True to enable remote analytics, false to disable
+
+**Default:** `true` (enabled)
+
+**Example - Disable Remote Analytics:**
+```php
+add_filter('sfb_enable_remote_analytics', '__return_false');
+```
+
+**Example - Conditional Remote Analytics:**
+```php
+add_filter('sfb_enable_remote_analytics', function() {
+    // Only enable on production sites
+    return defined('WP_ENV') && WP_ENV === 'production';
+});
+```
+
+**Example - Client-Controlled Setting:**
+```php
+add_filter('sfb_enable_remote_analytics', function() {
+    // Let clients control via admin setting
+    return (bool) get_option('sfb_allow_remote_analytics', true);
+});
+```
+
+**What Gets Sent When Enabled:**
+- Site ID (SHA-256 hashed URL)
+- Plugin version
+- PHP version
+- WordPress version
+- Event counts (PDFs generated, leads captured)
+- Product names/IDs (no PII)
+
+**What NEVER Gets Sent:**
+- Lead emails or phone numbers
+- IP addresses (only hashed locally)
+- Project names
+- Client data
+- Any personally identifiable information
+
+**Use Cases:**
+- GDPR compliance
+- Client privacy requirements
+- Internal policy enforcement
+- Staging/development environments
+
+---
+
 ## Actions
 
 Actions allow you to execute custom code at specific points in the plugin lifecycle.
@@ -577,6 +703,210 @@ add_action('sfb_purge_expired_drafts', function() {
 
 ---
 
+### Lead & Analytics Hooks (Agency)
+
+#### `sfb_lead_captured`
+Fires after a lead is saved to the database.
+
+**Since:** 1.0.0 (Agency features: 1.0.3)
+
+**Parameters:**
+- `$lead_id` (int) - Lead ID from `wp_sfb_leads` table
+- `$email` (string) - Lead email address
+- `$data` (array) - Complete lead data (phone, project_name, utm, etc.)
+
+**Consumed By:**
+- Lead routing system (triggers routing rules)
+- Agency analytics (tracks lead capture event)
+
+**Example - Custom CRM Integration:**
+```php
+add_action('sfb_lead_captured', function($lead_id, $email, $data) {
+    // Send to custom CRM
+    wp_remote_post('https://crm.example.com/api/leads', [
+        'body' => json_encode([
+            'email'        => $email,
+            'phone'        => $data['phone'] ?? '',
+            'project_name' => $data['project_name'] ?? '',
+            'source'       => 'Submittal Builder',
+            'utm'          => $data['utm'] ?? []
+        ])
+    ]);
+}, 10, 3);
+```
+
+**Example - Slack Notification:**
+```php
+add_action('sfb_lead_captured', function($lead_id, $email, $data) {
+    $webhook_url = 'https://hooks.slack.com/services/YOUR/WEBHOOK/URL';
+
+    $message = sprintf(
+        "🎉 New Lead: %s\nProject: %s\nItems: %d",
+        $email,
+        $data['project_name'] ?? 'N/A',
+        $data['num_items'] ?? 0
+    );
+
+    wp_remote_post($webhook_url, [
+        'body' => json_encode(['text' => $message])
+    ]);
+}, 10, 3);
+```
+
+**Use Cases:**
+- Custom CRM integrations
+- Real-time notifications (Slack, Teams, Discord)
+- Third-party analytics tracking
+- Multi-system lead distribution
+
+---
+
+#### `sfb_weekly_lead_export`
+Scheduled cron event that runs weekly to send CSV email of new leads.
+
+**Since:** 1.0.3 (Agency feature)
+
+**Schedule:** Weekly (configurable day/time, respects site timezone)
+
+**Parameters:** None
+
+**Example - Add Custom Data to Export:**
+```php
+add_action('sfb_weekly_lead_export', function() {
+    // Run before default handler to prepare custom data
+    global $wpdb;
+
+    // Mark leads with custom flag before export
+    $wpdb->query("
+        UPDATE {$wpdb->prefix}sfb_leads
+        SET utm_json = JSON_SET(utm_json, '$.exported', 'true')
+        WHERE last_export_sent IS NULL
+    ");
+}, 5); // Priority 5 runs before default (10)
+```
+
+**Example - Custom Notification:**
+```php
+add_action('sfb_weekly_lead_export', function() {
+    // Run after default handler to send additional notification
+    $lead_count = get_transient('sfb_last_export_count');
+
+    if ($lead_count > 0) {
+        // Notify sales team via custom channel
+        wp_remote_post('https://api.example.com/notify-sales', [
+            'body' => json_encode(['new_leads' => $lead_count])
+        ]);
+    }
+}, 15); // Priority 15 runs after default
+```
+
+**Use Cases:**
+- Custom export data preparation
+- Additional notification channels
+- Export analytics tracking
+- Multi-recipient distribution
+
+---
+
+#### `sfb_analytics_heartbeat`
+Daily cron event that sends non-PII analytics ping.
+
+**Since:** 1.0.3 (Agency feature)
+
+**Schedule:** Daily
+
+**Parameters:** None
+
+**Data Sent:**
+- Site ID (hashed)
+- Plugin version
+- PHP version
+- WordPress version
+- Timestamp
+
+**Example - Add Custom Health Metrics:**
+```php
+add_action('sfb_analytics_heartbeat', function() {
+    // Add custom health checks to heartbeat
+    $custom_metrics = [
+        'total_leads'    => wp_count_posts('sfb_lead')->publish,
+        'total_products' => wp_count_posts('sfb_node')->publish,
+        'disk_usage'     => disk_free_space('/') / disk_total_space('/'),
+    ];
+
+    // Store in option for aggregation
+    update_option('sfb_custom_health_metrics', $custom_metrics);
+}, 10);
+```
+
+**Use Cases:**
+- Custom health metrics
+- Performance monitoring
+- Usage tracking
+- System diagnostics
+
+---
+
+#### `sfb_retry_webhook_delivery`
+Scheduled retry for failed lead routing webhooks.
+
+**Since:** 1.0.3 (Agency feature)
+
+**Schedule:** One-time scheduled event per retry (via `wp_schedule_single_event`)
+
+**Parameters:**
+- `$lead_id` (int) - Lead ID being routed
+- `$route_signature` (string) - Unique route identifier (rule name hash + lead ID)
+- `$attempt` (int) - Retry attempt number (1, 2, or 3)
+
+**Retry Schedule:**
+- Attempt 1: ~30 seconds after failure
+- Attempt 2: ~2 minutes after failure
+- Attempt 3: ~10 minutes after failure (final attempt)
+
+**Example - Custom Retry Logic:**
+```php
+add_action('sfb_retry_webhook_delivery', function($lead_id, $route_signature, $attempt) {
+    // Log retry attempts
+    error_log(sprintf(
+        '[SFB] Webhook retry #%d for lead %d (route: %s)',
+        $attempt,
+        $lead_id,
+        $route_signature
+    ));
+
+    // Alert on final failure
+    if ($attempt === 3) {
+        // Send alert that webhook failed after 3 attempts
+        wp_mail(
+            get_option('admin_email'),
+            'Lead Routing Webhook Failed',
+            sprintf('Lead #%d failed to route after 3 attempts', $lead_id)
+        );
+    }
+}, 10, 3);
+```
+
+**Example - Custom Retry Timing:**
+```php
+add_filter('sfb_webhook_retry_delays', function($delays) {
+    // Customize retry timing (in seconds)
+    return [
+        1 => 60,    // 1 minute
+        2 => 300,   // 5 minutes
+        3 => 1800   // 30 minutes
+    ];
+});
+```
+
+**Use Cases:**
+- Webhook failure monitoring
+- Custom retry timing
+- Alert on delivery failures
+- Backup routing strategies
+
+---
+
 ## Template System
 
 ### Template Overrides
@@ -659,6 +989,276 @@ sfb_get_template('pdf/cover.html.php', [
     'meta'  => $project_info
 ]);
 ```
+
+---
+
+## WordPress Capabilities (Operator Role)
+
+### Custom Capabilities via `map_meta_cap`
+
+**Since:** 1.0.3 (Client Handoff Mode + Operator Role)
+
+The plugin defines 6 custom capabilities used for granular access control, enforced via WordPress's `map_meta_cap` filter.
+
+---
+
+### Capability Reference
+
+#### `use_sfb_builder`
+Access the Submittal Builder frontend and generate PDFs.
+
+**Operator Role:** ✅ **Granted**
+
+**Admins:** ✅ Always granted
+
+**Use Cases:**
+- Allow users to create and download submittals
+- Frontend access to product catalog
+- PDF generation
+
+**Example - Grant to Custom Role:**
+```php
+$role = get_role('custom_role');
+$role->add_cap('use_sfb_builder');
+```
+
+---
+
+#### `view_sfb_leads`
+View the Leads admin page and export leads to CSV.
+
+**Operator Role:** ✅ **Granted**
+
+**Admins:** ✅ Always granted
+
+**Use Cases:**
+- Sales team access to lead data
+- Marketing team CSV exports
+- View-only lead management
+
+**Example - Conditional Access:**
+```php
+add_filter('map_meta_cap', function($caps, $cap) {
+    if ($cap === 'view_sfb_leads') {
+        $user = wp_get_current_user();
+        // Grant to sales team
+        if (in_array('sales_rep', $user->roles)) {
+            return ['read']; // Basic capability everyone has
+        }
+    }
+    return $caps;
+}, 10, 2);
+```
+
+---
+
+#### `view_sfb_tracking`
+View the Tracking admin page with link analytics.
+
+**Operator Role:** ✅ **Granted**
+
+**Admins:** ✅ Always granted
+
+**Use Cases:**
+- Monitor PDF download tracking
+- View engagement analytics
+- Check link performance
+
+---
+
+#### `edit_sfb_branding`
+Edit branding settings (logo, colors, presets).
+
+**Operator Role:** ❌ **Denied**
+
+**Admins:** ✅ Always granted
+
+**Use Cases:**
+- Control who can modify brand identity
+- Prevent accidental branding changes
+- Client Handoff Mode protection
+
+**Example - Grant to Specific User:**
+```php
+$user = get_user_by('email', 'designer@example.com');
+$user->add_cap('edit_sfb_branding');
+```
+
+---
+
+#### `edit_sfb_catalog`
+Add, edit, or delete products/categories/models in the catalog.
+
+**Operator Role:** ❌ **Denied**
+
+**Admins:** ✅ Always granted
+
+**Use Cases:**
+- Protect catalog integrity during handoff
+- Prevent accidental product deletion
+- Limit who can manage inventory
+
+**Example - Temporary Catalog Editor:**
+```php
+// Grant catalog editing for specific task
+add_action('init', function() {
+    $user = wp_get_current_user();
+    if ($user->user_email === 'contractor@example.com' && isset($_GET['edit_catalog'])) {
+        $user->add_cap('edit_sfb_catalog');
+    }
+});
+```
+
+---
+
+#### `access_sfb_agency`
+Access Agency features (Packs, Presets, Analytics, Lead Routing).
+
+**Operator Role:** ❌ **Denied**
+
+**Admins:** ✅ Always granted
+
+**Use Cases:**
+- Restrict Agency-only features
+- Hide advanced configuration from clients
+- Client Handoff Mode enforcement
+
+**Example - Grant to Agency Manager:**
+```php
+$role = get_role('agency_manager');
+$role->add_cap('access_sfb_agency');
+```
+
+---
+
+### Capability Enforcement
+
+Capabilities are checked via WordPress's `map_meta_cap` filter:
+
+```php
+add_filter('map_meta_cap', function($caps, $cap, $user_id) {
+    $custom_caps = [
+        'use_sfb_builder',
+        'view_sfb_leads',
+        'view_sfb_tracking',
+        'edit_sfb_branding',
+        'edit_sfb_catalog',
+        'access_sfb_agency'
+    ];
+
+    if (!in_array($cap, $custom_caps)) {
+        return $caps; // Not our capability
+    }
+
+    $user = get_userdata($user_id);
+
+    // Administrators always have access
+    if ($user && $user->has_cap('manage_options')) {
+        return ['manage_options'];
+    }
+
+    // Check if user has the specific capability
+    if ($user && $user->has_cap($cap)) {
+        return ['read']; // Basic cap = granted
+    }
+
+    // Deny by default
+    return ['do_not_allow'];
+}, 10, 3);
+```
+
+---
+
+### Checking Capabilities in Code
+
+**REST API:**
+```php
+// In REST endpoint permission callback
+public function check_catalog_permission() {
+    return current_user_can('edit_sfb_catalog');
+}
+```
+
+**Admin Pages:**
+```php
+// Before rendering admin page
+if (!current_user_can('access_sfb_agency')) {
+    wp_die('You do not have permission to access this page.');
+}
+```
+
+**AJAX Handlers:**
+```php
+// In AJAX handler
+if (!current_user_can('edit_sfb_branding')) {
+    wp_send_json_error('Insufficient permissions', 403);
+}
+```
+
+**Templates:**
+```php
+<?php if (current_user_can('view_sfb_tracking')): ?>
+    <a href="<?= admin_url('admin.php?page=sfb-tracking') ?>">View Tracking</a>
+<?php endif; ?>
+```
+
+---
+
+### Operator Role Matrix
+
+| Capability | Operator | Admin |
+|-----------|----------|-------|
+| `use_sfb_builder` | ✅ Yes | ✅ Yes |
+| `view_sfb_leads` | ✅ Yes | ✅ Yes |
+| `view_sfb_tracking` | ✅ Yes | ✅ Yes |
+| `edit_sfb_branding` | ❌ No | ✅ Yes |
+| `edit_sfb_catalog` | ❌ No | ✅ Yes |
+| `access_sfb_agency` | ❌ No | ✅ Yes |
+
+**Role Slug:** `sfb_operator`
+
+**Display Name:** "Submittal Builder Operator"
+
+**Use Case:** Client Handoff Mode - give clients access to use the builder and view data without modifying configuration.
+
+---
+
+### Best Practices
+
+1. **Always Use Capability Checks:**
+   ```php
+   if (current_user_can('edit_sfb_catalog')) {
+       // Safe to modify catalog
+   }
+   ```
+
+2. **Check Early in Request:**
+   ```php
+   // At top of admin page
+   if (!current_user_can('access_sfb_agency')) {
+       wp_die('Access denied');
+   }
+   ```
+
+3. **Graceful UI Degradation:**
+   ```php
+   <?php if (current_user_can('edit_sfb_branding')): ?>
+       <button>Edit Branding</button>
+   <?php else: ?>
+       <span class="note">Contact admin to change branding</span>
+   <?php endif; ?>
+   ```
+
+4. **Log Capability Violations:**
+   ```php
+   if (!current_user_can('edit_sfb_catalog')) {
+       error_log(sprintf(
+           '[SFB] User %d (%s) attempted catalog edit without permission',
+           get_current_user_id(),
+           wp_get_current_user()->user_email
+       ));
+   }
+   ```
 
 ---
 

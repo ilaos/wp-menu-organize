@@ -42,9 +42,13 @@ final class SFB_Ajax {
     // Dismiss welcome notice (onboarding)
     add_action('wp_ajax_sfb_dismiss_welcome', [$plugin, 'dismiss_welcome_notice']);
 
-    // Tools page handlers
+    // Utilities page handlers
     add_action('wp_ajax_sfb_purge_expired_drafts', [$plugin, 'ajax_purge_expired_drafts']);
     add_action('wp_ajax_sfb_run_smoke_test', [$plugin, 'ajax_run_smoke_test']);
+    add_action('wp_ajax_sfb_test_email', [$plugin, 'ajax_test_email']);
+    add_action('wp_ajax_sfb_clear_tracking', [$plugin, 'ajax_clear_tracking']);
+    add_action('wp_ajax_sfb_optimize_db', [$plugin, 'ajax_optimize_db']);
+    add_action('wp_ajax_sfb_clean_orphans', [$plugin, 'ajax_clean_orphans']);
 
     // Branding save handler
     add_action('wp_ajax_sfb_save_brand', [$plugin, 'ajax_save_brand']);
@@ -54,6 +58,9 @@ final class SFB_Ajax {
 
     // Agency Packs (Agency feature)
     self::register_agency_pack_hooks($plugin);
+
+    // Lead Routing (Agency feature)
+    self::register_lead_routing_hooks();
   }
 
   /**
@@ -99,5 +106,117 @@ final class SFB_Ajax {
     // Lead capture submission
     add_action('wp_ajax_sfb_submit_lead', ['SFB_Lead_Capture', 'ajax_submit_lead']);
     add_action('wp_ajax_nopriv_sfb_submit_lead', ['SFB_Lead_Capture', 'ajax_submit_lead']);
+  }
+
+  /**
+   * Register lead routing AJAX hooks (Agency feature)
+   */
+  private static function register_lead_routing_hooks() {
+    add_action('wp_ajax_sfb_routing_save', ['SFB_Agency_Lead_Routing_Ajax', 'save_settings']);
+    add_action('wp_ajax_sfb_routing_test', ['SFB_Agency_Lead_Routing_Ajax', 'test_rule']);
+    add_action('wp_ajax_sfb_routing_clear_log', ['SFB_Agency_Lead_Routing_Ajax', 'clear_log']);
+  }
+}
+
+/**
+ * Lead Routing AJAX handlers
+ */
+class SFB_Agency_Lead_Routing_Ajax {
+
+  /**
+   * Save routing settings (rules + fallback + enabled status)
+   */
+  public static function save_settings() {
+    // Security checks
+    if (!current_user_can('manage_options')) {
+      wp_send_json_error(['message' => 'Unauthorized'], 403);
+    }
+
+    if (!isset($_POST['nonce']) || !wp_verify_nonce($_POST['nonce'], 'sfb_lead_routing')) {
+      wp_send_json_error(['message' => 'Invalid nonce'], 403);
+    }
+
+    if (!sfb_is_agency_license()) {
+      wp_send_json_error(['message' => 'Agency license required'], 403);
+    }
+
+    // Get POST data
+    $enabled = !empty($_POST['enabled']);
+    $rules = isset($_POST['rules']) ? json_decode(stripslashes($_POST['rules']), true) : [];
+    $fallback = isset($_POST['fallback']) ? json_decode(stripslashes($_POST['fallback']), true) : [];
+
+    // Validate
+    if (!is_array($rules) || !is_array($fallback)) {
+      wp_send_json_error(['message' => 'Invalid data format'], 400);
+    }
+
+    // Save settings
+    update_option('sfb_lead_routing_enabled', $enabled, false);
+    SFB_Agency_Lead_Routing::save_rules($rules);
+    SFB_Agency_Lead_Routing::save_fallback($fallback);
+
+    wp_send_json_success([
+      'message' => 'Routing settings saved successfully',
+      'enabled' => $enabled,
+      'rules' => SFB_Agency_Lead_Routing::get_rules(),
+      'fallback' => SFB_Agency_Lead_Routing::get_fallback(),
+    ]);
+  }
+
+  /**
+   * Test a routing rule
+   */
+  public static function test_rule() {
+    // Security checks
+    if (!current_user_can('manage_options')) {
+      wp_send_json_error(['message' => 'Unauthorized'], 403);
+    }
+
+    if (!isset($_POST['nonce']) || !wp_verify_nonce($_POST['nonce'], 'sfb_lead_routing')) {
+      wp_send_json_error(['message' => 'Invalid nonce'], 403);
+    }
+
+    if (!sfb_is_agency_license()) {
+      wp_send_json_error(['message' => 'Agency license required'], 403);
+    }
+
+    // Get rule data
+    $rule = isset($_POST['rule']) ? json_decode(stripslashes($_POST['rule']), true) : [];
+
+    if (!is_array($rule)) {
+      wp_send_json_error(['message' => 'Invalid rule data'], 400);
+    }
+
+    // Test the rule
+    $result = SFB_Agency_Lead_Routing::test_rule($rule);
+
+    wp_send_json_success($result);
+  }
+
+  /**
+   * Clear delivery log
+   */
+  public static function clear_log() {
+    // Security checks
+    if (!current_user_can('manage_options')) {
+      wp_send_json_error(['message' => 'Unauthorized'], 403);
+    }
+
+    if (!isset($_POST['nonce']) || !wp_verify_nonce($_POST['nonce'], 'sfb_lead_routing')) {
+      wp_send_json_error(['message' => 'Invalid nonce'], 403);
+    }
+
+    if (!sfb_is_agency_license()) {
+      wp_send_json_error(['message' => 'Agency license required'], 403);
+    }
+
+    // Clear log
+    $cleared = SFB_Agency_Lead_Routing::clear_log();
+
+    if ($cleared) {
+      wp_send_json_success(['message' => 'Delivery log cleared']);
+    } else {
+      wp_send_json_error(['message' => 'Failed to clear log'], 500);
+    }
   }
 }

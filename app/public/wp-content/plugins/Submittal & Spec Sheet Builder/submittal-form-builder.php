@@ -3,7 +3,7 @@
  * Plugin Name: Submittal & Spec Sheet Builder
  * Plugin URI:  https://example.com/submittal-builder
  * Description: Generate professional submittal and spec sheet PDFs with full branding, summaries, and TOCs. Perfect for construction, manufacturing, and professional services.
- * Version:     1.0.2
+ * Version:     1.0.0
  * Author:      Webstuffguy
  * Author URI:  https://example.com
  * License:     GPL v2 or later
@@ -36,6 +36,9 @@ require_once plugin_dir_path(__FILE__) . 'Includes/industry-pack-helpers.php';
 
 // Load agency analytics (Agency feature)
 require_once plugin_dir_path(__FILE__) . 'Includes/agency-analytics.php';
+
+// Load agency lead routing (Agency feature)
+require_once plugin_dir_path(__FILE__) . 'Includes/agency-lead-routing.php';
 
 // Load lead capture (Pro feature)
 require_once plugin_dir_path(__FILE__) . 'Includes/lead-capture.php';
@@ -72,7 +75,7 @@ function sfb_text_list($arr): array {
 }
 
 final class SFB_Plugin {
-  const VERSION = '1.0.2';
+  const VERSION = '1.0.0';
   private static $instance = null;
 
   static function instance() { return self::$instance ?: self::$instance = new self; }
@@ -91,7 +94,8 @@ final class SFB_Plugin {
     add_action('template_redirect', [$this, 'handle_tracking_redirect']); // tracking links
 
     // Admin notices
-    add_action('admin_notices', [$this, 'show_handoff_mode_banner']);
+    // Removed: Client Handoff Mode banner - feature toggle remains functional on Agency page
+    // add_action('admin_notices', [$this, 'show_handoff_mode_banner']);
 
     // Custom capability enforcement
     add_filter('map_meta_cap', [$this, 'map_sfb_capabilities'], 10, 4);
@@ -472,8 +476,8 @@ final class SFB_Plugin {
       2
     );
 
-    // 3. Demo Tools (internal/testing only - hidden outside dev mode)
-    if (defined('SFB_DEV_MODE') && SFB_DEV_MODE) {
+    // 3. Demo Tools (internal/testing only - not shown in production)
+    if (false) { // Disabled for production
       add_submenu_page(
         'sfb',
         __('Demo Tools', 'submittal-builder'),
@@ -586,8 +590,14 @@ final class SFB_Plugin {
 
   /** Builder Page Renderer */
   function render_builder_page() {
-    echo '<div class="wrap"><h1>Submittal Form Builder</h1>';
-    echo '<div id="sfb-admin-root" data-view="builder"></div></div>';
+    echo '<div class="wrap">';
+    echo '<h1>' . esc_html__('Product Catalog', 'submittal-builder') . '</h1>';
+    echo '<p class="description" style="margin-top:-8px;margin-bottom:24px;">';
+    echo esc_html__('Manage your product catalog. Add categories, products, and specifications that contractors can select when building submittal packets.', 'submittal-builder');
+    echo '</p>';
+    echo '<div id="sfb-admin-root" data-view="builder"></div>';
+    $this->render_feedback_footer();
+    echo '</div>';
   }
 
   /** Branding Page Renderer */
@@ -2214,6 +2224,10 @@ final class SFB_Plugin {
       }
     </style>
     <?php
+    $this->render_feedback_footer();
+    ?>
+    </div><!-- .wrap -->
+    <?php
   }
 
   /** Consolidated Agency Page Renderer (Settings + Library) */
@@ -2311,7 +2325,7 @@ final class SFB_Plugin {
       </h1>
 
       <p class="description" style="margin-top:12px;margin-bottom:24px;">
-        <?php esc_html_e('Manage client handoff settings and reusable catalog Packs for your agency.', 'submittal-builder'); ?>
+        <?php esc_html_e('Agency-specific tools: save reusable catalog Packs, manage brand presets, configure white-label mode, and control client handoff settings.', 'submittal-builder'); ?>
       </p>
 
       <?php if (isset($settings_saved)): ?>
@@ -2551,6 +2565,22 @@ final class SFB_Plugin {
         <?php endif; ?>
       </div>
       <?php endif; ?>
+
+      <!-- Advanced Lead Routing Section (Agency only, hidden in handoff mode) -->
+      <?php if (!$handoff_mode): ?>
+      <div class="sfb-card" style="margin-top:32px;">
+        <h2>🔀 <?php esc_html_e('Advanced Lead Routing', 'submittal-builder'); ?></h2>
+        <p class="sfb-muted">
+          <?php esc_html_e('Automatically route leads to email recipients and/or webhooks based on rules (email domain, UTM parameters, category).', 'submittal-builder'); ?>
+        </p>
+
+        <div id="sfb-lead-routing-app">
+          <p style="text-align:center;padding:40px;color:#9ca3af;">
+            <?php esc_html_e('Loading...', 'submittal-builder'); ?>
+          </p>
+        </div>
+      </div>
+      <?php endif; ?>
     </div>
 
     <style>
@@ -2609,6 +2639,23 @@ final class SFB_Plugin {
         color: white !important;
       }
     </style>
+
+    <script>
+      // Localize routing data for JavaScript
+      window.SFB_Routing = <?php echo wp_json_encode([
+        'enabled' => SFB_Agency_Lead_Routing::is_enabled(),
+        'rules' => SFB_Agency_Lead_Routing::get_rules(),
+        'fallback' => SFB_Agency_Lead_Routing::get_fallback(),
+        'log' => SFB_Agency_Lead_Routing::get_log(20),
+        'categories' => SFB_Agency_Lead_Routing::get_top_categories(),
+        'ajaxUrl' => admin_url('admin-ajax.php'),
+        'nonce' => wp_create_nonce('sfb_lead_routing'),
+      ]); ?>;
+    </script>
+    <?php
+    $this->render_feedback_footer();
+    ?>
+    </div><!-- .wrap -->
     <?php
   }
 
@@ -2624,7 +2671,7 @@ final class SFB_Plugin {
     <div class="wrap sfb-settings-wrap">
       <h1><?php echo esc_html__('Settings', 'submittal-builder'); ?></h1>
       <p style="color: #6b7280; margin-top: -8px; margin-bottom: 24px;">
-        <?php echo esc_html__('Configure draft autosave, server storage, and privacy settings.', 'submittal-builder'); ?>
+        <?php echo esc_html__('Configure plugin features including draft saving, lead capture, auto-email delivery, and data retention policies.', 'submittal-builder'); ?>
       </p>
 
       <?php if ($settings_saved): ?>
@@ -2812,7 +2859,7 @@ final class SFB_Plugin {
         </div>
 
         <!-- Weekly Lead Export Card (Agency) -->
-        <?php if (sfb_is_agency_license() || (defined('SFB_AGENCY_DEV') && SFB_AGENCY_DEV)): ?>
+        <?php if (sfb_is_agency_license()): ?>
         <div class="sfb-card">
           <h2>📅 <?php echo esc_html__('Weekly Lead Export (Agency)', 'submittal-builder'); ?></h2>
           <p class="sfb-muted">
@@ -3244,6 +3291,10 @@ final class SFB_Plugin {
       }
     </style>
     <?php
+    $this->render_feedback_footer();
+    ?>
+    </div><!-- .wrap -->
+    <?php
   }
 
   /** Register Draft Settings (Settings API) */
@@ -3429,6 +3480,38 @@ final class SFB_Plugin {
       'sfb_settings_page',
       'sfb_section_lead_capture'
     );
+
+    // Weekly Lead Export settings (Agency)
+    register_setting('sfb_settings_group', 'sfb_lead_weekly_export_enabled', [
+      'sanitize_callback' => function($value) {
+        return !empty($value);
+      },
+      'default' => false
+    ]);
+
+    register_setting('sfb_settings_group', 'sfb_lead_weekly_export_email', [
+      'sanitize_callback' => 'sanitize_email',
+      'default' => ''
+    ]);
+
+    register_setting('sfb_settings_group', 'sfb_lead_weekly_export_day', [
+      'sanitize_callback' => function($value) {
+        $valid_days = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'];
+        return in_array($value, $valid_days) ? $value : 'monday';
+      },
+      'default' => 'monday'
+    ]);
+
+    register_setting('sfb_settings_group', 'sfb_lead_weekly_export_time', [
+      'sanitize_callback' => function($value) {
+        // Validate time format (HH:MM)
+        if (preg_match('/^([0-1][0-9]|2[0-3]):[0-5][0-9]$/', $value)) {
+          return $value;
+        }
+        return '09:00';
+      },
+      'default' => '09:00'
+    ]);
   }
 
   /** Sanitize settings callback */
@@ -3688,13 +3771,14 @@ final class SFB_Plugin {
   }
 
   /** Tools Page Renderer */
-  function render_tools_page() {
+  function render_utilities_page() {
     // Get plugin version
     $plugin_version = self::VERSION;
 
     // Get Pro status
     $pro_active = sfb_is_pro_active();
     $pro_status_label = $pro_active ? __('Active', 'submittal-builder') : __('Free', 'submittal-builder');
+    $is_agency = sfb_is_agency_license();
 
     // Get shareable drafts status
     $shareable_enabled = sfb_feature_enabled('server_drafts');
@@ -3702,6 +3786,16 @@ final class SFB_Plugin {
 
     // Get draft statistics
     $draft_stats = $this->get_draft_stats();
+
+    // Get tracking statistics (Pro)
+    $tracking_stats = ['total' => 0, 'viewed' => 0];
+    if ($pro_active) {
+      $packets = get_option('sfb_packets', []);
+      $tracking_stats['total'] = count($packets);
+      $tracking_stats['viewed'] = count(array_filter($packets, function($p) {
+        return !empty($p['views']);
+      }));
+    }
 
     // Get cron status
     $next_run = wp_next_scheduled('sfb_purge_expired_drafts');
@@ -3713,8 +3807,9 @@ final class SFB_Plugin {
     }
 
     ?>
-    <div class="wrap sfb-tools">
-      <h1><?php echo esc_html__('Submittal & Spec Builder Tools', 'submittal-builder'); ?></h1>
+    <div class="wrap sfb-utilities">
+      <h1><?php echo esc_html__('Utilities', 'submittal-builder'); ?></h1>
+      <p class="description"><?php esc_html_e('Maintenance and testing tools. Clean up old data, test email delivery, optimize database, and run system diagnostics.', 'submittal-builder'); ?></p>
 
       <!-- Draft Management Card -->
       <div class="sfb-card">
@@ -3778,7 +3873,90 @@ final class SFB_Plugin {
         </div>
       </div>
 
-      <?php if (defined('SFB_DEV_MODE') && SFB_DEV_MODE): ?>
+      <!-- Email Testing Card -->
+      <div class="sfb-card">
+        <h2>📧 <?php echo esc_html__('Email Testing', 'submittal-builder'); ?></h2>
+        <p class="sfb-muted"><?php echo esc_html__('Test email delivery to verify SMTP configuration is working correctly.', 'submittal-builder'); ?></p>
+
+        <div class="sfb-actions">
+          <input type="email"
+                 id="sfb-test-email-input"
+                 placeholder="<?php esc_attr_e('recipient@example.com', 'submittal-builder'); ?>"
+                 style="width: 300px; margin-right: 10px;"
+                 value="<?php echo esc_attr(wp_get_current_user()->user_email); ?>" />
+
+          <button id="sfb-test-email-btn"
+                  class="button button-primary sfb-btn"
+                  data-nonce="<?php echo esc_attr(wp_create_nonce('sfb_test_email')); ?>">
+            <?php esc_html_e('Send Test Email', 'submittal-builder'); ?>
+          </button>
+        </div>
+
+        <div id="sfb-email-status" class="sfb-status">
+          <?php echo esc_html__('Enter recipient email and click Send Test Email.', 'submittal-builder'); ?>
+        </div>
+      </div>
+
+      <?php if ($pro_active): ?>
+      <!-- Tracking Data Management (Pro) -->
+      <div class="sfb-card">
+        <h2>📊 <?php echo esc_html__('Tracking Data Management', 'submittal-builder'); ?> <span class="sfb-pro-badge">PRO</span></h2>
+        <p class="sfb-muted"><?php echo esc_html__('Clear old tracking links and view statistics. This does not delete PDFs, only tracking data.', 'submittal-builder'); ?></p>
+
+        <div class="sfb-grid" style="margin-bottom:16px;">
+          <div class="sfb-kv">
+            <div class="k"><?php esc_html_e('Total Tracking Links', 'submittal-builder'); ?></div>
+            <div class="v" id="sfb-tracking-total">
+              <?php echo esc_html($tracking_stats['total']); ?>
+            </div>
+          </div>
+          <div class="sfb-kv">
+            <div class="k"><?php esc_html_e('Links with Views', 'submittal-builder'); ?></div>
+            <div class="v" id="sfb-tracking-viewed">
+              <?php echo esc_html($tracking_stats['viewed']); ?>
+            </div>
+          </div>
+        </div>
+
+        <div class="sfb-actions">
+          <button id="sfb-clear-tracking-btn"
+                  class="button button-secondary sfb-btn"
+                  data-nonce="<?php echo esc_attr(wp_create_nonce('sfb_clear_tracking')); ?>">
+            <?php esc_html_e('Clear All Tracking Data', 'submittal-builder'); ?>
+          </button>
+        </div>
+
+        <div id="sfb-tracking-status" class="sfb-status">
+          <?php echo esc_html__('Tracking data helps monitor customer engagement.', 'submittal-builder'); ?>
+        </div>
+      </div>
+      <?php endif; ?>
+
+      <!-- Database Cleanup Card -->
+      <div class="sfb-card">
+        <h2>🗄️ <?php echo esc_html__('Database Cleanup', 'submittal-builder'); ?></h2>
+        <p class="sfb-muted"><?php echo esc_html__('Optimize database tables and remove orphaned data. Safe to run anytime.', 'submittal-builder'); ?></p>
+
+        <div class="sfb-actions">
+          <button id="sfb-optimize-db-btn"
+                  class="button sfb-btn"
+                  data-nonce="<?php echo esc_attr(wp_create_nonce('sfb_optimize_db')); ?>">
+            <?php esc_html_e('Optimize Database', 'submittal-builder'); ?>
+          </button>
+
+          <button id="sfb-clean-orphans-btn"
+                  class="button sfb-btn"
+                  data-nonce="<?php echo esc_attr(wp_create_nonce('sfb_clean_orphans')); ?>">
+            <?php esc_html_e('Remove Orphaned Data', 'submittal-builder'); ?>
+          </button>
+        </div>
+
+        <div id="sfb-db-status" class="sfb-status">
+          <?php echo esc_html__('Database is healthy.', 'submittal-builder'); ?>
+        </div>
+      </div>
+
+      <?php if (false): ?> <!-- Disabled for production -->
       <!-- Advanced Tools Link (Dev Mode Only) -->
       <div style="margin-top: 20px; padding: 10px; background: #f0f0f1; border-radius: 4px; text-align: center;">
         <a href="<?php echo esc_url(admin_url('admin.php?page=sfb-demo-tools')); ?>" style="font-size: 12px; color: #646970;">
@@ -3786,6 +3964,8 @@ final class SFB_Plugin {
         </a>
       </div>
       <?php endif; ?>
+
+      <?php $this->render_feedback_footer(); ?>
     </div>
     <?php
   }
@@ -3814,7 +3994,7 @@ final class SFB_Plugin {
       </h1>
 
       <p class="description" style="margin-top:12px;margin-bottom:24px;">
-        <?php esc_html_e('Monitor PDF generation, lead capture, and product popularity across your agency sites.', 'submittal-builder'); ?>
+        <?php esc_html_e('Monitor client activity across your sites. Track PDF generation, lead captures, and popular products to optimize your catalog.', 'submittal-builder'); ?>
       </p>
 
       <!-- Date Range Filter -->
@@ -3961,6 +4141,10 @@ final class SFB_Plugin {
         margin-left: 8px;
       }
     </style>
+    <?php
+    $this->render_feedback_footer();
+    ?>
+    </div><!-- .wrap -->
     <?php
   }
 
@@ -4138,9 +4322,9 @@ final class SFB_Plugin {
         }
       </style>
 
-      <h1><?php echo esc_html__('📊 Tracking & Analytics', 'submittal-builder'); ?></h1>
+      <h1><?php echo esc_html__('Tracking', 'submittal-builder'); ?></h1>
       <p class="description">
-        <?php echo esc_html__('Monitor engagement and track PDF views in real-time.', 'submittal-builder'); ?>
+        <?php echo esc_html__('Monitor customer engagement. See when recipients view your submittal packets and track PDF download activity.', 'submittal-builder'); ?>
       </p>
 
       <!-- Enhanced Summary Stats -->
@@ -4298,6 +4482,10 @@ final class SFB_Plugin {
     });
     </script>
     <?php
+    $this->render_feedback_footer();
+    ?>
+    </div><!-- .wrap -->
+    <?php
   }
 
   /** Leads Page Renderer */
@@ -4329,6 +4517,9 @@ final class SFB_Plugin {
     ?>
     <div class="wrap sfb-leads-wrap">
       <h1><?php esc_html_e('Leads', 'submittal-builder'); ?></h1>
+      <p class="description" style="margin-top:-8px;margin-bottom:24px;">
+        <?php esc_html_e('View and export captured lead information from your submittal forms. Track contact details, project names, and download activity.', 'submittal-builder'); ?>
+      </p>
 
       <!-- Stats Summary -->
       <div class="sfb-stats-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin: 20px 0;">
@@ -4535,6 +4726,10 @@ final class SFB_Plugin {
     }
     </style>
     <?php
+    $this->render_feedback_footer();
+    ?>
+    </div><!-- .wrap -->
+    <?php
   }
 
   /** Get filtered leads with search and date range */
@@ -4704,7 +4899,10 @@ final class SFB_Plugin {
 
     ?>
     <div class="wrap sfb-tools">
-      <h1><?php echo esc_html__('Submittal & Spec Builder Demo Tools', 'submittal-builder'); ?></h1>
+      <h1><?php echo esc_html__('Demo Tools', 'submittal-builder'); ?></h1>
+      <p class="description" style="margin-top:-8px;margin-bottom:24px;">
+        <?php esc_html_e('Developer tools for testing and demonstration. Load sample catalogs, preview PDFs, test license states, and reset data.', 'submittal-builder'); ?>
+      </p>
 
       <!-- Draft Management Card -->
       <div class="sfb-card">
@@ -5011,6 +5209,8 @@ final class SFB_Plugin {
           </tr>
         </table>
       </div>
+
+      <?php $this->render_feedback_footer(); ?>
     </div>
     <?php
   }
@@ -5127,7 +5327,7 @@ final class SFB_Plugin {
       wp_send_json_error('Unauthorized');
     }
 
-    if (!sfb_is_agency_license() && !(defined('SFB_AGENCY_DEV') && SFB_AGENCY_DEV)) {
+    if (!sfb_is_agency_license()) {
       wp_send_json_error('This feature requires an Agency license');
     }
 
@@ -5149,7 +5349,7 @@ final class SFB_Plugin {
     }
 
     // Check Agency license
-    if (!sfb_is_agency_license() && !(defined('SFB_AGENCY_DEV') && SFB_AGENCY_DEV)) {
+    if (!sfb_is_agency_license()) {
       error_log('[SFB] Weekly export skipped: Agency license required');
       return;
     }
@@ -5245,6 +5445,17 @@ final class SFB_Plugin {
       $headers,
       [$temp_file]
     );
+
+    // Log email attempt for debugging
+    if (defined('WP_DEBUG') && WP_DEBUG) {
+      error_log(sprintf(
+        '[SFB Weekly Export] Email attempt - To: %s, Subject: %s, Sent: %s, Attachment: %s',
+        $recipient_email,
+        $subject,
+        $sent ? 'YES' : 'NO',
+        $temp_file
+      ));
+    }
 
     // Clean up temp file
     @unlink($temp_file);
@@ -5604,6 +5815,145 @@ final class SFB_Plugin {
     ]);
   }
 
+  /** AJAX handler: Test email delivery */
+  function ajax_test_email() {
+    // Check permission
+    if (!current_user_can('manage_options')) {
+      wp_send_json_error(['message' => __('Unauthorized', 'submittal-builder')], 403);
+    }
+
+    // Verify nonce
+    check_ajax_referer('sfb_test_email');
+
+    // Get recipient email
+    $to = isset($_POST['email']) ? sanitize_email($_POST['email']) : '';
+    if (empty($to) || !is_email($to)) {
+      wp_send_json_error(['message' => __('Invalid email address', 'submittal-builder')]);
+    }
+
+    // Prepare test email
+    $subject = __('Test Email from Submittal & Spec Sheet Builder', 'submittal-builder');
+    $message = __('This is a test email to verify SMTP configuration.', 'submittal-builder') . "\n\n";
+    $message .= sprintf(__('Sent at: %s', 'submittal-builder'), wp_date('Y-m-d H:i:s')) . "\n";
+    $message .= sprintf(__('From site: %s', 'submittal-builder'), get_bloginfo('name')) . "\n";
+
+    // Send email
+    $sent = wp_mail($to, $subject, $message);
+
+    if ($sent) {
+      wp_send_json_success([
+        'message' => sprintf(__('✅ Test email sent successfully to %s', 'submittal-builder'), $to)
+      ]);
+    } else {
+      wp_send_json_error([
+        'message' => __('❌ Failed to send test email. Check SMTP configuration.', 'submittal-builder')
+      ]);
+    }
+  }
+
+  /** AJAX handler: Clear tracking data (Pro) */
+  function ajax_clear_tracking() {
+    // Check permission
+    if (!current_user_can('manage_options')) {
+      wp_send_json_error(['message' => __('Unauthorized', 'submittal-builder')], 403);
+    }
+
+    // Verify nonce
+    check_ajax_referer('sfb_clear_tracking');
+
+    // Check Pro status
+    if (!sfb_is_pro_active()) {
+      wp_send_json_error(['message' => __('Pro license required', 'submittal-builder')], 403);
+    }
+
+    // Get current tracking data
+    $packets = get_option('sfb_packets', []);
+    $count = count($packets);
+
+    // Clear all tracking data
+    update_option('sfb_packets', []);
+
+    wp_send_json_success([
+      'message' => sprintf(__('✅ Cleared %d tracking links', 'submittal-builder'), $count),
+      'total' => 0,
+      'viewed' => 0
+    ]);
+  }
+
+  /** AJAX handler: Optimize database */
+  function ajax_optimize_db() {
+    // Check permission
+    if (!current_user_can('manage_options')) {
+      wp_send_json_error(['message' => __('Unauthorized', 'submittal-builder')], 403);
+    }
+
+    // Verify nonce
+    check_ajax_referer('sfb_optimize_db');
+
+    global $wpdb;
+
+    // Get plugin tables
+    $tables = [
+      $wpdb->prefix . 'sfb_forms',
+      $wpdb->prefix . 'sfb_nodes',
+      $wpdb->prefix . 'sfb_leads',
+      $wpdb->prefix . 'sfb_analytics_events',
+    ];
+
+    $optimized = 0;
+    foreach ($tables as $table) {
+      // Check if table exists
+      $exists = $wpdb->get_var($wpdb->prepare("SHOW TABLES LIKE %s", $table));
+      if ($exists) {
+        $wpdb->query("OPTIMIZE TABLE `{$table}`");
+        $optimized++;
+      }
+    }
+
+    wp_send_json_success([
+      'message' => sprintf(__('✅ Optimized %d database tables', 'submittal-builder'), $optimized)
+    ]);
+  }
+
+  /** AJAX handler: Clean orphaned data */
+  function ajax_clean_orphans() {
+    // Check permission
+    if (!current_user_can('manage_options')) {
+      wp_send_json_error(['message' => __('Unauthorized', 'submittal-builder')], 403);
+    }
+
+    // Verify nonce
+    check_ajax_referer('sfb_clean_orphans');
+
+    global $wpdb;
+
+    $cleaned = 0;
+
+    // Clean orphaned nodes (nodes without a form)
+    $forms_table = $wpdb->prefix . 'sfb_forms';
+    $nodes_table = $wpdb->prefix . 'sfb_nodes';
+
+    $orphaned_nodes = $wpdb->query("
+      DELETE n FROM {$nodes_table} n
+      LEFT JOIN {$forms_table} f ON n.form_id = f.id
+      WHERE f.id IS NULL
+    ");
+    $cleaned += (int) $orphaned_nodes;
+
+    // Clean orphaned post meta (from deleted drafts)
+    $orphaned_meta = $wpdb->query("
+      DELETE pm FROM {$wpdb->postmeta} pm
+      LEFT JOIN {$wpdb->posts} p ON pm.post_id = p.ID
+      WHERE p.ID IS NULL
+      AND pm.meta_key LIKE '_sfb_%'
+    ");
+    $cleaned += (int) $orphaned_meta;
+
+    wp_send_json_success([
+      'message' => sprintf(__('✅ Removed %d orphaned records', 'submittal-builder'), $cleaned)
+    ]);
+  }
+
   /**
    * AJAX: List products for frontend builder
    * Returns all products with basic info for the product picker
@@ -5941,7 +6291,7 @@ final class SFB_Plugin {
       // Configure Dompdf options
       $options = new \Dompdf\Options();
       $options->set('isRemoteEnabled', true);
-      $options->set('isPhpEnabled', false);
+      $options->set('isPhpEnabled', true); // Enable PHP scripts for page numbers
 
       // Enable HTML5 parser - the library is bundled in lib/masterminds/html5
       $options->set('isHtml5ParserEnabled', true);
@@ -5960,6 +6310,34 @@ final class SFB_Plugin {
         $dompdf->loadHtml($html, 'UTF-8');
         $dompdf->setPaper('letter', 'portrait');
         $dompdf->render();
+
+        // Add page numbers using canvas - must be done BEFORE output
+        $canvas = $dompdf->getCanvas();
+        $canvas->page_script(function ($pageNumber, $pageCount, $canvas, $fontMetrics) {
+          $font = $fontMetrics->getFont('helvetica', 'normal');
+          $size = 9;
+          $color = array(0.42, 0.45, 0.50);
+          $linkColor = array(0.4, 0.49, 0.91); // Blue color for link
+
+          $height = $canvas->get_height();
+          $width = $canvas->get_width();
+
+          // Footer text on left with clickable link
+          $canvas->text(36, $height - 36, "Generated with ", $font, $size, $color);
+
+          // Add clickable link
+          $linkText = "Submittal & Spec Sheet Builder";
+          $linkX = 36 + $fontMetrics->getTextWidth("Generated with ", $font, $size);
+          $canvas->text($linkX, $height - 36, $linkText, $font, $size, $linkColor);
+
+          // Add the actual hyperlink annotation
+          $linkWidth = $fontMetrics->getTextWidth($linkText, $font, $size);
+          $canvas->add_link("https://webstuffguylabs.com/plugins/submittal-spec-sheet-builder/", $linkX, $height - 36 - $size, $linkX + $linkWidth, $height - 36 + 2);
+
+          // Page numbers on right
+          $pageText = "Page " . $pageNumber . " of " . $pageCount;
+          $canvas->text($width - 156, $height - 36, $pageText, $font, $size, $color);
+        });
 
         $pdf_output = $dompdf->output();
 
@@ -6557,6 +6935,36 @@ final class SFB_Plugin {
         $dompdf->setPaper($paper_size, 'portrait');
         $dompdf->render();
 
+        // Add page numbers using canvas - must be done BEFORE output
+        $canvas = $dompdf->getCanvas();
+
+        // Add footer text and page numbers on ALL pages
+        $canvas->page_script(function ($pageNumber, $pageCount, $canvas, $fontMetrics) {
+          $font = $fontMetrics->getFont('helvetica', 'normal');
+          $size = 9;
+          $color = array(0.42, 0.45, 0.50);
+          $linkColor = array(0.4, 0.49, 0.91); // Blue color for link
+
+          $height = $canvas->get_height();
+          $width = $canvas->get_width();
+
+          // Footer text on left with clickable link
+          $canvas->text(36, $height - 36, "Generated with ", $font, $size, $color);
+
+          // Add clickable link
+          $linkText = "Submittal & Spec Sheet Builder";
+          $linkX = 36 + $fontMetrics->getTextWidth("Generated with ", $font, $size);
+          $canvas->text($linkX, $height - 36, $linkText, $font, $size, $linkColor);
+
+          // Add the actual hyperlink annotation
+          $linkWidth = $fontMetrics->getTextWidth($linkText, $font, $size);
+          $canvas->add_link("https://webstuffguylabs.com/plugins/submittal-spec-sheet-builder/", $linkX, $height - 36 - $size, $linkX + $linkWidth, $height - 36 + 2);
+
+          // Page numbers on right
+          $pageText = "Page " . $pageNumber . " of " . $pageCount;
+          $canvas->text($width - 156, $height - 36, $pageText, $font, $size, $color);
+        });
+
         // Clear any previous output buffers to prevent whitespace issues
         while (ob_get_level()) {
           ob_end_clean();
@@ -6858,7 +7266,7 @@ final class SFB_Plugin {
     $page = isset($_GET['page']) ? (string) sanitize_key($_GET['page']) : '';
 
     // Only load on our pages
-    if ($page !== 'sfb' && $page !== 'sfb-branding' && $page !== 'sfb-onboarding' && $page !== 'sfb-tools' && $page !== 'sfb-demo-tools') return;
+    if ($page !== 'sfb' && $page !== 'sfb-branding' && $page !== 'sfb-onboarding' && $page !== 'sfb-tools' && $page !== 'sfb-demo-tools' && $page !== 'sfb-agency') return;
 
     // WP deps
     wp_enqueue_script('wp-element');
@@ -6909,6 +7317,17 @@ final class SFB_Plugin {
       }
 
       $localized_data['brand'] = $brand;
+    }
+
+    // Enqueue lead routing script on Agency page
+    if ($page === 'sfb-agency' && sfb_is_agency_license()) {
+      wp_enqueue_script(
+        'sfb-lead-routing',
+        plugins_url('assets/js/lead-routing.js', __FILE__),
+        [],
+        self::VERSION,
+        true
+      );
     }
 
     wp_localize_script('sfb-admin', 'SFB', $localized_data);
@@ -8160,8 +8579,8 @@ final class SFB_Plugin {
       // Enable remote resources (for external images/fonts if needed)
       $options->set('isRemoteEnabled', true);
 
-      // Disable PHP execution in templates for security
-      $options->set('isPhpEnabled', false);
+      // Enable PHP execution for page numbers
+      $options->set('isPhpEnabled', true);
 
       // Enable HTML5 parser - library bundled in lib/masterminds/html5
       $options->set('isHtml5ParserEnabled', true);
@@ -8180,10 +8599,33 @@ final class SFB_Plugin {
       $dompdf->setPaper('letter', 'portrait');
       $dompdf->render();
 
-      // ===== PAGE NUMBERING NOW HANDLED IN HTML =====
-      // Page numbers and footer are rendered using <script type="text/php"> in the HTML
-      // See: SFB_PDF_Generator::render_page_numbers() in pdf-generator.php
-      // This method is more reliable than canvas->page_text() for page numbering
+      // Add page numbers using canvas - must be done BEFORE output
+      $canvas = $dompdf->getCanvas();
+      $canvas->page_script(function ($pageNumber, $pageCount, $canvas, $fontMetrics) {
+        $font = $fontMetrics->getFont('helvetica', 'normal');
+        $size = 9;
+        $color = array(0.42, 0.45, 0.50);
+        $linkColor = array(0.4, 0.49, 0.91); // Blue color for link
+
+        $height = $canvas->get_height();
+        $width = $canvas->get_width();
+
+        // Footer text on left with clickable link
+        $canvas->text(36, $height - 36, "Generated with ", $font, $size, $color);
+
+        // Add clickable link
+        $linkText = "Submittal & Spec Sheet Builder";
+        $linkX = 36 + $fontMetrics->getTextWidth("Generated with ", $font, $size);
+        $canvas->text($linkX, $height - 36, $linkText, $font, $size, $linkColor);
+
+        // Add the actual hyperlink annotation
+        $linkWidth = $fontMetrics->getTextWidth($linkText, $font, $size);
+        $canvas->add_link("https://webstuffguylabs.com/plugins/submittal-spec-sheet-builder/", $linkX, $height - 36 - $size, $linkX + $linkWidth, $height - 36 + 2);
+
+        // Page numbers on right
+        $pageText = "Page " . $pageNumber . " of " . $pageCount;
+        $canvas->text($width - 156, $height - 36, $pageText, $font, $size, $color);
+      });
 
       $pdf = $dompdf->output();
       file_put_contents($path, $pdf);
@@ -8288,7 +8730,7 @@ final class SFB_Plugin {
   function schedule_weekly_lead_export_cron() {
     // Only schedule if feature is enabled and Agency license
     $enabled = get_option('sfb_lead_weekly_export_enabled', false);
-    $is_agency = sfb_is_agency_license() || (defined('SFB_AGENCY_DEV') && SFB_AGENCY_DEV);
+    $is_agency = sfb_is_agency_license();
 
     $event_scheduled = wp_next_scheduled('sfb_weekly_lead_export');
 
@@ -8398,6 +8840,20 @@ final class SFB_Plugin {
       'expired' => intval($expired),
       'text' => sprintf('%d total • %d expired', intval($total), intval($expired))
     ];
+  }
+
+  /** Render feedback footer for admin pages */
+  private function render_feedback_footer() {
+    ?>
+    <div style="margin-top: 40px; padding: 16px 20px; background: #f9fafb; border: 1px solid #e5e7eb; border-radius: 8px; text-align: center;">
+      <p style="margin: 0; color: #6b7280; font-size: 14px;">
+        <?php esc_html_e('Found a bug? Have a suggestion?', 'submittal-builder'); ?>
+        <a href="https://webstuffguylabs.com/support/" target="_blank" rel="noopener noreferrer" style="color: #2563eb; text-decoration: none; font-weight: 600;">
+          <?php esc_html_e('Tell us about it', 'submittal-builder'); ?> →
+        </a>
+      </p>
+    </div>
+    <?php
   }
 
   /** Generate random ID for draft */
@@ -9390,7 +9846,38 @@ add_action('plugins_loaded', function() {
   SFB_Pdf::init();
   SFB_Ajax::init();  // Phase 5: AJAX hooks
   SFB_Agency_Analytics::init();  // Agency Analytics: Event tracking & heartbeat
+  SFB_Agency_Lead_Routing::init();  // Agency Lead Routing: Rules engine + webhook delivery
 }, 10);
+
+/**
+ * Clean up scheduled events on deactivation
+ */
+register_deactivation_hook(__FILE__, function () {
+  // Weekly lead export
+  $ts = wp_next_scheduled('sfb_weekly_lead_export');
+  if ($ts) {
+    wp_unschedule_event($ts, 'sfb_weekly_lead_export');
+  }
+
+  // Webhook retry (may be scheduled with args)
+  $hook = 'sfb_retry_webhook_delivery';
+  $crons = _get_cron_array();
+  if (is_array($crons)) {
+    foreach ($crons as $t => $events) {
+      if (isset($events[$hook])) {
+        foreach ($events[$hook] as $sig => $evt) {
+          wp_unschedule_event($t, $hook, $evt['args'] ?? []);
+        }
+      }
+    }
+  }
+
+  // Analytics heartbeat
+  $ts = wp_next_scheduled('sfb_analytics_heartbeat');
+  if ($ts) {
+    wp_unschedule_event($ts, 'sfb_analytics_heartbeat');
+  }
+});
 
 /**
  * Plugin Deactivation Hook

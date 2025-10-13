@@ -61,6 +61,9 @@ function sfb_add_changelog(string $version, string $date, array $notes): void {
 function sfb_is_pro_active(): bool {
   if (defined('SFB_PRO_DEV') && SFB_PRO_DEV) return true;
 
+  // Agency license includes all Pro features
+  if (sfb_is_agency_license()) return true;
+
   // Use new WooCommerce license API check
   if (function_exists('sfb_is_license_active')) {
     $valid = sfb_is_license_active();

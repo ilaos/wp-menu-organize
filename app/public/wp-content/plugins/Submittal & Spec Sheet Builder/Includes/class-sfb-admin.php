@@ -43,42 +43,26 @@ final class SFB_Admin {
       56
     );
 
-    // 1. Welcome to Submittal Builder (onboarding)
+    // ========================================
+    // Content/Data Section (Daily Use)
+    // ========================================
+
+    // 1. Submittal Builder (default submenu - renamed from parent)
+    // WordPress automatically creates first submenu with same slug as parent
+    // We'll rename it via global $submenu later if needed
+
+    // 2. Welcome (News & Updates)
     add_submenu_page(
       'sfb',
-      __('Welcome to Submittal Builder', 'submittal-builder'),
-      __('Welcome to Submittal Builder', 'submittal-builder'),
+      __('Welcome', 'submittal-builder'),
+      __('Welcome', 'submittal-builder'),
       'manage_options',
       'sfb-onboarding',
       [$sfb_plugin, 'render_onboarding_page'],
       0
     );
 
-    // 2. Tools
-    add_submenu_page(
-      'sfb',
-      __('Tools', 'submittal-builder'),
-      __('Tools', 'submittal-builder'),
-      'manage_options',
-      'sfb-tools',
-      [$sfb_plugin, 'render_tools_page'],
-      2
-    );
-
-    // 3. Demo Tools (dev mode only - hidden in handoff mode)
-    if (defined('SFB_DEV_MODE') && SFB_DEV_MODE && !sfb_is_client_handoff_mode()) {
-      add_submenu_page(
-        'sfb',
-        __('Demo Tools', 'submittal-builder'),
-        __('Demo Tools', 'submittal-builder'),
-        'manage_options',
-        'sfb-demo-tools',
-        [$sfb_plugin, 'render_demo_tools_page'],
-        3
-      );
-    }
-
-    // 3.5 Tracking (Pro feature)
+    // 3. Tracking (Pro - Monitor customer engagement)
     $lic = get_option('sfb_license', []);
     $license_status = $lic['status'] ?? '';
     $show_tracking = ($license_status === 'active') ||
@@ -96,7 +80,7 @@ final class SFB_Admin {
       );
     }
 
-    // 3.6 Leads (Pro feature - only show if lead capture enabled)
+    // 4. Leads (Pro - View captured leads)
     $show_leads = ($license_status === 'active' || (defined('SFB_PRO_DEV') && SFB_PRO_DEV) || (function_exists('sfb_is_pro_active') && sfb_is_pro_active())) &&
                   get_option('sfb_lead_capture_enabled', false);
     if ($show_leads) {
@@ -107,22 +91,15 @@ final class SFB_Admin {
         'manage_options',
         'sfb-leads',
         [$sfb_plugin, 'render_leads_page'],
-        3
+        4
       );
     }
 
-    // 4. Settings
-    add_submenu_page(
-      'sfb',
-      __('Settings', 'submittal-builder'),
-      __('Settings', 'submittal-builder'),
-      'manage_options',
-      'sfb-settings',
-      [$sfb_plugin, 'render_settings_page'],
-      4
-    );
+    // ========================================
+    // Configuration Section (Setup)
+    // ========================================
 
-    // 5. Branding
+    // 5. Branding (Logo, colors, company info)
     add_submenu_page(
       'sfb',
       __('Branding', 'submittal-builder'),
@@ -133,7 +110,18 @@ final class SFB_Admin {
       5
     );
 
-    // 5.5 Agency (Agency feature only - combines settings + library)
+    // 6. Settings (Feature toggles, configuration)
+    add_submenu_page(
+      'sfb',
+      __('Settings', 'submittal-builder'),
+      __('Settings', 'submittal-builder'),
+      'manage_options',
+      'sfb-settings',
+      [$sfb_plugin, 'render_settings_page'],
+      6
+    );
+
+    // 7. Agency (Agency-specific settings and library)
     if (sfb_is_agency_license()) {
       add_submenu_page(
         'sfb',
@@ -142,10 +130,10 @@ final class SFB_Admin {
         'manage_options',
         'sfb-agency',
         [$sfb_plugin, 'render_agency_page'],
-        5.5
+        7
       );
 
-      // 5.6 Agency Analytics (Agency feature only)
+      // 8. Agency Analytics (Agency monitoring and insights)
       add_submenu_page(
         'sfb',
         __('Agency Analytics', 'submittal-builder'),
@@ -153,11 +141,39 @@ final class SFB_Admin {
         'manage_options',
         'sfb-agency-analytics',
         [$sfb_plugin, 'render_agency_analytics_page'],
-        5.6
+        8
       );
     }
 
-    // 6. Last slot: Adaptive based on license state
+    // ========================================
+    // Meta/Support Section (Occasional Use)
+    // ========================================
+
+    // 9. Utilities (Maintenance and diagnostic tools)
+    add_submenu_page(
+      'sfb',
+      __('Utilities', 'submittal-builder'),
+      __('Utilities', 'submittal-builder'),
+      'manage_options',
+      'sfb-tools',
+      [$sfb_plugin, 'render_utilities_page'],
+      9
+    );
+
+    // 10. Demo Tools (dev mode only - hidden in handoff mode)
+    if (defined('SFB_DEV_MODE') && SFB_DEV_MODE && !sfb_is_client_handoff_mode()) {
+      add_submenu_page(
+        'sfb',
+        __('Demo Tools', 'submittal-builder'),
+        __('Demo Tools', 'submittal-builder'),
+        'manage_options',
+        'sfb-demo-tools',
+        [$sfb_plugin, 'render_demo_tools_page'],
+        10
+      );
+    }
+
+    // 11. Last slot: License & Support (Adaptive based on license state)
     $last_position = 999;
 
     if ($license_status === 'expired' || $license_status === 'invalid') {

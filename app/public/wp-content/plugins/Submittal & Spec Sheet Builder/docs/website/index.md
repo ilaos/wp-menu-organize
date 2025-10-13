@@ -93,6 +93,21 @@ Customize your brand appearance and understand PDF generation.
 
 ---
 
+### Pro Features
+
+**[PDF Tracking & Analytics →](./tracking.md)** (Pro)
+
+Track when customers view your submittal packets with detailed analytics.
+
+- View counts and timestamps
+- Recipient engagement tracking
+- Visual dashboard with statistics
+- Privacy-compliant IP hashing
+- Integration with Auto Email and Lead Capture
+- Business intelligence for follow-ups
+
+---
+
 ### Troubleshooting
 
 **[Troubleshooting Guide →](./troubleshooting.md)**
@@ -149,6 +164,7 @@ Quick answers to common questions.
 - [How to add products →](./product-management.md#adding-products)
 - [Customizing your brand →](./branding-pdfs.md#branding-customization)
 - [PDF generation troubleshooting →](./troubleshooting.md#pdf-generation-fails)
+- [Tracking customer views →](./tracking.md) (Pro)
 - [Keyboard shortcuts →](./user-guide.md#keyboard-shortcuts)
 - [Server requirements →](./installation.md#server-requirements)
 

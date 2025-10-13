@@ -9,7 +9,10 @@
       "Bash(php:*)",
       "Bash(git log:*)",
       "Read(//c//**)",
-      "Bash(find:*)"
+      "Bash(find:*)",
+      "Bash(wp i18n make-pot:*)",
+      "Bash(ls:*)",
+      "Bash(git rm:*)"
     ],
     "deny": [],
     "ask": []

@@ -62,8 +62,8 @@ class SFB_PDF_Generator {
     // Render product specification pages
     self::render_product_pages($grouped_products, $branding, $args['project_name']);
 
-    // Add page numbering script (Dompdf PHP script method)
-    self::render_page_numbers($branding, $args['pro_active']);
+    // Page numbering is now handled via canvas->page_script() in submittal-form-builder.php
+    // No longer using inline <script type="text/php"> method
 
     echo '</body></html>';
 
@@ -431,14 +431,19 @@ class SFB_PDF_Generator {
 
     /* ========== Product Pages ========== */
     .product-page {
-      page-break-before: always;
-      /* Removed page-break-after to prevent footer-only blank pages */
+      page-break-inside: avoid;
+      /* Allow multiple products per page - only break when content doesn't fit */
+      margin-bottom: 30pt;
+    }
+
+    .product-page:first-of-type {
+      page-break-before: always; /* Force first product to start on new page after summary */
     }
 
     .product-header {
-      margin-top: 5px;
-      margin-bottom: 20px;
-      padding-bottom: 15px;
+      margin-top: 0;
+      margin-bottom: 15px;
+      padding-bottom: 12px;
       border-bottom: 2px solid #e5e7eb;
       clear: both;
     }
@@ -517,6 +522,10 @@ class SFB_PDF_Generator {
       height: 0; /* Reduced since header is now relative, not fixed */
     }
 
+    .sfb-spacer-bottom {
+      height: 0; /* Removed - no longer needed with efficient page breaks */
+    }
+
     .sfb-content-spacer-bottom {
       height: 28pt;
     }
@@ -542,13 +551,8 @@ class SFB_PDF_Generator {
 
     /* ========== Footer with Page Numbers ========== */
     .sfb-page-footer {
-      position: fixed;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      height: 50pt;
-      font-size: 9pt;
-      color: #6b7280;
+      /* Footer rendered via DomPDF script - no visible HTML element */
+      display: none;
     }
 
     /* ========== External Links ========== */
@@ -933,8 +937,6 @@ class SFB_PDF_Generator {
       </table>
     </div>
   <?php endif; ?>
-
-  <div class="sfb-spacer-bottom"></div>
 </div>
     <?php
   }
@@ -954,27 +956,30 @@ class SFB_PDF_Generator {
       // Use centralized brand credit helper (plain-text for PDF)
       $footerText = sfb_brand_credit_plain('pdf');
     }
+
+    // Escape for inline PHP
+    $footerTextEscaped = str_replace("'", "\\'", $footerText);
     ?>
-<div class="sfb-page-footer">
-  <script type="text/php">
-    if (isset($pdf)) {
-      $font = $fontMetrics->getFont("Helvetica", "normal");
-      $size = 9;
-      $color = [0.42, 0.45, 0.50]; // #6B7280
+<script type="text/php">
+if (isset($pdf)) {
+  $font = $fontMetrics->get_font("helvetica");
+  $size = 9;
+  $color = array(0.42, 0.45, 0.50);
 
-      $w = $pdf->get_width();
-      $h = $pdf->get_height();
+  $w = $pdf->get_width();
+  $h = $pdf->get_height();
 
-      // Footer text on left (36pt from left edge, 36pt from bottom)
-      $footerText = <?php echo json_encode($footerText); ?>;
-      $pdf->text(36, $h - 36, $footerText, $font, $size, $color);
+  // Footer text on left (36pt from left edge, 36pt from bottom)
+  $footerText = '<?php echo $footerTextEscaped; ?>';
+  if (!empty($footerText)) {
+    $pdf->text(36, $h - 36, $footerText, $font, $size, $color);
+  }
 
-      // Page numbers on right (120pt from right edge for space, 36pt from bottom)
-      $pageText = "Page " . $PAGE_NUM . " of " . $PAGE_COUNT;
-      $pdf->text($w - 156, $h - 36, $pageText, $font, $size, $color);
-    }
-  </script>
-</div>
+  // Page numbers on right (120pt from right edge for space, 36pt from bottom)
+  $pageText = "Page " . $PAGE_NUM . " of " . $PAGE_COUNT;
+  $pdf->text($w - 156, $h - 36, $pageText, $font, $size, $color);
+}
+</script>
     <?php
   }
 

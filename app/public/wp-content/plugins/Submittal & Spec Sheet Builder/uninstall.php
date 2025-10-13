@@ -6,7 +6,7 @@
  * Handles license deactivation and optionally removes all plugin data.
  *
  * @package Submittal_Builder
- * @version 1.0.2
+ * @version 1.0.0
  */
 
 // Exit if accessed directly or if not uninstalling
@@ -122,6 +122,9 @@ if ($remove_all_data) {
     // Current options
     'sfb_settings',
     'sfb_license_data',
+    'sfb_brand_settings',
+    'sfb_brand_presets',
+    'sfb_brand_use_default_on_pdf',
 
     // Behavioral settings
     'sfb_auto_deactivate_on_deactivate',
@@ -142,6 +145,18 @@ if ($remove_all_data) {
     // Onboarding
     'sfb_onboarding_completed',
     'sfb_activation_redirect',
+
+    // Agency features
+    'sfb_agency_packs',
+    'sfb_lead_weekly_export_enabled',
+    'sfb_lead_weekly_export_email',
+    'sfb_lead_routing_enabled',
+    'sfb_lead_routing_rules',
+    'sfb_lead_routing_fallback',
+    'sfb_lead_routing_log',
+    'sfb_routed_lead_ids',
+    'sfb_client_handoff_mode',
+    'sfb_analytics_enabled',
   ];
 
   foreach ($options_to_remove as $option) {
@@ -176,6 +191,8 @@ if ($remove_all_data) {
       $wpdb->prefix . 'sfb_forms',
       $wpdb->prefix . 'sfb_nodes',
       $wpdb->prefix . 'sfb_shares',
+      $wpdb->prefix . 'sfb_leads',
+      $wpdb->prefix . 'sfb_analytics_events',
   ];
 
   foreach ($tables as $table) {

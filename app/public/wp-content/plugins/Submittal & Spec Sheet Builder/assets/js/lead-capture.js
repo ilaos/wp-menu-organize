@@ -66,10 +66,9 @@
     // Validate form on input changes
     const validateForm = () => {
       const emailValid = emailInput.value && isValidEmail(emailInput.value);
-      const consentGiven = consentCheckbox ? consentCheckbox.checked : true;
 
-      // Only enable if email is valid AND consent is checked (if checkbox exists)
-      if (emailValid && consentGiven) {
+      // Only enable if email is valid (consent checkbox is optional)
+      if (emailValid) {
         submitBtn.disabled = false;
         submitBtn.setAttribute('aria-disabled', 'false');
       } else {
@@ -81,10 +80,6 @@
     // Listen for changes
     emailInput.addEventListener('input', validateForm);
     emailInput.addEventListener('blur', validateForm);
-
-    if (consentCheckbox) {
-      consentCheckbox.addEventListener('change', validateForm);
-    }
 
     // Initial validation
     validateForm();

@@ -364,6 +364,137 @@ Before generating, verify:
 
 ---
 
+## Saving & Loading Drafts (Pro)
+
+**Note:** Draft functionality requires an active Pro or Agency license.
+
+### What are Drafts?
+
+Drafts allow users to save their product selections and project information in-progress, then return later to complete and generate the PDF. This is perfect for complex projects that require multiple sessions or collaboration.
+
+### Two Types of Saves
+
+**1. Local Autosave (Browser Storage)**
+- **Available:** All license tiers (Free, Pro, Agency)
+- **Storage:** Saved in your browser's localStorage
+- **Persistence:** Remains until you clear browser data or complete the PDF
+- **Privacy:** Only accessible on the same device and browser
+- **Offline:** Works without internet connection
+- **Automatic:** Saves every time you select/deselect a product
+
+**2. Server-Stored Draft (Shareable)**
+- **Available:** Pro and Agency licenses only
+- **Storage:** Saved in WordPress database as custom post type
+- **Persistence:** Expires after configured period (default: 45 days)
+- **Privacy:** Generates unique, unlisted link
+- **Shareable:** Link can be sent to colleagues or clients
+- **Manual:** User clicks "Save Progress" button to create
+
+### How to Save a Draft (Pro/Agency)
+
+**Step 1: Build Your Selection**
+1. Select products on Step 1 (Product Selection)
+2. Optionally add project name and notes on Step 2 (Review)
+3. Click **"Save Progress"** button (appears in toolbar)
+
+**Step 2: Get Your Draft Link**
+1. Modal appears with unique draft URL
+2. URL format: `yoursite.com/builder/?sfb_draft=abc123xyz`
+3. Link is valid for expiry period (default: 45 days)
+4. Copy link to clipboard or email it
+
+**What Gets Saved:**
+- ✅ All selected products (with IDs)
+- ✅ Project name (if entered)
+- ✅ Project notes (if entered)
+- ✅ Product order (if reordered)
+- ✅ Timestamp of when draft was created
+- ❌ Branding settings (uses current site settings when loaded)
+- ❌ Generated PDFs (created fresh when draft is finalized)
+
+### How to Load a Draft
+
+**From a Draft Link:**
+1. Open the draft URL in your browser
+2. Builder loads with saved selections pre-populated
+3. All products automatically added to selection
+4. Project name and notes restored (if saved)
+5. Make any changes needed
+6. Generate PDF when ready
+
+**From Local Autosave:**
+1. Return to builder page on same device/browser
+2. If local autosave exists, banner appears:
+   > "📝 You have unsaved changes from [time]. Resume or start fresh?"
+3. Click **"Resume"** to restore selections
+4. Or click **"Start Fresh"** to clear and begin new session
+
+### Draft Expiration
+
+**Server Drafts:**
+- Expire after configured period (Settings → Draft Settings → Draft Expiry)
+- Default: 45 days
+- Range: 1-365 days
+- Expired drafts automatically deleted daily via WordPress cron
+- After expiration, draft link shows error: "Draft not found or expired"
+
+**Local Autosave:**
+- Persists indefinitely in browser localStorage
+- Cleared when:
+  - User clears browser data/cache
+  - User clicks "Start Fresh" on resume banner
+  - PDF is successfully generated (autosave deleted)
+
+### Use Cases
+
+**1. Multi-Day Projects**
+- Start selecting products today
+- Save progress and return tomorrow
+- No need to remember what you selected
+
+**2. Collaboration**
+- Build initial selection
+- Share draft link with colleague
+- They review, modify, and generate PDF
+
+**3. Client Approvals**
+- Create draft with recommended products
+- Send link to client for review
+- Client can modify and download when approved
+
+**4. Quote Preparation**
+- Sales team creates draft during site visit
+- Returns to office to finalize specifications
+- Generates professional PDF for customer
+
+**5. Template Reuse**
+- Create draft for common project type
+- Use same link for similar future projects
+- Modify products as needed per project
+
+### Privacy & Security
+
+**Draft URLs:**
+- Unlisted (not searchable or indexed)
+- Use random, non-guessable tokens
+- No authentication required to access
+- Consider URL as "password" - protect accordingly
+
+**Data Stored:**
+- Product IDs (not actual product data)
+- Project name and notes (as entered by user)
+- Timestamp metadata only
+- No user personal information
+- No IP addresses or tracking data
+
+**Best Practices:**
+- Only share draft links with trusted recipients
+- Use expiry settings appropriate for your workflow
+- Purge expired drafts regularly (Settings → Draft Settings)
+- Don't rely on drafts for long-term storage (use PDFs)
+
+---
+
 ## Admin Settings
 
 ### Accessing Settings
@@ -466,12 +597,75 @@ Before generating, verify:
 - Index custom fields
 - Stop words configuration
 
-#### Storage
+#### Draft Management (Pro/Agency)
 
-**Draft Management:**
-- Auto-save drafts (checkbox)
-- Draft expiry (days)
-- Auto-purge old drafts
+**Location:** WordPress Admin → **Submittal Builder** → **Settings** → **Draft Settings**
+
+Configure how user selections are saved and managed throughout the building process.
+
+**Enable Local Autosave (Browser Storage)**
+- **Toggle:** Enable/disable automatic saving to browser localStorage
+- **Default:** Enabled
+- **How it works:** Every time a user selects or deselects a product, their progress is automatically saved in their browser
+- **Benefits:** Works offline, instant save, no server resources used
+- **Limitations:** Only accessible on same device/browser, cleared if browser data is cleared
+- **Recommendation:** Keep enabled for better user experience
+
+**Enable Server-Stored Drafts (Shareable)**
+- **Toggle:** Enable/disable "Save Progress" feature (Pro/Agency only)
+- **Default:** Enabled (if Pro/Agency license active)
+- **How it works:** Users can click "Save Progress" to create a shareable draft link
+- **Benefits:** Can be accessed from any device, shareable with others, survives browser clearing
+- **Limitations:** Requires server storage, expires after configured period
+- **Recommendation:** Enable for teams or client-facing sites
+
+**Draft Expiry Period**
+- **Setting:** Number of days before server drafts are automatically deleted
+- **Default:** 45 days
+- **Range:** 1-365 days
+- **How it works:** WordPress cron job runs daily to purge expired drafts
+- **Considerations:**
+  - Shorter periods (7-30 days): Better for data privacy, reduces database bloat
+  - Longer periods (60-180 days): Better for long-term projects, client follow-ups
+  - Maximum (365 days): For archival purposes, requires manual cleanup
+- **Recommendation:** 45 days for most use cases, 14 days for high-volume sites
+
+**Rate Limiting (Draft Creation)**
+- **Setting:** Minimum seconds between draft saves per IP address
+- **Default:** 20 seconds
+- **Range:** 5-120 seconds
+- **Purpose:** Prevent spam/abuse of draft creation
+- **How it works:** Same IP address cannot create multiple drafts within this timeframe
+- **Recommendation:** 20 seconds for normal sites, increase to 60+ if experiencing abuse
+
+**Privacy Notice (Optional)**
+- **Setting:** Custom text shown below "Save Progress" button
+- **Default:** Empty (no notice shown)
+- **Use cases:**
+  - GDPR compliance notices
+  - Data retention policies
+  - Terms of use for shared links
+- **Example:** "Draft links expire after 45 days. Do not include sensitive information."
+- **Recommendation:** Add notice if handling client data or operating in EU
+
+**Manual Actions**
+
+**Purge Expired Drafts Now**
+- **Button:** "Purge Expired Drafts" (in Settings → Draft Settings)
+- **Action:** Immediately deletes all drafts past expiry date
+- **Use when:**
+  - You've just reduced the expiry period
+  - Database cleanup before backups
+  - Investigating storage issues
+- **Shows:** Count of purged drafts and remaining active drafts
+
+**Draft Statistics**
+- **Display:** Total drafts and expired count
+- **Example:** "142 total • 23 expired"
+- **Updates:** Real-time after purge operation
+- **Use for:** Monitoring draft usage and database size
+
+#### Storage
 
 **PDF Storage:**
 - Upload directory path
@@ -885,6 +1079,504 @@ The Agency Library is your central hub for managing reusable catalog templates.
 4. Export JSON
 5. Send to clients for reimport
 6. Clients can merge (add new products) or replace (full update)
+
+---
+
+### Advanced Lead Routing
+
+**Note:** Agency feature requiring active Agency license.
+
+**Location:** WordPress Admin → **Submittal Builder** → **Settings** → **Lead Routing**
+
+Create rules that automatically route new leads based on specific conditions. Each rule can match by email domain, UTM parameters, or the lead's top category. When a rule matches, the lead is sent to designated recipients via email and/or webhook.
+
+#### Rule Conditions
+
+Rules use **OR logic** within a single rule, meaning if any condition matches, the rule triggers:
+
+**Email Domain Contains:**
+- Match leads by email domain
+- Example: `acme.com` matches `john@acme.com` or `jane@corp.acme.com`
+- Case-insensitive matching
+- Perfect for routing by company or organization
+
+**UTM Source/Medium/Campaign:**
+- Match leads by UTM parameters
+- Examples: `google`, `facebook`, `summer-promo`
+- Tracks lead source for campaign-specific routing
+- Any UTM field can be used independently
+
+**Top Category Equals:**
+- Match leads by their primary product category
+- Exact match only (e.g., "C-Studs" matches "C-Studs" but not "c-studs")
+- Useful for routing by product line or department
+
+#### Rule Actions
+
+**Send to Email:**
+- Comma-separated list of recipients
+- Example: `sales@company.com, john@company.com`
+- Standard lead notification email sent to all recipients
+
+**Send to Webhook:**
+- POST request to external URL (Zapier, Make, custom endpoint)
+- Full lead data sent as JSON payload
+- Includes retry logic (see below)
+
+#### Retry Logic & De-duplication
+
+**Webhook Retries:**
+- **Attempt 1:** Immediate on lead capture
+- **Attempt 2:** ~30 seconds after first failure
+- **Attempt 3:** ~2 minutes after second failure
+- **Attempt 4:** ~10 minutes after third failure
+- Exponential backoff prevents server overload
+
+**De-duplication:**
+- Each lead ID tracked to prevent duplicate webhook deliveries
+- Retries use same lead ID
+- Activity log shows all attempts
+
+**Activity Log:**
+- Location: Settings → Lead Routing → Activity Log
+- Shows last 50 routing events
+- Includes: timestamp, rule matched, delivery status, retry attempts
+- Clear log button (admin only)
+
+#### Fallback Rule
+
+**What It Does:**
+- Catches leads that don't match any rule
+- Optional (can be left empty)
+- Uses same email/webhook actions as rules
+
+**When to Use:**
+- Ensure no leads are missed
+- Send unmatched leads to general inbox
+- Log all leads to central webhook
+
+#### Rule Priority
+
+**First-Match Wins:**
+- Rules evaluated in display order (top to bottom)
+- Once a rule matches, evaluation stops
+- Fallback only used if no rule matches
+- Drag to reorder rules (if UI supports)
+
+**Best Practice:**
+- Place most specific rules first
+- Place broad rules last
+- Test rules with "Test Rule" button
+
+#### Testing Rules
+
+**Test Rule Button:**
+- Simulates a lead without creating actual lead
+- Enter test email, UTM params, category
+- Shows which rule would match
+- Displays email/webhook that would be triggered
+- No actual emails/webhooks sent during test
+
+---
+
+### Default Brand Preset → PDFs
+
+**Note:** Agency feature requiring active Agency license.
+
+**Location:** WordPress Admin → **Submittal Builder** → **Settings** → **Branding** → "Use default preset automatically"
+
+Automatically apply your Default Brand Preset to the Review page and all new PDFs. When enabled, users see the default branding without manual selection.
+
+#### How It Works
+
+**Toggle ON + Default Preset Set:**
+- Review page displays with default preset applied
+- All generated PDFs use default preset branding
+- Session-only changes still possible (see Review Preset Switcher)
+- Current branding settings ignored for PDFs
+
+**Toggle ON but No Default Set:**
+- Falls back to current branding settings
+- Warning shown in admin
+- Set a default preset in Brand Presets section
+
+**Toggle OFF:**
+- Uses current branding settings only
+- Presets available for manual selection
+- Original behavior restored
+
+#### Use Cases
+
+**Consistent Branding:**
+- Ensure all PDFs match company standards
+- Prevent accidental branding errors
+- Perfect for agencies with strict brand guidelines
+
+**Multi-User Teams:**
+- Junior staff can't accidentally break branding
+- Default preset maintained by admin
+- Individual users don't need branding access
+
+**Client Handoff:**
+- Set default preset before handoff
+- Client gets consistent branded PDFs
+- No training needed on branding system
+
+---
+
+### Review Preset Switcher (Preview-only)
+
+**Note:** Agency feature visible on Review step.
+
+**Location:** Review step (Step 2) → Brand Preset dropdown (if 2+ presets exist)
+
+Quickly preview different Brand Presets on the Review page. Changes are **session-only** and don't affect saved settings or generated PDFs.
+
+#### How It Works
+
+**Selecting a Preset:**
+- Click preset dropdown on Review page
+- Choose any saved Brand Preset
+- Preview updates instantly (logo, colors, company info)
+- Changes stored in `sessionStorage` only
+
+**Session-Only Behavior:**
+- Preview changes **do not persist** after:
+  - Closing browser tab
+  - Refreshing page
+  - Generating PDF (unless preset is default)
+  - Returning to Step 1
+- No database writes occur
+
+**Generated PDFs:**
+- If "Default-to-PDF" toggle is ON: Uses default preset
+- If toggle is OFF: Uses current saved branding settings
+- Session preview does NOT affect PDF output
+
+#### Apply as Default
+
+**"Apply as default" Link:**
+- Click to open Branding settings page
+- Selected preset loaded into form
+- Click "Save Changes" to persist
+- Returns to Builder after save
+
+**When to Use:**
+- You like the preview and want to keep it
+- Need to update current branding to match preview
+- Want to set a new default preset
+
+#### Use Cases
+
+**Client Presentations:**
+- Preview multiple brand options for client
+- Show different color schemes or logos
+- No commitment until "Apply as default"
+
+**A/B Testing:**
+- Compare preset variations
+- See which branding looks best
+- Quick visual comparison
+
+**Temporary Changes:**
+- Preview one-off branding for special project
+- Doesn't affect other users or PDFs
+- Clean slate on page refresh
+
+---
+
+### White-Label Mode
+
+**Note:** Agency feature requiring active Agency license.
+
+**Location:** WordPress Admin → **Submittal Builder** → **Settings** → **White-Label**
+
+Remove or customize plugin credits, set custom PDF footers, and customize email From name/address. Ideal for agencies who want to present the plugin as their own solution.
+
+#### Credit Modes
+
+**Three Modes Available:**
+
+**1. Full Credit (Default):**
+- Plugin credits appear in admin footer
+- PDF footer includes "Generated with Submittal & Spec Sheet Builder"
+- Email footer includes plugin name
+- No changes to default behavior
+
+**2. Subtle Credit:**
+- Admin footer unchanged
+- PDF footer includes small "Powered by …" link
+- Email footer includes small "Powered by …" line
+- User-facing only (not admin)
+
+**3. No Credit:**
+- All plugin credits removed
+- PDF footer custom text only
+- Email footer custom text only
+- Complete white-label
+
+#### Custom Footer Text
+
+**PDF Footer:**
+- Replaces default footer text
+- Example: "© 2025 Your Company. All rights reserved."
+- Supports line breaks
+- Max 200 characters
+
+**Where It Appears:**
+- Bottom of every PDF page
+- Does not replace page numbers (separate setting)
+- Rendered in small gray text
+
+#### Email Customization
+
+**From Name:**
+- Default: WordPress site name
+- Custom: Your company name
+- Example: "ACME Corp Engineering"
+- Appears in recipient's inbox
+
+**From Address:**
+- Default: `wordpress@yourdomain.com`
+- Custom: Your company email
+- Example: `noreply@acmecorp.com`
+- **Must be valid email address**
+- **Must match server SPF/DKIM** (or emails may fail)
+
+**Reply-To Address:**
+- Optional
+- Where replies are sent
+- Example: `support@acmecorp.com`
+
+#### White-Label Checklist
+
+**Before Enabling:**
+1. Verify Agency license active
+2. Test custom email settings (send test lead)
+3. Confirm SPF/DKIM records (to prevent spam folder)
+4. Generate test PDF to verify footer
+5. Check email delivery to inbox (not spam)
+
+**After Enabling:**
+1. Generate sample PDF and verify footer
+2. Submit test lead and check email From/footer
+3. Review admin pages for any missed credits
+4. Test on client site before handoff
+
+---
+
+### Client Handoff Mode
+
+**Note:** Agency feature requiring active Agency license.
+
+**Location:** WordPress Admin → **Submittal Builder** → **Agency** → **Client Handoff Mode**
+
+Temporarily hide agency-specific features from your WordPress admin to create a "client-safe" view. Perfect for when you're giving clients access to use the builder without exposing your internal agency tools and templates.
+
+#### What is Client Handoff Mode?
+
+Client Handoff Mode is a **one-click toggle** that hides agency-specific features from the WordPress admin interface. Think of it as a "presentation mode" for your plugin — you can safely let clients use the builder, view settings, and generate PDFs without them seeing or accidentally modifying your agency's internal resources.
+
+**Key Point:** This is a **temporary visibility toggle only**. No data is deleted or modified. When you turn it off, everything instantly returns to normal.
+
+#### What Gets Hidden When Enabled
+
+When Client Handoff Mode is active, the following agency features are hidden from view:
+
+**1. Agency Library (Agency Packs)**
+- The entire "Agency Library" admin page is hidden
+- Your saved Packs remain safe in the database
+- "Save as Pack" button disappears from toolbar
+- Clients cannot see, export, or delete your Packs
+
+**2. Brand Presets Management**
+- Brand Presets management section hidden on Branding settings page
+- The active/default preset still works normally
+- Clients can still use the builder with your default branding
+- Preset dropdown on Review page still visible (for preview only)
+
+**3. Demo Tools & Seeder**
+- Internal development tools hidden
+- Prevents accidental catalog resets
+- Protects against data loss
+
+#### What Clients CAN Still Access
+
+Client Handoff Mode only hides agency-specific tools. Clients retain full access to:
+
+✅ **Product Builder** - Full access to select products and generate PDFs
+✅ **Settings Page** - View and modify general settings
+✅ **Branding Page** - View current branding (but not manage presets)
+✅ **Tracking & Analytics** - View usage data and metrics
+✅ **Leads Data** - Access lead capture information
+✅ **PDF Generation** - Generate and download submittal packets
+
+#### How to Enable/Disable
+
+**Enabling Client Handoff Mode:**
+1. Go to: **Submittal Builder → Agency**
+2. Scroll to: **Client Handoff Mode** section
+3. Check: **"Enable Client Handoff Mode"**
+4. Click: **"Save Changes"**
+5. Result: Agency features instantly hidden from admin
+
+**Disabling Client Handoff Mode:**
+1. Look for the blue banner at the top of any plugin page
+2. Banner says: **"🤝 Client Handoff Mode Active"**
+3. Click: **"Return to Agency Mode"** button
+4. Or: Go to Agency page and uncheck the toggle
+5. Result: All agency features instantly reappear
+
+#### The Client Handoff Banner
+
+When Client Handoff Mode is enabled, you'll see a blue informational banner at the top of all plugin pages:
+
+**Banner Text:**
+> 🤝 **Client Handoff Mode Active**
+> Agency-specific features are currently hidden. All data is safe and can be restored instantly.
+>
+> [Return to Agency Mode] ← Click to turn off
+
+**Why the Banner?**
+- Reminds you that handoff mode is active
+- Prevents confusion ("where did my Agency Library go?")
+- Provides quick access to turn it back off
+- Only visible on plugin pages (not elsewhere in WordPress)
+
+#### Use Cases
+
+**1. Client Site Handoff**
+- You've set up a client's catalog and branding
+- Client needs admin access to generate PDFs
+- Enable Client Handoff Mode before giving them login
+- They see a clean, simple interface without agency tools
+
+**2. Multi-User Teams**
+- Junior staff or contractors need builder access
+- Don't want them accidentally modifying Agency Packs
+- Enable handoff mode for their user role
+- They can use the builder but can't access agency resources
+
+**3. Client Training Sessions**
+- Walking a client through the plugin
+- Don't want to confuse them with agency features
+- Enable handoff mode during screen share
+- Simpler interface = easier training
+
+**4. Temporary Client Access**
+- Client needs to generate PDFs for a project
+- Give them temporary admin access
+- Enable handoff mode to protect your agency assets
+- Disable when project is complete
+
+#### Important Notes
+
+**Data Safety:**
+- **Nothing is deleted** - All Agency Packs, Brand Presets, and settings remain in the database
+- **Instant restoration** - Turn off handoff mode and everything reappears immediately
+- **No user permissions changed** - This only affects visibility, not capabilities
+
+**What It Does NOT Do:**
+- ❌ Does not create separate user roles
+- ❌ Does not modify database content
+- ❌ Does not affect frontend builder functionality
+- ❌ Does not change branding or PDF output
+- ❌ Does not hide the "Agency" settings page itself (so you can turn it back off)
+
+**Best Practice:**
+- Set up a default Brand Preset before enabling (see "Default Brand Preset → PDFs")
+- Test PDF generation while handoff mode is active
+- Document which features are hidden for client onboarding
+- Use with White-Label Mode for complete client-facing experience
+
+#### Combining with Other Agency Features
+
+**Client Handoff + White-Label Mode:**
+- Hide agency tools (Client Handoff)
+- Remove plugin branding (White-Label)
+- Result: Completely client-branded experience
+
+**Client Handoff + Default Preset:**
+- Hide preset management (Client Handoff)
+- Auto-apply default branding (Default Preset toggle)
+- Result: Clients get consistent PDFs without seeing branding controls
+
+**Client Handoff + Operator Role:**
+- Hide agency tools (Client Handoff)
+- Limit user capabilities (Operator role)
+- Result: Locked-down, client-safe environment
+
+---
+
+### Weekly Lead Export → "Send Now"
+
+**Note:** Agency feature requiring active Agency license.
+
+**Location:** WordPress Admin → **Submittal Builder** → **Settings** → **Lead Export** → "Send Now" button
+
+Automatically export all new leads weekly via email CSV. Or, trigger an immediate export with the "Send Now" button.
+
+#### How It Works
+
+**Weekly Schedule:**
+- Runs every Monday at 9:00 AM (site timezone)
+- Gathers all leads from previous 7 days
+- Generates CSV file with lead data
+- Sends email with CSV attachment
+
+**Send Now Button:**
+- Location: Settings → Lead Export section
+- Triggers immediate export (bypasses schedule)
+- Includes all leads from past 7 days
+- Same CSV format as scheduled export
+- Email sent to configured recipients
+
+#### CSV Format
+
+**Columns Included:**
+- Lead ID
+- Email address
+- Date submitted
+- Project name (if provided)
+- Product count
+- Top category
+- UTM source/medium/campaign (if present)
+- Custom fields (if any)
+
+**File Format:**
+- Standard CSV (comma-separated values)
+- UTF-8 encoding
+- Header row included
+- Filename: `leads-export-YYYY-MM-DD.csv`
+
+#### Configuration
+
+**Recipients:**
+- Comma-separated email list
+- Example: `manager@company.com, sales@company.com`
+- Validation on save
+
+**Enable/Disable:**
+- Toggle to turn weekly export on/off
+- "Send Now" always available (even if disabled)
+- Default: disabled
+
+#### Use Cases
+
+**Sales Team Reports:**
+- Weekly lead summary for team meetings
+- Import into CRM or spreadsheet
+- Track lead volume over time
+
+**On-Demand Exports:**
+- Need leads immediately for urgent proposal
+- Monthly reporting (click "Send Now" on last Monday)
+- Quarter-end summaries
+
+**Backup & Compliance:**
+- Regular lead backup to email
+- Audit trail for compliance
+- Redundant storage outside WordPress
 
 ---
 
@@ -1677,5 +2369,5 @@ Found a bug? Please report it!
 
 ---
 
-© 2025 WebStuff Guy Labs. All rights reserved.
+© 2025 WebStuffGuy Labs. All rights reserved.
 

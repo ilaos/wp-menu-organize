@@ -17,6 +17,7 @@ Complete documentation for all 29 REST API endpoints and AJAX handlers available
 - [PDF Generation](#pdf-generation)
 - [Draft Management (Pro)](#draft-management-pro)
 - [Agency Features (Agency)](#agency-features-agency)
+- [AJAX Endpoints (Agency)](#ajax-endpoints-agency)
 - [Settings](#settings)
 - [License Management](#license-management)
 
@@ -1402,10 +1403,190 @@ wp.apiFetch({
 
 ---
 
+## AJAX Endpoints (Agency)
+
+All AJAX endpoints require WordPress nonce verification and admin capabilities. Agency endpoints additionally require an active Agency license.
+
+### Brand Presets (Agency)
+
+**Permission:** Admin + `edit_sfb_branding` + Agency license
+
+#### `sfb_preset_create`
+Create a new brand preset from current branding settings.
+
+**Parameters:**
+- `name` (string, required) - Preset display name
+- `_wpnonce` (string, required) - Nonce
+
+**Response:**
+```json
+{
+  "success": true,
+  "data": {
+    "preset_id": "preset_abc123",
+    "name": "Client A Branding"
+  }
+}
+```
+
+---
+
+#### `sfb_preset_list`
+Get all saved brand presets.
+
+**Parameters:**
+- `_wpnonce` (string, required) - Nonce
+
+**Response:**
+```json
+{
+  "success": true,
+  "data": [
+    {
+      "id": "preset_abc123",
+      "name": "Client A Branding",
+      "is_default": true
+    }
+  ]
+}
+```
+
+---
+
+#### `sfb_preset_apply`
+Apply a preset to current branding.
+
+**Parameters:**
+- `preset_id` (string, required) - Preset ID to apply
+- `_wpnonce` (string, required) - Nonce
+
+**Response:**
+```json
+{
+  "success": true,
+  "data": {
+    "message": "Preset applied successfully"
+  }
+}
+```
+
+---
+
+#### `sfb_preset_rename`
+Rename an existing preset.
+
+**Parameters:**
+- `preset_id` (string, required) - Preset ID
+- `new_name` (string, required) - New display name
+- `_wpnonce` (string, required) - Nonce
+
+**Response:**
+```json
+{
+  "success": true
+}
+```
+
+---
+
+#### `sfb_preset_delete`
+Delete a brand preset.
+
+**Parameters:**
+- `preset_id` (string, required) - Preset ID to delete
+- `_wpnonce` (string, required) - Nonce
+
+**Response:**
+```json
+{
+  "success": true
+}
+```
+
+---
+
+#### `sfb_preset_set_default`
+Set a preset as the default for automatic application.
+
+**Parameters:**
+- `preset_id` (string, required) - Preset ID to set as default
+- `_wpnonce` (string, required) - Nonce
+
+**Response:**
+```json
+{
+  "success": true
+}
+```
+
+---
+
+### Lead Routing (Agency)
+
+**Permission:** Admin + `access_sfb_agency` + Agency license
+
+#### `sfb_routing_save`
+Save lead routing rules.
+
+**Parameters:**
+- `rules` (array, required) - Array of routing rule objects
+- `_wpnonce` (string, required) - Nonce
+
+**Response:**
+```json
+{
+  "success": true,
+  "data": {
+    "rules_saved": 3
+  }
+}
+```
+
+---
+
+#### `sfb_routing_test`
+Test a routing rule against the last captured lead.
+
+**Parameters:**
+- `rule` (object, required) - Routing rule to test
+- `_wpnonce` (string, required) - Nonce
+
+**Response:**
+```json
+{
+  "success": true,
+  "data": {
+    "matched": true,
+    "lead_id": 42,
+    "lead_email": "test@example.com"
+  }
+}
+```
+
+---
+
+#### `sfb_routing_clear_log`
+Clear the routing delivery log.
+
+**Parameters:**
+- `_wpnonce` (string, required) - Nonce
+
+**Response:**
+```json
+{
+  "success": true,
+  "data": {
+    "cleared": 20
+  }
+}
+```
+
+---
+
 ## Settings
 
 ### GET /sfb/v1/settings
-Retrieve all plugin settings (branding, drafts, links).
+Retrieve all plugin settings (branding, white-label, drafts, toggles, links).
 
 **Permission:** Admin
 
@@ -1426,7 +1607,14 @@ Retrieve all plugin settings (branding, drafts, links).
     "cover_default": true,
     "footer_text": "Professional Submittal Packet",
     "theme": "engineering",
-    "watermark": ""
+    "watermark": "",
+    "white_label": {
+      "enabled": false,
+      "custom_footer": "",
+      "email_from_name": "",
+      "email_from_address": "",
+      "show_subtle_credit": false
+    }
   },
   "drafts": {
     "autosave_enabled": true,
@@ -1435,6 +1623,10 @@ Retrieve all plugin settings (branding, drafts, links).
     "rate_limit_sec": 20,
     "privacy_note": ""
   },
+  "toggles": {
+    "default_preset_to_pdf": false,
+    "client_handoff_mode": false
+  },
   "links": {
     "account": "https://example.com/account",
     "docs": "https://example.com/docs"
@@ -1442,15 +1634,27 @@ Retrieve all plugin settings (branding, drafts, links).
 }
 ```
 
+**Response Fields:**
+- `branding.white_label` (object) - White-label settings (Agency feature)
+  - `enabled` (boolean) - Remove plugin branding
+  - `custom_footer` (string) - Custom PDF footer text
+  - `email_from_name` (string) - Custom email sender name
+  - `email_from_address` (string) - Custom email sender address
+  - `show_subtle_credit` (boolean) - Show "Powered by" credit
+- `toggles` (object) - Feature toggles (Agency)
+  - `default_preset_to_pdf` (boolean) - Auto-apply default preset to PDFs
+  - `client_handoff_mode` (boolean) - Hide agency features from clients
+
 **Use Cases:**
 - Loading settings in admin UI
 - Applying branding to frontend
 - Feature configuration checks
+- Checking white-label status
 
 ---
 
 ### POST /sfb/v1/settings
-Update plugin settings.
+Update plugin settings (branding, white-label, toggles).
 
 **Permission:** Admin
 
@@ -1459,10 +1663,17 @@ Update plugin settings.
 {
   "branding": {
     "company_name": "Updated Corp",
-    "primary_color": "#0ea5e9"
+    "primary_color": "#0ea5e9",
+    "white_label": {
+      "enabled": true,
+      "custom_footer": "Professional Documentation System"
+    }
   },
   "drafts": {
     "expiry_days": 60
+  },
+  "toggles": {
+    "default_preset_to_pdf": true
   }
 }
 ```
@@ -1480,6 +1691,8 @@ Update plugin settings.
 - Saving branding changes
 - Updating draft settings
 - Configuring external links
+- Enabling white-label mode
+- Toggling agency features
 
 ---
 

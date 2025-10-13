@@ -1642,3 +1642,109 @@
   color: #9ca3af;
   font-size: 12px;
 }
+
+/* ========== Lead Routing Styles ========== */
+.sfb-routing-controls {
+  margin-bottom: 24px;
+}
+
+.sfb-rule-card {
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  padding: 16px;
+  margin-bottom: 16px;
+  background: #fff;
+  transition: box-shadow 0.2s;
+}
+
+.sfb-rule-card:hover {
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+.sfb-rule-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 12px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid #f3f4f6;
+}
+
+.sfb-rule-header strong {
+  flex: 1;
+  font-size: 15px;
+  color: #111827;
+}
+
+.sfb-rule-form {
+  padding-top: 12px;
+}
+
+.sfb-form-row {
+  margin-bottom: 16px;
+}
+
+.sfb-form-row label {
+  display: block;
+  margin-bottom: 4px;
+}
+
+.sfb-form-row strong {
+  display: block;
+  font-size: 13px;
+  font-weight: 600;
+  color: #374151;
+  margin-bottom: 6px;
+}
+
+.sfb-form-row small {
+  display: block;
+  margin-top: 4px;
+  color: #6b7280;
+  font-size: 12px;
+}
+
+.sfb-form-section {
+  padding: 16px;
+  background: #f9fafb;
+  border-radius: 6px;
+  margin-bottom: 16px;
+}
+
+.sfb-form-section h4 {
+  margin-top: 0;
+}
+
+.sfb-rule-actions {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  margin-top: 16px;
+}
+
+.sfb-rule-preview {
+  padding-top: 12px;
+}
+
+.sfb-routing-fallback {
+  margin-top: 32px;
+}
+
+.sfb-routing-log {
+  margin-top: 32px;
+}
+
+.sfb-rules-list {
+  margin-bottom: 16px;
+}
+
+/* Drag handle for rules */
+.sfb-rule-card .sfb-drag-handle {
+  cursor: grab;
+  color: #9ca3af;
+  flex-shrink: 0;
+}
+
+.sfb-rule-card .sfb-drag-handle:active {
+  cursor: grabbing;
+}

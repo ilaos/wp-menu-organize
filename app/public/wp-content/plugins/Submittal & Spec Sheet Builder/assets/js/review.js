@@ -296,7 +296,11 @@
     renderSelected();
   });
 
-  // ---- Brand Preview Initialization ----
+  // ---- Brand Preview Initialization (REMOVED - See Branding page for live preview) ----
+  // Brand preview sidebar was removed from Review page as it's redundant with
+  // the live preview already available in Settings → Branding page.
+  // This simplifies the contractor experience on the Review page.
+  /*
   function initBrandPreview() {
     const container = document.getElementById('sfb-brand-preview-container');
     if (!container) return;
@@ -315,7 +319,9 @@
     // Fallback: Normal theme selector (for non-Agency users)
     renderDefaultThemeSelector();
   }
+  */
 
+  /*
   // Phase C: Render preset switcher UI
   function renderPresetSwitcher(presets, defaultPreset, useDefault) {
     const container = document.getElementById('sfb-brand-preview-container');
@@ -586,9 +592,10 @@
       el.style.color = color;
     });
   }
+  */
 
-  // Initialize brand preview after a short delay to ensure DOM is ready
-  setTimeout(initBrandPreview, 100);
+  // Brand Preview initialization removed - see comment block above
+  // setTimeout(initBrandPreview, 100);
 
   // Expose for debugging
   window.sfbReviewState = { selectedMap };

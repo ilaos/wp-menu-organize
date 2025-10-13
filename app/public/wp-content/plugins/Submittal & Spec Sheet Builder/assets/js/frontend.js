@@ -133,7 +133,6 @@
       elements.selectionViewBtn.addEventListener('click', (e) => {
         e.preventDefault();
         e.stopPropagation();
-        console.log('[SFB] Selection counter View button clicked');
         // Go directly to review step
         goToStep(2);
       });
@@ -143,21 +142,31 @@
     elements.pills.forEach((pill, index) => {
       pill.addEventListener('click', (e) => {
         const stepNumber = index + 1;
-        console.log('[SFB] Pill clicked:', stepNumber, 'Classes:', pill.className);
 
         // Only allow navigation to completed steps or current step
         if (pill.classList.contains('sfb-pill-complete') || pill.classList.contains('sfb-pill-active')) {
-          console.log('[SFB] Navigating to step:', stepNumber);
           goToStep(stepNumber);
-        } else {
-          console.log('[SFB] Pill not clickable (not complete or active)');
         }
       });
     });
 
     // Tray continue button
     if (elements.trayContinueBtn) {
-      elements.trayContinueBtn.addEventListener('click', () => goToStep(2));
+      elements.trayContinueBtn.addEventListener('click', () => {
+        if (state.currentStep === 1) {
+          // Step 1: Go to review step and collapse tray
+          goToStep(2);
+          if (elements.tray && !elements.tray.classList.contains('sfb-tray--collapsed')) {
+            toggleTray();
+          }
+        } else if (state.currentStep === 2) {
+          // Step 2: Generate PDF and collapse tray
+          handleGeneratePDF();
+          if (elements.tray && !elements.tray.classList.contains('sfb-tray--collapsed')) {
+            toggleTray();
+          }
+        }
+      });
     }
 
     // Tray clear all button
@@ -291,20 +300,9 @@
         // Step 2: Normalize and deduplicate using composite_key
         normalizeProducts(rawProducts);
 
-        // Debug: Log normalized data
-        console.log('[SFB] Total products from server:', rawProducts.length);
-        console.log('[SFB] Deduplicated products:', state.productsMap.size);
-        console.log('[SFB] Categories:', Array.from(state.byCategory.keys()));
-
         // Expose catalog to Review step
         window.SFB = window.SFB || {};
         window.SFB.productsById = state.productsMap;
-
-        if (state.productsMap.size > 0) {
-          const firstKey = state.productsMap.keys().next().value;
-          const firstProduct = state.productsMap.get(firstKey);
-          console.log('[SFB] First product (normalized):', firstProduct);
-        }
 
         renderCategories();
         renderProducts();
@@ -522,9 +520,6 @@
               ${lines.map(line => `<div>${line}</div>`).join('')}
             </div>
           `;
-        } else {
-          // Debug: Show that specs exist but are in wrong format
-          console.log('[SFB] Product has specs but in unexpected format:', product.name, specs);
         }
       }
 
@@ -746,10 +741,8 @@
       // Don't call renderReview() - review.js will handle it
     }
 
-    // Hide tray on step 2+
-    if (elements.tray) {
-      elements.tray.classList.toggle('active', step === 1 && state.selected.size > 0);
-    }
+    // Update tray button text and visibility based on step
+    updateTrayForStep(step);
 
     // Scroll to top
     window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -965,10 +958,6 @@
 
   // ========== Generate PDF ==========
   async function handleGeneratePDF(skipLeadCapture = false) {
-    console.log('[SFB] Generate PDF clicked');
-    console.log('[SFB] Selected products size:', state.selected.size);
-    console.log('[SFB] Selected products:', state.selectedProducts);
-
     if (state.selected.size === 0) {
       alert('Please select at least one product.');
       return;
@@ -978,8 +967,6 @@
     const leadCaptureEnabled = elements.app?.dataset.leadCapture === '1';
 
     if (leadCaptureEnabled && !skipLeadCapture && typeof window.SFB_LeadCapture !== 'undefined') {
-      console.log('[SFB] Lead capture enabled, showing modal');
-
       // Prepare PDF data to pass to modal
       const pdfData = {
         projectName: state.projectName || '',
@@ -1001,7 +988,6 @@
       let review = null;
       if (typeof window.SFB_collectReviewPayload === 'function') {
         review = window.SFB_collectReviewPayload(state.projectName || '');
-        console.log('[SFB] Review payload collected:', review);
       }
 
       const formData = new FormData();
@@ -1028,8 +1014,6 @@
 
       // Read response as text first
       const responseText = await response.text();
-      console.log('[SFB] Response status:', response.status);
-      console.log('[SFB] Response text (first 500 chars):', responseText.substring(0, 500));
 
       // Try to parse as JSON
       let data;
@@ -1097,6 +1081,29 @@
     }
   }
 
+  // ========== Update Tray for Current Step ==========
+  function updateTrayForStep(step) {
+    if (!elements.tray || !elements.trayContinueBtn) return;
+
+    const count = state.selected.size;
+
+    // Update button text based on step
+    if (step === 1) {
+      // Step 1: "Continue to Review"
+      elements.trayContinueBtn.innerHTML = 'Continue to Review <span class="sfb-icon-arrow">→</span>';
+      // Show tray if items selected
+      elements.tray.classList.toggle('sfb-tray-visible', count > 0);
+    } else if (step === 2) {
+      // Step 2: "Generate PDF"
+      elements.trayContinueBtn.innerHTML = 'Generate PDF <span class="sfb-icon-arrow">→</span>';
+      // Keep tray visible on step 2
+      elements.tray.classList.toggle('sfb-tray-visible', count > 0);
+    } else {
+      // Step 3: Hide tray
+      elements.tray.classList.remove('sfb-tray-visible');
+    }
+  }
+
   // ========== Update Tray ==========
   function updateTray() {
     const count = state.selectedProducts.size;
@@ -1112,10 +1119,8 @@
       elements.trayContinueBtn.disabled = count === 0;
     }
 
-    // Show/hide tray based on selection count
-    if (elements.tray) {
-      elements.tray.classList.toggle('sfb-tray-visible', count > 0);
-    }
+    // Update button text and visibility for current step
+    updateTrayForStep(state.currentStep);
 
     // Update products list
     if (elements.trayProductsList) {

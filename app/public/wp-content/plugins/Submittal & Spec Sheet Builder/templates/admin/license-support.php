@@ -191,6 +191,16 @@ $links = sfb_get_links();
   <p style="color:#9ca3af; margin-top:32px; font-size:13px; text-align:center;">
     <?php esc_html_e('Thank you for being a Pro member!', 'submittal-builder'); ?>
   </p>
+
+  <!-- Feedback Footer -->
+  <div style="margin-top: 40px; padding: 16px 20px; background: #f9fafb; border: 1px solid #e5e7eb; border-radius: 8px; text-align: center;">
+    <p style="margin: 0; color: #6b7280; font-size: 14px;">
+      <?php esc_html_e('Found a bug? Have a suggestion?', 'submittal-builder'); ?>
+      <a href="https://webstuffguylabs.com/support/" target="_blank" rel="noopener noreferrer" style="color: #2563eb; text-decoration: none; font-weight: 600;">
+        <?php esc_html_e('Tell us about it', 'submittal-builder'); ?> →
+      </a>
+    </p>
+  </div>
 </div>
 
 <!-- Copy Toast Notification -->

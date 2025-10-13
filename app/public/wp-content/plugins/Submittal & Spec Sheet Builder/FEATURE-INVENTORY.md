@@ -236,6 +236,7 @@
 - Implementation: `submittal-form-builder.php:6282-6299, 232-271`
 - Admin page: `submittal-form-builder.php:2843-2953`
 - Storage: `sfb_packets` option (array with view tracking data)
+- **Documentation:** `docs/website/tracking.md` (comprehensive user guide)
 
 ---
 
@@ -296,7 +297,7 @@
   - Graceful degradation for non-Agency users (features hidden)
 
 **Brand Presets** (Agency feature - implemented previously)
-- Save multiple brand configurations as reusable presets
+- Save multiple brand configurations as reusable presets (A, B, C, etc.)
 - Apply presets to current branding with one click
 - Set default preset for automatic use in Review + PDFs
 - **Admin page:** Branding → Brand Presets section
@@ -306,6 +307,37 @@
   - Template: `templates/frontend/builder.php:107-149` (data localization)
 - **Storage:** `sfb_brand_presets` option
 
+**Default-to-PDF Brand Preset** (Agency feature)
+- **Status:** ✅ Implemented
+- **Location:** Admin → Branding → "Use default preset automatically" toggle
+- **What it does:** When enabled and a Default Preset is set, the Review preview and generated PDFs automatically use that preset's branding
+- **Behavior:**
+  - ✅ **Toggle ON + Default Preset set:** Review page and PDFs use default preset branding
+  - ⚠️ **Toggle ON but no Default Preset:** Falls back to current branding settings
+  - ❌ **Toggle OFF or Non-Agency:** No change to current behavior (uses current branding)
+- **Use Cases:**
+  - Agencies maintaining consistent branding across all client PDFs
+  - Fast-switching between client brands without manual preset application
+  - Ensuring every PDF matches the designated "primary" brand
+
+**Review Screen Preset Switcher** (Agency feature)
+- **Status:** ✅ Implemented (Phase C)
+- **Location:** Review step (right sidebar)
+- **What it does:** Lets Agency users preview different brand presets for the current session only
+- **Important Behavior:**
+  - 🔄 **Session-only:** Switcher uses `sessionStorage` (no database writes)
+  - 💾 **Does not persist:** On page reload, reverts to Default Preset (if "Default-to-PDF" toggle is on) or current branding
+  - 🎨 **Live preview:** Changes logo, colors, and company info in real-time on Review page
+  - ⚙️ **"Apply as default" action:** Opens Branding → Presets page where admin must manually save
+- **Use Cases:**
+  - Quick visual comparison of multiple brand presets
+  - Client approval workflows ("Which brand do you prefer?")
+  - Testing preset appearance before making it default
+- **Files:**
+  - Frontend logic: `assets/js/review.js:299-589`
+  - Session storage key: `sfb_session_preset`
+  - Data localization: `templates/frontend/builder.php:107-149`
+
 **Weekly Lead Export Scheduler** (NEW 2025-10-11)
 - **Automated weekly email** delivery of new leads in CSV format
 - **Settings UI** in Settings → Weekly Lead Export (Agency):
@@ -313,7 +345,7 @@
   - Recipient email address
   - Day of week selector (Monday-Sunday)
   - Time of day picker (respects site timezone)
-  - Manual "Send Now" button for testing
+  - 🔘 **"Send Now" button** - Manual trigger for immediate testing/QA
 - **Cron job** scheduled weekly:
   - Respects site timezone
   - Auto-schedules when enabled
@@ -329,6 +361,16 @@
   - Subject: `[Site Name] Weekly Lead Export - N New Leads`
   - Body includes summary, date range, generation timestamp
   - CSV columns match Leads page export
+- **"Send Now" Button Details:**
+  - **Purpose:** Immediate manual send for testing/validation without waiting for scheduled time
+  - **What it does:** Sends CSV email with all new leads (those not previously exported)
+  - **Use cases:**
+    - QA: Verify configuration before waiting for cron
+    - Testing: Confirm email delivery and CSV format
+    - On-demand: Client requests immediate lead dump
+  - **Behavior:** Uses same logic as scheduled cron (marks leads as sent to prevent duplicates)
+  - **AJAX handler:** `sfb_weekly_lead_export_send_now`
+  - **Security:** Nonce verification + `manage_options` capability
 - **Files:**
   - Settings UI: `submittal-form-builder.php:2413-2568`
   - CSS styles: `submittal-form-builder.php:2759-2790`
@@ -349,7 +391,7 @@
 - **User Flow:**
   1. Enable: Settings → Weekly Lead Export → Toggle "Enable weekly lead CSV email"
   2. Configure: Enter recipient email, select day/time
-  3. Test: Click "Send Now" to verify configuration
+  3. Test: Click "Send Now" to verify configuration (includes only new leads since last export)
   4. Automated: Cron sends weekly emails with new leads only
   5. Monitor: Check email for weekly reports
 
@@ -367,6 +409,16 @@
   - Uses custom From name/address for all lead capture emails
   - Optional subtle "Powered by" credit (not shown on frontend)
   - Respects white-label settings across all email communications
+- **Credit Behavior (3 modes):**
+  - 🔴 **White-Label OFF:** Standard "Generated with Submittal & Spec Sheet Builder" credit shown everywhere
+  - 🟡 **White-Label ON + Show subtle credit:** Tiny "Powered by Submittal & Spec Sheet Builder" in PDF footer and email footers only (never on frontend)
+  - 🟢 **White-Label ON (no subtle credit):** No plugin credit shown anywhere
+  - ✍️ **Custom footer:** When provided, replaces default credit text entirely (works in all modes)
+- **Where Credits Appear:**
+  - **Frontend:** "Built with..." tagline (removed when white-label ON)
+  - **PDF Footer:** Bottom of every page (subtle credit appears here if enabled)
+  - **Email Footer:** Lead capture emails (subtle credit appears here if enabled)
+  - **Admin Pages:** Never affected (always shows plugin name)
 - **Files:**
   - Settings UI: `submittal-form-builder.php:854-956`
   - Helper functions: `Includes/branding-helpers.php:207-308`
@@ -489,6 +541,64 @@
 - **Storage:**
   - Events stored in `wp_sfb_analytics_events` table
   - Cron job: `sfb_analytics_heartbeat` (daily)
+
+**Advanced Lead Routing** (NEW 2025-10-12)
+- **Status:** ✅ Implemented
+- **Location:** Admin → Agency Settings → "Advanced Lead Routing"
+- **What it does:** Automatically routes newly captured leads to email recipients and/or a generic webhook (Zapier/Make compatible) based on rules
+- **Rule Conditions (OR logic within a rule; first-match wins):**
+  - **Email domain contains:** e.g., `acme.com` (comma-separated tokens)
+  - **UTM contains:** source / medium / campaign (comma-separated tokens, case-insensitive)
+  - **Top Category equals:** exact match on lead's top category
+- **Actions per rule:**
+  - **Email to:** comma-separated recipients (validated)
+  - **Webhook URL:** HTTPS only, JSON POST
+- **Fallback route:** optional email + webhook if no rule matches
+- **Retries & logging:**
+  - Webhooks retry 3× with exponential backoff (≈30s, 2m, 10m) via `wp_cron`
+  - De-duplication per lead ID (no double sends)
+  - Delivery log (last 20) with success/failure + HTTP code
+  - "Test" a rule against the last lead from UI
+- **Security & gating:**
+  - Agency-only UI and processing
+  - Nonces + `manage_options` on all AJAX operations
+  - HTTPS enforced for webhooks
+- **Webhook Payload Example:**
+  ```json
+  {
+    "event": "lead.captured",
+    "site": {
+      "url": "https://example.com",
+      "name": "Example",
+      "plugin_version": "1.0.0"
+    },
+    "lead": {
+      "id": 123,
+      "created_at": "2025-10-12T14:30:00Z",
+      "email": "jane@acme.com",
+      "phone": "+1-555-123-4567",
+      "project_name": "East Wing",
+      "num_items": 14,
+      "top_category": "Shaftwall",
+      "utm": {
+        "source": "google",
+        "medium": "cpc",
+        "campaign": "fall_promo",
+        "term": "",
+        "content": ""
+      }
+    },
+    "routing": {
+      "rule_name": "Acme Domains",
+      "matched": true
+    }
+  }
+  ```
+- **Files:**
+  - Routing logic: `Includes/agency-lead-routing.php`
+  - Admin UI: `assets/js/lead-routing.js`
+  - Integration: `Includes/lead-capture.php` (triggers routing on lead capture)
+  - Settings storage: `sfb_lead_routing_rules` option
 
 ---
 

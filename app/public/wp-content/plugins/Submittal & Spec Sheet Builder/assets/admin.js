@@ -1644,7 +1644,6 @@
         const next = new Set(prev);
         if (next.has(nodeId)) next.delete(nodeId); else next.add(nodeId);
         saveCollapsedSet(next);
-        console.log('[SFB] toggleCollapse', { nodeId, collapsedBefore: Array.from(prev), collapsedAfter: Array.from(next) });
         return next;
       });
     };
@@ -1670,13 +1669,11 @@
       const next = new Set(ids.map(toID));
       saveCollapsedSet(next);
       setCollapsed(next);
-      console.log('[SFB] collapseAll =>', Array.from(next));
     };
 
     const expandAll = () => {
       saveCollapsedSet(new Set());
       setCollapsed(new Set());
-      console.log('[SFB] expandAll => []');
     };
 
     // Collapse by type
@@ -1695,15 +1692,12 @@
       }
       saveCollapsedSet(next);
       setCollapsed(next);
-      console.log('[SFB] collapseByType', nodeType, '=>', Array.from(next));
     };
 
     // Drag & Drop reordering
     const handleDragDrop = (sourceId, targetId, zone, targetNode) => {
       sourceId = toID(sourceId);
       targetId = toID(targetId);
-
-      console.log('[SFB] drag-drop', { sourceId, targetId, zone });
 
       let newParentId = targetNode.parent_id || 0;
       let newPosition = targetNode.position || 0;
@@ -3154,10 +3148,10 @@
   })();
 
   // ========================================
-  // Tools Page Functionality
+  // Utilities Page Functionality
   // ========================================
   (function() {
-    // Only run on tools page
+    // Only run on utilities page
     const params = new URLSearchParams(window.location.search);
     if (params.get('page') !== 'sfb-tools') return;
 
@@ -3166,37 +3160,50 @@
       smokeBtn: document.querySelector('#sfb-smoke-btn'),
       status: document.querySelector('#sfb-drafts-status'),
       cron: document.querySelector('#sfb-cron-status'),
-      stats: document.querySelector('#sfb-draft-stats')
+      stats: document.querySelector('#sfb-draft-stats'),
+      // New utility elements
+      testEmailBtn: document.querySelector('#sfb-test-email-btn'),
+      testEmailInput: document.querySelector('#sfb-test-email-input'),
+      emailStatus: document.querySelector('#sfb-email-status'),
+      clearTrackingBtn: document.querySelector('#sfb-clear-tracking-btn'),
+      trackingStatus: document.querySelector('#sfb-tracking-status'),
+      trackingTotal: document.querySelector('#sfb-tracking-total'),
+      trackingViewed: document.querySelector('#sfb-tracking-viewed'),
+      optimizeDbBtn: document.querySelector('#sfb-optimize-db-btn'),
+      cleanOrphansBtn: document.querySelector('#sfb-clean-orphans-btn'),
+      dbStatus: document.querySelector('#sfb-db-status')
     };
 
-    function setStatus(cls, msg) {
-      if (!el.status) return;
-      el.status.className = 'sfb-status ' + cls;
-      el.status.textContent = msg;
+    function setStatus(statusEl, cls, msg) {
+      if (!statusEl) return;
+      statusEl.className = 'sfb-status ' + cls;
+      statusEl.textContent = msg;
     }
 
-    async function post(action, nonce) {
+    async function post(action, nonce, extraData = {}) {
+      const body = new URLSearchParams({ action, _wpnonce: nonce, ...extraData });
       const res = await fetch(ajaxurl, {
         method: 'POST',
         headers: { 'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8' },
-        body: new URLSearchParams({ action, _wpnonce: nonce })
+        body
       });
       const data = await res.json().catch(() => ({ success: false, data: { message: 'Invalid JSON' } }));
       if (!data.success) throw new Error(data.data?.message || 'Request failed');
       return data.data;
     }
 
+    // Draft Management
     if (el.purgeBtn) {
       el.purgeBtn.addEventListener('click', async (e) => {
         e.preventDefault();
-        setStatus('warn', 'Working… purging expired drafts');
+        setStatus(el.status, 'warn', 'Working… purging expired drafts');
         el.purgeBtn.disabled = true;
         try {
           const data = await post('sfb_purge_expired_drafts', el.purgeBtn.dataset.nonce);
-          setStatus('ok', data.message || 'Done.');
+          setStatus(el.status, 'ok', data.message || 'Done.');
           if (el.stats) el.stats.textContent = data.stats_text || '';
         } catch (err) {
-          setStatus('err', 'Error: ' + err.message);
+          setStatus(el.status, 'err', 'Error: ' + err.message);
         } finally {
           el.purgeBtn.disabled = false;
         }
@@ -3206,16 +3213,97 @@
     if (el.smokeBtn) {
       el.smokeBtn.addEventListener('click', async (e) => {
         e.preventDefault();
-        setStatus('warn', 'Running smoke test…');
+        setStatus(el.status, 'warn', 'Running smoke test…');
         el.smokeBtn.disabled = true;
         try {
           const data = await post('sfb_run_smoke_test', el.smokeBtn.dataset.nonce);
-          setStatus('ok', data.message || 'Smoke test passed.');
+          setStatus(el.status, 'ok', data.message || 'Smoke test passed.');
           if (el.stats) el.stats.textContent = data.stats_text || '';
         } catch (err) {
-          setStatus('err', 'Error: ' + err.message);
+          setStatus(el.status, 'err', 'Error: ' + err.message);
         } finally {
           el.smokeBtn.disabled = false;
+        }
+      });
+    }
+
+    // Email Testing
+    if (el.testEmailBtn && el.testEmailInput) {
+      el.testEmailBtn.addEventListener('click', async (e) => {
+        e.preventDefault();
+        const email = el.testEmailInput.value.trim();
+        if (!email) {
+          setStatus(el.emailStatus, 'err', 'Please enter an email address');
+          return;
+        }
+        setStatus(el.emailStatus, 'warn', 'Sending test email…');
+        el.testEmailBtn.disabled = true;
+        try {
+          const data = await post('sfb_test_email', el.testEmailBtn.dataset.nonce, { email });
+          setStatus(el.emailStatus, 'ok', data.message);
+        } catch (err) {
+          setStatus(el.emailStatus, 'err', err.message);
+        } finally {
+          el.testEmailBtn.disabled = false;
+        }
+      });
+    }
+
+    // Clear Tracking Data (Pro)
+    if (el.clearTrackingBtn) {
+      el.clearTrackingBtn.addEventListener('click', async (e) => {
+        e.preventDefault();
+        if (!confirm('Are you sure you want to clear all tracking data? This cannot be undone.')) {
+          return;
+        }
+        setStatus(el.trackingStatus, 'warn', 'Clearing tracking data…');
+        el.clearTrackingBtn.disabled = true;
+        try {
+          const data = await post('sfb_clear_tracking', el.clearTrackingBtn.dataset.nonce);
+          setStatus(el.trackingStatus, 'ok', data.message);
+          if (el.trackingTotal) el.trackingTotal.textContent = data.total || '0';
+          if (el.trackingViewed) el.trackingViewed.textContent = data.viewed || '0';
+        } catch (err) {
+          setStatus(el.trackingStatus, 'err', err.message);
+        } finally {
+          el.clearTrackingBtn.disabled = false;
+        }
+      });
+    }
+
+    // Database Optimization
+    if (el.optimizeDbBtn) {
+      el.optimizeDbBtn.addEventListener('click', async (e) => {
+        e.preventDefault();
+        setStatus(el.dbStatus, 'warn', 'Optimizing database tables…');
+        el.optimizeDbBtn.disabled = true;
+        try {
+          const data = await post('sfb_optimize_db', el.optimizeDbBtn.dataset.nonce);
+          setStatus(el.dbStatus, 'ok', data.message);
+        } catch (err) {
+          setStatus(el.dbStatus, 'err', err.message);
+        } finally {
+          el.optimizeDbBtn.disabled = false;
+        }
+      });
+    }
+
+    // Clean Orphaned Data
+    if (el.cleanOrphansBtn) {
+      el.cleanOrphansBtn.addEventListener('click', async (e) => {
+        e.preventDefault();
+        if (!confirm('Remove orphaned data from the database? This is safe but cannot be undone.')) {
+          return;
+        }
+        setStatus(el.dbStatus, 'warn', 'Cleaning orphaned data…');
+        el.cleanOrphansBtn.disabled = true;
+        try {
+          const data = await post('sfb_clean_orphans', el.cleanOrphansBtn.dataset.nonce);
+          setStatus(el.dbStatus, 'ok', data.message);
+        } catch (err) {
+          setStatus(el.dbStatus, 'err', err.message);
+        } finally {
+          el.cleanOrphansBtn.disabled = false;
         }
       });
     }
@@ -3273,8 +3361,6 @@
     // Only run on branding page
     if (!location.search.includes('page=sfb-branding')) return;
     if (!window.SFB || !window.SFB.brand) return;
-
-    console.log('[SFB] Initializing branding panel with autosave');
 
     // State management
     const Brand = {
@@ -3381,8 +3467,6 @@
       if (elements.removeLogo) {
         elements.removeLogo.style.display = state.company.logo_url ? 'inline-block' : 'none';
       }
-
-      console.log('[SFB] Preview updated with color:', state.visual.primary_color);
     }
 
     // Schedule autosave with debounce
@@ -3401,7 +3485,6 @@
       if (Brand.saving) return;
 
       Brand.saving = true;
-      console.log('[SFB] Autosaving brand settings...', Brand.state);
 
       if (elements.saveButton) {
         elements.saveButton.textContent = 'Saving...';
@@ -3432,8 +3515,6 @@
         if (!response.ok || !data.success) {
           throw new Error(data.data?.message || 'Save failed');
         }
-
-        console.log('[SFB] Brand settings saved successfully');
 
         if (elements.saveButton) {
           elements.saveButton.textContent = '✓ Saved';
@@ -3468,8 +3549,6 @@
         console.warn('[SFB] Unknown preset:', presetKey);
         return;
       }
-
-      console.log('[SFB] Applying preset:', presetKey, '→', color);
 
       Brand.state.visual.primary_color = color;
       Brand.state.visual.preset_key = normalizedKey;
@@ -3645,7 +3724,5 @@
 
     // Initial preview update
     updatePreview();
-
-    console.log('[SFB] Branding panel initialized');
   })();
 })();
