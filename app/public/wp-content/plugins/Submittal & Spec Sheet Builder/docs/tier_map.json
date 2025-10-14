@@ -185,13 +185,16 @@
     },
     {
       "name": "PDF Watermark",
-      "status": "partial",
+      "status": "implemented",
       "tiers": { "free": false, "expired": false, "pro": true, "agency": true },
-      "gates": [],
+      "gates": [
+        {"file": "submittal-form-builder.php", "line_range": "8588-8590", "condition": "sfb_feature_enabled('watermark')"}
+      ],
       "entry_points": {
-        "setting": "Settings page has watermark toggle/upload"
+        "setting": "Settings page has watermark text input",
+        "templates": ["templates/pdf/cover.html.php:19-24", "templates/pdf/toc.html.php:19-24", "templates/pdf/summary.html.php:32-37", "templates/pdf/model-sheet.html.php:24-29"]
       },
-      "notes": "Setting exists but PDF generator doesn't apply watermark. Needs implementation."
+      "notes": "Fixed-position watermark overlay at 6% opacity, -20° rotation, 64px font. Rendered across all PDF templates."
     },
     {
       "name": "Approval Signature Block",
@@ -591,16 +594,15 @@
   ],
   "summary": {
     "total_features": 31,
-    "fully_implemented": 28,
-    "partially_implemented": 3,
+    "fully_implemented": 29,
+    "partially_implemented": 2,
     "not_implemented": 0,
-    "implementation_rate": "90.3%",
+    "implementation_rate": "93.5%",
     "free_tier_features": 12,
     "pro_tier_features": 8,
     "agency_tier_features": 11,
     "gaps": [
       "PDF Themes need Pro license gate enforcement",
-      "PDF Watermark needs implementation in generator",
       "Approval Signature Block needs full PDF rendering"
     ]
   }

@@ -45,7 +45,7 @@ Complete feature inventory by tier with implementation status.
 | Auto-Email Packets           | ❌   | ❌      | ✅  | ✅     | Implemented | Send PDFs with tracking links                  |
 | Auto-Archive to History      | ❌   | ❌      | ✅  | ✅     | Implemented | Archive by project/date                        |
 | PDF Themes (Arch/Corp)       | ❌   | ❌      | ✅  | ✅     | Partial     | Themes exist, needs Pro gate enforcement       |
-| PDF Watermark                | ❌   | ❌      | ✅  | ✅     | Partial     | Setting exists, needs implementation           |
+| PDF Watermark                | ❌   | ❌      | ✅  | ✅     | Implemented | Fixed-position overlay on all PDF pages        |
 | Approval Signature Block     | ❌   | ❌      | ✅  | ✅     | Partial     | Setting exists, needs full implementation      |
 | **Agency Features**          |      |         |     |        |             |                                                |
 | White-Label Branding         | ❌   | ❌      | ❌  | ✅     | Implemented | Remove plugin credit, custom email sender      |
@@ -207,12 +207,6 @@ Complete feature inventory by tier with implementation status.
 - **File:** pdf-generator.php (theme selection logic present)
 - **Gap:** No enforcement preventing Free users from using themes
 - **Fix Needed:** Add `sfb_is_pro_active()` check before applying non-default themes
-
-#### PDF Watermark (Pro)
-- **Status:** Setting exists but implementation incomplete
-- **File:** Settings page has watermark toggle/upload
-- **Gap:** PDF generator doesn't apply watermark
-- **Fix Needed:** Implement watermark overlay in pdf-generator.php
 
 #### Approval Signature Block (Pro)
 - **Status:** Setting exists (`approve_block`) but needs full implementation
@@ -606,15 +600,15 @@ Shows:
 All basic functionality: catalog, PDF, branding, frontend builder, admin editor, utilities
 
 ### Pro (Pro + Agency) - 8 features
-Server drafts, tracking, lead capture, auto-email, auto-archive, themes†, watermark†, signature†
+Server drafts, tracking, lead capture, auto-email, auto-archive, watermark, themes†, signature†
 †Partial implementation
 
 ### Agency (Agency Only) - 11 features
 White-label, brand presets, default preset auto-apply, preset switcher, lead routing, weekly export, analytics, agency library, client handoff, operator role, agency pages
 
 ### Total Features: 35
-- Fully Implemented: 32 (91.4%)
-- Partially Implemented: 3 (8.6%)
+- Fully Implemented: 33 (94.3%)
+- Partially Implemented: 2 (5.7%)
 - Not Implemented: 0 (0%)
 
 ## Next Steps
