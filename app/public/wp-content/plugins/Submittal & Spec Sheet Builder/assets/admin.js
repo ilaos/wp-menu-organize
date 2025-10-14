@@ -667,18 +667,24 @@
 
           if (intent === 'inside') {
             parent_id = node.id;
-            const kids = flat.filter(n => n.parent_id === parent_id).sort((a,b)=>a.position - b.position);
+            // Exclude dragged item when calculating position
+            const kids = flat.filter(n => n.parent_id === parent_id && n.id !== drag.id).sort((a,b)=>a.position - b.position);
             position = kids.length ? kids[kids.length-1].position + 1 : 0;
           } else {
             parent_id = node.parent_id;
-            const siblings = flat.filter(n => n.parent_id === parent_id).sort((a,b)=>a.position - b.position);
+            // Exclude dragged item from siblings list for accurate position calculation
+            const siblings = flat.filter(n => n.parent_id === parent_id && n.id !== drag.id).sort((a,b)=>a.position - b.position);
+
             const idx = siblings.findIndex(n => n.id === node.id);
+
             let left = idx > 0 ? siblings[idx-1].position : null;
             let right = siblings[idx] ? siblings[idx].position : 0;
+
             if (intent === 'after') {
               left = siblings[idx]?.position ?? right;
               right = siblings[idx+1]?.position ?? (left + 2);
             }
+
             if (left === null) {
               position = right - 0.5;
             } else if (right == null) {

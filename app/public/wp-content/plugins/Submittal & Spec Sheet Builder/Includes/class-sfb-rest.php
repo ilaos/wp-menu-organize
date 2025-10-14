@@ -740,17 +740,6 @@ final class SFB_Rest {
         'position' => $new_position
       ], ['id' => $id]);
 
-      // Normalize positions for siblings in the new parent
-      $siblings = $wpdb->get_results($wpdb->prepare(
-        "SELECT id, position FROM $table WHERE form_id=%d AND parent_id=%d ORDER BY position ASC",
-        $node['form_id'], $new_parent_id
-      ), ARRAY_A);
-
-      $pos = 1;
-      foreach($siblings as $sib){
-        $wpdb->update($table, ['position' => $pos++], ['id' => $sib['id']]);
-      }
-
       return rest_ensure_response(['ok' => true]);
     } catch (\Throwable $e) {
       error_log('SFB api_move_node error: ' . $e->getMessage());
