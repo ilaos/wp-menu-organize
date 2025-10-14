@@ -615,8 +615,7 @@ White-label, brand presets, default preset auto-apply, preset switcher, lead rou
 
 ### High Priority (Complete Partial Features)
 1. **PDF Themes Gate** - Add `sfb_is_pro_active()` check to theme selection
-2. **PDF Watermark** - Implement watermark overlay in pdf-generator.php
-3. **Signature Block** - Add signature section rendering to PDF template
+2. **Signature Block** - Add signature section rendering to PDF template
 
 ### Medium Priority (Enhancements)
 1. Add explicit "Pro Only" badges in Settings UI
