@@ -2588,27 +2588,39 @@
           h('button',{
             className:'button',
             disabled:!selected,
-            onClick:()=> selected && duplicateNode(selected)
+            onClick:()=> selected && duplicateNode(selected),
+            title:'Create a copy of the selected category or product'
           },'Duplicate'),
           h('button',{
             className:'button',
             disabled:!selected,
             onClick:()=> {
               if(selected) window.dispatchEvent(new CustomEvent('sfb-rename', {detail: selected.id}));
-            }
+            },
+            title:'Change the name of the selected item'
           },'Rename'),
           h('button',{
             className:'button',
             disabled:!selected,
-            onClick:()=> selected && deleteNode(selected.id)
+            onClick:()=> selected && deleteNode(selected.id),
+            title:'Permanently remove the selected item and all its children'
           },'Delete'),
-          h('button',{className:'button',onClick:exportJSON},'Export JSON'),
-          h('button',{className:'button',onClick:importJSON},'Import JSON'),
+          h('button',{
+            className:'button',
+            onClick:exportJSON,
+            title:'Download your entire catalog as a JSON file for backup or migration'
+          },'Export JSON'),
+          h('button',{
+            className:'button',
+            onClick:importJSON,
+            title:'Upload a previously exported JSON file to restore or merge catalog data'
+          },'Import JSON'),
           // Agency feature: Save as Pack
           (window.SFB && SFB.isAgency) && h('button',{
             className:'button button-primary',
             onClick:()=> setPackModal({...packModal, open:true}),
-            style: {marginLeft: '8px'}
+            style: {marginLeft: '8px'},
+            title:'Save selected items as a reusable pack for the Agency Library'
           },'💼 Save as Pack')
         ),
         // Search & Filter Toolbar

@@ -1,7 +1,7 @@
   <?php
     define( 'WP_CACHE', false ); // By Speed Optimizer by SiteGround
 
-    // define('SFB_PRO_DEV', true); // Commented out to test license states
+    define('SFB_PRO_DEV', true); // Enable Pro features for testing
 
     /**
      * The base configuration for WordPress
@@ -86,7 +86,7 @@
     define( 'SFB_DEV_MODE', true );
 
     // Enable Agency tier features for testing (Brand Presets)
-    define( 'SFB_AGENCY_DEV', true );
+    define( 'SFB_AGENCY_DEV', true ); // Enable Agency features for testing
 
     /**
      * For developers: WordPress debugging mode.

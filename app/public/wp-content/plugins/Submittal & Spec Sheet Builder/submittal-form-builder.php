@@ -16,6 +16,11 @@
 
 if (!defined('ABSPATH')) exit;
 
+// Define plugin main file constant for reliable path resolution
+if (!defined('SFB_PLUGIN_FILE')) {
+  define('SFB_PLUGIN_FILE', __FILE__);
+}
+
 // Global toggle for Demo Tools (production: false, development: true)
 if (!defined('SFB_SHOW_DEMO_TOOLS')) {
   define('SFB_SHOW_DEMO_TOOLS', false);
@@ -595,14 +600,171 @@ final class SFB_Plugin {
 
   /** Builder Page Renderer */
   function render_builder_page() {
-    echo '<div class="wrap">';
-    echo '<h1>' . esc_html__('Product Catalog', 'submittal-builder') . '</h1>';
-    echo '<p class="description" style="margin-top:-8px;margin-bottom:24px;">';
-    echo esc_html__('Manage your product catalog. Add categories, products, and specifications that contractors can select when building submittal packets.', 'submittal-builder');
-    echo '</p>';
-    echo '<div id="sfb-admin-root" data-view="builder"></div>';
+    ?>
+    <div class="wrap sfb-builder-wrap">
+      <div class="sfb-builder-header">
+        <div class="sfb-builder-header-content">
+          <div class="sfb-builder-title-group">
+            <h1><?php esc_html_e('Product Catalog', 'submittal-builder'); ?></h1>
+            <p class="sfb-builder-subtitle">
+              <?php esc_html_e('Manage your product catalog. Add categories, products, and specifications that contractors can select when building submittal packets.', 'submittal-builder'); ?>
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <div class="sfb-builder-content">
+        <div id="sfb-admin-root" data-view="builder"></div>
+      </div>
+    </div>
+
+    <style>
+    /* Modern Builder Page Styles */
+    .sfb-builder-wrap {
+      max-width: 1400px;
+      margin: 20px 20px 20px 0;
+      background: #f9fafb;
+      min-height: calc(100vh - 60px);
+    }
+
+    .sfb-builder-header {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      border-radius: 12px;
+      padding: 32px 40px;
+      margin-bottom: 24px;
+      box-shadow: 0 4px 16px rgba(102, 126, 234, 0.15);
+    }
+
+    .sfb-builder-header-content {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 24px;
+    }
+
+    .sfb-builder-title-group h1 {
+      color: #fff;
+      font-size: 32px;
+      font-weight: 700;
+      margin: 0 0 8px 0;
+      line-height: 1.2;
+    }
+
+    .sfb-builder-subtitle {
+      color: rgba(255, 255, 255, 0.95);
+      font-size: 15px;
+      margin: 0;
+      line-height: 1.5;
+      max-width: 800px;
+    }
+
+    .sfb-builder-content {
+      background: #fff;
+      border-radius: 12px;
+      padding: 32px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+      min-height: 400px;
+    }
+
+    /* Enhance React app container */
+    #sfb-admin-root {
+      position: relative;
+    }
+
+    /* Modern button overrides for the builder */
+    .sfb-builder-wrap .button,
+    .sfb-builder-wrap .button-primary,
+    .sfb-builder-wrap .button-secondary {
+      border-radius: 6px;
+      padding: 8px 16px 10px 16px;
+      font-size: 14px;
+      font-weight: 500;
+      border: none;
+      transition: all 0.2s ease;
+      line-height: 1.4;
+    }
+
+    /* Ensure toolbar buttons have proper padding */
+    .sfb-builder-wrap .sfb-toolbar .button {
+      padding: 8px 16px 10px 16px;
+      min-height: 36px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .sfb-builder-wrap .button-primary {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: #fff;
+      box-shadow: 0 2px 6px rgba(102, 126, 234, 0.25);
+    }
+
+    .sfb-builder-wrap .button-primary:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(102, 126, 234, 0.35);
+      background: linear-gradient(135deg, #5568d3 0%, #6a3f8f 100%);
+    }
+
+    .sfb-builder-wrap .button-secondary {
+      background: #fff;
+      color: #667eea;
+      border: 2px solid #e5e7eb;
+    }
+
+    .sfb-builder-wrap .button-secondary:hover {
+      border-color: #667eea;
+      color: #5568d3;
+      transform: translateY(-1px);
+    }
+
+    /* Modern input fields */
+    .sfb-builder-wrap input[type="text"],
+    .sfb-builder-wrap input[type="email"],
+    .sfb-builder-wrap input[type="number"],
+    .sfb-builder-wrap textarea,
+    .sfb-builder-wrap select {
+      border: 2px solid #e5e7eb;
+      border-radius: 6px;
+      padding: 8px 12px;
+      font-size: 14px;
+      transition: all 0.2s ease;
+    }
+
+    .sfb-builder-wrap input[type="text"]:focus,
+    .sfb-builder-wrap input[type="email"]:focus,
+    .sfb-builder-wrap input[type="number"]:focus,
+    .sfb-builder-wrap textarea:focus,
+    .sfb-builder-wrap select:focus {
+      border-color: #667eea;
+      outline: none;
+      box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .sfb-builder-wrap {
+        margin: 10px;
+      }
+
+      .sfb-builder-header {
+        padding: 24px;
+      }
+
+      .sfb-builder-title-group h1 {
+        font-size: 24px;
+      }
+
+      .sfb-builder-subtitle {
+        font-size: 14px;
+      }
+
+      .sfb-builder-content {
+        padding: 20px;
+      }
+    }
+    </style>
+    <?php
     $this->render_feedback_footer();
-    echo '</div>';
   }
 
   /** Branding Page Renderer */
@@ -903,19 +1065,19 @@ final class SFB_Plugin {
             </div>
 
             <?php
-            // White-Label Mode Card (Agency only)
-            $is_agency = SFB_Branding::is_agency_license();
-            if ($is_agency):
+            // White-Label Mode Card (Pro + Agency)
+            $is_pro_or_agency = sfb_is_pro_active();
+            if ($is_pro_or_agency):
               $white_label_settings = $options['white_label'] ?? sfb_brand_defaults()['white_label'];
             ?>
-            <!-- White-Label Mode (Agency Feature) -->
+            <!-- White-Label Mode (Pro Feature) -->
             <div class="sfb-card sfb-white-label-card">
               <h2>
                 🏷️ <?php echo esc_html__('White-Label Mode', 'submittal-builder'); ?>
-                <span class="sfb-agency-badge">AGENCY</span>
+                <span class="sfb-pro-badge">PRO</span>
               </h2>
               <p class="sfb-muted">
-                <?php echo esc_html__('Remove plugin branding from PDFs, emails, and frontend. Perfect for agencies presenting to clients.', 'submittal-builder'); ?>
+                <?php echo esc_html__('Remove plugin branding from PDFs, emails, and frontend. Perfect for professionals presenting to clients.', 'submittal-builder'); ?>
               </p>
 
               <!-- Enable White-Label Toggle -->
@@ -2227,6 +2389,13 @@ final class SFB_Plugin {
           padding: 12px 16px;
         }
       }
+
+      /* Hide WordPress admin footer elements */
+      .sfb-branding-wrap ~ #wpfooter,
+      #footer-thankyou,
+      #footer-upgrade {
+        display: none !important;
+      }
     </style>
     <?php
     $this->render_feedback_footer();
@@ -3020,9 +3189,10 @@ final class SFB_Plugin {
         </script>
         <?php endif; ?>
 
-        <!-- Sticky Save Button -->
-        <div class="sfb-sticky-save">
+        <!-- Save Button -->
+        <div class="sfb-save-section">
           <button type="submit" class="button button-primary button-large">
+            <span class="dashicons dashicons-saved" style="margin-top: 3px;"></span>
             <?php esc_html_e('Save Changes', 'submittal-builder'); ?>
           </button>
         </div>
@@ -3030,6 +3200,13 @@ final class SFB_Plugin {
     </div>
 
     <style>
+      /* Hide WordPress admin footer elements */
+      .sfb-settings-wrap ~ #wpfooter,
+      #footer-thankyou,
+      #footer-upgrade {
+        display: none !important;
+      }
+
       .sfb-settings-wrap {
         max-width: 880px;
       }
@@ -3242,34 +3419,37 @@ final class SFB_Plugin {
         box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.1);
       }
 
-      .sfb-sticky-save {
-        position: sticky;
-        bottom: 20px;
+      .sfb-save-section {
         display: flex;
-        justify-content: flex-end;
-        padding: 16px 24px;
-        background: #fff;
-        border: 1px solid #e5e7eb;
-        border-radius: 12px;
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-        z-index: 100;
-        margin-top: 20px;
+        justify-content: flex-start;
+        padding: 24px 0 24px 24px;
+        margin-top: 12px;
       }
 
-      .sfb-sticky-save .button-primary {
+      .sfb-save-section .button-primary {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
         background: linear-gradient(135deg, #7c3aed 0%, #a855f7 100%);
         border: none;
         border-radius: 8px;
-        padding: 10px 24px;
-        font-size: 14px;
+        padding: 12px 28px;
+        font-size: 15px;
         font-weight: 600;
         box-shadow: 0 2px 8px rgba(124, 58, 237, 0.25);
         transition: all 0.2s ease;
+        cursor: pointer;
       }
 
-      .sfb-sticky-save .button-primary:hover {
-        transform: translateY(-1px);
-        box-shadow: 0 4px 12px rgba(124, 58, 237, 0.35);
+      .sfb-save-section .button-primary:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 16px rgba(124, 58, 237, 0.4);
+      }
+
+      .sfb-save-section .button-primary .dashicons {
+        font-size: 18px;
+        width: 18px;
+        height: 18px;
       }
 
       @media (max-width: 768px) {
@@ -3282,22 +3462,16 @@ final class SFB_Plugin {
           align-self: flex-start;
         }
 
-        .sfb-sticky-save {
-          position: fixed;
-          bottom: 0;
-          left: 0;
-          right: 0;
-          margin: 0;
-          border-radius: 0;
-          border-left: none;
-          border-right: none;
-          border-bottom: none;
+        .sfb-save-section {
+          justify-content: center;
+        }
+
+        .sfb-save-section .button-primary {
+          width: 100%;
+          justify-content: center;
         }
       }
     </style>
-    <?php
-    $this->render_feedback_footer();
-    ?>
     </div><!-- .wrap -->
     <?php
   }
@@ -3782,7 +3956,22 @@ final class SFB_Plugin {
 
   /** Onboarding Page Renderer */
   function render_onboarding_page() {
-    include plugin_dir_path(__FILE__) . 'templates/admin/onboarding.php';
+    // Use constant for reliable path resolution
+    $welcome_template = plugin_dir_path(SFB_PLUGIN_FILE) . 'templates/admin/welcome.php';
+    $onboarding_template = plugin_dir_path(SFB_PLUGIN_FILE) . 'templates/admin/onboarding.php';
+
+    // Try new welcome template first
+    if (file_exists($welcome_template)) {
+      include $welcome_template;
+    } elseif (file_exists($onboarding_template)) {
+      // Fallback to old onboarding template
+      include $onboarding_template;
+    } else {
+      // Error state - neither template found
+      echo '<div class="wrap"><div class="notice notice-error"><p>';
+      echo esc_html__('Welcome template not found. Please reinstall the plugin.', 'submittal-builder');
+      echo '</p></div></div>';
+    }
   }
 
   /** Tools Page Renderer */
@@ -3980,6 +4169,15 @@ final class SFB_Plugin {
       </div>
       <?php endif; ?>
 
+      <style>
+        /* Hide WordPress admin footer elements */
+        .sfb-agency-wrap ~ #wpfooter,
+        #footer-thankyou,
+        #footer-upgrade {
+          display: none !important;
+        }
+      </style>
+
       <?php $this->render_feedback_footer(); ?>
     </div>
     <?php
@@ -4154,6 +4352,13 @@ final class SFB_Plugin {
         border-radius: 4px;
         font-weight: 600;
         margin-left: 8px;
+      }
+
+      /* Hide WordPress admin footer elements */
+      .sfb-analytics-wrap ~ #wpfooter,
+      #footer-thankyou,
+      #footer-upgrade {
+        display: none !important;
       }
     </style>
     <?php
@@ -7366,20 +7571,29 @@ final class SFB_Plugin {
 
   /** Enqueue admin assets only on our pages */
   function enqueue_admin($hook) {
+    // Get current screen for reliable detection
+    $screen = get_current_screen();
+    if (!$screen) return;
+
+    // Check if we're on any of our plugin pages
+    // Screen IDs typically look like: 'toplevel_page_sfb' or 'submittal-builder_page_sfb-onboarding'
+    $is_sfb_page = (strpos($screen->id, 'sfb') !== false || strpos($screen->id, 'submittal-builder') !== false);
+    if (!$is_sfb_page) return;
+
+    // Also check page param as fallback
     $page = isset($_GET['page']) ? (string) sanitize_key($_GET['page']) : '';
 
-    // Only load on our pages
-    if ($page !== 'sfb' && $page !== 'sfb-branding' && $page !== 'sfb-onboarding' && $page !== 'sfb-tools' && $page !== 'sfb-demo-tools' && $page !== 'sfb-agency') return;
+    // WP deps (only on pages that need React)
+    if (in_array($page, ['sfb', 'sfb-branding', 'sfb-agency'])) {
+      wp_enqueue_script('wp-element');
+      wp_enqueue_script('wp-api-fetch');
+      wp_enqueue_media();
+    }
 
-    // WP deps
-    wp_enqueue_script('wp-element');
-    wp_enqueue_script('wp-api-fetch');
-    wp_enqueue_media();
-
-    // Styles (shared)
+    // Styles (shared across all admin pages) - use constant for reliable path
     wp_enqueue_style(
       'sfb-admin',
-      plugins_url('assets/admin.css', __FILE__),
+      plugins_url('assets/admin.css', SFB_PLUGIN_FILE),
       [],
       self::VERSION
     );

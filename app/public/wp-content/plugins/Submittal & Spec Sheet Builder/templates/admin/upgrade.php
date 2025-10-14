@@ -34,16 +34,16 @@ $category_icons = [
     <!-- Hero Banner -->
     <div class="sfb-hero-banner">
       <div class="sfb-hero-content">
-        <h1><?php esc_html_e('Upgrade to Submittal & Spec Sheet Builder Pro', 'submittal-builder'); ?></h1>
+        <h1><?php esc_html_e('Upgrade to Pro or Agency', 'submittal-builder'); ?></h1>
         <p class="sfb-hero-subtitle">
-          <?php esc_html_e('Unlock automation, white-label PDFs, and advanced presentation tools.', 'submittal-builder'); ?>
+          <?php esc_html_e('Unlock automation, white-label PDFs, lead capture, and advanced presentation tools.', 'submittal-builder'); ?>
         </p>
         <div class="sfb-hero-cta">
-          <a href="https://your-site.com/pro" target="_blank" rel="noopener" class="sfb-btn-primary">
-            <?php esc_html_e('Upgrade Now — $69/year', 'submittal-builder'); ?>
+          <a href="https://webstuffguylabs.com/plugins/submittal-spec-sheet-builder/" target="_blank" rel="noopener noreferrer" class="sfb-btn-primary">
+            <?php esc_html_e('View Pricing & Plans', 'submittal-builder'); ?>
           </a>
           <p class="sfb-hero-guarantee">
-            <?php esc_html_e('30-day money-back guarantee. Instant activation.', 'submittal-builder'); ?>
+            <?php esc_html_e('Pro: $99/year • Agency: $299/year • 30-day money-back guarantee', 'submittal-builder'); ?>
           </p>
         </div>
       </div>
@@ -62,44 +62,240 @@ $category_icons = [
   <?php endif; ?>
 
   <!-- Feature Categories -->
-  <?php foreach ($groups as $group => $items): if (!$items) continue; ?>
-    <div class="sfb-feature-section">
-      <h2 class="sfb-section-title">
-        <span class="sfb-category-icon"><?php echo $category_icons[$group] ?? '✨'; ?></span>
-        <?php echo esc_html($group); ?>
-      </h2>
 
-      <div class="sfb-feature-grid">
-        <?php foreach ($items as $key => $def): ?>
-          <?php
-            $is_pro = !empty($def['pro']);
-            $enabled = sfb_feature_enabled($key);
-          ?>
-          <div class="sfb-feature-card <?php echo $is_pro ? 'pro-feature' : 'free-feature'; ?> <?php echo $enabled ? 'enabled' : ''; ?>">
-            <div class="sfb-feature-header">
-              <h3><?php echo esc_html($def['label']); ?></h3>
-              <span class="sfb-feature-badge <?php echo $is_pro ? 'badge-pro' : 'badge-free'; ?>">
-                <?php echo $is_pro ? esc_html__('Pro', 'submittal-builder') : esc_html__('Free', 'submittal-builder'); ?>
-              </span>
-            </div>
-            <p class="sfb-feature-desc"><?php echo esc_html($def['desc']); ?></p>
-            <?php if ($enabled): ?>
-              <div class="sfb-feature-status">
-                <span class="dashicons dashicons-yes"></span>
-                <?php esc_html_e('Included', 'submittal-builder'); ?>
-              </div>
-            <?php endif; ?>
+  <!-- Create & Build (6 features - all Free) -->
+  <div class="sfb-feature-section">
+    <h2 class="sfb-section-title">
+      <span class="sfb-category-icon">🛠️</span>
+      <?php esc_html_e('Create & Build', 'submittal-builder'); ?>
+    </h2>
+    <div class="sfb-feature-grid">
+      <div class="sfb-feature-card free-feature <?php echo $pro ? '' : 'enabled'; ?>">
+        <div class="sfb-feature-header">
+          <h3><?php esc_html_e('Easy Submittal Builder', 'submittal-builder'); ?></h3>
+          <span class="sfb-feature-badge badge-free"><?php esc_html_e('Free', 'submittal-builder'); ?></span>
+        </div>
+        <p class="sfb-feature-desc"><?php esc_html_e('Intuitive drag-and-drop interface to build professional submittals quickly.', 'submittal-builder'); ?></p>
+        <?php if (!$pro): ?>
+          <div class="sfb-feature-status">
+            <span class="dashicons dashicons-yes"></span>
+            <?php esc_html_e('Included', 'submittal-builder'); ?>
           </div>
-        <?php endforeach; ?>
+        <?php endif; ?>
+      </div>
+      <div class="sfb-feature-card free-feature <?php echo $pro ? '' : 'enabled'; ?>">
+        <div class="sfb-feature-header">
+          <h3><?php esc_html_e('Instant PDF Generation', 'submittal-builder'); ?></h3>
+          <span class="sfb-feature-badge badge-free"><?php esc_html_e('Free', 'submittal-builder'); ?></span>
+        </div>
+        <p class="sfb-feature-desc"><?php esc_html_e('Generate beautiful PDF packets with one click - no external tools needed.', 'submittal-builder'); ?></p>
+        <?php if (!$pro): ?>
+          <div class="sfb-feature-status">
+            <span class="dashicons dashicons-yes"></span>
+            <?php esc_html_e('Included', 'submittal-builder'); ?>
+          </div>
+        <?php endif; ?>
+      </div>
+      <div class="sfb-feature-card free-feature <?php echo $pro ? '' : 'enabled'; ?>">
+        <div class="sfb-feature-header">
+          <h3><?php esc_html_e('Smart Autosave', 'submittal-builder'); ?></h3>
+          <span class="sfb-feature-badge badge-free"><?php esc_html_e('Free', 'submittal-builder'); ?></span>
+        </div>
+        <p class="sfb-feature-desc"><?php esc_html_e('Never lose your work - drafts are automatically saved as you build.', 'submittal-builder'); ?></p>
+        <?php if (!$pro): ?>
+          <div class="sfb-feature-status">
+            <span class="dashicons dashicons-yes"></span>
+            <?php esc_html_e('Included', 'submittal-builder'); ?>
+          </div>
+        <?php endif; ?>
+      </div>
+      <div class="sfb-feature-card free-feature <?php echo $pro ? '' : 'enabled'; ?>">
+        <div class="sfb-feature-header">
+          <h3><?php esc_html_e('Product Catalog Editor', 'submittal-builder'); ?></h3>
+          <span class="sfb-feature-badge badge-free"><?php esc_html_e('Free', 'submittal-builder'); ?></span>
+        </div>
+        <p class="sfb-feature-desc"><?php esc_html_e('Build and organize your product catalog with categories and specifications.', 'submittal-builder'); ?></p>
+        <?php if (!$pro): ?>
+          <div class="sfb-feature-status">
+            <span class="dashicons dashicons-yes"></span>
+            <?php esc_html_e('Included', 'submittal-builder'); ?>
+          </div>
+        <?php endif; ?>
+      </div>
+      <div class="sfb-feature-card free-feature <?php echo $pro ? '' : 'enabled'; ?>">
+        <div class="sfb-feature-header">
+          <h3><?php esc_html_e('Unlimited Itemization', 'submittal-builder'); ?></h3>
+          <span class="sfb-feature-badge badge-free"><?php esc_html_e('Free', 'submittal-builder'); ?></span>
+        </div>
+        <p class="sfb-feature-desc"><?php esc_html_e('Add unlimited items and line entries to your submittals without restrictions.', 'submittal-builder'); ?></p>
+        <?php if (!$pro): ?>
+          <div class="sfb-feature-status">
+            <span class="dashicons dashicons-yes"></span>
+            <?php esc_html_e('Included', 'submittal-builder'); ?>
+          </div>
+        <?php endif; ?>
+      </div>
+      <div class="sfb-feature-card free-feature <?php echo $pro ? '' : 'enabled'; ?>">
+        <div class="sfb-feature-header">
+          <h3><?php esc_html_e('Custom Logo & Colors', 'submittal-builder'); ?></h3>
+          <span class="sfb-feature-badge badge-free"><?php esc_html_e('Free', 'submittal-builder'); ?></span>
+        </div>
+        <p class="sfb-feature-desc"><?php esc_html_e('Add your company logo and brand colors to all generated PDFs.', 'submittal-builder'); ?></p>
+        <?php if (!$pro): ?>
+          <div class="sfb-feature-status">
+            <span class="dashicons dashicons-yes"></span>
+            <?php esc_html_e('Included', 'submittal-builder'); ?>
+          </div>
+        <?php endif; ?>
       </div>
     </div>
-  <?php endforeach; ?>
+  </div>
+
+  <!-- Pro Features (6 features) -->
+  <div class="sfb-feature-section">
+    <h2 class="sfb-section-title">
+      <span class="sfb-category-icon">⭐</span>
+      <?php esc_html_e('Pro Features', 'submittal-builder'); ?>
+    </h2>
+    <div class="sfb-feature-grid">
+      <div class="sfb-feature-card pro-feature <?php echo $pro ? 'enabled' : ''; ?>">
+        <div class="sfb-feature-header">
+          <h3><?php esc_html_e('Professional PDF Themes', 'submittal-builder'); ?></h3>
+          <span class="sfb-feature-badge badge-pro"><?php esc_html_e('Pro', 'submittal-builder'); ?></span>
+        </div>
+        <p class="sfb-feature-desc"><?php esc_html_e('Choose from Architectural, Corporate, and other premium PDF design templates.', 'submittal-builder'); ?></p>
+        <?php if ($pro): ?>
+          <div class="sfb-feature-status">
+            <span class="dashicons dashicons-yes"></span>
+            <?php esc_html_e('Included', 'submittal-builder'); ?>
+          </div>
+        <?php endif; ?>
+      </div>
+      <div class="sfb-feature-card pro-feature <?php echo $pro ? 'enabled' : ''; ?>">
+        <div class="sfb-feature-header">
+          <h3><?php esc_html_e('Watermark Protection', 'submittal-builder'); ?></h3>
+          <span class="sfb-feature-badge badge-pro"><?php esc_html_e('Pro', 'submittal-builder'); ?></span>
+        </div>
+        <p class="sfb-feature-desc"><?php esc_html_e('Add custom watermarks to protect your PDFs and mark them as drafts or confidential.', 'submittal-builder'); ?></p>
+        <?php if ($pro): ?>
+          <div class="sfb-feature-status">
+            <span class="dashicons dashicons-yes"></span>
+            <?php esc_html_e('Included', 'submittal-builder'); ?>
+          </div>
+        <?php endif; ?>
+      </div>
+      <div class="sfb-feature-card pro-feature <?php echo $pro ? 'enabled' : ''; ?>">
+        <div class="sfb-feature-header">
+          <h3><?php esc_html_e('Signature & Approval Block', 'submittal-builder'); ?></h3>
+          <span class="sfb-feature-badge badge-pro"><?php esc_html_e('Pro', 'submittal-builder'); ?></span>
+        </div>
+        <p class="sfb-feature-desc"><?php esc_html_e('Include signature blocks and approval fields for professional documentation.', 'submittal-builder'); ?></p>
+        <?php if ($pro): ?>
+          <div class="sfb-feature-status">
+            <span class="dashicons dashicons-yes"></span>
+            <?php esc_html_e('Included', 'submittal-builder'); ?>
+          </div>
+        <?php endif; ?>
+      </div>
+      <div class="sfb-feature-card pro-feature <?php echo $pro ? 'enabled' : ''; ?>">
+        <div class="sfb-feature-header">
+          <h3><?php esc_html_e('Lead Capture & Notifications', 'submittal-builder'); ?></h3>
+          <span class="sfb-feature-badge badge-pro"><?php esc_html_e('Pro', 'submittal-builder'); ?></span>
+        </div>
+        <p class="sfb-feature-desc"><?php esc_html_e('Capture client information and receive instant email notifications on form submissions.', 'submittal-builder'); ?></p>
+        <?php if ($pro): ?>
+          <div class="sfb-feature-status">
+            <span class="dashicons dashicons-yes"></span>
+            <?php esc_html_e('Included', 'submittal-builder'); ?>
+          </div>
+        <?php endif; ?>
+      </div>
+      <div class="sfb-feature-card pro-feature <?php echo $pro ? 'enabled' : ''; ?>">
+        <div class="sfb-feature-header">
+          <h3><?php esc_html_e('Activity Tracking Links', 'submittal-builder'); ?></h3>
+          <span class="sfb-feature-badge badge-pro"><?php esc_html_e('Pro', 'submittal-builder'); ?></span>
+        </div>
+        <p class="sfb-feature-desc"><?php esc_html_e('Track when clients open your PDFs and monitor engagement with tracking links.', 'submittal-builder'); ?></p>
+        <?php if ($pro): ?>
+          <div class="sfb-feature-status">
+            <span class="dashicons dashicons-yes"></span>
+            <?php esc_html_e('Included', 'submittal-builder'); ?>
+          </div>
+        <?php endif; ?>
+      </div>
+      <div class="sfb-feature-card pro-feature <?php echo $pro ? 'enabled' : ''; ?>">
+        <div class="sfb-feature-header">
+          <h3><?php esc_html_e('White-Label Mode', 'submittal-builder'); ?></h3>
+          <span class="sfb-feature-badge badge-pro"><?php esc_html_e('Pro', 'submittal-builder'); ?></span>
+        </div>
+        <p class="sfb-feature-desc"><?php esc_html_e('Remove all plugin branding for a completely white-labeled client experience.', 'submittal-builder'); ?></p>
+        <?php if ($pro): ?>
+          <div class="sfb-feature-status">
+            <span class="dashicons dashicons-yes"></span>
+            <?php esc_html_e('Included', 'submittal-builder'); ?>
+          </div>
+        <?php endif; ?>
+      </div>
+    </div>
+  </div>
+
+  <!-- Agency Features (6 features) -->
+  <div class="sfb-feature-section">
+    <h2 class="sfb-section-title">
+      <span class="sfb-category-icon">🏢</span>
+      <?php esc_html_e('Agency Features', 'submittal-builder'); ?>
+    </h2>
+    <div class="sfb-feature-grid">
+      <div class="sfb-feature-card pro-feature">
+        <div class="sfb-feature-header">
+          <h3><?php esc_html_e('Multi-Brand Management', 'submittal-builder'); ?></h3>
+          <span class="sfb-feature-badge badge-pro"><?php esc_html_e('Agency', 'submittal-builder'); ?></span>
+        </div>
+        <p class="sfb-feature-desc"><?php esc_html_e('Manage multiple client brands with separate logos, colors, and settings for each.', 'submittal-builder'); ?></p>
+      </div>
+      <div class="sfb-feature-card pro-feature">
+        <div class="sfb-feature-header">
+          <h3><?php esc_html_e('Brand Preset Library', 'submittal-builder'); ?></h3>
+          <span class="sfb-feature-badge badge-pro"><?php esc_html_e('Agency', 'submittal-builder'); ?></span>
+        </div>
+        <p class="sfb-feature-desc"><?php esc_html_e('Save and reuse brand presets across multiple projects and client sites.', 'submittal-builder'); ?></p>
+      </div>
+      <div class="sfb-feature-card pro-feature">
+        <div class="sfb-feature-header">
+          <h3><?php esc_html_e('Client Handoff Mode', 'submittal-builder'); ?></h3>
+          <span class="sfb-feature-badge badge-pro"><?php esc_html_e('Agency', 'submittal-builder'); ?></span>
+        </div>
+        <p class="sfb-feature-desc"><?php esc_html_e('Simplified interface for client handoffs with restricted access to agency features.', 'submittal-builder'); ?></p>
+      </div>
+      <div class="sfb-feature-card pro-feature">
+        <div class="sfb-feature-header">
+          <h3><?php esc_html_e('Agency Analytics Dashboard', 'submittal-builder'); ?></h3>
+          <span class="sfb-feature-badge badge-pro"><?php esc_html_e('Agency', 'submittal-builder'); ?></span>
+        </div>
+        <p class="sfb-feature-desc"><?php esc_html_e('Comprehensive analytics across all clients and projects in one centralized dashboard.', 'submittal-builder'); ?></p>
+      </div>
+      <div class="sfb-feature-card pro-feature">
+        <div class="sfb-feature-header">
+          <h3><?php esc_html_e('Lead Routing Rules', 'submittal-builder'); ?></h3>
+          <span class="sfb-feature-badge badge-pro"><?php esc_html_e('Agency', 'submittal-builder'); ?></span>
+        </div>
+        <p class="sfb-feature-desc"><?php esc_html_e('Automatically route leads to different team members or clients based on custom rules.', 'submittal-builder'); ?></p>
+      </div>
+      <div class="sfb-feature-card pro-feature">
+        <div class="sfb-feature-header">
+          <h3><?php esc_html_e('Team Operator Role', 'submittal-builder'); ?></h3>
+          <span class="sfb-feature-badge badge-pro"><?php esc_html_e('Agency', 'submittal-builder'); ?></span>
+        </div>
+        <p class="sfb-feature-desc"><?php esc_html_e('Grant team members limited access to build submittals without full admin privileges.', 'submittal-builder'); ?></p>
+      </div>
+    </div>
+  </div>
 
   <!-- Comparison Table -->
   <div class="sfb-comparison-section">
     <h2 class="sfb-section-title">
       <span class="sfb-category-icon">📋</span>
-      <?php esc_html_e('Free vs Pro Comparison', 'submittal-builder'); ?>
+      <?php esc_html_e('Feature Comparison', 'submittal-builder'); ?>
     </h2>
 
     <div class="sfb-comparison-table">
@@ -107,68 +303,202 @@ $category_icons = [
         <thead>
           <tr>
             <th class="feature-col"><?php esc_html_e('Feature', 'submittal-builder'); ?></th>
-            <th class="free-col"><?php esc_html_e('Free', 'submittal-builder'); ?></th>
-            <th class="pro-col"><?php esc_html_e('Pro', 'submittal-builder'); ?></th>
+            <th class="tier-col"><?php esc_html_e('Free', 'submittal-builder'); ?></th>
+            <th class="tier-col"><?php esc_html_e('Pro', 'submittal-builder'); ?></th>
+            <th class="tier-col tier-col-agency"><?php esc_html_e('Agency', 'submittal-builder'); ?></th>
           </tr>
         </thead>
         <tbody>
-          <!-- Core Features -->
+          <!-- Create & Build -->
           <tr class="category-row">
-            <td colspan="3">
-              <strong><?php echo $category_icons['Core']; ?> <?php esc_html_e('Core Features', 'submittal-builder'); ?></strong>
-            </td>
-          </tr>
-          <?php foreach ($groups['Core'] as $key => $def): ?>
-            <tr>
-              <td><?php echo esc_html($def['label']); ?></td>
-              <td class="check-cell"><span class="dashicons dashicons-yes"></span></td>
-              <td class="check-cell"><span class="dashicons dashicons-yes"></span></td>
-            </tr>
-          <?php endforeach; ?>
-
-          <!-- Pro Features -->
-          <tr class="category-row">
-            <td colspan="3">
-              <strong>⭐ <?php esc_html_e('Pro-Only Features', 'submittal-builder'); ?></strong>
-            </td>
-          </tr>
-          <?php
-          $pro_features = array_merge(
-            $groups['Automation'] ?? [],
-            $groups['Branding'] ?? [],
-            $groups['Data'] ?? [],
-            $groups['Distribution'] ?? []
-          );
-          foreach ($pro_features as $key => $def):
-            if (empty($def['pro'])) continue;
-          ?>
-            <tr>
-              <td><?php echo esc_html($def['label']); ?></td>
-              <td class="empty-cell">—</td>
-              <td class="check-cell pro-check"><span class="dashicons dashicons-yes"></span></td>
-            </tr>
-          <?php endforeach; ?>
-
-          <!-- Support -->
-          <tr class="category-row">
-            <td colspan="3">
-              <strong>💬 <?php esc_html_e('Support', 'submittal-builder'); ?></strong>
+            <td colspan="4">
+              <strong>🛠️ <?php esc_html_e('Create & Build', 'submittal-builder'); ?></strong>
             </td>
           </tr>
           <tr>
-            <td><?php esc_html_e('Community Support', 'submittal-builder'); ?></td>
+            <td><?php esc_html_e('Easy Submittal Builder', 'submittal-builder'); ?></td>
+            <td class="check-cell"><span class="dashicons dashicons-yes"></span></td>
             <td class="check-cell"><span class="dashicons dashicons-yes"></span></td>
             <td class="check-cell"><span class="dashicons dashicons-yes"></span></td>
           </tr>
           <tr>
-            <td><?php esc_html_e('Priority Email Support', 'submittal-builder'); ?></td>
+            <td><?php esc_html_e('Instant PDF Generation', 'submittal-builder'); ?></td>
+            <td class="check-cell"><span class="dashicons dashicons-yes"></span></td>
+            <td class="check-cell"><span class="dashicons dashicons-yes"></span></td>
+            <td class="check-cell"><span class="dashicons dashicons-yes"></span></td>
+          </tr>
+          <tr>
+            <td><?php esc_html_e('Smart Autosave', 'submittal-builder'); ?></td>
+            <td class="check-cell"><span class="dashicons dashicons-yes"></span></td>
+            <td class="check-cell"><span class="dashicons dashicons-yes"></span></td>
+            <td class="check-cell"><span class="dashicons dashicons-yes"></span></td>
+          </tr>
+          <tr>
+            <td><?php esc_html_e('Product Catalog Editor', 'submittal-builder'); ?></td>
+            <td class="check-cell"><span class="dashicons dashicons-yes"></span></td>
+            <td class="check-cell"><span class="dashicons dashicons-yes"></span></td>
+            <td class="check-cell"><span class="dashicons dashicons-yes"></span></td>
+          </tr>
+          <tr>
+            <td><?php esc_html_e('Unlimited Itemization', 'submittal-builder'); ?></td>
+            <td class="check-cell"><span class="dashicons dashicons-yes"></span></td>
+            <td class="check-cell"><span class="dashicons dashicons-yes"></span></td>
+            <td class="check-cell"><span class="dashicons dashicons-yes"></span></td>
+          </tr>
+
+          <!-- Branding & Presentation -->
+          <tr class="category-row">
+            <td colspan="4">
+              <strong>🎨 <?php esc_html_e('Branding & Presentation', 'submittal-builder'); ?></strong>
+            </td>
+          </tr>
+          <tr>
+            <td><?php esc_html_e('Custom Logo & Colors', 'submittal-builder'); ?></td>
+            <td class="check-cell"><span class="dashicons dashicons-yes"></span></td>
+            <td class="check-cell"><span class="dashicons dashicons-yes"></span></td>
+            <td class="check-cell"><span class="dashicons dashicons-yes"></span></td>
+          </tr>
+          <tr>
+            <td><?php esc_html_e('Professional PDF Themes', 'submittal-builder'); ?></td>
             <td class="empty-cell">—</td>
-            <td class="check-cell pro-check"><span class="dashicons dashicons-yes"></span></td>
+            <td class="check-cell"><span class="dashicons dashicons-yes"></span></td>
+            <td class="check-cell"><span class="dashicons dashicons-yes"></span></td>
           </tr>
           <tr>
-            <td><?php esc_html_e('Update Guarantee', 'submittal-builder'); ?></td>
-            <td><?php esc_html_e('Free forever', 'submittal-builder'); ?></td>
-            <td><?php esc_html_e('1 year included', 'submittal-builder'); ?></td>
+            <td><?php esc_html_e('Watermark Protection', 'submittal-builder'); ?></td>
+            <td class="empty-cell">—</td>
+            <td class="check-cell"><span class="dashicons dashicons-yes"></span></td>
+            <td class="check-cell"><span class="dashicons dashicons-yes"></span></td>
+          </tr>
+          <tr>
+            <td><?php esc_html_e('Signature & Approval Block', 'submittal-builder'); ?></td>
+            <td class="empty-cell">—</td>
+            <td class="check-cell"><span class="dashicons dashicons-yes"></span></td>
+            <td class="check-cell"><span class="dashicons dashicons-yes"></span></td>
+          </tr>
+
+          <!-- Collaboration & Lead Capture -->
+          <tr class="category-row">
+            <td colspan="4">
+              <strong>📧 <?php esc_html_e('Collaboration & Lead Capture', 'submittal-builder'); ?></strong>
+            </td>
+          </tr>
+          <tr>
+            <td><?php esc_html_e('Shareable Draft Links', 'submittal-builder'); ?></td>
+            <td class="empty-cell">—</td>
+            <td class="check-cell"><span class="dashicons dashicons-yes"></span></td>
+            <td class="check-cell"><span class="dashicons dashicons-yes"></span></td>
+          </tr>
+          <tr>
+            <td><?php esc_html_e('Lead Capture & Notifications', 'submittal-builder'); ?></td>
+            <td class="empty-cell">—</td>
+            <td class="check-cell"><span class="dashicons dashicons-yes"></span></td>
+            <td class="check-cell"><span class="dashicons dashicons-yes"></span></td>
+          </tr>
+          <tr>
+            <td><?php esc_html_e('Automatic Email Delivery', 'submittal-builder'); ?></td>
+            <td class="empty-cell">—</td>
+            <td class="check-cell"><span class="dashicons dashicons-yes"></span></td>
+            <td class="check-cell"><span class="dashicons dashicons-yes"></span></td>
+          </tr>
+          <tr>
+            <td><?php esc_html_e('Weekly Lead Reports', 'submittal-builder'); ?></td>
+            <td class="empty-cell">—</td>
+            <td class="empty-cell">—</td>
+            <td class="check-cell"><span class="dashicons dashicons-yes"></span></td>
+          </tr>
+
+          <!-- Automation & Tracking -->
+          <tr class="category-row">
+            <td colspan="4">
+              <strong>📊 <?php esc_html_e('Automation & Tracking', 'submittal-builder'); ?></strong>
+            </td>
+          </tr>
+          <tr>
+            <td><?php esc_html_e('Activity Tracking Links', 'submittal-builder'); ?></td>
+            <td class="empty-cell">—</td>
+            <td class="check-cell"><span class="dashicons dashicons-yes"></span></td>
+            <td class="check-cell"><span class="dashicons dashicons-yes"></span></td>
+          </tr>
+          <tr>
+            <td><?php esc_html_e('Lead Routing Rules', 'submittal-builder'); ?></td>
+            <td class="empty-cell">—</td>
+            <td class="empty-cell">—</td>
+            <td class="check-cell"><span class="dashicons dashicons-yes"></span></td>
+          </tr>
+          <tr>
+            <td><?php esc_html_e('Schedule Exports', 'submittal-builder'); ?></td>
+            <td class="empty-cell">—</td>
+            <td class="empty-cell">—</td>
+            <td class="check-cell"><span class="dashicons dashicons-yes"></span></td>
+          </tr>
+
+          <!-- Agency-Level Tools -->
+          <tr class="category-row">
+            <td colspan="4">
+              <strong>🏢 <?php esc_html_e('Agency-Level Tools', 'submittal-builder'); ?></strong>
+            </td>
+          </tr>
+          <tr>
+            <td><?php esc_html_e('Multi-Brand Management', 'submittal-builder'); ?></td>
+            <td class="empty-cell">—</td>
+            <td class="empty-cell">—</td>
+            <td class="check-cell"><span class="dashicons dashicons-yes"></span></td>
+          </tr>
+          <tr>
+            <td><?php esc_html_e('Brand Preset Library', 'submittal-builder'); ?></td>
+            <td class="empty-cell">—</td>
+            <td class="empty-cell">—</td>
+            <td class="check-cell"><span class="dashicons dashicons-yes"></span></td>
+          </tr>
+          <tr>
+            <td><?php esc_html_e('Default-to-PDF Branding', 'submittal-builder'); ?></td>
+            <td class="empty-cell">—</td>
+            <td class="empty-cell">—</td>
+            <td class="check-cell"><span class="dashicons dashicons-yes"></span></td>
+          </tr>
+          <tr>
+            <td><?php esc_html_e('Client Handoff Mode', 'submittal-builder'); ?></td>
+            <td class="empty-cell">—</td>
+            <td class="empty-cell">—</td>
+            <td class="check-cell"><span class="dashicons dashicons-yes"></span></td>
+          </tr>
+          <tr>
+            <td><?php esc_html_e('Team Operator Role', 'submittal-builder'); ?></td>
+            <td class="empty-cell">—</td>
+            <td class="empty-cell">—</td>
+            <td class="check-cell"><span class="dashicons dashicons-yes"></span></td>
+          </tr>
+          <tr>
+            <td><?php esc_html_e('Agency Analytics Dashboard', 'submittal-builder'); ?></td>
+            <td class="empty-cell">—</td>
+            <td class="empty-cell">—</td>
+            <td class="check-cell"><span class="dashicons dashicons-yes"></span></td>
+          </tr>
+          <tr>
+            <td><?php esc_html_e('Save as Pack / Agency Library', 'submittal-builder'); ?></td>
+            <td class="empty-cell">—</td>
+            <td class="empty-cell">—</td>
+            <td class="check-cell"><span class="dashicons dashicons-yes"></span></td>
+          </tr>
+
+          <!-- Support & White-Labeling -->
+          <tr class="category-row">
+            <td colspan="4">
+              <strong>💬 <?php esc_html_e('Support & White-Labeling', 'submittal-builder'); ?></strong>
+            </td>
+          </tr>
+          <tr>
+            <td><?php esc_html_e('White-Label Mode', 'submittal-builder'); ?></td>
+            <td class="empty-cell">—</td>
+            <td class="check-cell"><span class="dashicons dashicons-yes"></span></td>
+            <td class="check-cell"><span class="dashicons dashicons-yes"></span></td>
+          </tr>
+          <tr>
+            <td><?php esc_html_e('Priority Support & Updates', 'submittal-builder'); ?></td>
+            <td class="empty-cell">—</td>
+            <td class="check-cell"><span class="dashicons dashicons-yes"></span></td>
+            <td class="check-cell"><span class="dashicons dashicons-yes"></span></td>
           </tr>
         </tbody>
       </table>
@@ -180,13 +510,13 @@ $category_icons = [
     <div class="sfb-bottom-cta">
       <div class="sfb-cta-content">
         <h2><?php esc_html_e('Ready to upgrade?', 'submittal-builder'); ?></h2>
-        <p><?php esc_html_e('Get instant access to all Pro features with priority support.', 'submittal-builder'); ?></p>
-        <a href="https://your-site.com/pro" target="_blank" rel="noopener" class="sfb-btn-primary">
-          <?php esc_html_e('Upgrade to Pro — $69/year', 'submittal-builder'); ?>
+        <p><?php esc_html_e('Choose the plan that fits your needs.', 'submittal-builder'); ?></p>
+        <a href="https://webstuffguylabs.com/plugins/submittal-spec-sheet-builder/" target="_blank" rel="noopener noreferrer" class="sfb-btn-primary">
+          <?php esc_html_e('View Pricing & Plans', 'submittal-builder'); ?>
         </a>
         <p class="sfb-pricing-details">
-          <strong><?php esc_html_e('Agency License:', 'submittal-builder'); ?></strong>
-          <?php esc_html_e('$149/year for unlimited client sites', 'submittal-builder'); ?>
+          <strong><?php esc_html_e('Pro:', 'submittal-builder'); ?></strong> <?php esc_html_e('$99/year — Perfect for individual professionals', 'submittal-builder'); ?><br>
+          <strong><?php esc_html_e('Agency:', 'submittal-builder'); ?></strong> <?php esc_html_e('$299/year — Unlimited client sites with advanced features', 'submittal-builder'); ?>
         </p>
       </div>
 
@@ -510,10 +840,13 @@ $category_icons = [
   text-align: left;
 }
 
-.sfb-comparison-table .free-col,
-.sfb-comparison-table .pro-col {
+.sfb-comparison-table .tier-col {
   text-align: center;
-  width: 120px;
+  width: 100px;
+}
+
+.sfb-comparison-table tbody .tier-col-agency {
+  background: linear-gradient(135deg, #faf5ff 0%, #fff 100%);
 }
 
 .sfb-comparison-table tbody tr {
@@ -539,10 +872,6 @@ $category_icons = [
 .sfb-comparison-table .check-cell {
   text-align: center;
   color: #10b981;
-}
-
-.sfb-comparison-table .check-cell.pro-check {
-  color: #7c3aed;
 }
 
 .sfb-comparison-table .empty-cell {
