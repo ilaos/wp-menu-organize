@@ -630,6 +630,10 @@ White-label, brand presets, default preset auto-apply, preset switcher, lead rou
 3. Add lock icons (🔒) to Pro/Agency menu items in free tier
 
 ### Low Priority (Polish)
-1. Improve upgrade page with video/screenshots
+1. Improve upgrade page with video/screenshots (see [marketing_bullets.md](marketing_bullets.md) for copy templates)
 2. Add feature comparison table to upgrade page
 3. Add testimonials/social proof to upgrade page
+
+---
+
+_Docs synchronized on: 2025-10-13 • Source parity confirmed_

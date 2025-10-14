@@ -32,7 +32,7 @@ Feature-based marketing bullets derived from actual implemented functionality.
 
 ### Lead Generation
 - **Lead Capture & CRM** - Collect email and phone before PDF download with UTM tracking, honeypot anti-bot protection, and rate limiting
-- **CSV Lead Export** - Download captured leads for import into your CRM
+- **Lead Export (CSV)** - Download captured leads for import into your CRM
 - **BCC Admin Option** - Automatically receive a copy of all lead capture emails
 
 ### Automation
@@ -111,7 +111,7 @@ Feature-based marketing bullets derived from actual implemented functionality.
 | Public Tracking Links            | ❌   | ✅  | ✅     |
 | **Lead Generation**              |      |     |        |
 | Lead Capture & CRM               | ❌   | ✅  | ✅     |
-| CSV Export                       | ❌   | ✅  | ✅     |
+| Lead Export (CSV)                | ❌   | ✅  | ✅     |
 | UTM Tracking                     | ❌   | ✅  | ✅     |
 | Anti-Bot Protection              | ❌   | ✅  | ✅     |
 | **Automation**                   |      |     |        |
@@ -405,3 +405,7 @@ Manage unlimited client brands with complete white-label control. Intelligent le
 _Last Updated: 2025-01-13_
 _Based on: Submittal & Spec Sheet Builder v1.0.0_
 _Source: docs/tier_map.json (91.4% implementation rate - 32 of 35 features fully implemented)_
+
+---
+
+_Docs synchronized on: 2025-10-13 • Source parity confirmed_
