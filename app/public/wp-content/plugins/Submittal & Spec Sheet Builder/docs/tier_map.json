@@ -1,0 +1,607 @@
+{
+  "version": "1.0.0",
+  "generated": "2025-01-13",
+  "license_states": ["free", "expired", "pro", "agency"],
+  "features": [
+    {
+      "name": "Catalog Management",
+      "status": "implemented",
+      "tiers": { "free": true, "expired": true, "pro": true, "agency": true },
+      "gates": [
+        {"file": "Includes/class-sfb-rest.php", "line_range": "86-151", "condition": "current_user_can('edit_sfb_catalog')"}
+      ],
+      "entry_points": {
+        "menu": "Submittal Builder",
+        "slug": "sfb",
+        "rest": "/sfb/v1/node/*",
+        "capability": "edit_sfb_catalog"
+      },
+      "notes": "Full CRUD via REST API with drag-drop UI"
+    },
+    {
+      "name": "PDF Generation",
+      "status": "implemented",
+      "tiers": { "free": true, "expired": true, "pro": true, "agency": true },
+      "gates": [],
+      "entry_points": {
+        "rest": "/sfb/v1/generate",
+        "shortcode": "[submittal_builder]",
+        "class": "SFB_PDF_Generator"
+      },
+      "notes": "Dompdf with custom templates, tier-based features (white-label for Agency)"
+    },
+    {
+      "name": "Server-Side Shareable Drafts",
+      "status": "implemented",
+      "tiers": { "free": false, "expired": false, "pro": true, "agency": true },
+      "gates": [
+        {"file": "submittal-form-builder.php", "line_range": "6374", "condition": "get_option('sfb_drafts_server_enabled')"},
+        {"file": "submittal-form-builder.php", "line_range": "3542", "condition": "sfb_is_pro_active()"},
+        {"file": "Includes/class-sfb-rest.php", "line_range": "243", "condition": "sfb_is_pro_active() || defined('SFB_PRO_DEV')"}
+      ],
+      "entry_points": {
+        "rest": "/sfb/v1/drafts",
+        "button": "#sfb-save-draft",
+        "upsell": "assets/app.js:759-783"
+      },
+      "notes": "Save to server, share URL, 45-day expiry, rate limiting. Frontend shows upsell modal if not Pro."
+    },
+    {
+      "name": "Tracking Links",
+      "status": "implemented",
+      "tiers": { "free": false, "expired": false, "pro": true, "agency": true },
+      "gates": [
+        {"file": "submittal-form-builder.php", "line_range": "294-330", "condition": "None (public endpoint)"}
+      ],
+      "entry_points": {
+        "menu": "Tracking",
+        "slug": "sfb-tracking",
+        "endpoint": "?sfb_track={hash}",
+        "template": null
+      },
+      "notes": "Public tracking URLs, view timestamps, IP hashing. Menu visible to Pro/Agency only."
+    },
+    {
+      "name": "Lead Capture & CRM",
+      "status": "implemented",
+      "tiers": { "free": false, "expired": false, "pro": true, "agency": true },
+      "gates": [
+        {"file": "Includes/lead-capture.php", "line_range": "25-125", "condition": "get_option('sfb_lead_capture_enabled')"},
+        {"file": "Includes/class-sfb-admin.php", "line_range": "114-115", "condition": "sfb_is_pro_active() && get_option('sfb_lead_capture_enabled')"}
+      ],
+      "entry_points": {
+        "menu": "Leads",
+        "slug": "sfb-leads",
+        "ajax": "wp_ajax_nopriv_sfb_submit_lead",
+        "rest": null
+      },
+      "notes": "Email/phone capture, UTM tracking, honeypot, rate limiting, CSV export, BCC admin option"
+    },
+    {
+      "name": "White-Label Branding",
+      "status": "implemented",
+      "tiers": { "free": false, "expired": false, "pro": false, "agency": true },
+      "gates": [
+        {"file": "Includes/branding-helpers.php", "line_range": "209", "condition": "SFB_Branding::is_agency_license()"},
+        {"file": "Includes/pdf-generator.php", "line_range": "674, 749", "condition": "sfb_is_pro_active() && get_option('sfb_white_label_enabled')"},
+        {"file": "Includes/lead-capture.php", "line_range": "143-151", "condition": "sfb_is_white_label_enabled()"}
+      ],
+      "entry_points": {
+        "menu": "Branding",
+        "section": "White-Label Settings",
+        "option": "sfb_brand_settings[white_label]"
+      },
+      "notes": "Remove plugin credit from PDFs, custom email sender, custom footer text, optional subtle credit"
+    },
+    {
+      "name": "Brand Presets Library",
+      "status": "implemented",
+      "tiers": { "free": false, "expired": false, "pro": false, "agency": true },
+      "gates": [
+        {"file": "Includes/class-sfb-branding.php", "line_range": "312, 344, 365, 394, 424, 453", "condition": "SFB_Branding::is_agency_license()"},
+        {"file": "Includes/class-sfb-branding.php", "line_range": "305, 337, 358, 387, 417, 446", "condition": "current_user_can('access_sfb_agency')"}
+      ],
+      "entry_points": {
+        "ajax": ["sfb_preset_create", "sfb_preset_list", "sfb_preset_apply", "sfb_preset_rename", "sfb_preset_delete", "sfb_preset_set_default"],
+        "option": "sfb_brand_presets"
+      },
+      "notes": "Save/load/apply brand configurations, set default, auto-apply to PDFs"
+    },
+    {
+      "name": "Lead Routing & Webhooks",
+      "status": "implemented",
+      "tiers": { "free": false, "expired": false, "pro": false, "agency": true },
+      "gates": [
+        {"file": "Includes/agency-lead-routing.php", "line_range": "26-28, 41-42", "condition": "sfb_is_agency_license()"},
+        {"file": "Includes/class-sfb-ajax.php", "line_range": "139, 179, 209", "condition": "sfb_is_agency_license()"}
+      ],
+      "entry_points": {
+        "menu": "Agency",
+        "section": "Lead Routing",
+        "ajax": ["sfb_routing_save", "sfb_routing_test", "sfb_routing_clear_log"],
+        "option": "sfb_lead_routing_rules"
+      },
+      "notes": "Rules engine with domain/UTM/category matching, email routing, webhook delivery with retry, fallback routing"
+    },
+    {
+      "name": "Agency Analytics",
+      "status": "implemented",
+      "tiers": { "free": false, "expired": false, "pro": false, "agency": true },
+      "gates": [
+        {"file": "Includes/agency-analytics.php", "line_range": "24", "condition": "sfb_is_agency_license()"}
+      ],
+      "entry_points": {
+        "menu": "📊 Agency Analytics",
+        "slug": "sfb-agency-analytics",
+        "class": "SFB_Agency_Analytics"
+      },
+      "notes": "Aggregated non-PII metrics: leads, PDFs, drafts, tracking views. Privacy-first design."
+    },
+    {
+      "name": "Client Handoff Mode",
+      "status": "implemented",
+      "tiers": { "free": false, "expired": false, "pro": false, "agency": true },
+      "gates": [
+        {"file": "Includes/branding-helpers.php", "line_range": "187", "condition": "sfb_is_agency_license()"}
+      ],
+      "entry_points": {
+        "menu": "Agency",
+        "section": "Client Handoff",
+        "option": "sfb_client_handoff_mode"
+      },
+      "notes": "Hides agency-specific UI elements for client sites"
+    },
+    {
+      "name": "Auto-Email Packets",
+      "status": "implemented",
+      "tiers": { "free": false, "expired": false, "pro": true, "agency": true },
+      "gates": [],
+      "entry_points": {
+        "file": "Includes/lead-capture.php",
+        "line_range": "130-213"
+      },
+      "notes": "Send PDFs with tracking links via WordPress mail. White-label support for Agency."
+    },
+    {
+      "name": "Auto-Archive to History",
+      "status": "implemented",
+      "tiers": { "free": false, "expired": false, "pro": true, "agency": true },
+      "gates": [],
+      "entry_points": {
+        "rest": "/sfb/v1/node/history",
+        "capability": "manage_options"
+      },
+      "notes": "Archive by project/date, node change tracking"
+    },
+    {
+      "name": "PDF Themes (Arch/Corp)",
+      "status": "partial",
+      "tiers": { "free": false, "expired": false, "pro": true, "agency": true },
+      "gates": [],
+      "entry_points": {
+        "file": "Includes/pdf-generator.php"
+      },
+      "notes": "Theme code exists but no Pro license gate enforcement. Needs sfb_is_pro_active() check."
+    },
+    {
+      "name": "PDF Watermark",
+      "status": "partial",
+      "tiers": { "free": false, "expired": false, "pro": true, "agency": true },
+      "gates": [],
+      "entry_points": {
+        "setting": "Settings page has watermark toggle/upload"
+      },
+      "notes": "Setting exists but PDF generator doesn't apply watermark. Needs implementation."
+    },
+    {
+      "name": "Approval Signature Block",
+      "status": "partial",
+      "tiers": { "free": false, "expired": false, "pro": true, "agency": true },
+      "gates": [],
+      "entry_points": {
+        "setting": "app.js:477 defines approve_block"
+      },
+      "notes": "Setting exists but PDF doesn't render signature block. Needs full implementation."
+    },
+    {
+      "name": "Summary Page",
+      "status": "implemented",
+      "tiers": { "free": true, "expired": true, "pro": true, "agency": true },
+      "gates": [],
+      "entry_points": {
+        "file": "Includes/pdf-generator.php"
+      },
+      "notes": "Category-grouped product summary in PDF. Free feature."
+    },
+    {
+      "name": "Table of Contents",
+      "status": "implemented",
+      "tiers": { "free": true, "expired": true, "pro": true, "agency": true },
+      "gates": [],
+      "entry_points": {
+        "file": "Includes/pdf-generator.php"
+      },
+      "notes": "Clickable internal TOC for navigation. Free feature."
+    },
+    {
+      "name": "Local Autosave",
+      "status": "implemented",
+      "tiers": { "free": true, "expired": true, "pro": true, "agency": true },
+      "gates": [],
+      "entry_points": {
+        "file": "assets/app.js",
+        "line_range": "634-689"
+      },
+      "notes": "Browser localStorage with 20s throttle. Free feature."
+    },
+    {
+      "name": "Email Notifications",
+      "status": "implemented",
+      "tiers": { "free": true, "expired": true, "pro": true, "agency": true },
+      "gates": [
+        {"file": "Includes/lead-capture.php", "line_range": "130-213", "condition": "WordPress mail integration"}
+      ],
+      "entry_points": {
+        "function": "wp_mail"
+      },
+      "notes": "WordPress mail integration. Plugin credit for Free, custom sender for Agency white-label."
+    },
+    {
+      "name": "Basic Branding",
+      "status": "implemented",
+      "tiers": { "free": true, "expired": true, "pro": true, "agency": true },
+      "gates": [],
+      "entry_points": {
+        "menu": "Branding",
+        "slug": "sfb-branding",
+        "ajax": "sfb_save_brand",
+        "option": "sfb_brand_settings"
+      },
+      "notes": "Logo, colors, footer text, company info. Free feature. White-label settings Agency-only."
+    },
+    {
+      "name": "Frontend Builder",
+      "status": "implemented",
+      "tiers": { "free": true, "expired": true, "pro": true, "agency": true },
+      "gates": [],
+      "entry_points": {
+        "shortcode": "[submittal_builder]",
+        "template": "templates/frontend/builder.php",
+        "script": "assets/app.js"
+      },
+      "notes": "Public product selector with React UI. Free feature."
+    },
+    {
+      "name": "Admin Catalog Editor",
+      "status": "implemented",
+      "tiers": { "free": true, "expired": true, "pro": true, "agency": true },
+      "gates": [],
+      "entry_points": {
+        "menu": "Submittal Builder",
+        "slug": "sfb",
+        "script": "assets/admin.js"
+      },
+      "notes": "Drag-drop tree editor with React UI. Free feature."
+    },
+    {
+      "name": "Database Optimization",
+      "status": "implemented",
+      "tiers": { "free": true, "expired": true, "pro": true, "agency": true },
+      "gates": [],
+      "entry_points": {
+        "menu": "Utilities",
+        "slug": "sfb-tools",
+        "ajax": ["sfb_optimize_db", "sfb_clean_orphans"]
+      },
+      "notes": "Clean orphans, optimize tables. Free utility."
+    },
+    {
+      "name": "Draft Cleanup",
+      "status": "implemented",
+      "tiers": { "free": true, "expired": true, "pro": true, "agency": true },
+      "gates": [],
+      "entry_points": {
+        "menu": "Utilities",
+        "ajax": "sfb_purge_expired_drafts",
+        "cron": "sfb_purge_expired_drafts_cron"
+      },
+      "notes": "Manual + cron purge of expired drafts. Free utility."
+    },
+    {
+      "name": "Import/Export",
+      "status": "implemented",
+      "tiers": { "free": true, "expired": true, "pro": true, "agency": true },
+      "gates": [
+        {"file": "Includes/class-sfb-rest.php", "line_range": "73-83", "condition": "current_user_can('manage_options')"}
+      ],
+      "entry_points": {
+        "rest": ["/sfb/v1/form/{id}/export", "/sfb/v1/form/import"]
+      },
+      "notes": "JSON catalog backup/restore. Free utility."
+    },
+    {
+      "name": "License Management",
+      "status": "implemented",
+      "tiers": { "free": true, "expired": true, "pro": true, "agency": true },
+      "gates": [],
+      "entry_points": {
+        "menu": "License & Support (Pro+) or ⭐ Upgrade (Free/Expired)",
+        "slug": "sfb-license or sfb-upgrade",
+        "rest": ["/sfb/v1/license"],
+        "file": "Includes/admin/license-api.php"
+      },
+      "notes": "Activate/deactivate via WooCommerce API. All tiers have access to license page."
+    },
+    {
+      "name": "Demo Tools",
+      "status": "implemented",
+      "tiers": { "free": false, "expired": false, "pro": true, "agency": true },
+      "gates": [
+        {"file": "submittal-form-builder.php", "line_range": "20-22", "condition": "SFB_SHOW_DEMO_TOOLS constant"},
+        {"file": "Includes/class-sfb-admin.php", "line_range": "195", "condition": "SFB_SHOW_DEMO_TOOLS && current_user_can('manage_options')"},
+        {"file": "Includes/class-sfb-admin.php", "line_range": "250-254", "condition": "Safeguard: removes for free/expired"}
+      ],
+      "entry_points": {
+        "menu": "Demo Tools",
+        "slug": "sfb-demo-tools",
+        "constant": "SFB_SHOW_DEMO_TOOLS"
+      },
+      "notes": "Dev mode only. Hidden for Free/Expired even with constant enabled (belt-and-suspenders)."
+    },
+    {
+      "name": "Agency Library - Save as Pack",
+      "status": "implemented",
+      "tiers": { "free": false, "expired": false, "pro": false, "agency": true },
+      "gates": [
+        {"file": "submittal-form-builder.php", "line_range": "6602-6683", "condition": "sfb_is_agency_license()"},
+        {"file": "Includes/class-sfb-ajax.php", "line_range": "76-78", "condition": "sfb_is_agency_license() && current_user_can('manage_options')"}
+      ],
+      "entry_points": {
+        "menu": "💼 Agency",
+        "ajax": "sfb_pack_save",
+        "option": "sfb_agency_packs"
+      },
+      "notes": "Save catalog as reusable Pack with branding, export JSON, import on other sites"
+    },
+    {
+      "name": "Default-to-PDF Brand Preset",
+      "status": "implemented",
+      "tiers": { "free": false, "expired": false, "pro": false, "agency": true },
+      "gates": [
+        {"file": "Includes/class-sfb-branding.php", "line_range": "312-453", "condition": "SFB_Branding::is_agency_license()"}
+      ],
+      "entry_points": {
+        "menu": "Branding",
+        "section": "Brand Presets",
+        "option": "sfb_brand_use_default_on_pdf"
+      },
+      "notes": "Auto-apply default preset to Review page and PDFs when toggle enabled"
+    },
+    {
+      "name": "Review Screen Preset Switcher",
+      "status": "implemented",
+      "tiers": { "free": false, "expired": false, "pro": false, "agency": true },
+      "gates": [
+        {"file": "assets/js/review.js", "line_range": "299-589", "condition": "Agency presets exist"}
+      ],
+      "entry_points": {
+        "template": "templates/frontend/builder.php",
+        "line_range": "107-149",
+        "session_storage": "sfb_session_preset"
+      },
+      "notes": "Session-only preset preview on Review step, doesn't persist on reload"
+    },
+    {
+      "name": "Weekly Lead Export Scheduler",
+      "status": "implemented",
+      "tiers": { "free": false, "expired": false, "pro": false, "agency": true },
+      "gates": [
+        {"file": "submittal-form-builder.php", "line_range": "4546-4757", "condition": "sfb_is_agency_license()"}
+      ],
+      "entry_points": {
+        "menu": "Settings",
+        "section": "Weekly Lead Export",
+        "cron": "sfb_weekly_lead_export",
+        "ajax": "sfb_weekly_lead_export_send_now"
+      },
+      "notes": "Automated weekly CSV email with duplicate prevention, manual Send Now button"
+    },
+    {
+      "name": "Operator Role & Capabilities",
+      "status": "implemented",
+      "tiers": { "free": false, "expired": false, "pro": false, "agency": true },
+      "gates": [
+        {"file": "submittal-form-builder.php", "line_range": "171-195", "condition": "Role creation on activation"},
+        {"file": "submittal-form-builder.php", "line_range": "6488-6543", "condition": "map_meta_cap filter"}
+      ],
+      "entry_points": {
+        "role": "sfb_operator",
+        "capabilities": ["use_sfb_builder", "view_sfb_leads", "view_sfb_tracking"],
+        "menu": "Agency",
+        "section": "Assign Operator Role"
+      },
+      "notes": "Custom WordPress role with limited catalog/branding access for client users"
+    }
+  ],
+  "admin_pages": [
+    {
+      "name": "Submittal Builder",
+      "slug": "sfb",
+      "tiers": { "free": true, "expired": true, "pro": true, "agency": true },
+      "capability": "manage_options",
+      "file": "Includes/class-sfb-admin.php",
+      "line": 68
+    },
+    {
+      "name": "Welcome",
+      "slug": "sfb-onboarding",
+      "tiers": { "free": true, "expired": true, "pro": true, "agency": true },
+      "capability": "manage_options",
+      "file": "Includes/class-sfb-admin.php",
+      "line": 87
+    },
+    {
+      "name": "Tracking",
+      "slug": "sfb-tracking",
+      "tiers": { "free": false, "expired": false, "pro": true, "agency": true },
+      "capability": "manage_options",
+      "file": "Includes/class-sfb-admin.php",
+      "line": 102,
+      "condition": "license_status === 'active' OR sfb_is_pro_active()"
+    },
+    {
+      "name": "Leads",
+      "slug": "sfb-leads",
+      "tiers": { "free": false, "expired": false, "pro": true, "agency": true },
+      "capability": "manage_options",
+      "file": "Includes/class-sfb-admin.php",
+      "line": 117,
+      "condition": "sfb_is_pro_active() AND get_option('sfb_lead_capture_enabled')"
+    },
+    {
+      "name": "Branding",
+      "slug": "sfb-branding",
+      "tiers": { "free": true, "expired": true, "pro": true, "agency": true },
+      "capability": "manage_options",
+      "file": "Includes/class-sfb-admin.php",
+      "line": 133
+    },
+    {
+      "name": "Settings",
+      "slug": "sfb-settings",
+      "tiers": { "free": true, "expired": true, "pro": true, "agency": true },
+      "capability": "manage_options",
+      "file": "Includes/class-sfb-admin.php",
+      "line": 144
+    },
+    {
+      "name": "💼 Agency",
+      "slug": "sfb-agency",
+      "tiers": { "free": false, "expired": false, "pro": false, "agency": true },
+      "capability": "manage_options",
+      "file": "Includes/class-sfb-admin.php",
+      "line": 156,
+      "condition": "sfb_is_agency_license()"
+    },
+    {
+      "name": "📊 Agency Analytics",
+      "slug": "sfb-agency-analytics",
+      "tiers": { "free": false, "expired": false, "pro": false, "agency": true },
+      "capability": "manage_options",
+      "file": "Includes/class-sfb-admin.php",
+      "line": 167,
+      "condition": "sfb_is_agency_license()"
+    },
+    {
+      "name": "Utilities",
+      "slug": "sfb-tools",
+      "tiers": { "free": true, "expired": true, "pro": true, "agency": true },
+      "capability": "manage_options",
+      "file": "Includes/class-sfb-admin.php",
+      "line": 183
+    },
+    {
+      "name": "Demo Tools",
+      "slug": "sfb-demo-tools",
+      "tiers": { "free": false, "expired": false, "pro": true, "agency": true },
+      "capability": "manage_options",
+      "file": "Includes/class-sfb-admin.php",
+      "line": 196,
+      "condition": "SFB_SHOW_DEMO_TOOLS constant AND safeguard removes for free/expired"
+    },
+    {
+      "name": "⭐ Upgrade",
+      "slug": "sfb-upgrade",
+      "tiers": { "free": true, "expired": true, "pro": false, "agency": false },
+      "capability": "manage_options",
+      "file": "Includes/class-sfb-admin.php",
+      "line": 215,
+      "condition": "license_state === 'free' OR 'expired'"
+    },
+    {
+      "name": "License & Support",
+      "slug": "sfb-license",
+      "tiers": { "free": false, "expired": false, "pro": true, "agency": true },
+      "capability": "manage_options",
+      "file": "Includes/class-sfb-admin.php",
+      "line": 226,
+      "condition": "license_state === 'pro' OR 'agency'"
+    }
+  ],
+  "upsell_points": [
+    {
+      "location": "Frontend Builder - Save & Share Button",
+      "file": "assets/app.js",
+      "line": "587-588",
+      "trigger": "User clicks save without Pro, backend returns { code: 'pro_required' }",
+      "modal": "showUpsellModal() at line 759",
+      "cta": "Upgrade to Pro button → sfb-upgrade page",
+      "tiers_affected": ["free", "expired"]
+    },
+    {
+      "location": "Settings Page - Draft Server Toggle",
+      "file": "submittal-form-builder.php",
+      "line": "3542",
+      "trigger": "Save settings without Pro, toggle forced to false",
+      "modal": null,
+      "cta": "No explicit upsell, silently disabled",
+      "tiers_affected": ["free", "expired"]
+    },
+    {
+      "location": "Admin Catalog - Agency Pack Export",
+      "file": "assets/admin.js",
+      "line": "2608",
+      "trigger": "Button not rendered for non-Agency",
+      "modal": null,
+      "cta": "Feature hidden (not rendered)",
+      "tiers_affected": ["free", "expired", "pro"]
+    },
+    {
+      "location": "Branding Page - White-Label Section",
+      "file": "Branding template",
+      "trigger": "Section not rendered for non-Agency",
+      "modal": null,
+      "cta": "Feature hidden (not rendered)",
+      "tiers_affected": ["free", "expired", "pro"]
+    }
+  ],
+  "constants": [
+    {
+      "name": "SFB_SHOW_DEMO_TOOLS",
+      "type": "bool",
+      "default": false,
+      "purpose": "Enable Demo Tools menu (dev mode)",
+      "file": "submittal-form-builder.php",
+      "line": 20
+    },
+    {
+      "name": "SFB_PRO_DEV",
+      "type": "bool",
+      "default": null,
+      "purpose": "Developer override for Pro features (user-defined in wp-config.php)",
+      "file": "N/A (user-defined)"
+    },
+    {
+      "name": "SFB_AGENCY_DEV",
+      "type": "bool",
+      "default": null,
+      "purpose": "Developer override for Agency features (user-defined in wp-config.php)",
+      "file": "N/A (user-defined)"
+    }
+  ],
+  "summary": {
+    "total_features": 31,
+    "fully_implemented": 28,
+    "partially_implemented": 3,
+    "not_implemented": 0,
+    "implementation_rate": "90.3%",
+    "free_tier_features": 12,
+    "pro_tier_features": 8,
+    "agency_tier_features": 11,
+    "gaps": [
+      "PDF Themes need Pro license gate enforcement",
+      "PDF Watermark needs implementation in generator",
+      "Approval Signature Block needs full PDF rendering"
+    ]
+  }
+}

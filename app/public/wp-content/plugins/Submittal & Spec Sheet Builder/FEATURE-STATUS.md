@@ -7,6 +7,17 @@
 
 ---
 
+## Related Documentation
+
+**📚 For tier-specific information, see:**
+- **[docs/tier_map.md](docs/tier_map.md)** - License tier feature matrix with Free/Pro/Agency access
+- **[docs/tier_map.json](docs/tier_map.json)** - Machine-readable tier data for tooling
+- **[docs/marketing_bullets.md](docs/marketing_bullets.md)** - Marketing copy and tier comparisons
+- **[docs/TIER-AUDIT-EXECUTIVE-SUMMARY.md](docs/TIER-AUDIT-EXECUTIVE-SUMMARY.md)** - Tier audit executive summary
+- **[FEATURE-INVENTORY.md](FEATURE-INVENTORY.md)** - Complete feature documentation with technical details
+
+---
+
 ## Status Legend
 
 - ✅ **IMPLEMENTED & TESTED** - Confirmed working, code complete, ready for production
