@@ -16,6 +16,11 @@
 
 if (!defined('ABSPATH')) exit;
 
+// Global toggle for Demo Tools (production: false, development: true)
+if (!defined('SFB_SHOW_DEMO_TOOLS')) {
+  define('SFB_SHOW_DEMO_TOOLS', false);
+}
+
 // Load Pro registry (feature gating)
 require_once plugin_dir_path(__FILE__) . 'Includes/pro/registry.php';
 
@@ -3529,7 +3534,17 @@ final class SFB_Plugin {
     $sanitized['brand_preset'] = isset($input['brand_preset']) && in_array($input['brand_preset'], ['modern-blue', 'architect-gray', 'engineering-bold', 'clean-violet', 'custom']) ? $input['brand_preset'] : $defaults['brand_preset'];
     $sanitized['cover_default'] = !empty($input['cover_default']);
     $sanitized['footer_text'] = isset($input['footer_text']) ? sanitize_text_field($input['footer_text']) : $defaults['footer_text'];
-    $sanitized['theme'] = isset($input['theme']) && in_array($input['theme'], ['engineering', 'architectural', 'corporate']) ? $input['theme'] : $defaults['theme'];
+
+    // Theme - enforce Pro/Agency license gate for premium themes
+    $is_pro = sfb_is_pro_active() || defined('SFB_PRO_DEV');
+    $requested_theme = isset($input['theme']) && in_array($input['theme'], ['engineering', 'architectural', 'corporate']) ? $input['theme'] : $defaults['theme'];
+    // Free/Expired users can only use 'engineering' theme
+    if (!$is_pro && in_array($requested_theme, ['architectural', 'corporate'], true)) {
+      $sanitized['theme'] = 'engineering'; // Force fallback to default theme
+    } else {
+      $sanitized['theme'] = $requested_theme;
+    }
+
     $sanitized['watermark'] = isset($input['watermark']) ? sanitize_text_field($input['watermark']) : $defaults['watermark'];
 
     // Draft settings
