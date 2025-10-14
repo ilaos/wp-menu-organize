@@ -85,6 +85,9 @@
     // Enable Submittal Builder Dev Mode (shows Demo Tools menu)
     define( 'SFB_DEV_MODE', true );
 
+    // Show Demo Tools page in admin menu
+    define( 'SFB_SHOW_DEMO_TOOLS', true );
+
     // Enable Agency tier features for testing (Brand Presets)
     define( 'SFB_AGENCY_DEV', true ); // Enable Agency features for testing
 

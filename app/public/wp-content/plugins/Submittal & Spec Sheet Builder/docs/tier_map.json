@@ -80,11 +80,11 @@
     {
       "name": "White-Label Branding",
       "status": "implemented",
-      "tiers": { "free": false, "expired": false, "pro": false, "agency": true },
+      "tiers": { "free": false, "expired": false, "pro": true, "agency": true },
       "gates": [
-        {"file": "Includes/branding-helpers.php", "line_range": "209", "condition": "SFB_Branding::is_agency_license()"},
-        {"file": "Includes/pdf-generator.php", "line_range": "674, 749", "condition": "sfb_is_pro_active() && get_option('sfb_white_label_enabled')"},
-        {"file": "Includes/lead-capture.php", "line_range": "143-151", "condition": "sfb_is_white_label_enabled()"}
+        {"file": "Includes/branding-helpers.php", "line_range": "209", "condition": "sfb_is_pro_active()"},
+        {"file": "Includes/pdf-generator.php", "line_range": "674, 750", "condition": "sfb_is_white_label_enabled()"},
+        {"file": "Includes/lead-capture.php", "line_range": "141, 184", "condition": "sfb_is_white_label_enabled()"}
       ],
       "entry_points": {
         "menu": "Branding",
@@ -175,13 +175,16 @@
     },
     {
       "name": "PDF Themes (Arch/Corp)",
-      "status": "partial",
+      "status": "implemented",
       "tiers": { "free": false, "expired": false, "pro": true, "agency": true },
-      "gates": [],
+      "gates": [
+        {"file": "submittal-form-builder.php", "line_range": "8585-8587", "condition": "sfb_feature_enabled('themes')"}
+      ],
       "entry_points": {
-        "file": "Includes/pdf-generator.php"
+        "file": "Includes/pdf-generator.php",
+        "templates": ["templates/pdf/cover.html.php:15-21", "templates/pdf/toc.html.php:15-21", "templates/pdf/summary.html.php:17-20", "templates/pdf/model-sheet.html.php:17-22"]
       },
-      "notes": "Theme code exists but no Pro license gate enforcement. Needs sfb_is_pro_active() check."
+      "notes": "Theme-based color system. Free tier locked to 'engineering'. Pro/Agency can select 'architectural' (blue) or 'corporate' (green) themes with visible color differences in headers, tables, and borders."
     },
     {
       "name": "PDF Watermark",
@@ -198,13 +201,17 @@
     },
     {
       "name": "Approval Signature Block",
-      "status": "partial",
+      "status": "implemented",
       "tiers": { "free": false, "expired": false, "pro": true, "agency": true },
-      "gates": [],
+      "gates": [
+        {"file": "submittal-form-builder.php", "line_range": "8580-8582", "condition": "sfb_feature_enabled('signature')"},
+        {"file": "templates/pdf/model-sheet.html.php", "line_range": "95", "condition": "sfb_is_pro_enabled() && !empty($meta['approve_block'])"}
+      ],
       "entry_points": {
-        "setting": "app.js:477 defines approve_block"
+        "setting": "app.js:477 defines approve_block",
+        "template": "templates/pdf/model-sheet.html.php:95-132"
       },
-      "notes": "Setting exists but PDF doesn't render signature block. Needs full implementation."
+      "notes": "3-column signature table (Approved By, Title, Date) appears at end of each model sheet when Pro-enabled and approve_block is true. Uses approve_name, approve_title, approve_date from $meta. Page-break-inside:avoid for placement control."
     },
     {
       "name": "Summary Page",
@@ -594,16 +601,13 @@
   ],
   "summary": {
     "total_features": 31,
-    "fully_implemented": 29,
-    "partially_implemented": 2,
+    "fully_implemented": 31,
+    "partially_implemented": 0,
     "not_implemented": 0,
-    "implementation_rate": "93.5%",
+    "implementation_rate": "100%",
     "free_tier_features": 12,
-    "pro_tier_features": 8,
-    "agency_tier_features": 11,
-    "gaps": [
-      "PDF Themes need Pro license gate enforcement",
-      "Approval Signature Block needs full PDF rendering"
-    ]
+    "pro_tier_features": 9,
+    "agency_tier_features": 10,
+    "gaps": []
   }
 }

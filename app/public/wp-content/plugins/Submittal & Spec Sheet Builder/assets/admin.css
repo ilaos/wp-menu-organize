@@ -1748,3 +1748,586 @@
 .sfb-rule-card .sfb-drag-handle:active {
   cursor: grabbing;
 }
+
+/* ========================================
+   Modern Welcome Screen
+   ======================================== */
+
+.sfb-welcome-modern {
+  max-width: 1400px;
+  margin: 20px auto 40px;
+}
+
+/* Hero Header */
+.sfb-welcome-hero {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border-radius: 16px;
+  padding: 40px 50px;
+  margin-bottom: 32px;
+  box-shadow: 0 10px 40px rgba(102, 126, 234, 0.2);
+  position: relative;
+  overflow: hidden;
+}
+
+.sfb-welcome-hero::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  right: -10%;
+  width: 500px;
+  height: 500px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 50%;
+  pointer-events: none;
+}
+
+.sfb-welcome-hero-content {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 30px;
+}
+
+.sfb-welcome-branding {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  flex: 1;
+}
+
+.sfb-welcome-logo {
+  height: 60px;
+  width: auto;
+  filter: brightness(0) invert(1);
+  opacity: 0.95;
+}
+
+.sfb-welcome-title-group h1 {
+  color: #ffffff;
+  font-size: 32px;
+  font-weight: 700;
+  margin: 0 0 6px 0;
+  line-height: 1.2;
+  letter-spacing: -0.5px;
+}
+
+.sfb-welcome-tagline {
+  color: rgba(255, 255, 255, 0.85);
+  font-size: 16px;
+  margin: 0;
+  font-weight: 400;
+}
+
+.sfb-welcome-hero-actions {
+  display: flex;
+  gap: 12px;
+  flex-shrink: 0;
+}
+
+.sfb-welcome-hero-actions .button-hero {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 24px !important;
+  font-size: 15px !important;
+  font-weight: 600 !important;
+  border-radius: 8px !important;
+  border: none !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15) !important;
+  transition: all 0.2s ease !important;
+  text-decoration: none !important;
+  height: auto !important;
+  line-height: 1.4 !important;
+}
+
+.sfb-welcome-hero-actions .button-primary {
+  background: #ffffff !important;
+  color: #667eea !important;
+}
+
+.sfb-welcome-hero-actions .button-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2) !important;
+}
+
+.sfb-welcome-hero-actions .button-secondary {
+  background: rgba(255, 255, 255, 0.2) !important;
+  color: #ffffff !important;
+  backdrop-filter: blur(10px);
+}
+
+.sfb-welcome-hero-actions .button-secondary:hover {
+  background: rgba(255, 255, 255, 0.3) !important;
+  transform: translateY(-2px);
+}
+
+.sfb-welcome-hero-actions .dashicons {
+  font-size: 18px;
+  width: 18px;
+  height: 18px;
+}
+
+/* Main Content */
+.sfb-welcome-content {
+  max-width: 100%;
+}
+
+.sfb-welcome-section {
+  margin-bottom: 32px;
+}
+
+.sfb-welcome-section > h2 {
+  font-size: 22px;
+  font-weight: 700;
+  color: #1e293b;
+  margin: 0 0 20px 0;
+  letter-spacing: -0.3px;
+}
+
+/* Quick Actions Grid */
+.sfb-quick-action-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 16px;
+}
+
+.sfb-quick-action {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 20px;
+  background: #ffffff;
+  border: 2px solid #e2e8f0;
+  border-radius: 12px;
+  text-decoration: none;
+  transition: all 0.2s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.sfb-quick-action::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, #667eea, #764ba2);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.3s ease;
+}
+
+.sfb-quick-action:hover {
+  border-color: #667eea;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(102, 126, 234, 0.15);
+}
+
+.sfb-quick-action:hover::before {
+  transform: scaleX(1);
+}
+
+.sfb-quick-action-icon {
+  width: 50px;
+  height: 50px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: transform 0.2s ease;
+}
+
+.sfb-quick-action:hover .sfb-quick-action-icon {
+  transform: scale(1.1);
+}
+
+.sfb-icon-builder {
+  background: linear-gradient(135deg, #667eea, #764ba2);
+}
+
+.sfb-icon-branding {
+  background: linear-gradient(135deg, #f093fb, #f5576c);
+}
+
+.sfb-icon-settings {
+  background: linear-gradient(135deg, #4facfe, #00f2fe);
+}
+
+.sfb-icon-utilities {
+  background: linear-gradient(135deg, #43e97b, #38f9d7);
+}
+
+.sfb-quick-action-icon .dashicons {
+  color: #ffffff;
+  font-size: 24px;
+  width: 24px;
+  height: 24px;
+}
+
+.sfb-quick-action-content {
+  flex: 1;
+}
+
+.sfb-quick-action-content h3 {
+  margin: 0 0 4px 0;
+  font-size: 16px;
+  font-weight: 600;
+  color: #1e293b;
+  transition: color 0.2s ease;
+}
+
+.sfb-quick-action:hover .sfb-quick-action-content h3 {
+  color: #667eea;
+}
+
+.sfb-quick-action-content p {
+  margin: 0;
+  font-size: 13px;
+  color: #64748b;
+  line-height: 1.5;
+}
+
+.sfb-quick-action-arrow {
+  color: #cbd5e1;
+  font-size: 20px;
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+  transition: all 0.2s ease;
+}
+
+.sfb-quick-action:hover .sfb-quick-action-arrow {
+  color: #667eea;
+  transform: translateX(4px);
+}
+
+/* Two Column Layout */
+.sfb-welcome-two-col {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(450px, 1fr));
+  gap: 24px;
+  margin-top: 32px;
+}
+
+/* Cards */
+.sfb-welcome-card {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 28px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+}
+
+.sfb-welcome-card-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 24px;
+  padding-bottom: 16px;
+  border-bottom: 2px solid #f1f5f9;
+}
+
+.sfb-welcome-card-header .dashicons {
+  color: #667eea;
+  font-size: 24px;
+  width: 24px;
+  height: 24px;
+}
+
+.sfb-welcome-card-header h2 {
+  margin: 0;
+  font-size: 20px;
+  font-weight: 700;
+  color: #1e293b;
+}
+
+/* Checklist */
+.sfb-welcome-checklist {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.sfb-checklist-item {
+  display: flex;
+  gap: 16px;
+  align-items: flex-start;
+}
+
+.sfb-checklist-number {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #667eea, #764ba2);
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 14px;
+  flex-shrink: 0;
+}
+
+.sfb-checklist-item h4 {
+  margin: 0 0 6px 0;
+  font-size: 15px;
+  font-weight: 600;
+  color: #1e293b;
+}
+
+.sfb-checklist-item p {
+  margin: 0 0 10px 0;
+  font-size: 13px;
+  color: #64748b;
+  line-height: 1.6;
+}
+
+.sfb-checklist-item a {
+  color: #667eea;
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 13px;
+  transition: color 0.2s ease;
+}
+
+.sfb-checklist-item a:hover {
+  color: #764ba2;
+  text-decoration: underline;
+}
+
+/* Shortcode Box */
+.sfb-shortcode-box {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 8px;
+  padding: 10px 12px;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 6px;
+}
+
+.sfb-shortcode-box code {
+  flex: 1;
+  font-family: 'Monaco', 'Courier New', monospace;
+  font-size: 13px;
+  color: #1e293b;
+  background: transparent;
+  padding: 0;
+  user-select: all;
+}
+
+.sfb-shortcode-box .button {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 6px 12px !important;
+  height: auto !important;
+  line-height: 1 !important;
+  font-size: 12px !important;
+  border-radius: 4px !important;
+}
+
+.sfb-shortcode-box .dashicons {
+  font-size: 16px;
+  width: 16px;
+  height: 16px;
+}
+
+.sfb-copy-feedback {
+  color: #10b981;
+  font-weight: 600;
+  font-size: 13px;
+  margin-top: 6px;
+  display: block;
+}
+
+/* Resources List */
+.sfb-resource-list {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.sfb-resource-item {
+  display: flex;
+  gap: 14px;
+  align-items: flex-start;
+  padding: 16px;
+  background: #f8fafc;
+  border-radius: 8px;
+  transition: all 0.2s ease;
+}
+
+.sfb-resource-item:hover {
+  background: #f1f5f9;
+}
+
+.sfb-resource-item > .dashicons {
+  color: #667eea;
+  font-size: 20px;
+  width: 20px;
+  height: 20px;
+  margin-top: 2px;
+  flex-shrink: 0;
+}
+
+.sfb-resource-item h4 {
+  margin: 0 0 4px 0;
+  font-size: 15px;
+  font-weight: 600;
+  color: #1e293b;
+}
+
+.sfb-resource-item p {
+  margin: 0 0 8px 0;
+  font-size: 13px;
+  color: #64748b;
+  line-height: 1.5;
+}
+
+.sfb-resource-item a {
+  color: #667eea;
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 13px;
+  transition: color 0.2s ease;
+}
+
+.sfb-resource-item a:hover {
+  color: #764ba2;
+  text-decoration: underline;
+}
+
+.sfb-resource-highlight {
+  background: linear-gradient(135deg, rgba(102, 126, 234, 0.08), rgba(118, 75, 162, 0.08));
+  border: 1px solid rgba(102, 126, 234, 0.2);
+}
+
+.sfb-resource-highlight > .dashicons {
+  color: #f59e0b;
+}
+
+/* Responsive Design */
+@media (max-width: 1200px) {
+  .sfb-welcome-hero {
+    padding: 32px 40px;
+  }
+
+  .sfb-welcome-two-col {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 782px) {
+  .sfb-welcome-modern {
+    margin: 10px 0 20px;
+  }
+
+  .sfb-welcome-hero {
+    padding: 24px 20px;
+    border-radius: 12px;
+  }
+
+  .sfb-welcome-hero-content {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 20px;
+  }
+
+  .sfb-welcome-branding {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+
+  .sfb-welcome-logo {
+    height: 40px;
+  }
+
+  .sfb-welcome-title-group h1 {
+    font-size: 24px;
+  }
+
+  .sfb-welcome-tagline {
+    font-size: 14px;
+  }
+
+  .sfb-welcome-hero-actions {
+    width: 100%;
+    flex-direction: column;
+  }
+
+  .sfb-welcome-hero-actions .button-hero {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .sfb-quick-action-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .sfb-welcome-two-col {
+    grid-template-columns: 1fr;
+  }
+
+  .sfb-welcome-card {
+    padding: 20px;
+  }
+}
+
+@media (max-width: 600px) {
+  .sfb-welcome-section > h2 {
+    font-size: 18px;
+  }
+
+  .sfb-quick-action {
+    padding: 16px;
+  }
+
+  .sfb-quick-action-icon {
+    width: 42px;
+    height: 42px;
+  }
+
+  .sfb-quick-action-icon .dashicons {
+    font-size: 20px;
+    width: 20px;
+    height: 20px;
+  }
+}
+
+/* Print Styles */
+@media print {
+  .sfb-welcome-hero-actions,
+  .sfb-quick-action-arrow {
+    display: none;
+  }
+
+  .sfb-welcome-hero {
+    background: #f8fafc;
+    box-shadow: none;
+  }
+
+  .sfb-welcome-title-group h1,
+  .sfb-welcome-tagline {
+    color: #1e293b;
+  }
+}
+
+/* Accessibility */
+.sfb-quick-action:focus,
+.sfb-checklist-item a:focus,
+.sfb-resource-item a:focus {
+  outline: 2px solid #667eea;
+  outline-offset: 2px;
+}
+
+/* WordPress Admin Notice Compatibility */
+.sfb-welcome-modern .notice {
+  margin: 0 0 20px 0;
+}

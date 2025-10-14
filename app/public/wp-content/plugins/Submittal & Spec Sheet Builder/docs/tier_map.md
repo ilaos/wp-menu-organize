@@ -44,11 +44,11 @@ Complete feature inventory by tier with implementation status.
 | Lead Capture & CRM           | ❌   | ❌      | ✅  | ✅     | Implemented | Email/phone capture, CSV export, UTM tracking  |
 | Auto-Email Packets           | ❌   | ❌      | ✅  | ✅     | Implemented | Send PDFs with tracking links                  |
 | Auto-Archive to History      | ❌   | ❌      | ✅  | ✅     | Implemented | Archive by project/date                        |
-| PDF Themes (Arch/Corp)       | ❌   | ❌      | ✅  | ✅     | Partial     | Themes exist, needs Pro gate enforcement       |
+| PDF Themes (Arch/Corp)       | ❌   | ❌      | ✅  | ✅     | Implemented | Theme-based color system with visible diffs    |
 | PDF Watermark                | ❌   | ❌      | ✅  | ✅     | Implemented | Fixed-position overlay on all PDF pages        |
-| Approval Signature Block     | ❌   | ❌      | ✅  | ✅     | Partial     | Setting exists, needs full implementation      |
+| Approval Signature Block     | ❌   | ❌      | ✅  | ✅     | Implemented | 3-column signature table on model sheets       |
+| White-Label Branding         | ❌   | ❌      | ✅  | ✅     | Implemented | Remove plugin credit, custom email sender      |
 | **Agency Features**          |      |         |     |        |             |                                                |
-| White-Label Branding         | ❌   | ❌      | ❌  | ✅     | Implemented | Remove plugin credit, custom email sender      |
 | Brand Presets Library        | ❌   | ❌      | ❌  | ✅     | Implemented | Save/load/apply brand configurations           |
 | Default Preset Auto-Apply    | ❌   | ❌      | ❌  | ✅     | Implemented | Auto-apply brand preset to PDFs                |
 | Review Screen Preset Switcher| ❌   | ❌      | ❌  | ✅     | Implemented | Session-only preset preview on Review step     |
@@ -134,12 +134,14 @@ Complete feature inventory by tier with implementation status.
   - Implementation: History tracking in node operations
   - Status: ✅ Complete
 
-#### Agency Features
+#### Pro Features (continued)
 - **White-Label Branding**
   - Backend: branding-helpers.php:207-308
-  - PDF integration: pdf-generator.php:674, 749
-  - Email integration: lead-capture.php:143-151
+  - PDF integration: pdf-generator.php:674, 750
+  - Email integration: lead-capture.php:141, 184
   - Status: ✅ Complete with footer/email customization
+
+#### Agency Features
 
 - **Brand Presets Library**
   - Backend: class-sfb-branding.php:77-469
@@ -202,21 +204,31 @@ Complete feature inventory by tier with implementation status.
 
 ### ⚠️ Partially Implemented (Needs Work)
 
-#### PDF Themes (Pro)
-- **Status:** Theme code exists but no Pro license gate
-- **File:** pdf-generator.php (theme selection logic present)
-- **Gap:** No enforcement preventing Free users from using themes
-- **Fix Needed:** Add `sfb_is_pro_active()` check before applying non-default themes
+None. All 35 features are now fully implemented.
 
-#### Approval Signature Block (Pro)
-- **Status:** Setting exists (`approve_block`) but needs full implementation
-- **File:** app.js:477 defines setting
-- **Gap:** PDF generator doesn't render signature block
-- **Fix Needed:** Add signature section to PDF template
+### ✅ Recently Completed
 
-### ❌ Not Implemented (No Code)
+#### PDF Themes (Pro) - Completed 2025-10-13
+- **Status:** Fully implemented with Pro gate enforcement
+- **Gate:** submittal-form-builder.php:8585-8587 using `sfb_feature_enabled('themes')`
+- **Templates:** Themes applied in cover.html.php, toc.html.php, summary.html.php, model-sheet.html.php
+- **Visual Differences:**
+  - Engineering (default/free): Uses primary_color or #111827 (dark gray)
+  - Architectural (Pro+): #0ea5e9 (sky blue) for headers, tables, borders
+  - Corporate (Pro+): #10b981 (emerald green) for headers, tables, borders
+- **Free tier behavior:** Forced to 'engineering' theme, cannot switch
 
-None identified. All features listed in registry have at least partial implementation.
+#### Approval Signature Block (Pro) - Completed 2025-10-13
+- **Status:** Fully implemented with Pro-gated rendering
+- **Gate:** submittal-form-builder.php:8580-8582 using `sfb_feature_enabled('signature')`
+- **Template:** templates/pdf/model-sheet.html.php:95-132
+- **Implementation:**
+  - 3-column signature table (Approved By, Title, Date)
+  - Uses `$meta['approve_name']`, `$meta['approve_title']`, `$meta['approve_date']`
+  - Conditional: `sfb_is_pro_enabled() && !empty($meta['approve_block'])`
+  - Page-break-inside:avoid for placement control
+  - Min-height:930px on .model-content wrapper for short pages
+- **Free tier behavior:** Signature block hidden, approve_block setting disabled
 
 ## Feature Entry Points
 
@@ -599,25 +611,20 @@ Shows:
 ### Core (All Tiers) - 16 features
 All basic functionality: catalog, PDF, branding, frontend builder, admin editor, utilities
 
-### Pro (Pro + Agency) - 8 features
-Server drafts, tracking, lead capture, auto-email, auto-archive, watermark, themes†, signature†
-†Partial implementation
+### Pro (Pro + Agency) - 9 features
+Server drafts, tracking, lead capture, auto-email, auto-archive, watermark, themes, signature block, white-label
 
-### Agency (Agency Only) - 11 features
-White-label, brand presets, default preset auto-apply, preset switcher, lead routing, weekly export, analytics, agency library, client handoff, operator role, agency pages
+### Agency (Agency Only) - 10 features
+Brand presets, default preset auto-apply, preset switcher, lead routing, weekly export, analytics, agency library, client handoff, operator role, agency pages
 
 ### Total Features: 35
-- Fully Implemented: 33 (94.3%)
-- Partially Implemented: 2 (5.7%)
+- Fully Implemented: 35 (100%)
+- Partially Implemented: 0 (0%)
 - Not Implemented: 0 (0%)
 
 ## Next Steps
 
-### High Priority (Complete Partial Features)
-1. **PDF Themes Gate** - Add `sfb_is_pro_active()` check to theme selection
-2. **Signature Block** - Add signature section rendering to PDF template
-
-### Medium Priority (Enhancements)
+### High Priority (Polish & UX)
 1. Add explicit "Pro Only" badges in Settings UI
 2. Add upsell tooltips on disabled Pro settings for Free users
 3. Add lock icons (🔒) to Pro/Agency menu items in free tier

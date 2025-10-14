@@ -671,9 +671,10 @@ class SFB_PDF_Generator {
   <div class="cover-footer">
     <?php
     // Pro users with white-label can customize, otherwise show attribution with link
-    if (sfb_is_pro_active() && get_option('sfb_white_label_enabled')) {
+    if (sfb_is_white_label_enabled()) {
       // White-label mode: show custom footer or nothing
-      $custom_footer = trim(get_option('sfb_brand_footer_text', ''));
+      $brand = sfb_get_brand_settings();
+      $custom_footer = trim($brand['white_label']['custom_footer'] ?? '');
       if ($custom_footer) {
         echo esc_html($custom_footer);
       }
@@ -746,7 +747,7 @@ class SFB_PDF_Generator {
     </ul>
   </div>
 
-  <?php if (!sfb_is_pro_active() || !get_option('sfb_white_label_enabled')): ?>
+  <?php if (!sfb_is_white_label_enabled()): ?>
     <!-- Attribution link for free/non-white-label users (clickable) -->
     <div class="sfb-attrib" style="margin-top: 30px; padding-top: 15px; border-top: 1px solid #e5e7eb; font-size: 9pt; color: #9ca3af; text-align: center;">
       <?php esc_html_e('Generated using', 'submittal-builder'); ?>

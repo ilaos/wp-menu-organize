@@ -85,7 +85,7 @@ function sfb_text_list($arr): array {
 }
 
 final class SFB_Plugin {
-  const VERSION = '1.0.0';
+  const VERSION = '1.0.4';
   private static $instance = null;
 
   static function instance() { return self::$instance ?: self::$instance = new self; }
@@ -487,7 +487,7 @@ final class SFB_Plugin {
     );
 
     // 3. Demo Tools (internal/testing only - not shown in production)
-    if (false) { // Disabled for production
+    if (defined('SFB_SHOW_DEMO_TOOLS') && SFB_SHOW_DEMO_TOOLS) {
       add_submenu_page(
         'sfb',
         __('Demo Tools', 'submittal-builder'),
@@ -5142,6 +5142,18 @@ final class SFB_Plugin {
       $action = 'reset';
     }
 
+    // Generate Demo Data Handler
+    if (isset($_POST['sfb_generate_demo_data']) && check_admin_referer('sfb_generate_demo_data')) {
+      $result = $this->generate_screenshot_demo_data();
+      $action = 'generate_demo';
+    }
+
+    // Clear Demo Data Handler
+    if (isset($_POST['sfb_clear_demo_data']) && check_admin_referer('sfb_generate_demo_data')) {
+      $result = $this->clear_screenshot_demo_data();
+      $action = 'clear_demo';
+    }
+
     // Get available packs
     $packs = $this->get_available_packs();
 
@@ -5491,6 +5503,37 @@ final class SFB_Plugin {
           <p class="submit">
             <button type="submit" name="sfb_reset_demo" class="button button-secondary" style="border-color: #d63638; color: #d63638;">
               <?php echo esc_html__('Reset Seeded Demo Content', 'submittal-builder'); ?>
+            </button>
+          </p>
+        </form>
+      </div>
+
+      <!-- Demo Data Generator (for Screenshots) -->
+      <div class="card" style="max-width: 800px; margin-top: 20px; background: #f0f9ff; border-left: 4px solid #0ea5e9;">
+        <h2 style="margin-top: 0;">
+          📸 <?php echo esc_html__('Demo Data Generator (for Screenshots)', 'submittal-builder'); ?>
+        </h2>
+
+        <p><?php echo esc_html__('Generate realistic demo data for Tracking, Agency, and Analytics pages to help with WordPress plugin submission screenshots.', 'submittal-builder'); ?></p>
+
+        <div class="notice notice-info" style="margin: 15px 0;">
+          <p><strong><?php echo esc_html__('What will be created:', 'submittal-builder'); ?></strong></p>
+          <ul style="margin-left: 20px; list-style: disc;">
+            <li><?php echo esc_html__('10 tracking links with realistic project names, views, and timestamps', 'submittal-builder'); ?></li>
+            <li><?php echo esc_html__('5 Agency Packs with sample catalog items (Electrical, HVAC, Plumbing, etc.)', 'submittal-builder'); ?></li>
+            <li><?php echo esc_html__('30 days of analytics activity data for the Agency Analytics dashboard', 'submittal-builder'); ?></li>
+          </ul>
+          <p style="margin-top: 10px;"><em><?php echo esc_html__('All demo data is tagged and can be easily cleared with the "Clear Demo Data" button below.', 'submittal-builder'); ?></em></p>
+        </div>
+
+        <form method="post" style="margin-top: 20px;">
+          <?php wp_nonce_field('sfb_generate_demo_data'); ?>
+          <p class="submit" style="margin-top: 0;">
+            <button type="submit" name="sfb_generate_demo_data" class="button button-primary">
+              <?php echo esc_html__('Generate Demo Data', 'submittal-builder'); ?>
+            </button>
+            <button type="submit" name="sfb_clear_demo_data" class="button button-secondary" style="margin-left: 10px;">
+              <?php echo esc_html__('Clear Demo Data', 'submittal-builder'); ?>
             </button>
           </p>
         </form>
@@ -9775,6 +9818,209 @@ final class SFB_Plugin {
       return [
         'success' => false,
         'message' => sprintf(__('Error resetting demo content: %s', 'submittal-builder'), $e->getMessage())
+      ];
+    }
+  }
+
+  /** Generate demo data for screenshots */
+  private function generate_screenshot_demo_data() {
+    try {
+      $tracking_count = 0;
+      $pack_count = 0;
+      $analytics_count = 0;
+
+      // 1. Generate Tracking Demo Data (10 tracking links)
+      $tracking_links = get_option('sfb_packets', []);
+
+      $project_names = [
+        'Downtown Office Tower - Phase 2',
+        'Riverside Medical Center Expansion',
+        'Tech Campus Building C',
+        'Mountain View Retail Complex',
+        'Harbor Front Hotel Project',
+        'University Science Building',
+        'Parkside Residential Development',
+        'Industrial Park Warehouse 5',
+        'City Hall Renovation',
+        'Lakeside Conference Center'
+      ];
+
+      $client_companies = [
+        'BuildCorp Construction',
+        'Summit Builders LLC',
+        'Metropolitan Contractors',
+        'Horizon Development Group',
+        'Premier Construction Co',
+        'Elite Building Services',
+        'Pinnacle Contracting',
+        'Urban Development Partners',
+        'Cornerstone Builders',
+        'Skyline Construction'
+      ];
+
+      foreach ($project_names as $i => $project) {
+        $token = 'demo_' . wp_generate_password(16, false);
+        $created = date('Y-m-d H:i:s', strtotime("-" . (30 - $i * 3) . " days"));
+        $view_count = rand(0, 15);
+        $views = [];
+
+        // Generate view history
+        for ($v = 0; $v < $view_count; $v++) {
+          $views[] = [
+            'timestamp' => date('Y-m-d H:i:s', strtotime($created . " +" . rand(1, 72) . " hours")),
+            'ip' => '192.168.' . rand(1, 255) . '.' . rand(1, 255),
+            'user_agent' => 'Mozilla/5.0 (Demo Data)'
+          ];
+        }
+
+        $tracking_links[$token] = [
+          'project' => $project,
+          'contractor' => 'John Smith',
+          'email_to' => 'demo@example.com',
+          'company_to' => $client_companies[$i],
+          'created' => $created,
+          'view_count' => $view_count,
+          'views' => $views,
+          '_demo_data' => true
+        ];
+        $tracking_count++;
+      }
+
+      update_option('sfb_packets', $tracking_links, false);
+
+      // 2. Generate Agency Pack Demo Data (5 packs)
+      $packs = get_option('sfb_agency_packs', []);
+
+      $pack_templates = [
+        [
+          'name' => 'Electrical Package',
+          'description' => 'Complete electrical components catalog with fixtures, panels, and controls',
+          'categories' => ['Lighting Fixtures', 'Electrical Panels', 'Controls & Sensors']
+        ],
+        [
+          'name' => 'HVAC Systems',
+          'description' => 'Heating, ventilation, and air conditioning equipment catalog',
+          'categories' => ['Air Handlers', 'Ductwork', 'Controls']
+        ],
+        [
+          'name' => 'Plumbing Fixtures',
+          'description' => 'Commercial plumbing fixtures and fittings',
+          'categories' => ['Sinks & Faucets', 'Toilets & Urinals', 'Piping']
+        ],
+        [
+          'name' => 'Security Systems',
+          'description' => 'Access control, cameras, and monitoring equipment',
+          'categories' => ['Cameras', 'Access Control', 'Alarm Systems']
+        ],
+        [
+          'name' => 'Fire Protection',
+          'description' => 'Fire suppression and detection systems',
+          'categories' => ['Sprinkler Heads', 'Fire Alarms', 'Extinguishers']
+        ]
+      ];
+
+      foreach ($pack_templates as $template) {
+        $pack_id = 'demo_pack_' . sanitize_title($template['name']);
+
+        $packs[] = [
+          'id' => $pack_id,
+          'name' => $template['name'],
+          'description' => $template['description'],
+          'created' => date('Y-m-d H:i:s', strtotime('-' . rand(5, 25) . ' days')),
+          'node_ids' => [], // Would reference actual catalog nodes
+          'settings' => [
+            'include_branding' => true,
+            'include_notes' => false
+          ],
+          '_demo_data' => true
+        ];
+        $pack_count++;
+      }
+
+      update_option('sfb_agency_packs', $packs, false);
+
+      // 3. Generate Analytics Demo Data (30 days of activity)
+      // Store in a custom option for analytics
+      $analytics_data = [];
+      $today = time();
+
+      for ($day = 0; $day < 30; $day++) {
+        $date = date('Y-m-d', strtotime("-$day days", $today));
+
+        $analytics_data[$date] = [
+          'packets_created' => rand(2, 8),
+          'pdfs_generated' => rand(5, 20),
+          'tracking_views' => rand(10, 50),
+          'leads_captured' => rand(1, 5),
+          'unique_visitors' => rand(15, 45),
+          '_demo_data' => true
+        ];
+        $analytics_count++;
+      }
+
+      update_option('sfb_demo_analytics', $analytics_data, false);
+
+      return [
+        'success' => true,
+        'message' => sprintf(
+          __('✅ Demo data generated successfully! Created %d tracking links, %d agency packs, and %d days of analytics data. Visit Tracking, Agency, and Agency Analytics pages to see the results.', 'submittal-builder'),
+          $tracking_count,
+          $pack_count,
+          $analytics_count
+        )
+      ];
+
+    } catch (\Throwable $e) {
+      return [
+        'success' => false,
+        'message' => sprintf(__('Error generating demo data: %s', 'submittal-builder'), $e->getMessage())
+      ];
+    }
+  }
+
+  /** Clear all screenshot demo data */
+  private function clear_screenshot_demo_data() {
+    try {
+      $cleared_count = 0;
+
+      // 1. Clear tracking demo data
+      $tracking_links = get_option('sfb_packets', []);
+      $original_count = count($tracking_links);
+
+      $tracking_links = array_filter($tracking_links, function($packet) {
+        return empty($packet['_demo_data']);
+      });
+
+      update_option('sfb_packets', $tracking_links, false);
+      $cleared_count += ($original_count - count($tracking_links));
+
+      // 2. Clear agency pack demo data
+      $packs = get_option('sfb_agency_packs', []);
+      $original_pack_count = count($packs);
+
+      $packs = array_filter($packs, function($pack) {
+        return empty($pack['_demo_data']);
+      });
+
+      update_option('sfb_agency_packs', array_values($packs), false);
+      $cleared_count += ($original_pack_count - count($packs));
+
+      // 3. Clear analytics demo data
+      delete_option('sfb_demo_analytics');
+      $cleared_count += 30; // 30 days
+
+      return [
+        'success' => true,
+        'message' => sprintf(
+          __('✅ Demo data cleared successfully! Removed approximately %d demo items. Your real data remains intact.', 'submittal-builder'),
+          $cleared_count
+        )
+      ];
+
+    } catch (\Throwable $e) {
+      return [
+        'success' => false,
+        'message' => sprintf(__('Error clearing demo data: %s', 'submittal-builder'), $e->getMessage())
       ];
     }
   }

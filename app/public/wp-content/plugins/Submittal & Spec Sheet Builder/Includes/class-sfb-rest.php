@@ -751,7 +751,7 @@ final class SFB_Rest {
         $wpdb->update($table, ['position' => $pos++], ['id' => $sib['id']]);
       }
 
-      return ['ok' => true];
+      return rest_ensure_response(['ok' => true]);
     } catch (\Throwable $e) {
       error_log('SFB api_move_node error: ' . $e->getMessage());
       return new WP_Error('server_error', $e->getMessage(), ['status' => 500]);

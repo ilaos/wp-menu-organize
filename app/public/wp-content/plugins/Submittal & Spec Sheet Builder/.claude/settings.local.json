@@ -12,7 +12,12 @@
       "Bash(find:*)",
       "Bash(wp i18n make-pot:*)",
       "Bash(ls:*)",
-      "Bash(git rm:*)"
+      "Bash(git rm:*)",
+      "Bash(git push:*)",
+      "Bash(wp option get:*)",
+      "Bash(where php)",
+      "Bash(wc:*)",
+      "Bash(wp db query:*)"
     ],
     "deny": [],
     "ask": []

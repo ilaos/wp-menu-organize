@@ -1998,3 +1998,13 @@ Stack trace:
 [07-Sep-2025 01:22:11 UTC] PHP Parse error:  syntax error, unexpected token "\", expecting end of file in Command line code on line 2
 [07-Sep-2025 01:31:08 UTC] PHP Parse error:  syntax error, unexpected token "\", expecting variable or "$" in Command line code on line 4
 [07-Sep-2025 01:31:17 UTC] PHP Parse error:  syntax error, unexpected token "\" in Command line code on line 15
+[13-Oct-2025 23:18:11 UTC] PHP Warning:  require_once(../../../../../wp-load.php): Failed to open stream: No such file or directory in C:\Users\ishla\Local Sites\my-playground\app\public\wp-content\plugins\Submittal & Spec Sheet Builder\debug-license-check.php on line 8
+[13-Oct-2025 23:18:11 UTC] PHP Fatal error:  Uncaught Error: Failed opening required '../../../../../wp-load.php' (include_path='.:/usr/share/php:/www/wp-content/pear') in C:\Users\ishla\Local Sites\my-playground\app\public\wp-content\plugins\Submittal & Spec Sheet Builder\debug-license-check.php:8
+Stack trace:
+#0 {main}
+  thrown in C:\Users\ishla\Local Sites\my-playground\app\public\wp-content\plugins\Submittal & Spec Sheet Builder\debug-license-check.php on line 8
+[13-Oct-2025 23:20:08 UTC] PHP Warning:  require_once(C:\Users\ishla\Local Sites\my-playground\app\public\wp-content\plugins\Submittal &amp; Spec Sheet Builder/../../../../../wp-load.php): Failed to open stream: No such file or directory in C:\Users\ishla\Local Sites\my-playground\app\public\wp-content\plugins\Submittal & Spec Sheet Builder\debug-license-check.php on line 8
+[13-Oct-2025 23:20:08 UTC] PHP Fatal error:  Uncaught Error: Failed opening required 'C:\Users\ishla\Local Sites\my-playground\app\public\wp-content\plugins\Submittal & Spec Sheet Builder/../../../../../wp-load.php' (include_path='.:/usr/share/php:/www/wp-content/pear') in C:\Users\ishla\Local Sites\my-playground\app\public\wp-content\plugins\Submittal & Spec Sheet Builder\debug-license-check.php:8
+Stack trace:
+#0 {main}
+  thrown in C:\Users\ishla\Local Sites\my-playground\app\public\wp-content\plugins\Submittal & Spec Sheet Builder\debug-license-check.php on line 8

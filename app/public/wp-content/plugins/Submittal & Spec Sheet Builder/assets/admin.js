@@ -696,7 +696,7 @@
             });
             await loadForm();
           } catch (err) {
-            console.error('Drag move error', err);
+            console.error('[SFB] Drag move error:', err);
             container.classList.add('sfb-drop-error');
             setTimeout(() => container.classList.remove('sfb-drop-error'), 450);
           } finally {
@@ -1719,15 +1719,19 @@
       }
 
       // Call REST endpoint
+      console.log('[SFB] Calling move API:', { id: sourceId, parent_id: newParentId, position: newPosition });
       wp.apiFetch({
         path: '/sfb/v1/node/move',
         method: 'POST',
         data: { id: sourceId, parent_id: newParentId, position: newPosition }
       })
       .then(res => {
+        console.log('[SFB] move response:', res);
         if (res?.ok) {
+          console.log('[SFB] Move successful, calling load()');
           load();
         } else {
+          console.error('[SFB] Move failed, response:', res);
           alert('Move failed');
         }
       })

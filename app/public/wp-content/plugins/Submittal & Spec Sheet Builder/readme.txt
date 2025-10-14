@@ -26,7 +26,7 @@ Create professional submittal packets from a product catalog in minutes. Capture
 - 📨 **Leads:** modal form, admin list, CSV export, weekly export (Agency).
 - 🎨 **Branding:** colors, footer, cover; **presets** (Agency) + preview.
 - 📦 **Agency Library:** save current catalog as a reusable Pack (Agency).
-- 🕵️ **White-Label Mode:** remove plugin credit; custom email sender (Agency).
+- 🕵️ **White-Label Mode:** remove plugin credit; custom email sender (Pro).
 - 🤝 **Client Handoff Mode:** hide agency panels + Operator permissions (Agency).
 - 📈 **Analytics (light):** PDFs & leads counts, top products (Agency).
 - 🔀 **Advanced Lead Routing:** rules + generic webhook (Agency).
@@ -34,8 +34,8 @@ Create professional submittal packets from a product catalog in minutes. Capture
 ### Tiers
 
 - **Free:** Builder, PDF, basic branding, leads list + CSV export.
-- **Pro (site license):** Tracking links, expanded branding/PDF options.
-- **Agency (org license):** Branding presets & preview, Agency Library (Packs), Weekly lead export, White-Label Mode, Client Handoff (with Operator role), Analytics (light), Advanced Lead Routing.
+- **Pro (site license):** Tracking links, expanded branding/PDF options, White-Label Mode.
+- **Agency (org license):** Branding presets & preview, Agency Library (Packs), Weekly lead export, Client Handoff (with Operator role), Analytics (light), Advanced Lead Routing.
 
 > This plugin is fully translatable. Use the included text domain.
 
@@ -74,7 +74,7 @@ This plugin stores submitted lead data in your WordPress database.
 By default, no. Agency analytics can optionally ping a remote aggregator with **non-PII** counts; you can disable with a filter. Lead webhooks post only to the URLs **you** configure.
 
 = Can I brand the PDFs? =
-Yes. Set colors and footer. Agency tier adds **Brand Presets** and **White-Label Mode** (remove credit, custom email sender).
+Yes. Set colors and footer. Pro tier adds **White-Label Mode** (remove credit, custom email sender). Agency tier adds **Brand Presets**.
 
 = Can I import a catalog? =
 Yes. Use **Industry Packs** (included) or Agency **Packs** you save from any site.
@@ -90,7 +90,7 @@ Free covers core building and PDFs. Pro/Agency unlock lead and sharing automatio
 - Leads admin with CSV export; **Weekly Lead Export** (Agency).
 - Branding: **Presets (A–C)** with default-to-PDF toggle, Review preset switcher (Agency).
 - **Agency Library (Packs)**: save, export JSON, seed other sites.
-- **White-Label Mode** (Agency): remove credit; custom PDF/email sender.
+- **White-Label Mode** (Pro): remove credit; custom PDF/email sender.
 - **Client Handoff Mode** (Agency): hide panels + **Operator** role/caps.
 - **Agency Analytics (light)**: PDFs/leads counts, top products, heartbeat.
 - **Advanced Lead Routing**: rules + generic webhook with retries.

@@ -28,7 +28,7 @@ $watermark = sfb_text($brand['watermark'] ?? '');
   </div>
 <?php endif; ?>
 <a id="<?= esc_attr($anchor_id); ?>"></a>
-<div style="max-width:800px; margin:0 auto; padding:28px 34px;">
+<div class="model-content" style="max-width:800px; margin:0 auto; padding:28px 34px; min-height:930px;">
   <h2 style="color:<?= esc_attr($bar); ?>; font-size:22px; font-weight:700; margin:0 0 6px;">
     <?= esc_html($product_title); ?>
   </h2>
@@ -92,19 +92,40 @@ $watermark = sfb_text($brand['watermark'] ?? '');
     <?php endif; ?>
   <?php endif; ?>
 
-  <?php if (!empty($meta['approve_block'])): ?>
+  <?php if (function_exists('sfb_is_pro_enabled') ? sfb_is_pro_enabled() && !empty($meta['approve_block']) : !empty($meta['approve_block'])): ?>
     <?php
-    $approved_by = sfb_text($meta['approved_by'] ?? '');
-    $approved_title = sfb_text($meta['approved_title'] ?? '');
-    $approved_date = sfb_text($meta['approved_date'] ?? '');
+    $approve_name = sfb_text($meta['approve_name'] ?? '');
+    $approve_title = sfb_text($meta['approve_title'] ?? '');
+    $approve_date = sfb_text($meta['approve_date'] ?? '');
     ?>
-    <div style="margin-top:18px; border-top:1px solid #e5e7eb; padding-top:10px; font-size:12px;">
-      <strong>Approval</strong>
-      <table width="100%" cellpadding="0" cellspacing="0" style="margin-top:6px; font-size:12px;">
+    <div class="sig-wrap" style="margin-top:24px; padding-top:12px; page-break-inside:avoid;">
+      <table class="sig-table" width="100%" cellpadding="0" cellspacing="0"
+        style="border-collapse:collapse; font-size:12px; border:1px solid #d1d5db;">
         <tr>
-          <td style="width:45%; padding:4px;">Approved By: <?= esc_html($approved_by) ?></td>
-          <td style="width:35%; padding:4px;">Title: <?= esc_html($approved_title) ?></td>
-          <td style="width:20%; padding:4px;">Date: <?= esc_html($approved_date) ?></td>
+          <td style="width:40%; padding:10px; border-right:1px solid #d1d5db; vertical-align:top;">
+            <div class="sig-label" style="font-size:10px; color:#6b7280; text-transform:uppercase; letter-spacing:0.5px; margin-bottom:6px;">
+              Approved By
+            </div>
+            <div class="sig-line" style="border-bottom:1px solid #374151; min-height:18px; padding-bottom:2px;">
+              <?= esc_html($approve_name); ?>
+            </div>
+          </td>
+          <td style="width:35%; padding:10px; border-right:1px solid #d1d5db; vertical-align:top;">
+            <div class="sig-label" style="font-size:10px; color:#6b7280; text-transform:uppercase; letter-spacing:0.5px; margin-bottom:6px;">
+              Title
+            </div>
+            <div class="sig-line" style="border-bottom:1px solid #374151; min-height:18px; padding-bottom:2px;">
+              <?= esc_html($approve_title); ?>
+            </div>
+          </td>
+          <td style="width:25%; padding:10px; vertical-align:top;">
+            <div class="sig-label" style="font-size:10px; color:#6b7280; text-transform:uppercase; letter-spacing:0.5px; margin-bottom:6px;">
+              Date
+            </div>
+            <div class="sig-line" style="border-bottom:1px solid #374151; min-height:18px; padding-bottom:2px;">
+              <?= esc_html($approve_date); ?>
+            </div>
+          </td>
         </tr>
       </table>
     </div>

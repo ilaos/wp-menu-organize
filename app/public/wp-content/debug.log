@@ -1,2 +1,48 @@
-[12-Oct-2025 16:57:28 UTC] Automatic updates starting...
-[12-Oct-2025 16:57:29 UTC] Automatic updates complete.
+[14-Oct-2025 21:17:52 UTC] [SFB] register_routes called in SFB_Rest
+[14-Oct-2025 21:17:52 UTC] [SFB] $sfb_plugin is valid, registering routes...
+[14-Oct-2025 21:17:52 UTC] [SFB] Registered route: /sfb/v1/node/move
+[14-Oct-2025 21:17:53 UTC] [SFB] register_routes called in SFB_Rest
+[14-Oct-2025 21:17:53 UTC] [SFB] $sfb_plugin is valid, registering routes...
+[14-Oct-2025 21:17:53 UTC] [SFB] Registered route: /sfb/v1/node/move
+[14-Oct-2025 21:18:00 UTC] [SFB] register_routes called in SFB_Rest
+[14-Oct-2025 21:18:00 UTC] [SFB] $sfb_plugin is valid, registering routes...
+[14-Oct-2025 21:18:00 UTC] [SFB] Registered route: /sfb/v1/node/move
+[14-Oct-2025 21:18:00 UTC] [SFB] Permission check for /node/move: user_id=1, can_edit=YES
+[14-Oct-2025 21:18:00 UTC] [SFB] move_node called - method exists and is being executed
+[14-Oct-2025 21:18:00 UTC] [SFB] move_node params: Array
+(
+    [id] => 1752
+    [parent_id] => 1748
+    [position] => 0.5
+    [form_id] => 1
+)
+
+[14-Oct-2025 21:18:00 UTC] [SFB] move_node: id=1752, new_parent_id=1748, new_position=0.5
+[14-Oct-2025 21:18:00 UTC] [SFB] move_node: Found node - type=model, parent_id=1748
+[14-Oct-2025 21:18:00 UTC] [SFB] move_node SUCCESS: Returning ok=true
+[14-Oct-2025 21:18:00 UTC] [SFB] move_node response type: array
+[14-Oct-2025 21:18:00 UTC] [SFB] Permission check for /node/move: user_id=1, can_edit=YES
+[14-Oct-2025 21:18:01 UTC] [SFB] register_routes called in SFB_Rest
+[14-Oct-2025 21:18:01 UTC] [SFB] $sfb_plugin is valid, registering routes...
+[14-Oct-2025 21:18:01 UTC] [SFB] Registered route: /sfb/v1/node/move
+[14-Oct-2025 21:18:06 UTC] [SFB] register_routes called in SFB_Rest
+[14-Oct-2025 21:18:06 UTC] [SFB] $sfb_plugin is valid, registering routes...
+[14-Oct-2025 21:18:06 UTC] [SFB] Registered route: /sfb/v1/node/move
+[14-Oct-2025 21:18:06 UTC] [SFB] Permission check for /node/move: user_id=1, can_edit=YES
+[14-Oct-2025 21:18:06 UTC] [SFB] move_node called - method exists and is being executed
+[14-Oct-2025 21:18:07 UTC] [SFB] move_node params: Array
+(
+    [id] => 1752
+    [parent_id] => 1748
+    [position] => 0.5
+    [form_id] => 1
+)
+
+[14-Oct-2025 21:18:07 UTC] [SFB] move_node: id=1752, new_parent_id=1748, new_position=0.5
+[14-Oct-2025 21:18:07 UTC] [SFB] move_node: Found node - type=model, parent_id=1748
+[14-Oct-2025 21:18:07 UTC] [SFB] move_node SUCCESS: Returning ok=true
+[14-Oct-2025 21:18:07 UTC] [SFB] move_node response type: array
+[14-Oct-2025 21:18:07 UTC] [SFB] Permission check for /node/move: user_id=1, can_edit=YES
+[14-Oct-2025 21:18:07 UTC] [SFB] register_routes called in SFB_Rest
+[14-Oct-2025 21:18:07 UTC] [SFB] $sfb_plugin is valid, registering routes...
+[14-Oct-2025 21:18:07 UTC] [SFB] Registered route: /sfb/v1/node/move

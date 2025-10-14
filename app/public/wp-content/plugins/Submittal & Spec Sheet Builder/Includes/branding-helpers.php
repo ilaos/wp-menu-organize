@@ -199,14 +199,14 @@ function sfb_is_client_handoff_mode() {
 /**
  * Check if white-label branding is enabled
  *
- * Requires Agency license AND white-label mode toggle to be enabled.
+ * Requires Pro or Agency license AND white-label mode toggle to be enabled.
  * When enabled, all plugin branding is hidden from PDFs, emails, and frontend.
  *
  * @return bool True if white-label is enabled
  */
 function sfb_is_white_label_enabled() {
-  // Check if Agency license is active
-  if (!SFB_Branding::is_agency_license()) {
+  // Check if Pro or Agency license is active
+  if (!sfb_is_pro_active()) {
     return false;
   }
 

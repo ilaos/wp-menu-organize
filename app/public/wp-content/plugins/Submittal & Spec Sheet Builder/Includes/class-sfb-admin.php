@@ -21,6 +21,31 @@ final class SFB_Admin {
   }
 
   /**
+   * Map license status to license state
+   *
+   * @param string $license_status License status from sfb_license option
+   * @return string License state: 'free', 'expired', 'pro', or 'agency'
+   */
+  private static function get_license_state($license_status) {
+    // Check for agency license first
+    if (sfb_is_agency_license()) {
+      return 'agency';
+    }
+
+    // Check license status
+    if ($license_status === 'active' || (function_exists('sfb_is_pro_active') && sfb_is_pro_active())) {
+      return 'pro';
+    }
+
+    if ($license_status === 'expired' || $license_status === 'invalid') {
+      return 'expired';
+    }
+
+    // Default to free
+    return 'free';
+  }
+
+  /**
    * Register all admin menu pages
    *
    * Forwards to existing render callbacks in Submittal_Form_Builder class
@@ -31,6 +56,13 @@ final class SFB_Admin {
     if (!$sfb_plugin || !($sfb_plugin instanceof SFB_Plugin)) {
       return;
     }
+
+    // Get license information
+    $lic = get_option('sfb_license', []);
+    $license_status = $lic['status'] ?? '';
+
+    // Map license status to license state (free|expired|pro|agency)
+    $license_state = self::get_license_state($license_status);
 
     // Top-level: Submittal Builder
     add_menu_page(
@@ -63,8 +95,6 @@ final class SFB_Admin {
     );
 
     // 3. Tracking (Pro - Monitor customer engagement)
-    $lic = get_option('sfb_license', []);
-    $license_status = $lic['status'] ?? '';
     $show_tracking = ($license_status === 'active') ||
                      (defined('SFB_PRO_DEV') && SFB_PRO_DEV) ||
                      (function_exists('sfb_is_pro_active') && sfb_is_pro_active());
@@ -160,8 +190,9 @@ final class SFB_Admin {
       9
     );
 
-    // 10. Demo Tools (dev mode only - hidden in handoff mode)
-    if (defined('SFB_DEV_MODE') && SFB_DEV_MODE && !sfb_is_client_handoff_mode()) {
+    // 10. Demo Tools (controlled by SFB_SHOW_DEMO_TOOLS constant)
+    // Only show when constant is true AND user has admin capabilities
+    if (SFB_SHOW_DEMO_TOOLS && current_user_can('manage_options')) {
       add_submenu_page(
         'sfb',
         __('Demo Tools', 'submittal-builder'),
@@ -176,19 +207,22 @@ final class SFB_Admin {
     // 11. Last slot: License & Support (Adaptive based on license state)
     $last_position = 999;
 
-    if ($license_status === 'expired' || $license_status === 'invalid') {
-      // Expired/invalid license - let user manage it
+    // Show "⭐ Upgrade" only for free and expired states
+    $show_upgrade = in_array($license_state, ['free', 'expired'], true);
+
+    if ($license_state === 'expired') {
+      // Expired license - show manage license page AND upgrade option
       add_submenu_page(
         'sfb',
-        __('Manage License', 'submittal-builder'),
-        __('Manage License', 'submittal-builder'),
+        __('⭐ Upgrade', 'submittal-builder'),
+        __('⭐ Upgrade', 'submittal-builder'),
         'manage_options',
-        'sfb-license',
-        [$sfb_plugin, 'render_license_management_page'],
+        'sfb-upgrade',
+        [$sfb_plugin, 'render_upgrade_page'],
         $last_position
       );
-    } elseif ($license_status === 'active' || (function_exists('sfb_is_pro_active') && sfb_is_pro_active())) {
-      // Pro user: License & Support hub
+    } elseif (in_array($license_state, ['pro', 'agency'], true)) {
+      // Pro/Agency user: License & Support hub (no upgrade option)
       add_submenu_page(
         'sfb',
         __('License & Support', 'submittal-builder'),
@@ -198,11 +232,11 @@ final class SFB_Admin {
         [$sfb_plugin, 'render_license_support_page'],
         $last_position
       );
-    } else {
-      // Free user: upsell
+    } elseif ($license_state === 'free') {
+      // Free user: show upgrade option
       add_submenu_page(
         'sfb',
-        __('Upgrade to Pro', 'submittal-builder'),
+        __('⭐ Upgrade', 'submittal-builder'),
         __('⭐ Upgrade', 'submittal-builder'),
         'manage_options',
         'sfb-upgrade',
@@ -210,5 +244,13 @@ final class SFB_Admin {
         $last_position
       );
     }
+
+    // Belt-and-suspenders safeguard: Remove Demo Tools for Free/Expired even if constant is enabled
+    // This ensures production safety even if someone accidentally enables the constant
+    add_action('admin_head', function() use ($license_state) {
+      if (in_array($license_state, ['free', 'expired'], true)) {
+        remove_submenu_page('sfb', 'sfb-demo-tools');
+      }
+    });
   }
 }
