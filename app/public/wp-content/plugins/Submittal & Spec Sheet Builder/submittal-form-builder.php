@@ -3002,6 +3002,8 @@ final class SFB_Plugin {
             <div class="sfb-setting-icon">🎯</div>
             <div class="sfb-setting-content">
               <label class="sfb-checkbox-label">
+                <!-- Hidden field ensures unchecked checkbox updates the option to false -->
+                <input type="hidden" name="sfb_lead_capture_enabled" value="0">
                 <input type="checkbox"
                        name="sfb_lead_capture_enabled"
                        value="1"
@@ -3631,7 +3633,8 @@ final class SFB_Plugin {
     // Lead capture enabled toggle
     register_setting('sfb_settings_group', 'sfb_lead_capture_enabled', [
       'sanitize_callback' => function($value) {
-        return !empty($value);
+        // Convert to boolean: "1" or 1 = true, anything else = false
+        return $value === '1' || $value === 1 || $value === true;
       },
       'default' => false
     ]);
@@ -3918,6 +3921,8 @@ final class SFB_Plugin {
     $enabled = get_option('sfb_lead_capture_enabled', false);
     $checked = !empty($enabled) ? 'checked' : '';
     ?>
+    <!-- Hidden field ensures unchecked checkbox updates the option to false -->
+    <input type="hidden" name="sfb_lead_capture_enabled" value="0">
     <label>
       <input type="checkbox" name="sfb_lead_capture_enabled" value="1" <?php echo $checked; ?>>
       <?php esc_html_e('Show lead capture modal before PDF generation', 'submittal-builder'); ?>
@@ -7703,7 +7708,7 @@ final class SFB_Plugin {
     wp_register_script('sfb-frontend', plugins_url('assets/js/frontend.js', __FILE__), [], self::VERSION, true);
 
     // Register lead capture script (Pro feature - loaded when modal is present)
-    wp_register_script('sfb-lead-capture', plugins_url('assets/js/lead-capture.js', __FILE__), [], self::VERSION, true);
+    wp_register_script('sfb-lead-capture', plugins_url('assets/js/lead-capture.js', __FILE__), ['sfb-frontend'], self::VERSION, true);
   }
 
   /** Shortcode: [submittal_builder id="1"] */
@@ -8144,10 +8149,10 @@ final class SFB_Plugin {
 
     // Size limits for how many categories/types/items to load
     $size_limits = [
-      'small'  => ['max_categories' => 2, 'max_types' => 2, 'max_items' => 2],
-      'medium' => ['max_categories' => 999, 'max_types' => 999, 'max_items' => 999], // Load all
-      'large'  => ['max_categories' => 999, 'max_types' => 999, 'max_items' => 999],  // Load all
-    ][$size] ?? ['max_categories' => 999, 'max_types' => 999, 'max_items' => 999];
+      'small'  => ['max_categories' => 2, 'max_types' => 2, 'max_items' => 2, 'multiply' => 1],
+      'medium' => ['max_categories' => 999, 'max_types' => 999, 'max_items' => 999, 'multiply' => 1], // Load all
+      'large'  => ['max_categories' => 999, 'max_types' => 999, 'max_items' => 999, 'multiply' => 100],  // Load all + multiply by 100
+    ][$size] ?? ['max_categories' => 999, 'max_types' => 999, 'max_items' => 999, 'multiply' => 1];
 
     // Seed from industry pack JSON
     $stats = ['categories' => 0, 'types' => 0, 'models' => 0];
@@ -8238,43 +8243,62 @@ final class SFB_Plugin {
               }
               $item_count++;
 
-              $item_slug = sanitize_title($item_data['title']);
+              // For 'large' size, multiply items to generate more test data
+              $multiply_count = $size_limits['multiply'];
 
-              // In merge mode, check if item already exists
-              if ($mode === 'merge') {
-                $exists = $wpdb->get_var($wpdb->prepare(
-                  "SELECT id FROM {$nodes_table} WHERE form_id = %d AND parent_id = %d AND node_type = 'model' AND slug = %s LIMIT 1",
-                  $form_id,
-                  $type_id,
-                  $item_slug
-                ));
+              for ($variant = 1; $variant <= $multiply_count; $variant++) {
+                // Base title and slug
+                $base_title = $item_data['title'];
+                $title = ($multiply_count > 1) ? $base_title . ' #' . $variant : $base_title;
+                $item_slug = sanitize_title($title);
 
-                if ($exists) {
-                  continue;
+                // In merge mode, check if item already exists
+                if ($mode === 'merge') {
+                  $exists = $wpdb->get_var($wpdb->prepare(
+                    "SELECT id FROM {$nodes_table} WHERE form_id = %d AND parent_id = %d AND node_type = 'model' AND slug = %s LIMIT 1",
+                    $form_id,
+                    $type_id,
+                    $item_slug
+                  ));
+
+                  if ($exists) {
+                    continue;
+                  }
                 }
+
+                // Build settings_json with meta fields
+                $settings = [
+                  '_demo_seed' => 1,
+                  '_demo_pack' => $industry_pack
+                ];
+
+                if (isset($item_data['meta']) && is_array($item_data['meta'])) {
+                  // For variants, add slight variation to numeric fields
+                  $fields = $item_data['meta'];
+                  if ($multiply_count > 1 && $variant > 1) {
+                    // Add variant number to make it unique
+                    foreach ($fields as $key => $value) {
+                      // Add variant indicator to fields that look like numbers
+                      if (is_numeric(str_replace(['"', 'mil', 'lb/ft', 'x'], '', $value))) {
+                        $fields[$key] = $value . ' (v' . $variant . ')';
+                      }
+                    }
+                  }
+                  $settings['fields'] = $fields;
+                }
+
+                $wpdb->insert($nodes_table, [
+                  'form_id' => $form_id,
+                  'parent_id' => $type_id,
+                  'node_type' => 'model',
+                  'title' => $title,
+                  'slug' => $item_slug,
+                  'position' => $item_pos++,
+                  'settings_json' => json_encode($settings, JSON_UNESCAPED_SLASHES)
+                ]);
+
+                $stats['models']++;
               }
-
-              // Build settings_json with meta fields
-              $settings = [
-                '_demo_seed' => 1,
-                '_demo_pack' => $industry_pack
-              ];
-
-              if (isset($item_data['meta']) && is_array($item_data['meta'])) {
-                $settings['fields'] = $item_data['meta'];
-              }
-
-              $wpdb->insert($nodes_table, [
-                'form_id' => $form_id,
-                'parent_id' => $type_id,
-                'node_type' => 'model',
-                'title' => $item_data['title'],
-                'slug' => $item_slug,
-                'position' => $item_pos++,
-                'settings_json' => json_encode($settings, JSON_UNESCAPED_SLASHES)
-              ]);
-
-              $stats['models']++;
             }
           }
         }

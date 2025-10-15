@@ -130,17 +130,21 @@ Submittal Builder → Settings → Branding
 3. **Add Company Info** - Name, website, contact details
 4. Click "Save Changes"
 
-### 3. Add Products (1 min)
+### 3. Add Products (2 min)
 
 ```
-Submittal Builder → Products → Add New
+Submittal Builder → Catalog Builder
 ```
 
-Add a few sample products to test with:
-- Enter product model number
-- Select category and type
-- Add specifications (size, thickness, etc.)
-- Save product
+Build a simple catalog structure to test with:
+
+1. **Add a Category** - Click "+ New" → "Category" → name it (e.g., "Framing")
+2. **Add a Product** - Click the Category → Inspector opens → **Details tab** → scroll to "Add Child" → click "+ Product" → name it (e.g., "Steel Studs")
+3. **Add a Type** - Click the Product → Inspector opens → **Details tab** → scroll to "Add Child" → click "+ Type" → name it (e.g., "20 Gauge")
+4. **Add a Model** - Click the Type → Inspector opens → **Details tab** → scroll to "Add Child" → click "+ Model" → name it (e.g., "362S162-20")
+5. **Add Specifications** - Click the Model → **Fields tab** → fill in values (Size, Thickness, etc.)
+
+💡 **Tip:** The "Add Child" section is at the bottom of the Details tab - scroll down to find it!
 
 ### 4. Create Builder Page (30 sec)
 
@@ -214,19 +218,23 @@ Each product has a unique composite key:
 
 ### Specifications
 
-Products have flexible key-value specifications:
+Products have flexible key-value specifications that can be customized per catalog:
 
-**Common Specs:**
-- Size: `3-5/8"`
-- Thickness: `33 mil (20 ga)`
-- Flange: `1-5/8"`
-- KSI: `50`
+**Industry-Specific Fields:**
+The plugin supports dynamic field definitions for different industries. Use the **⚙️ Manage Fields** button in the catalog builder to customize field names.
+
+**Common Industry Presets:**
+- **Steel/Construction:** Size, Flange, Thickness, KSI
+- **HVAC:** BTU Rating, CFM, Voltage, SEER
+- **Electrical:** Voltage, Amperage, Wattage, Phase
+- **Plumbing:** Diameter, PSI, Material, GPM
 
 **Custom Specs:**
-- Add any fields you need
-- No limit on spec count
+- Add, remove, or rename any fields you need
+- No limit on field count
 - Searchable across all specs
 - Displayed in cards and PDFs
+- Changes apply to entire catalog
 
 ---
 
@@ -241,6 +249,37 @@ Products have flexible key-value specifications:
 - **Types** - Define product types
 - **Settings** - Configure plugin
 - **Documentation** - Help and guides
+
+### Catalog Builder
+
+**Key Features:**
+- **Product Tree** - Hierarchical view of categories, products, types, and models
+- **Drag & Drop** - Reorder items by dragging
+- **Inspector Modal** - Edit node details (opens when clicking on items)
+- **⚙️ Manage Fields** - Customize specification field names for your industry
+  - Quick presets for Steel, HVAC, Electrical, Plumbing
+  - Add, remove, or rename fields
+  - Changes persist and apply to all models
+
+**Building Your Catalog:**
+1. **Set up fields** - Click "⚙️ Manage Fields" to customize specification field names for your industry
+2. **Add categories** - Use the "+ New" button to create top-level categories
+3. **Add products** - Click on a Category, open Inspector modal → Details tab → scroll to "Add Child" → click "+ Product"
+4. **Add types** - Click on a Product, open Inspector modal → Details tab → scroll to "Add Child" → click "+ Type"
+5. **Add models** - Click on a Type, open Inspector modal → Details tab → scroll to "Add Child" → click "+ Model"
+6. **Enter specifications** - Click on a Model → Fields tab → fill in specification values
+
+**Adding Children (Products, Types, Models):**
+When you click on any node (Category, Product, or Type), the Inspector modal opens. In the **Details tab**, scroll down to find the **"Add Child"** section. This section shows buttons to add the appropriate child type:
+- Category → "+ Product" button
+- Product → "+ Type" button
+- Type → "+ Model" button
+- Models have no children
+
+**Alternative Methods:**
+- **Kebab Menu (⋮):** Hover over any node → click ⋮ menu → select "➕ Add [Child Type]" → type name inline
+- **Keyboard Shortcut:** Select a node → press **Shift+N** to add a child
+- **Top Toolbar:** Select a node → click "+ New" dropdown → choose child type
 
 ### Frontend Builder
 

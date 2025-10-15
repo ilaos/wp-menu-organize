@@ -82,6 +82,12 @@ final class SFB_Rest {
       'callback' => [$sfb_plugin, 'api_import_form']
     ]);
 
+    register_rest_route('sfb/v1', '/form/(?P<id>\d+)/fields', [
+      'methods' => 'POST',
+      'permission_callback' => function() { return current_user_can('edit_sfb_catalog'); },
+      'callback' => [__CLASS__, 'save_field_definitions']
+    ]);
+
     // Node Operations (Admin)
     register_rest_route('sfb/v1', '/node/save', [
       'methods' => 'POST',
@@ -347,9 +353,76 @@ final class SFB_Rest {
         $r['settings'] = $r['settings_json'] ? json_decode($r['settings_json'], true) : [];
         unset($r['settings_json']);
       }
-      return ['ok'=>true,'form'=>$form,'nodes'=>$rows];
+
+      // Parse form settings to get field definitions
+      $form_settings = !empty($form['settings_json']) ? json_decode($form['settings_json'], true) : [];
+
+      // POC: Hardcoded field definitions for testing (will be stored in database later)
+      // Users will be able to customize these per catalog
+      $field_definitions = isset($form_settings['field_definitions']) && is_array($form_settings['field_definitions'])
+        ? $form_settings['field_definitions']
+        : ['Size', 'Flange', 'Thickness', 'KSI']; // Default fallback
+
+      return ['ok'=>true,'form'=>$form,'nodes'=>$rows,'field_definitions'=>$field_definitions];
     } catch (\Throwable $e) {
       error_log('SFB api_get_form error: '.$e->getMessage());
+      return new WP_Error('server_error', $e->getMessage(), ['status'=>500]);
+    }
+  }
+
+  /**
+   * POST /form/{id}/fields - Save field definitions for a catalog
+   *
+   * @param WP_REST_Request $req Request object with field definitions array
+   * @return array|WP_Error Response with saved field definitions, or error
+   */
+  public static function save_field_definitions($req) {
+    try {
+      global $wpdb;
+
+      $form_id = intval($req['id']);
+      $p = $req->get_json_params();
+      $field_definitions = isset($p['field_definitions']) && is_array($p['field_definitions'])
+        ? $p['field_definitions']
+        : [];
+
+      // Validate field definitions (must be array of strings)
+      foreach ($field_definitions as $field) {
+        if (!is_string($field) || trim($field) === '') {
+          return new WP_Error('bad_request', 'Invalid field definitions: each field must be a non-empty string', ['status'=>400]);
+        }
+      }
+
+      // Sanitize field names
+      $field_definitions = array_map('sanitize_text_field', $field_definitions);
+
+      $forms_table = $wpdb->prefix . 'sfb_forms';
+
+      // Get current form settings
+      $form = $wpdb->get_row($wpdb->prepare("SELECT * FROM $forms_table WHERE id=%d", $form_id), ARRAY_A);
+      if (!$form) {
+        return new WP_Error('not_found', 'Form not found', ['status'=>404]);
+      }
+
+      // Parse existing settings
+      $settings = !empty($form['settings_json']) ? json_decode($form['settings_json'], true) : [];
+      if (!is_array($settings)) {
+        $settings = [];
+      }
+
+      // Update field definitions in settings
+      $settings['field_definitions'] = $field_definitions;
+
+      // Save back to database
+      $wpdb->update(
+        $forms_table,
+        ['settings_json' => wp_json_encode($settings)],
+        ['id' => $form_id]
+      );
+
+      return ['ok' => true, 'field_definitions' => $field_definitions];
+    } catch (\Throwable $e) {
+      error_log('SFB save_field_definitions error: ' . $e->getMessage());
       return new WP_Error('server_error', $e->getMessage(), ['status'=>500]);
     }
   }

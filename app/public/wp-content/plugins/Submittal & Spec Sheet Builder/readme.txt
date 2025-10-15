@@ -57,16 +57,16 @@ This plugin stores submitted lead data in your WordPress database.
 
 == Screenshots ==
 
-1. Builder flow (select items with inline specs)
-2. Review step (grouped items + brand preset pill)
-3. Lead capture modal (before PDF)
-4. Leads admin list with CSV export
-5. Agency Library (Packs) with "Save as Pack"
-6. Branding → Presets & White-Label card (Agency)
-7. Client Handoff Mode banner (admin)
-8. Agency Analytics (light) dashboard
-9. Advanced Lead Routing rules (Agency)
-10. Example PDF cover + summary page
+1. Frontend product browser - Contractors search and browse your catalog with live filtering by category and specifications
+2. Product selection - Customers select products for their project with one-click selection and see live count
+3. Review and project info - Customers review selections and add project details for professional documentation
+4. Lead capture (Pro) - Optionally require email before PDF download to capture qualified leads with project details
+5. PDF generated - Instant submittal packet generation with download link - no waiting, no manual work required
+6. Branded PDF cover page - Professional cover with your logo, company info, and project details
+7. Product specification sheet - Detailed spec sheets with industry-specific fields ready for code compliance and bid submittal
+8. Catalog builder - Manage your product catalog with hierarchical tree view and drag-and-drop organization
+9. Customizable fields - Industry presets for HVAC, Electrical, Plumbing, and Steel, or create custom specification fields
+10. Add products easily - Click any node to open inspector, scroll to "Add Child" section to add products, types, and models
 
 == Frequently Asked Questions ==
 

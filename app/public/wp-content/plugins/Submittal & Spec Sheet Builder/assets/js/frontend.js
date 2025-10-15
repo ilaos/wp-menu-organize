@@ -423,10 +423,25 @@
 
     // Filter by search using search_tokens
     if (state.searchQuery) {
-      const query = state.searchQuery.toLowerCase();
+      const query = state.searchQuery.toLowerCase().trim();
       filteredKeys = filteredKeys.filter(key => {
         const product = state.productsMap.get(key);
-        return product && product.search_tokens && product.search_tokens.includes(query);
+        if (!product || !product.search_tokens) return false;
+
+        const tokens = product.search_tokens.toLowerCase();
+
+        // Split search tokens into words (including hyphenated parts)
+        // e.g., "cf-18 1.5hp 208v #3" becomes ["cf", "18", "1", "5hp", "208v", "3"]
+        const tokenWords = tokens.split(/[\s\-#.]+/).filter(w => w.length > 0);
+
+        // Split query by same delimiters to handle "CF-18" input
+        // e.g., "cf-18" becomes ["cf", "18"]
+        const queryWords = query.split(/[\s\-#.]+/).filter(w => w.length > 0);
+
+        // Match if ALL query words are found as substrings in any token word
+        return queryWords.every(queryWord => {
+          return tokenWords.some(tokenWord => tokenWord.includes(queryWord));
+        });
       });
     }
 
@@ -966,7 +981,16 @@
     // Check if lead capture is enabled (Pro feature)
     const leadCaptureEnabled = elements.app?.dataset.leadCapture === '1';
 
+    // Debug logging
+    console.log('[SFB] Lead capture check:', {
+      leadCaptureEnabled,
+      skipLeadCapture,
+      hasLeadCaptureScript: typeof window.SFB_LeadCapture !== 'undefined',
+      dataAttribute: elements.app?.dataset.leadCapture
+    });
+
     if (leadCaptureEnabled && !skipLeadCapture && typeof window.SFB_LeadCapture !== 'undefined') {
+      console.log('[SFB] Opening lead capture modal');
       // Prepare PDF data to pass to modal
       const pdfData = {
         projectName: state.projectName || '',
@@ -976,6 +1000,8 @@
       // Open lead capture modal
       window.SFB_LeadCapture.openModal(pdfData);
       return; // Stop here - will continue after lead submission
+    } else {
+      console.log('[SFB] Skipping lead capture - proceeding directly to PDF generation');
     }
 
     // Show loading overlay

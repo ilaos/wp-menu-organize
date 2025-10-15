@@ -363,7 +363,7 @@ if (confirm('Delete all catalog data?')) {
 ---
 
 ### GET /sfb/v1/form/{id}
-Retrieve complete form with all nodes (categories, products, types, models).
+Retrieve complete form with all nodes (categories, products, types, models) and field definitions.
 
 **Permission:** Admin for full data, Public for basic catalog
 
@@ -375,6 +375,7 @@ Retrieve complete form with all nodes (categories, products, types, models).
 {
   "ok": true,
   "form_id": 1,
+  "field_definitions": ["Size", "Flange", "Thickness", "KSI"],
   "nodes": [
     {
       "id": 1,
@@ -399,6 +400,7 @@ Retrieve complete form with all nodes (categories, products, types, models).
 ```
 
 **Response Fields:**
+- `field_definitions` (array) - Form-wide field names for model specifications
 - `nodes` (array) - Flat array of all nodes in hierarchical order
 - `node.id` (int) - Unique node ID
 - `node.parent_id` (int|null) - Parent node ID (null for categories)
@@ -411,6 +413,7 @@ Retrieve complete form with all nodes (categories, products, types, models).
 - Loading catalog in admin builder
 - Displaying product tree in frontend
 - Exporting catalog structure
+- Getting field definitions for dynamic field rendering
 
 **Example:**
 ```javascript
@@ -418,8 +421,71 @@ wp.apiFetch({ path: '/sfb/v1/form/1' })
   .then(data => {
     const categories = data.nodes.filter(n => n.node_type === 'category');
     console.log('Found', categories.length, 'categories');
+    console.log('Field definitions:', data.field_definitions);
   });
 ```
+
+---
+
+### POST /sfb/v1/form/{id}/fields
+Save custom field definitions for a catalog. Field definitions control which specification fields appear when editing models.
+
+**Permission:** Admin (`edit_sfb_catalog`)
+
+**Parameters:**
+- `id` (int, URL parameter) - Form ID. Usually `1`.
+
+**Request Body:**
+```json
+{
+  "field_definitions": ["BTU Rating", "CFM", "Voltage", "SEER"]
+}
+```
+
+**Request Parameters:**
+- `field_definitions` (array of strings, required) - Array of field names. Each field must be a non-empty string.
+
+**Response:**
+```json
+{
+  "ok": true,
+  "field_definitions": ["BTU Rating", "CFM", "Voltage", "SEER"]
+}
+```
+
+**Response Fields:**
+- `field_definitions` (array) - Saved field definitions (sanitized)
+
+**Use Cases:**
+- Customizing catalog for specific industry (HVAC, Electrical, Plumbing, etc.)
+- Updating field names to match business terminology
+- Setting up catalog during initial configuration
+
+**Example:**
+```javascript
+// Change catalog from Steel to HVAC fields
+wp.apiFetch({
+  path: '/sfb/v1/form/1/fields',
+  method: 'POST',
+  data: {
+    field_definitions: ['BTU Rating', 'CFM', 'Voltage', 'SEER']
+  }
+}).then(data => {
+  console.log('Field definitions updated:', data.field_definitions);
+  // Reload catalog to refresh UI with new fields
+  loadCatalog();
+});
+```
+
+**Industry Presets:**
+The Field Management UI provides quick presets for common industries:
+- **Steel/Construction:** Size, Flange, Thickness, KSI
+- **HVAC:** BTU Rating, CFM, Voltage, SEER
+- **Electrical:** Voltage, Amperage, Wattage, Phase
+- **Plumbing:** Diameter, PSI, Material, GPM
+
+**Storage:**
+Field definitions are stored in `sfb_forms.settings_json` under the `field_definitions` key. They apply to all models in the catalog.
 
 ---
 

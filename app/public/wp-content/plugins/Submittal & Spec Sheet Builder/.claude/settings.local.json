@@ -17,7 +17,8 @@
       "Bash(wp option get:*)",
       "Bash(where php)",
       "Bash(wc:*)",
-      "Bash(wp db query:*)"
+      "Bash(wp db query:*)",
+      "Bash(where wp)"
     ],
     "deny": [],
     "ask": []

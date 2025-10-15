@@ -24,6 +24,10 @@ $branding = [
 // Check if lead capture is enabled (Pro feature)
 $lead_capture_enabled = SFB_Lead_Capture::is_enabled();
 
+// Debug: Log the actual value
+error_log('[SFB Debug] Lead capture enabled check: ' . var_export($lead_capture_enabled, true));
+error_log('[SFB Debug] Option value: ' . var_export(get_option('sfb_lead_capture_enabled', 'NOT_SET'), true));
+
 // Generate nonce for security
 $nonce = wp_create_nonce('sfb_frontend_builder');
 ?>

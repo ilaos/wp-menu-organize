@@ -188,11 +188,14 @@
       if (!node.settings || typeof node.settings !== 'object') return '';
       const f = node.settings.fields || {};
       if (!f || typeof f !== 'object' || Object.keys(f).length === 0) return '';
+      // POC: Dynamically show all field key-value pairs
       const parts = [];
-      if (f.size)      parts.push(`Size: ${f.size}`);
-      if (f.flange)    parts.push(`Flange: ${f.flange}`);
-      if (f.thickness) parts.push(`Thickness: ${f.thickness}`);
-      if (typeof f.ksi !== 'undefined' && f.ksi !== null) parts.push(`KSI: ${f.ksi}`);
+      Object.keys(f).forEach(fieldName => {
+        const value = f[fieldName];
+        if (value !== null && value !== undefined && value !== '') {
+          parts.push(`${fieldName}: ${value}`);
+        }
+      });
       return parts.join('\n');
     } catch (e) {
       console.error('fieldsTooltip error:', e, node);
@@ -970,7 +973,7 @@
     );
   }
 
-  function Inspector({ node, onSave, onCreate, onDelete, onReorder, breadcrumbs, onSelectNode, allNodes }){
+  function Inspector({ node, onSave, onCreate, onDelete, onReorder, breadcrumbs, onSelectNode, allNodes, fieldDefinitions }){
     if (!node) return h('p', {style:{padding:'20px',textAlign:'center',color:'#6b7280'}}, 'Select a node to view details');
 
     const [activeTab, setActiveTab] = useState('details');
@@ -984,10 +987,15 @@
     const [title, setTitle] = useState(node.title);
     const [slug, setSlug] = useState(node.slug || '');
     const [note, setNote] = useState((node.settings && node.settings.note) || '');
-    const [size, setSize] = useState(fields.size || '');
-    const [flange, setFlange] = useState(fields.flange || '');
-    const [thickness, setThickness] = useState(fields.thickness || '');
-    const [ksi, setKsi] = useState(fields.ksi || '');
+
+    // POC: Dynamic field state based on fieldDefinitions
+    const [fieldValues, setFieldValues] = useState(() => {
+      const initial = {};
+      (fieldDefinitions || []).forEach(fieldName => {
+        initial[fieldName] = fields[fieldName] || '';
+      });
+      return initial;
+    });
 
     // Compute validation errors for the current node state
     const currentNodeState = {
@@ -996,25 +1004,34 @@
       settings: {
         ...(node.settings || {}),
         note,
-        ...(isModel ? { fields: { size, flange, thickness, ksi } } : {})
+        ...(isModel ? { fields: fieldValues } : {}) // POC: Use dynamic field values
       }
     };
     const validationErrors = allNodes ? validateNode(currentNodeState, allNodes) : [];
 
     const titleInputRef = useRef(null);
 
-    // Reset state when node changes
+    // Keep track of the current node ID to prevent resetting on every render
+    const prevNodeIdRef = useRef(node.id);
+
+    // Reset state when node changes (only on node ID change, not on every update)
     useEffect(()=> {
-      setTitle(node.title);
-      setSlug(node.slug || '');
-      setNote((node.settings && node.settings.note) || '');
-      const f = (node.settings && node.settings.fields) || {};
-      setSize(f.size || '');
-      setFlange(f.flange || '');
-      setThickness(f.thickness || '');
-      setKsi(f.ksi || '');
-      setSaveStatus(null);
-    }, [node.id]);
+      // Only reset if we're switching to a different node
+      if (prevNodeIdRef.current !== node.id) {
+        setTitle(node.title);
+        setSlug(node.slug || '');
+        setNote((node.settings && node.settings.note) || '');
+        // POC: Reset dynamic field values only when switching to a different node
+        const f = (node.settings && node.settings.fields) || {};
+        const newFieldValues = {};
+        (fieldDefinitions || []).forEach(fieldName => {
+          newFieldValues[fieldName] = f[fieldName] || '';
+        });
+        setFieldValues(newFieldValues);
+        setSaveStatus(null);
+        prevNodeIdRef.current = node.id;
+      }
+    }); // Run on every render, but only update if node ID changed
 
     // Auto-focus title for new nodes
     useEffect(()=> {
@@ -1058,7 +1075,7 @@
         settings: {
           ...(node.settings || {}),
           note,
-          ...(isModel ? { fields: { size, flange, thickness, ksi } } : {})
+          ...(isModel ? { fields: fieldValues } : {}) // POC: Save dynamic field values
         }
       };
 
@@ -1161,23 +1178,18 @@
           )
         ),
 
-        // Fields Tab (Model only)
+        // Fields Tab (Model only) - POC: Dynamically rendered based on fieldDefinitions
         activeTab === 'fields' && isModel && h(Fragment, null,
-          h('div', {className:'sfb-field'},
-            h('label', null, 'Size'),
-            h('input', {type:'text', value:size, onChange:e=>setSize(e.target.value), onBlur:autoSave})
-          ),
-          h('div', {className:'sfb-field'},
-            h('label', null, 'Flange'),
-            h('input', {type:'text', value:flange, onChange:e=>setFlange(e.target.value), onBlur:autoSave})
-          ),
-          h('div', {className:'sfb-field'},
-            h('label', null, 'Thickness'),
-            h('input', {type:'text', value:thickness, onChange:e=>setThickness(e.target.value), onBlur:autoSave})
-          ),
-          h('div', {className:'sfb-field'},
-            h('label', null, 'KSI'),
-            h('input', {type:'text', value:ksi, onChange:e=>setKsi(e.target.value), onBlur:autoSave})
+          (fieldDefinitions || []).map(fieldName =>
+            h('div', {key: fieldName, className:'sfb-field'},
+              h('label', null, fieldName),
+              h('input', {
+                type:'text',
+                value: fieldValues[fieldName] || '',
+                onChange: e => setFieldValues({...fieldValues, [fieldName]: e.target.value}),
+                onBlur: autoSave
+              })
+            )
           )
         ),
 
@@ -1537,6 +1549,7 @@
   }
 
   function App(){
+    const formId = 1; // TODO: make dynamic if multiple forms
     const [loading, setLoading] = useState(true);
     const [flat, setFlat] = useState([]);
     const [tree, setTree] = useState([]);
@@ -1546,6 +1559,7 @@
     const [bulkSelected, setBulkSelected] = useState(new Set()); // Set of node IDs
     const lastSelectedRef = useRef(null); // for Shift-click range selection
     const { query, setQuery, filter, setFilter, debouncedQuery } = useSearchFilter();
+    const [fieldDefinitions, setFieldDefinitions] = useState(['Size', 'Flange', 'Thickness', 'KSI']); // POC: Form-wide field definitions
 
     // Drag & Drop state
     const [drag, setDrag] = useState(null);
@@ -1592,6 +1606,9 @@
       includeNotes: false,
       saving: false
     });
+
+    // Field Management modal state
+    const [fieldManagementModal, setFieldManagementModal] = useState(false);
 
     // Wipe/Delete All modal state
     const [showWipeModal, setShowWipeModal] = useState(false);
@@ -1768,6 +1785,10 @@
           if (res?.ok) {
             setFlat(res.nodes);
             setTree(nest(res.nodes));
+            // POC: Load field definitions from API response
+            if (res.field_definitions && Array.isArray(res.field_definitions)) {
+              setFieldDefinitions(res.field_definitions);
+            }
             if (nextSelectIdRef.current){
               selectById(res.nodes, nextSelectIdRef.current);
               window.__SFB_SCROLL_TO = nextSelectIdRef.current;
@@ -1891,8 +1912,7 @@
         setShowWipeModal(false);
         await load();
         if (res.backup_url && wipeBackup) {
-          const ok = confirm('All data cleared. A backup was created. Click OK to open it in a new tab.');
-          if (ok) window.open(res.backup_url, '_blank');
+          alert('All data cleared. A backup was created at:\n\n' + res.backup_url + '\n\nYou can download it from the Backups tab if needed.');
         } else {
           alert('All data cleared.');
         }
@@ -2150,7 +2170,6 @@
     };
 
     function exportJSON(){
-      const formId = 1; // TODO: make dynamic if multiple forms
       wp.apiFetch({ path:`/sfb/v1/form/${formId}/export` })
         .then(res=> {
           if (res?.ok){
@@ -2402,9 +2421,13 @@
     // Keyboard shortcuts for bulk selection
     useEffect(() => {
       function onKey(e) {
-        // Esc = clear selection
+        // Esc = close inspector modal first, then clear bulk selection
         if (e.key === 'Escape') {
-          clearSelection();
+          if (selected) {
+            setSelected(null);
+          } else {
+            clearSelection();
+          }
         }
         // Ctrl/Cmd+A = select all visible
         if ((e.key === 'a' || e.key === 'A') && (e.metaKey || e.ctrlKey)) {
@@ -2415,7 +2438,7 @@
       }
       window.addEventListener('keydown', onKey);
       return () => window.removeEventListener('keydown', onKey);
-    }, [collapsed, flat, debouncedQuery, filter, clearSelection, setSelectedFromArray]);
+    }, [collapsed, flat, debouncedQuery, filter, clearSelection, setSelectedFromArray, selected, setSelected]);
 
     // Bulk action handlers
     const handleSelectAllInView = useCallback(() => {
@@ -2583,6 +2606,11 @@
         h('div',{className:'sfb-tree-controls'},
           h(SplitButton, { selected, onAddCategory:addCategory, onAddChild:addChildInline }),
           h('button',{className:'button',onClick:openCatalogModal},'Load Sample Catalog'),
+          h('button',{
+            className:'button',
+            onClick:() => setFieldManagementModal(true),
+            title:'Customize field names for your models'
+          },'⚙️ Manage Fields'),
           h('button', {
             className: 'button button-link-delete',
             onClick: () => setShowWipeModal(true),
@@ -2736,20 +2764,43 @@
           onMove: handleBulkMove,
           onExport: handleBulkExport,
           onClear: clearBulkSelection
-        }),
-        selected && h(RightPane, {
-          selected,
-          onSave:save,
-          onCreate:createNode,
-          onDelete:deleteNode,
-          onReorder:reorder,
-          breadcrumbs: pathFromNode(flat, selected),
-          onSelectNode: (node) => {
-            setSelected(node);
-            window.__SFB_SCROLL_TO = node.id;
-          },
-          allNodes: normalizedFlat
         })
+      ),
+      // Inspector Modal (opens when node is selected)
+      selected && h('div', {
+        className: 'sfb-modal-overlay',
+        onClick: () => setSelected(null)
+      },
+        h('div', {
+          className: 'sfb-modal sfb-inspector-modal',
+          onClick: (e) => e.stopPropagation()
+        },
+          h('div', {className: 'sfb-modal-header'},
+            h('h3', null, 'Edit Node'),
+            h('button', {
+              type: 'button',
+              className: 'sfb-modal-close',
+              onClick: () => setSelected(null),
+              'aria-label': 'Close'
+            }, '×')
+          ),
+          h('div', {className: 'sfb-modal-body'},
+            h(Inspector, {
+              node: selected,
+              onSave: save,
+              onCreate: createNode,
+              onDelete: deleteNode,
+              onReorder: reorder,
+              breadcrumbs: pathFromNode(flat, selected),
+              onSelectNode: (node) => {
+                setSelected(node);
+                window.__SFB_SCROLL_TO = node.id;
+              },
+              allNodes: normalizedFlat,
+              fieldDefinitions: fieldDefinitions // POC: Pass dynamic field definitions
+            })
+          )
+        )
       ),
       // Command Palette
       h(CommandPalette, {
@@ -3014,6 +3065,118 @@
       ),
 
       // Wipe/Delete All modal
+      // Field Management Modal
+      fieldManagementModal && h('div', {
+        className: 'sfb-modal-overlay',
+        onClick: () => setFieldManagementModal(false)
+      },
+        h('div', {
+          className: 'sfb-modal sfb-field-management-modal',
+          onClick: (e) => e.stopPropagation()
+        },
+          h('div', {className: 'sfb-modal-header'},
+            h('h3', null, 'Manage Model Fields'),
+            h('button', {
+              type: 'button',
+              className: 'sfb-modal-close',
+              onClick: () => setFieldManagementModal(false),
+              'aria-label': 'Close'
+            }, '×')
+          ),
+          h('div', {className: 'sfb-modal-body'},
+            h('p', {style:{marginTop:0,color:'#6b7280',fontSize:'14px'}},
+              'Customize the field names that appear when editing models. These fields will apply to all models in this catalog.'
+            ),
+            h('div', {className: 'sfb-field-list'},
+              (fieldDefinitions || []).map((fieldName, index) =>
+                h('div', {key: index, className: 'sfb-field-item'},
+                  h('span', {className: 'sfb-field-drag-handle'}, '⋮⋮'),
+                  h('input', {
+                    type: 'text',
+                    value: fieldName,
+                    onChange: (e) => {
+                      const newFields = [...fieldDefinitions];
+                      newFields[index] = e.target.value;
+                      setFieldDefinitions(newFields);
+                    },
+                    placeholder: 'Field name'
+                  }),
+                  h('button', {
+                    className: 'button sfb-field-remove',
+                    onClick: () => {
+                      const newFields = fieldDefinitions.filter((_, i) => i !== index);
+                      setFieldDefinitions(newFields);
+                    },
+                    title: 'Remove field'
+                  }, '×')
+                )
+              )
+            ),
+            h('button', {
+              className: 'button',
+              onClick: () => {
+                setFieldDefinitions([...fieldDefinitions, 'New Field']);
+              }
+            }, '+ Add Field'),
+            h('div', {style:{marginTop:'20px',paddingTop:'20px',borderTop:'1px solid #e5e7eb'}},
+              h('strong', null, 'Quick Presets:'),
+              h('div', {style:{display:'flex',gap:'8px',marginTop:'8px',flexWrap:'wrap'}},
+                h('button', {
+                  className: 'button',
+                  onClick: () => setFieldDefinitions(['Size', 'Flange', 'Thickness', 'KSI'])
+                }, 'Steel/Construction'),
+                h('button', {
+                  className: 'button',
+                  onClick: () => setFieldDefinitions(['BTU Rating', 'CFM', 'Voltage', 'SEER'])
+                }, 'HVAC'),
+                h('button', {
+                  className: 'button',
+                  onClick: () => setFieldDefinitions(['Voltage', 'Amperage', 'Wattage', 'Phase'])
+                }, 'Electrical'),
+                h('button', {
+                  className: 'button',
+                  onClick: () => setFieldDefinitions(['Diameter', 'PSI', 'Material', 'GPM'])
+                }, 'Plumbing')
+              )
+            )
+          ),
+          h('div', {className: 'sfb-modal-footer'},
+            h('button', {
+              className: 'button',
+              onClick: () => setFieldManagementModal(false)
+            }, 'Cancel'),
+            h('button', {
+              className: 'button button-primary',
+              onClick: async () => {
+                try {
+                  const res = await fetch(`/wp-json/sfb/v1/form/${formId}/fields`, {
+                    method: 'POST',
+                    headers: {
+                      'Content-Type': 'application/json',
+                      'X-WP-Nonce': wpApiSettings.nonce
+                    },
+                    body: JSON.stringify({ field_definitions: fieldDefinitions })
+                  });
+
+                  const data = await res.json();
+
+                  if (!res.ok || !data.ok) {
+                    throw new Error(data.message || 'Failed to save field definitions');
+                  }
+
+                  setFieldManagementModal(false);
+                  load(); // Reload to refresh all models with new fields
+                  alert('Field definitions saved successfully!');
+                } catch (err) {
+                  console.error('Error saving field definitions:', err);
+                  alert('Error saving field definitions: ' + err.message);
+                }
+              }
+            }, 'Save Changes')
+          )
+        )
+      ),
+
       showWipeModal && h('div', { className:'sfb-modal-backdrop', onClick:(e)=>{ if(e.target===e.currentTarget) setShowWipeModal(false); } },
         h('div', { className:'sfb-modal-card' },
           h('h2', null, 'Delete All Data (Nuclear)'),

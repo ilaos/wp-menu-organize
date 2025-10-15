@@ -293,7 +293,13 @@
 
   // Listen for products loaded event and re-render
   window.addEventListener('sfb-products-loaded', () => {
+    // Sync state from main frontend.js
+    const mainSelectedKeys = JSON.parse(localStorage.getItem('sfb-selected') || '[]');
+    selectedKeys.clear();
+    mainSelectedKeys.forEach(k => selectedKeys.add(k));
+
     renderSelected();
+    persistSelection(); // Update button state
   });
 
   // ---- Brand Preview Initialization (REMOVED - See Branding page for live preview) ----

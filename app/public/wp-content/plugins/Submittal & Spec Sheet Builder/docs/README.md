@@ -164,7 +164,7 @@ Tier-specific marketing bullets derived from actual implemented functionality.
 
 ### Documentation Coverage
 - **Admin Pages:** 12 documented
-- **REST Endpoints:** 26 documented
+- **REST Endpoints:** 27 documented (includes field definitions endpoint)
 - **AJAX Handlers:** 21 documented
 - **Upsell Points:** 4 documented
 - **Settings/Options:** 20+ documented
