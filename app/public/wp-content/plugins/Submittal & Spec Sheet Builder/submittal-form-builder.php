@@ -7527,16 +7527,6 @@ final class SFB_Plugin {
     return ob_get_clean();
   }
 
-  /** Security check helper for write endpoints (DEPRECATED - use permission_callback instead) */
-  private function check_write_permissions() {
-    // Capability check only - REST nonce is handled by WP core via permission_callback
-    if (!current_user_can('manage_options')) {
-      return new WP_Error('forbidden', 'Insufficient permissions', ['status' => 403]);
-    }
-
-    return true;
-  }
-
   /**
    * Return table names.
    */
