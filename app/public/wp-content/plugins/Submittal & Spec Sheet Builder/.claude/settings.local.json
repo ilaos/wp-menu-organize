@@ -18,7 +18,8 @@
       "Bash(where php)",
       "Bash(wc:*)",
       "Bash(wp db query:*)",
-      "Bash(where wp)"
+      "Bash(where wp)",
+      "Bash(git mv:*)"
     ],
     "deny": [],
     "ask": []
