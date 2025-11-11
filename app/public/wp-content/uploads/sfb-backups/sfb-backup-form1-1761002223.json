@@ -1,0 +1,19 @@
+{
+    "version": 1,
+    "exported_at": "2025-10-20T23:17:03+00:00",
+    "form_id": 1,
+    "branding": {
+        "company_name": "Acme Framing Supply",
+        "address_lines": [
+            "123 Steel Ave",
+            "Suite 400",
+            "Metropolis, NY 10001"
+        ],
+        "phone": "(212) 555-0199",
+        "email": "sales@acmeframing.example",
+        "logo_url": "https://dummyimage.com/300x80/111827/ffffff&text=ACME+FRAMING",
+        "primary_color": "#0ea5e9",
+        "footer_note": "Submittal packet auto-generated for demonstration."
+    },
+    "nodes": []
+}

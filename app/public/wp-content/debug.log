@@ -1,48 +1,2277 @@
-[14-Oct-2025 21:17:52 UTC] [SFB] register_routes called in SFB_Rest
-[14-Oct-2025 21:17:52 UTC] [SFB] $sfb_plugin is valid, registering routes...
-[14-Oct-2025 21:17:52 UTC] [SFB] Registered route: /sfb/v1/node/move
-[14-Oct-2025 21:17:53 UTC] [SFB] register_routes called in SFB_Rest
-[14-Oct-2025 21:17:53 UTC] [SFB] $sfb_plugin is valid, registering routes...
-[14-Oct-2025 21:17:53 UTC] [SFB] Registered route: /sfb/v1/node/move
-[14-Oct-2025 21:18:00 UTC] [SFB] register_routes called in SFB_Rest
-[14-Oct-2025 21:18:00 UTC] [SFB] $sfb_plugin is valid, registering routes...
-[14-Oct-2025 21:18:00 UTC] [SFB] Registered route: /sfb/v1/node/move
-[14-Oct-2025 21:18:00 UTC] [SFB] Permission check for /node/move: user_id=1, can_edit=YES
-[14-Oct-2025 21:18:00 UTC] [SFB] move_node called - method exists and is being executed
-[14-Oct-2025 21:18:00 UTC] [SFB] move_node params: Array
+[14-Oct-2025 21:59:16 UTC] [SFB MOVE] Moving node 1752 to parent 1748, position 0.5 (type: double)
+[14-Oct-2025 21:59:16 UTC] [SFB MOVE] SQL: UPDATE wp_sfb_nodes SET parent_id = 1748, position = 0.500000 WHERE id = 1752
+[14-Oct-2025 21:59:16 UTC] [SFB MOVE] Update result: success
+[14-Oct-2025 21:59:16 UTC] [SFB MOVE] Verification - ID 1752: position string = 1, position numeric = 1
+[14-Oct-2025 22:02:35 UTC] WordPress database error Duplicate key name 'form_parent_pos' for query ALTER TABLE wp_sfb_nodes ADD KEY `form_parent_pos` (`form_id`,`parent_id`,`position`) made by require('wp-blog-header.php'), wp, WP->main, WP->parse_request, do_action_ref_array('parse_request'), WP_Hook->do_action, WP_Hook->apply_filters, rest_api_loaded, WP_REST_Server->serve_request, WP_REST_Server->dispatch, WP_REST_Server->respond_to_request, SFB_Rest::get_form, SFB_Plugin->ensure_tables, dbDelta
+[14-Oct-2025 22:02:35 UTC] SFB ensure_tables NODES error: Duplicate key name 'form_parent_pos'
+[14-Oct-2025 22:02:37 UTC] WordPress database error Duplicate key name 'form_parent_pos' for query ALTER TABLE wp_sfb_nodes ADD KEY `form_parent_pos` (`form_id`,`parent_id`,`position`) made by require('wp-blog-header.php'), wp, WP->main, WP->parse_request, do_action_ref_array('parse_request'), WP_Hook->do_action, WP_Hook->apply_filters, rest_api_loaded, WP_REST_Server->serve_request, WP_REST_Server->dispatch, WP_REST_Server->respond_to_request, SFB_Rest::get_form, SFB_Plugin->ensure_tables, dbDelta
+[14-Oct-2025 22:02:37 UTC] SFB ensure_tables NODES error: Duplicate key name 'form_parent_pos'
+[14-Oct-2025 22:04:21 UTC] [SFB MOVE] Moving node 1750 to parent 1748, position 0.5 (type: double)
+[14-Oct-2025 22:04:21 UTC] [SFB MOVE] SQL: UPDATE wp_sfb_nodes SET parent_id = 1748, position = 0.500000 WHERE id = 1750
+[14-Oct-2025 22:04:21 UTC] [SFB MOVE] Update result: success
+[14-Oct-2025 22:04:21 UTC] [SFB MOVE] Verification - ID 1750: position string = 1, position numeric = 1
+[14-Oct-2025 22:07:03 UTC] WordPress database error Duplicate key name 'form_parent_pos' for query ALTER TABLE wp_sfb_nodes ADD KEY `form_parent_pos` (`form_id`,`parent_id`,`position`) made by require('wp-blog-header.php'), wp, WP->main, WP->parse_request, do_action_ref_array('parse_request'), WP_Hook->do_action, WP_Hook->apply_filters, rest_api_loaded, WP_REST_Server->serve_request, WP_REST_Server->dispatch, WP_REST_Server->respond_to_request, SFB_Rest::get_form, SFB_Plugin->ensure_tables, dbDelta
+[14-Oct-2025 22:07:03 UTC] SFB ensure_tables NODES error: Duplicate key name 'form_parent_pos'
+[14-Oct-2025 22:07:06 UTC] WordPress database error Duplicate key name 'form_parent_pos' for query ALTER TABLE wp_sfb_nodes ADD KEY `form_parent_pos` (`form_id`,`parent_id`,`position`) made by require('wp-blog-header.php'), wp, WP->main, WP->parse_request, do_action_ref_array('parse_request'), WP_Hook->do_action, WP_Hook->apply_filters, rest_api_loaded, WP_REST_Server->serve_request, WP_REST_Server->dispatch, WP_REST_Server->respond_to_request, SFB_Rest::get_form, SFB_Plugin->ensure_tables, dbDelta
+[14-Oct-2025 22:07:06 UTC] SFB ensure_tables NODES error: Duplicate key name 'form_parent_pos'
+[14-Oct-2025 22:08:29 UTC] [SFB MOVE] Moving node 1750 to parent 1748, position 0 (type: double)
+[14-Oct-2025 22:08:29 UTC] [SFB MOVE] SQL: UPDATE wp_sfb_nodes SET parent_id = 1748, position = 0.000000 WHERE id = 1750
+[14-Oct-2025 22:08:29 UTC] [SFB MOVE] Update result: success
+[14-Oct-2025 22:08:29 UTC] [SFB MOVE] Verification - ID 1750: position string = 0.00, position numeric = 0.00
+[14-Oct-2025 22:08:36 UTC] [SFB MOVE] Moving node 1752 to parent 1748, position -0.5 (type: double)
+[14-Oct-2025 22:08:36 UTC] [SFB MOVE] SQL: UPDATE wp_sfb_nodes SET parent_id = 1748, position = -0.500000 WHERE id = 1752
+[14-Oct-2025 22:08:36 UTC] [SFB MOVE] Update result: success
+[14-Oct-2025 22:08:36 UTC] [SFB MOVE] Verification - ID 1752: position string = -0.50, position numeric = -0.50
+[14-Oct-2025 22:08:48 UTC] [SFB MOVE] Moving node 1757 to parent 1755, position -0.5 (type: double)
+[14-Oct-2025 22:08:48 UTC] [SFB MOVE] SQL: UPDATE wp_sfb_nodes SET parent_id = 1755, position = -0.500000 WHERE id = 1757
+[14-Oct-2025 22:08:48 UTC] [SFB MOVE] Update result: success
+[14-Oct-2025 22:08:48 UTC] [SFB MOVE] Verification - ID 1757: position string = -0.50, position numeric = -0.50
+[14-Oct-2025 22:22:36 UTC] [SFB] Brand settings saved: success
+[14-Oct-2025 22:22:52 UTC] [SFB] Brand settings saved: success
+[14-Oct-2025 22:22:57 UTC] [SFB] Brand settings saved: success
+[14-Oct-2025 22:22:59 UTC] [SFB] Brand settings saved: success
+[14-Oct-2025 22:23:00 UTC] [SFB] Brand settings saved: success
+[14-Oct-2025 22:23:05 UTC] [SFB] Brand settings saved: success
+[14-Oct-2025 22:23:16 UTC] [SFB] Brand settings saved: success
+[14-Oct-2025 22:23:21 UTC] [SFB] Brand settings saved: success
+[14-Oct-2025 22:23:26 UTC] [SFB] Brand settings saved: success
+[14-Oct-2025 22:23:28 UTC] [SFB] Brand settings saved: success
+[14-Oct-2025 22:23:34 UTC] [SFB] Brand settings saved: success
+[14-Oct-2025 22:23:35 UTC] [SFB] Brand settings saved: success
+[14-Oct-2025 22:23:37 UTC] [SFB] Brand settings saved: success
+[14-Oct-2025 22:23:40 UTC] [SFB] Brand settings saved: success
+[14-Oct-2025 22:23:43 UTC] [SFB] Brand settings saved: success
+[14-Oct-2025 22:39:05 UTC] [SFB] ajax_list_products called
+[14-Oct-2025 22:39:05 UTC] [SFB] First product with lineage: Array
 (
-    [id] => 1752
-    [parent_id] => 1748
-    [position] => 0.5
-    [form_id] => 1
+    [id] => 1827
+    [model] => M8 x 25mm, Class 8.8, Zinc
+    [specs] => Array
+        (
+            [size] => M8
+            [length] => 25 mm
+            [thread] => 1.25 mm
+            [material] => Carbon Steel
+            [finish] => Zinc
+            [strength_class] => 8.8
+            [standard] => ISO 4014
+        )
+
+    [category] => Bolts
+    [type_key] => T1826
+    [type_label] => Hex Head Bolts
+    [slug] => m8-x-25mm-class-8-8-zinc
+    [composite_key] => bolts:hex-head-bolts:m8-x-25mm-class-8-8-zinc
+    [search_tokens] => m8 x 25mm, class 8.8, zinc hex head bolts bolts m8 size 25 mm length 1.25 mm thread carbon steel material zinc finish 8.8 strength_class iso 4014 standard
+    [ordering] => 1
 )
 
-[14-Oct-2025 21:18:00 UTC] [SFB] move_node: id=1752, new_parent_id=1748, new_position=0.5
-[14-Oct-2025 21:18:00 UTC] [SFB] move_node: Found node - type=model, parent_id=1748
-[14-Oct-2025 21:18:00 UTC] [SFB] move_node SUCCESS: Returning ok=true
-[14-Oct-2025 21:18:00 UTC] [SFB] move_node response type: array
-[14-Oct-2025 21:18:00 UTC] [SFB] Permission check for /node/move: user_id=1, can_edit=YES
-[14-Oct-2025 21:18:01 UTC] [SFB] register_routes called in SFB_Rest
-[14-Oct-2025 21:18:01 UTC] [SFB] $sfb_plugin is valid, registering routes...
-[14-Oct-2025 21:18:01 UTC] [SFB] Registered route: /sfb/v1/node/move
-[14-Oct-2025 21:18:06 UTC] [SFB] register_routes called in SFB_Rest
-[14-Oct-2025 21:18:06 UTC] [SFB] $sfb_plugin is valid, registering routes...
-[14-Oct-2025 21:18:06 UTC] [SFB] Registered route: /sfb/v1/node/move
-[14-Oct-2025 21:18:06 UTC] [SFB] Permission check for /node/move: user_id=1, can_edit=YES
-[14-Oct-2025 21:18:06 UTC] [SFB] move_node called - method exists and is being executed
-[14-Oct-2025 21:18:07 UTC] [SFB] move_node params: Array
+[14-Oct-2025 22:39:05 UTC] [SFB] Returning 14 products with lineage
+[14-Oct-2025 22:39:12 UTC] [SFB] ajax_list_products called
+[14-Oct-2025 22:39:12 UTC] [SFB] First product with lineage: Array
 (
-    [id] => 1752
-    [parent_id] => 1748
-    [position] => 0.5
-    [form_id] => 1
+    [id] => 1827
+    [model] => M8 x 25mm, Class 8.8, Zinc
+    [specs] => Array
+        (
+            [size] => M8
+            [length] => 25 mm
+            [thread] => 1.25 mm
+            [material] => Carbon Steel
+            [finish] => Zinc
+            [strength_class] => 8.8
+            [standard] => ISO 4014
+        )
+
+    [category] => Bolts
+    [type_key] => T1826
+    [type_label] => Hex Head Bolts
+    [slug] => m8-x-25mm-class-8-8-zinc
+    [composite_key] => bolts:hex-head-bolts:m8-x-25mm-class-8-8-zinc
+    [search_tokens] => m8 x 25mm, class 8.8, zinc hex head bolts bolts m8 size 25 mm length 1.25 mm thread carbon steel material zinc finish 8.8 strength_class iso 4014 standard
+    [ordering] => 1
 )
 
-[14-Oct-2025 21:18:07 UTC] [SFB] move_node: id=1752, new_parent_id=1748, new_position=0.5
-[14-Oct-2025 21:18:07 UTC] [SFB] move_node: Found node - type=model, parent_id=1748
-[14-Oct-2025 21:18:07 UTC] [SFB] move_node SUCCESS: Returning ok=true
-[14-Oct-2025 21:18:07 UTC] [SFB] move_node response type: array
-[14-Oct-2025 21:18:07 UTC] [SFB] Permission check for /node/move: user_id=1, can_edit=YES
-[14-Oct-2025 21:18:07 UTC] [SFB] register_routes called in SFB_Rest
-[14-Oct-2025 21:18:07 UTC] [SFB] $sfb_plugin is valid, registering routes...
-[14-Oct-2025 21:18:07 UTC] [SFB] Registered route: /sfb/v1/node/move
+[14-Oct-2025 22:39:12 UTC] [SFB] Returning 14 products with lineage
+[14-Oct-2025 22:42:27 UTC] [SFB] ajax_list_products called
+[14-Oct-2025 22:42:27 UTC] [SFB] First product with lineage: Array
+(
+    [id] => 1827
+    [model] => M8 x 25mm, Class 8.8, Zinc
+    [specs] => Array
+        (
+            [size] => M8
+            [length] => 25 mm
+            [thread] => 1.25 mm
+            [material] => Carbon Steel
+            [finish] => Zinc
+            [strength_class] => 8.8
+            [standard] => ISO 4014
+        )
+
+    [category] => Bolts
+    [type_key] => T1826
+    [type_label] => Hex Head Bolts
+    [slug] => m8-x-25mm-class-8-8-zinc
+    [composite_key] => bolts:hex-head-bolts:m8-x-25mm-class-8-8-zinc
+    [search_tokens] => m8 x 25mm, class 8.8, zinc hex head bolts bolts m8 size 25 mm length 1.25 mm thread carbon steel material zinc finish 8.8 strength_class iso 4014 standard
+    [ordering] => 1
+)
+
+[14-Oct-2025 22:42:27 UTC] [SFB] Returning 14 products with lineage
+[15-Oct-2025 00:45:23 UTC] [SFB] ajax_list_products called
+[15-Oct-2025 00:45:23 UTC] [SFB] First product with lineage: Array
+(
+    [id] => 1854
+    [model] => RTU-7.5T 208V
+    [specs] => Array
+        (
+            [cfm] => 3000
+            [tonnage] => 7.5
+            [voltage] => 208V
+            [phases] => 3
+            [material] => Galv. Steel
+            [gauge] => 18
+            [notes] => Economizer included
+        )
+
+    [category] => Air Handling Units
+    [type_key] => T1853
+    [type_label] => Rooftop Units
+    [slug] => rtu-7-5t-208v
+    [composite_key] => air-handling-units:rooftop-units:rtu-7-5t-208v
+    [search_tokens] => rtu-7.5t 208v rooftop units air handling units 3000 cfm 7.5 tonnage 208v voltage 3 phases galv. steel material 18 gauge economizer included notes
+    [ordering] => 1
+)
+
+[15-Oct-2025 00:45:23 UTC] [SFB] Returning 14 products with lineage
+[15-Oct-2025 00:52:17 UTC] [SFB] ajax_list_products called
+[15-Oct-2025 00:52:17 UTC] [SFB] First product with lineage: Array
+(
+    [id] => 1879
+    [model] => M8 x 25mm, Class 8.8, Zinc
+    [specs] => Array
+        (
+            [size] => M8
+            [length] => 25 mm
+            [thread] => 1.25 mm
+            [material] => Carbon Steel
+            [finish] => Zinc
+            [strength_class] => 8.8
+            [standard] => ISO 4014
+        )
+
+    [category] => Bolts
+    [type_key] => T1878
+    [type_label] => Hex Head Bolts
+    [slug] => m8-x-25mm-class-8-8-zinc
+    [composite_key] => bolts:hex-head-bolts:m8-x-25mm-class-8-8-zinc
+    [search_tokens] => m8 x 25mm, class 8.8, zinc hex head bolts bolts m8 size 25 mm length 1.25 mm thread carbon steel material zinc finish 8.8 strength_class iso 4014 standard
+    [ordering] => 1
+)
+
+[15-Oct-2025 00:52:17 UTC] [SFB] Returning 14 products with lineage
+[15-Oct-2025 00:53:57 UTC] [SFB] ajax_list_products called
+[15-Oct-2025 00:53:57 UTC] [SFB] First product with lineage: Array
+(
+    [id] => 1927
+    [model] => RTU-7.5T 208V
+    [specs] => Array
+        (
+            [cfm] => 3000
+            [tonnage] => 7.5
+            [voltage] => 208V
+            [phases] => 3
+            [material] => Galv. Steel
+            [gauge] => 18
+            [notes] => Economizer included
+        )
+
+    [category] => Air Handling Units
+    [type_key] => T1926
+    [type_label] => Rooftop Units
+    [slug] => rtu-7-5t-208v
+    [composite_key] => air-handling-units:rooftop-units:rtu-7-5t-208v
+    [search_tokens] => rtu-7.5t 208v rooftop units air handling units 3000 cfm 7.5 tonnage 208v voltage 3 phases galv. steel material 18 gauge economizer included notes
+    [ordering] => 1
+)
+
+[15-Oct-2025 00:53:57 UTC] [SFB] Returning 14 products with lineage
+[15-Oct-2025 00:54:11 UTC] [SFB] ajax_list_products called
+[15-Oct-2025 00:54:11 UTC] [SFB] First product with lineage: Array
+(
+    [id] => 1927
+    [model] => RTU-7.5T 208V
+    [specs] => Array
+        (
+            [cfm] => 3000
+            [tonnage] => 7.5
+            [voltage] => 208V
+            [phases] => 3
+            [material] => Galv. Steel
+            [gauge] => 18
+            [notes] => Economizer included
+        )
+
+    [category] => Air Handling Units
+    [type_key] => T1926
+    [type_label] => Rooftop Units
+    [slug] => rtu-7-5t-208v
+    [composite_key] => air-handling-units:rooftop-units:rtu-7-5t-208v
+    [search_tokens] => rtu-7.5t 208v rooftop units air handling units 3000 cfm 7.5 tonnage 208v voltage 3 phases galv. steel material 18 gauge economizer included notes
+    [ordering] => 1
+)
+
+[15-Oct-2025 00:54:11 UTC] [SFB] Returning 14 products with lineage
+[15-Oct-2025 00:54:36 UTC] WordPress database error Unknown column 'fields_json' in 'field list' for query SELECT id,parent_id,node_type,title,position,fields_json
+                 FROM wp_sfb_nodes
+                 WHERE form_id=1
+                 ORDER BY parent_id ASC, position ASC, id ASC made by require('wp-blog-header.php'), wp, WP->main, WP->parse_request, do_action_ref_array('parse_request'), WP_Hook->do_action, WP_Hook->apply_filters, rest_api_loaded, WP_REST_Server->serve_request, WP_REST_Server->dispatch, WP_REST_Server->respond_to_request, SFB_Plugin->api_wipe_form
+[15-Oct-2025 01:06:40 UTC] WordPress database error Unknown column 'fields_json' in 'field list' for query SELECT id,parent_id,node_type,title,position,fields_json
+                 FROM wp_sfb_nodes
+                 WHERE form_id=1
+                 ORDER BY parent_id ASC, position ASC, id ASC made by require('wp-blog-header.php'), wp, WP->main, WP->parse_request, do_action_ref_array('parse_request'), WP_Hook->do_action, WP_Hook->apply_filters, rest_api_loaded, WP_REST_Server->serve_request, WP_REST_Server->dispatch, WP_REST_Server->respond_to_request, SFB_Plugin->api_wipe_form
+[15-Oct-2025 01:09:48 UTC] [SFB] ajax_list_products called
+[15-Oct-2025 01:09:48 UTC] [SFB] First product with lineage: Array
+(
+    [id] => 1977
+    [model] => RTU-7.5T 208V #1
+    [specs] => Array
+        (
+            [cfm] => 3000
+            [tonnage] => 7.5
+            [voltage] => 208V
+            [phases] => 3
+            [material] => Galv. Steel
+            [gauge] => 18
+            [notes] => Economizer included
+        )
+
+    [category] => Air Handling Units
+    [type_key] => T1976
+    [type_label] => Rooftop Units
+    [slug] => rtu-7-5t-208v-1
+    [composite_key] => air-handling-units:rooftop-units:rtu-7-5t-208v-1
+    [search_tokens] => rtu-7.5t 208v #1 rooftop units air handling units 3000 cfm 7.5 tonnage 208v voltage 3 phases galv. steel material 18 gauge economizer included notes
+    [ordering] => 1
+)
+
+[15-Oct-2025 01:09:48 UTC] [SFB] Returning 1400 products with lineage
+[15-Oct-2025 01:14:31 UTC] [SFB] ajax_list_products called
+[15-Oct-2025 01:14:31 UTC] [SFB] First product with lineage: Array
+(
+    [id] => 1977
+    [model] => RTU-7.5T 208V #1
+    [specs] => Array
+        (
+            [cfm] => 3000
+            [tonnage] => 7.5
+            [voltage] => 208V
+            [phases] => 3
+            [material] => Galv. Steel
+            [gauge] => 18
+            [notes] => Economizer included
+        )
+
+    [category] => Air Handling Units
+    [type_key] => T1976
+    [type_label] => Rooftop Units
+    [slug] => rtu-7-5t-208v-1
+    [composite_key] => air-handling-units:rooftop-units:rtu-7-5t-208v-1
+    [search_tokens] => rtu-7.5t 208v #1 rooftop units air handling units 3000 cfm 7.5 tonnage 208v voltage 3 phases galv. steel material 18 gauge economizer included notes
+    [ordering] => 1
+)
+
+[15-Oct-2025 01:14:31 UTC] [SFB] Returning 1400 products with lineage
+[15-Oct-2025 01:14:39 UTC] [SFB] ajax_list_products called
+[15-Oct-2025 01:14:39 UTC] [SFB] First product with lineage: Array
+(
+    [id] => 1977
+    [model] => RTU-7.5T 208V #1
+    [specs] => Array
+        (
+            [cfm] => 3000
+            [tonnage] => 7.5
+            [voltage] => 208V
+            [phases] => 3
+            [material] => Galv. Steel
+            [gauge] => 18
+            [notes] => Economizer included
+        )
+
+    [category] => Air Handling Units
+    [type_key] => T1976
+    [type_label] => Rooftop Units
+    [slug] => rtu-7-5t-208v-1
+    [composite_key] => air-handling-units:rooftop-units:rtu-7-5t-208v-1
+    [search_tokens] => rtu-7.5t 208v #1 rooftop units air handling units 3000 cfm 7.5 tonnage 208v voltage 3 phases galv. steel material 18 gauge economizer included notes
+    [ordering] => 1
+)
+
+[15-Oct-2025 01:14:39 UTC] [SFB] Returning 1400 products with lineage
+[15-Oct-2025 01:17:16 UTC] [SFB] ajax_list_products called
+[15-Oct-2025 01:17:16 UTC] [SFB] First product with lineage: Array
+(
+    [id] => 1977
+    [model] => RTU-7.5T 208V #1
+    [specs] => Array
+        (
+            [cfm] => 3000
+            [tonnage] => 7.5
+            [voltage] => 208V
+            [phases] => 3
+            [material] => Galv. Steel
+            [gauge] => 18
+            [notes] => Economizer included
+        )
+
+    [category] => Air Handling Units
+    [type_key] => T1976
+    [type_label] => Rooftop Units
+    [slug] => rtu-7-5t-208v-1
+    [composite_key] => air-handling-units:rooftop-units:rtu-7-5t-208v-1
+    [search_tokens] => rtu-7.5t 208v #1 rooftop units air handling units 3000 cfm 7.5 tonnage 208v voltage 3 phases galv. steel material 18 gauge economizer included notes
+    [ordering] => 1
+)
+
+[15-Oct-2025 01:17:16 UTC] [SFB] Returning 1400 products with lineage
+[15-Oct-2025 01:17:23 UTC] [SFB] ajax_list_products called
+[15-Oct-2025 01:17:23 UTC] [SFB] First product with lineage: Array
+(
+    [id] => 1977
+    [model] => RTU-7.5T 208V #1
+    [specs] => Array
+        (
+            [cfm] => 3000
+            [tonnage] => 7.5
+            [voltage] => 208V
+            [phases] => 3
+            [material] => Galv. Steel
+            [gauge] => 18
+            [notes] => Economizer included
+        )
+
+    [category] => Air Handling Units
+    [type_key] => T1976
+    [type_label] => Rooftop Units
+    [slug] => rtu-7-5t-208v-1
+    [composite_key] => air-handling-units:rooftop-units:rtu-7-5t-208v-1
+    [search_tokens] => rtu-7.5t 208v #1 rooftop units air handling units 3000 cfm 7.5 tonnage 208v voltage 3 phases galv. steel material 18 gauge economizer included notes
+    [ordering] => 1
+)
+
+[15-Oct-2025 01:17:23 UTC] [SFB] Returning 1400 products with lineage
+[15-Oct-2025 01:19:46 UTC] [SFB] ajax_list_products called
+[15-Oct-2025 01:19:46 UTC] [SFB] First product with lineage: Array
+(
+    [id] => 1977
+    [model] => RTU-7.5T 208V #1
+    [specs] => Array
+        (
+            [cfm] => 3000
+            [tonnage] => 7.5
+            [voltage] => 208V
+            [phases] => 3
+            [material] => Galv. Steel
+            [gauge] => 18
+            [notes] => Economizer included
+        )
+
+    [category] => Air Handling Units
+    [type_key] => T1976
+    [type_label] => Rooftop Units
+    [slug] => rtu-7-5t-208v-1
+    [composite_key] => air-handling-units:rooftop-units:rtu-7-5t-208v-1
+    [search_tokens] => rtu-7.5t 208v #1 rooftop units air handling units 3000 cfm 7.5 tonnage 208v voltage 3 phases galv. steel material 18 gauge economizer included notes
+    [ordering] => 1
+)
+
+[15-Oct-2025 01:19:46 UTC] [SFB] Returning 1400 products with lineage
+[15-Oct-2025 01:30:31 UTC] [SFB] ajax_list_products called
+[15-Oct-2025 01:30:31 UTC] [SFB] First product with lineage: Array
+(
+    [id] => 1977
+    [model] => RTU-7.5T 208V #1
+    [specs] => Array
+        (
+            [cfm] => 3000
+            [tonnage] => 7.5
+            [voltage] => 208V
+            [phases] => 3
+            [material] => Galv. Steel
+            [gauge] => 18
+            [notes] => Economizer included
+        )
+
+    [category] => Air Handling Units
+    [type_key] => T1976
+    [type_label] => Rooftop Units
+    [slug] => rtu-7-5t-208v-1
+    [composite_key] => air-handling-units:rooftop-units:rtu-7-5t-208v-1
+    [search_tokens] => rtu-7.5t 208v #1 rooftop units air handling units 3000 cfm 7.5 tonnage 208v voltage 3 phases galv. steel material 18 gauge economizer included notes
+    [ordering] => 1
+)
+
+[15-Oct-2025 01:30:31 UTC] [SFB] Returning 1400 products with lineage
+[15-Oct-2025 01:39:02 UTC] [SFB] Using review payload format with 1 products
+[15-Oct-2025 01:39:07 UTC] [SFB] ajax_list_products called
+[15-Oct-2025 01:39:07 UTC] [SFB] First product with lineage: Array
+(
+    [id] => 1977
+    [model] => RTU-7.5T 208V #1
+    [specs] => Array
+        (
+            [cfm] => 3000
+            [tonnage] => 7.5
+            [voltage] => 208V
+            [phases] => 3
+            [material] => Galv. Steel
+            [gauge] => 18
+            [notes] => Economizer included
+        )
+
+    [category] => Air Handling Units
+    [type_key] => T1976
+    [type_label] => Rooftop Units
+    [slug] => rtu-7-5t-208v-1
+    [composite_key] => air-handling-units:rooftop-units:rtu-7-5t-208v-1
+    [search_tokens] => rtu-7.5t 208v #1 rooftop units air handling units 3000 cfm 7.5 tonnage 208v voltage 3 phases galv. steel material 18 gauge economizer included notes
+    [ordering] => 1
+)
+
+[15-Oct-2025 01:39:07 UTC] [SFB] Returning 1400 products with lineage
+[15-Oct-2025 01:45:12 UTC] [SFB] ajax_list_products called
+[15-Oct-2025 01:45:12 UTC] [SFB] First product with lineage: Array
+(
+    [id] => 1977
+    [model] => RTU-7.5T 208V #1
+    [specs] => Array
+        (
+            [cfm] => 3000
+            [tonnage] => 7.5
+            [voltage] => 208V
+            [phases] => 3
+            [material] => Galv. Steel
+            [gauge] => 18
+            [notes] => Economizer included
+        )
+
+    [category] => Air Handling Units
+    [type_key] => T1976
+    [type_label] => Rooftop Units
+    [slug] => rtu-7-5t-208v-1
+    [composite_key] => air-handling-units:rooftop-units:rtu-7-5t-208v-1
+    [search_tokens] => rtu-7.5t 208v #1 rooftop units air handling units 3000 cfm 7.5 tonnage 208v voltage 3 phases galv. steel material 18 gauge economizer included notes
+    [ordering] => 1
+)
+
+[15-Oct-2025 01:45:12 UTC] [SFB] Returning 1400 products with lineage
+[15-Oct-2025 01:46:59 UTC] [SFB] Using review payload format with 5 products
+[15-Oct-2025 01:49:00 UTC] [SFB] ajax_list_products called
+[15-Oct-2025 01:49:00 UTC] [SFB] First product with lineage: Array
+(
+    [id] => 1977
+    [model] => RTU-7.5T 208V #1
+    [specs] => Array
+        (
+            [cfm] => 3000
+            [tonnage] => 7.5
+            [voltage] => 208V
+            [phases] => 3
+            [material] => Galv. Steel
+            [gauge] => 18
+            [notes] => Economizer included
+        )
+
+    [category] => Air Handling Units
+    [type_key] => T1976
+    [type_label] => Rooftop Units
+    [slug] => rtu-7-5t-208v-1
+    [composite_key] => air-handling-units:rooftop-units:rtu-7-5t-208v-1
+    [search_tokens] => rtu-7.5t 208v #1 rooftop units air handling units 3000 cfm 7.5 tonnage 208v voltage 3 phases galv. steel material 18 gauge economizer included notes
+    [ordering] => 1
+)
+
+[15-Oct-2025 01:49:00 UTC] [SFB] Returning 1400 products with lineage
+[15-Oct-2025 01:49:09 UTC] [SFB] ajax_list_products called
+[15-Oct-2025 01:49:09 UTC] [SFB] First product with lineage: Array
+(
+    [id] => 1977
+    [model] => RTU-7.5T 208V #1
+    [specs] => Array
+        (
+            [cfm] => 3000
+            [tonnage] => 7.5
+            [voltage] => 208V
+            [phases] => 3
+            [material] => Galv. Steel
+            [gauge] => 18
+            [notes] => Economizer included
+        )
+
+    [category] => Air Handling Units
+    [type_key] => T1976
+    [type_label] => Rooftop Units
+    [slug] => rtu-7-5t-208v-1
+    [composite_key] => air-handling-units:rooftop-units:rtu-7-5t-208v-1
+    [search_tokens] => rtu-7.5t 208v #1 rooftop units air handling units 3000 cfm 7.5 tonnage 208v voltage 3 phases galv. steel material 18 gauge economizer included notes
+    [ordering] => 1
+)
+
+[15-Oct-2025 01:49:09 UTC] [SFB] Returning 1400 products with lineage
+[15-Oct-2025 01:49:32 UTC] [SFB] Using review payload format with 5 products
+[15-Oct-2025 01:51:40 UTC] [SFB] ajax_list_products called
+[15-Oct-2025 01:51:40 UTC] [SFB] First product with lineage: Array
+(
+    [id] => 1977
+    [model] => RTU-7.5T 208V #1
+    [specs] => Array
+        (
+            [cfm] => 3000
+            [tonnage] => 7.5
+            [voltage] => 208V
+            [phases] => 3
+            [material] => Galv. Steel
+            [gauge] => 18
+            [notes] => Economizer included
+        )
+
+    [category] => Air Handling Units
+    [type_key] => T1976
+    [type_label] => Rooftop Units
+    [slug] => rtu-7-5t-208v-1
+    [composite_key] => air-handling-units:rooftop-units:rtu-7-5t-208v-1
+    [search_tokens] => rtu-7.5t 208v #1 rooftop units air handling units 3000 cfm 7.5 tonnage 208v voltage 3 phases galv. steel material 18 gauge economizer included notes
+    [ordering] => 1
+)
+
+[15-Oct-2025 01:51:40 UTC] [SFB] Returning 1400 products with lineage
+[15-Oct-2025 01:51:48 UTC] [SFB] ajax_list_products called
+[15-Oct-2025 01:51:48 UTC] [SFB] First product with lineage: Array
+(
+    [id] => 1977
+    [model] => RTU-7.5T 208V #1
+    [specs] => Array
+        (
+            [cfm] => 3000
+            [tonnage] => 7.5
+            [voltage] => 208V
+            [phases] => 3
+            [material] => Galv. Steel
+            [gauge] => 18
+            [notes] => Economizer included
+        )
+
+    [category] => Air Handling Units
+    [type_key] => T1976
+    [type_label] => Rooftop Units
+    [slug] => rtu-7-5t-208v-1
+    [composite_key] => air-handling-units:rooftop-units:rtu-7-5t-208v-1
+    [search_tokens] => rtu-7.5t 208v #1 rooftop units air handling units 3000 cfm 7.5 tonnage 208v voltage 3 phases galv. steel material 18 gauge economizer included notes
+    [ordering] => 1
+)
+
+[15-Oct-2025 01:51:48 UTC] [SFB] Returning 1400 products with lineage
+[15-Oct-2025 01:51:57 UTC] [SFB] ajax_list_products called
+[15-Oct-2025 01:51:57 UTC] [SFB] First product with lineage: Array
+(
+    [id] => 1977
+    [model] => RTU-7.5T 208V #1
+    [specs] => Array
+        (
+            [cfm] => 3000
+            [tonnage] => 7.5
+            [voltage] => 208V
+            [phases] => 3
+            [material] => Galv. Steel
+            [gauge] => 18
+            [notes] => Economizer included
+        )
+
+    [category] => Air Handling Units
+    [type_key] => T1976
+    [type_label] => Rooftop Units
+    [slug] => rtu-7-5t-208v-1
+    [composite_key] => air-handling-units:rooftop-units:rtu-7-5t-208v-1
+    [search_tokens] => rtu-7.5t 208v #1 rooftop units air handling units 3000 cfm 7.5 tonnage 208v voltage 3 phases galv. steel material 18 gauge economizer included notes
+    [ordering] => 1
+)
+
+[15-Oct-2025 01:51:57 UTC] [SFB] Returning 1400 products with lineage
+[15-Oct-2025 01:52:14 UTC] [SFB] Using review payload format with 5 products
+[15-Oct-2025 01:53:23 UTC] [SFB Debug] Lead capture enabled check: false
+[15-Oct-2025 01:53:23 UTC] [SFB Debug] Option value: ''
+[15-Oct-2025 01:53:23 UTC] [SFB] ajax_list_products called
+[15-Oct-2025 01:53:23 UTC] [SFB] First product with lineage: Array
+(
+    [id] => 1977
+    [model] => RTU-7.5T 208V #1
+    [specs] => Array
+        (
+            [cfm] => 3000
+            [tonnage] => 7.5
+            [voltage] => 208V
+            [phases] => 3
+            [material] => Galv. Steel
+            [gauge] => 18
+            [notes] => Economizer included
+        )
+
+    [category] => Air Handling Units
+    [type_key] => T1976
+    [type_label] => Rooftop Units
+    [slug] => rtu-7-5t-208v-1
+    [composite_key] => air-handling-units:rooftop-units:rtu-7-5t-208v-1
+    [search_tokens] => rtu-7.5t 208v #1 rooftop units air handling units 3000 cfm 7.5 tonnage 208v voltage 3 phases galv. steel material 18 gauge economizer included notes
+    [ordering] => 1
+)
+
+[15-Oct-2025 01:53:23 UTC] [SFB] Returning 1400 products with lineage
+[15-Oct-2025 01:53:32 UTC] [SFB Debug] Lead capture enabled check: false
+[15-Oct-2025 01:53:32 UTC] [SFB Debug] Option value: ''
+[15-Oct-2025 01:53:32 UTC] [SFB] ajax_list_products called
+[15-Oct-2025 01:53:32 UTC] [SFB] First product with lineage: Array
+(
+    [id] => 1977
+    [model] => RTU-7.5T 208V #1
+    [specs] => Array
+        (
+            [cfm] => 3000
+            [tonnage] => 7.5
+            [voltage] => 208V
+            [phases] => 3
+            [material] => Galv. Steel
+            [gauge] => 18
+            [notes] => Economizer included
+        )
+
+    [category] => Air Handling Units
+    [type_key] => T1976
+    [type_label] => Rooftop Units
+    [slug] => rtu-7-5t-208v-1
+    [composite_key] => air-handling-units:rooftop-units:rtu-7-5t-208v-1
+    [search_tokens] => rtu-7.5t 208v #1 rooftop units air handling units 3000 cfm 7.5 tonnage 208v voltage 3 phases galv. steel material 18 gauge economizer included notes
+    [ordering] => 1
+)
+
+[15-Oct-2025 01:53:32 UTC] [SFB] Returning 1400 products with lineage
+[15-Oct-2025 01:53:50 UTC] [SFB] Using review payload format with 5 products
+[15-Oct-2025 01:55:37 UTC] [SFB Debug] Lead capture enabled check: false
+[15-Oct-2025 01:55:37 UTC] [SFB Debug] Option value: ''
+[15-Oct-2025 01:55:37 UTC] [SFB] ajax_list_products called
+[15-Oct-2025 01:55:37 UTC] [SFB] First product with lineage: Array
+(
+    [id] => 1977
+    [model] => RTU-7.5T 208V #1
+    [specs] => Array
+        (
+            [cfm] => 3000
+            [tonnage] => 7.5
+            [voltage] => 208V
+            [phases] => 3
+            [material] => Galv. Steel
+            [gauge] => 18
+            [notes] => Economizer included
+        )
+
+    [category] => Air Handling Units
+    [type_key] => T1976
+    [type_label] => Rooftop Units
+    [slug] => rtu-7-5t-208v-1
+    [composite_key] => air-handling-units:rooftop-units:rtu-7-5t-208v-1
+    [search_tokens] => rtu-7.5t 208v #1 rooftop units air handling units 3000 cfm 7.5 tonnage 208v voltage 3 phases galv. steel material 18 gauge economizer included notes
+    [ordering] => 1
+)
+
+[15-Oct-2025 01:55:37 UTC] [SFB] Returning 1400 products with lineage
+[15-Oct-2025 01:55:44 UTC] [SFB Debug] Lead capture enabled check: false
+[15-Oct-2025 01:55:44 UTC] [SFB Debug] Option value: ''
+[15-Oct-2025 01:55:45 UTC] [SFB] ajax_list_products called
+[15-Oct-2025 01:55:45 UTC] [SFB] First product with lineage: Array
+(
+    [id] => 1977
+    [model] => RTU-7.5T 208V #1
+    [specs] => Array
+        (
+            [cfm] => 3000
+            [tonnage] => 7.5
+            [voltage] => 208V
+            [phases] => 3
+            [material] => Galv. Steel
+            [gauge] => 18
+            [notes] => Economizer included
+        )
+
+    [category] => Air Handling Units
+    [type_key] => T1976
+    [type_label] => Rooftop Units
+    [slug] => rtu-7-5t-208v-1
+    [composite_key] => air-handling-units:rooftop-units:rtu-7-5t-208v-1
+    [search_tokens] => rtu-7.5t 208v #1 rooftop units air handling units 3000 cfm 7.5 tonnage 208v voltage 3 phases galv. steel material 18 gauge economizer included notes
+    [ordering] => 1
+)
+
+[15-Oct-2025 01:55:45 UTC] [SFB] Returning 1400 products with lineage
+[15-Oct-2025 01:55:54 UTC] [SFB Debug] Lead capture enabled check: false
+[15-Oct-2025 01:55:54 UTC] [SFB Debug] Option value: ''
+[15-Oct-2025 01:55:54 UTC] [SFB] ajax_list_products called
+[15-Oct-2025 01:55:54 UTC] [SFB] First product with lineage: Array
+(
+    [id] => 1977
+    [model] => RTU-7.5T 208V #1
+    [specs] => Array
+        (
+            [cfm] => 3000
+            [tonnage] => 7.5
+            [voltage] => 208V
+            [phases] => 3
+            [material] => Galv. Steel
+            [gauge] => 18
+            [notes] => Economizer included
+        )
+
+    [category] => Air Handling Units
+    [type_key] => T1976
+    [type_label] => Rooftop Units
+    [slug] => rtu-7-5t-208v-1
+    [composite_key] => air-handling-units:rooftop-units:rtu-7-5t-208v-1
+    [search_tokens] => rtu-7.5t 208v #1 rooftop units air handling units 3000 cfm 7.5 tonnage 208v voltage 3 phases galv. steel material 18 gauge economizer included notes
+    [ordering] => 1
+)
+
+[15-Oct-2025 01:55:54 UTC] [SFB] Returning 1400 products with lineage
+[15-Oct-2025 01:56:08 UTC] [SFB] Using review payload format with 5 products
+[15-Oct-2025 02:00:54 UTC] [SFB Debug] Lead capture enabled check: true
+[15-Oct-2025 02:00:54 UTC] [SFB Debug] Option value: '1'
+[15-Oct-2025 02:00:54 UTC] [SFB] ajax_list_products called
+[15-Oct-2025 02:00:54 UTC] [SFB] First product with lineage: Array
+(
+    [id] => 1977
+    [model] => RTU-7.5T 208V #1
+    [specs] => Array
+        (
+            [cfm] => 3000
+            [tonnage] => 7.5
+            [voltage] => 208V
+            [phases] => 3
+            [material] => Galv. Steel
+            [gauge] => 18
+            [notes] => Economizer included
+        )
+
+    [category] => Air Handling Units
+    [type_key] => T1976
+    [type_label] => Rooftop Units
+    [slug] => rtu-7-5t-208v-1
+    [composite_key] => air-handling-units:rooftop-units:rtu-7-5t-208v-1
+    [search_tokens] => rtu-7.5t 208v #1 rooftop units air handling units 3000 cfm 7.5 tonnage 208v voltage 3 phases galv. steel material 18 gauge economizer included notes
+    [ordering] => 1
+)
+
+[15-Oct-2025 02:00:54 UTC] [SFB] Returning 1400 products with lineage
+[15-Oct-2025 02:01:02 UTC] [SFB Debug] Lead capture enabled check: true
+[15-Oct-2025 02:01:02 UTC] [SFB Debug] Option value: '1'
+[15-Oct-2025 02:01:02 UTC] [SFB] ajax_list_products called
+[15-Oct-2025 02:01:02 UTC] [SFB] First product with lineage: Array
+(
+    [id] => 1977
+    [model] => RTU-7.5T 208V #1
+    [specs] => Array
+        (
+            [cfm] => 3000
+            [tonnage] => 7.5
+            [voltage] => 208V
+            [phases] => 3
+            [material] => Galv. Steel
+            [gauge] => 18
+            [notes] => Economizer included
+        )
+
+    [category] => Air Handling Units
+    [type_key] => T1976
+    [type_label] => Rooftop Units
+    [slug] => rtu-7-5t-208v-1
+    [composite_key] => air-handling-units:rooftop-units:rtu-7-5t-208v-1
+    [search_tokens] => rtu-7.5t 208v #1 rooftop units air handling units 3000 cfm 7.5 tonnage 208v voltage 3 phases galv. steel material 18 gauge economizer included notes
+    [ordering] => 1
+)
+
+[15-Oct-2025 02:01:02 UTC] [SFB] Returning 1400 products with lineage
+[15-Oct-2025 02:06:25 UTC] [SFB] Using review payload format with 5 products
+[15-Oct-2025 14:55:18 UTC] [SFB Debug] Lead capture enabled check: true
+[15-Oct-2025 14:55:18 UTC] [SFB Debug] Option value: '1'
+[15-Oct-2025 14:55:18 UTC] [SFB] ajax_list_products called
+[15-Oct-2025 14:55:18 UTC] [SFB] First product with lineage: Array
+(
+    [id] => 1977
+    [model] => RTU-7.5T 208V #1
+    [specs] => Array
+        (
+            [cfm] => 3000
+            [tonnage] => 7.5
+            [voltage] => 208V
+            [phases] => 3
+            [material] => Galv. Steel
+            [gauge] => 18
+            [notes] => Economizer included
+        )
+
+    [category] => Air Handling Units
+    [type_key] => T1976
+    [type_label] => Rooftop Units
+    [slug] => rtu-7-5t-208v-1
+    [composite_key] => air-handling-units:rooftop-units:rtu-7-5t-208v-1
+    [search_tokens] => rtu-7.5t 208v #1 rooftop units air handling units 3000 cfm 7.5 tonnage 208v voltage 3 phases galv. steel material 18 gauge economizer included notes
+    [ordering] => 1
+)
+
+[15-Oct-2025 14:55:18 UTC] [SFB] Returning 1400 products with lineage
+[15-Oct-2025 14:57:07 UTC] Automatic updates starting...
+[15-Oct-2025 14:57:07 UTC] Automatic updates complete.
+[15-Oct-2025 14:59:21 UTC] [SFB Debug] Lead capture enabled check: true
+[15-Oct-2025 14:59:21 UTC] [SFB Debug] Option value: '1'
+[15-Oct-2025 14:59:21 UTC] [SFB] ajax_list_products called
+[15-Oct-2025 14:59:21 UTC] [SFB] First product with lineage: Array
+(
+    [id] => 1977
+    [model] => RTU-7.5T 208V #1
+    [specs] => Array
+        (
+            [cfm] => 3000
+            [tonnage] => 7.5
+            [voltage] => 208V
+            [phases] => 3
+            [material] => Galv. Steel
+            [gauge] => 18
+            [notes] => Economizer included
+        )
+
+    [category] => Air Handling Units
+    [type_key] => T1976
+    [type_label] => Rooftop Units
+    [slug] => rtu-7-5t-208v-1
+    [composite_key] => air-handling-units:rooftop-units:rtu-7-5t-208v-1
+    [search_tokens] => rtu-7.5t 208v #1 rooftop units air handling units 3000 cfm 7.5 tonnage 208v voltage 3 phases galv. steel material 18 gauge economizer included notes
+    [ordering] => 1
+)
+
+[15-Oct-2025 14:59:21 UTC] [SFB] Returning 1400 products with lineage
+[15-Oct-2025 15:00:13 UTC] [SFB Debug] Lead capture enabled check: true
+[15-Oct-2025 15:00:13 UTC] [SFB Debug] Option value: '1'
+[15-Oct-2025 15:00:13 UTC] [SFB] ajax_list_products called
+[15-Oct-2025 15:00:13 UTC] [SFB] First product with lineage: Array
+(
+    [id] => 1977
+    [model] => RTU-7.5T 208V #1
+    [specs] => Array
+        (
+            [cfm] => 3000
+            [tonnage] => 7.5
+            [voltage] => 208V
+            [phases] => 3
+            [material] => Galv. Steel
+            [gauge] => 18
+            [notes] => Economizer included
+        )
+
+    [category] => Air Handling Units
+    [type_key] => T1976
+    [type_label] => Rooftop Units
+    [slug] => rtu-7-5t-208v-1
+    [composite_key] => air-handling-units:rooftop-units:rtu-7-5t-208v-1
+    [search_tokens] => rtu-7.5t 208v #1 rooftop units air handling units 3000 cfm 7.5 tonnage 208v voltage 3 phases galv. steel material 18 gauge economizer included notes
+    [ordering] => 1
+)
+
+[15-Oct-2025 15:00:13 UTC] [SFB] Returning 1400 products with lineage
+[15-Oct-2025 15:08:27 UTC] [SFB Debug] Lead capture enabled check: true
+[15-Oct-2025 15:08:27 UTC] [SFB Debug] Option value: '1'
+[15-Oct-2025 15:08:27 UTC] [SFB] ajax_list_products called
+[15-Oct-2025 15:08:27 UTC] [SFB] First product with lineage: Array
+(
+    [id] => 3388
+    [model] => RTU-7.5T 208V
+    [specs] => Array
+        (
+            [cfm] => 3000
+            [tonnage] => 7.5
+            [voltage] => 208V
+            [phases] => 3
+            [material] => Galv. Steel
+            [gauge] => 18
+            [notes] => Economizer included
+        )
+
+    [category] => Air Handling Units
+    [type_key] => T3387
+    [type_label] => Rooftop Units
+    [slug] => rtu-7-5t-208v
+    [composite_key] => air-handling-units:rooftop-units:rtu-7-5t-208v
+    [search_tokens] => rtu-7.5t 208v rooftop units air handling units 3000 cfm 7.5 tonnage 208v voltage 3 phases galv. steel material 18 gauge economizer included notes
+    [ordering] => 1
+)
+
+[15-Oct-2025 15:08:27 UTC] [SFB] Returning 6 products with lineage
+[15-Oct-2025 15:21:32 UTC] [SFB Debug] Lead capture enabled check: true
+[15-Oct-2025 15:21:32 UTC] [SFB Debug] Option value: '1'
+[15-Oct-2025 15:21:32 UTC] [SFB] ajax_list_products called
+[15-Oct-2025 15:21:32 UTC] [SFB] First product with lineage: Array
+(
+    [id] => 3388
+    [model] => RTU-7.5T 208V
+    [specs] => Array
+        (
+            [cfm] => 3000
+            [tonnage] => 7.5
+            [voltage] => 208V
+            [phases] => 3
+            [material] => Galv. Steel
+            [gauge] => 18
+            [notes] => Economizer included
+        )
+
+    [category] => Air Handling Units
+    [type_key] => T3387
+    [type_label] => Rooftop Units
+    [slug] => rtu-7-5t-208v
+    [composite_key] => air-handling-units:rooftop-units:rtu-7-5t-208v
+    [search_tokens] => rtu-7.5t 208v rooftop units air handling units 3000 cfm 7.5 tonnage 208v voltage 3 phases galv. steel material 18 gauge economizer included notes
+    [ordering] => 1
+)
+
+[15-Oct-2025 15:21:32 UTC] [SFB] Returning 6 products with lineage
+[15-Oct-2025 15:35:13 UTC] [SFB Debug] Lead capture enabled check: true
+[15-Oct-2025 15:35:13 UTC] [SFB Debug] Option value: '1'
+[15-Oct-2025 15:35:13 UTC] [SFB] ajax_list_products called
+[15-Oct-2025 15:35:13 UTC] [SFB] First product with lineage: Array
+(
+    [id] => 3413
+    [model] => 1/2" Type L Copper
+    [specs] => Array
+        (
+            [diameter] => 1/2 in
+            [material] => Copper (Type L)
+            [connection] => Solder
+            [pressure_rating] => 300 psi @ 100°F
+            [standard] => ASTM B88
+            [nsf] => NSF/ANSI 61
+        )
+
+    [category] => Pressure Pipe
+    [type_key] => T3412
+    [type_label] => Copper Tube (Type L)
+    [slug] => 1-2-type-l-copper
+    [composite_key] => pressure-pipe:copper-tube-type-l:1-2-type-l-copper
+    [search_tokens] => 1/2" type l copper copper tube (type l) pressure pipe 1/2 in diameter copper (type l) material solder connection 300 psi @ 100°f pressure_rating astm b88 standard nsf/ansi 61 nsf
+    [ordering] => 1
+)
+
+[15-Oct-2025 15:35:13 UTC] [SFB] Returning 7 products with lineage
+[15-Oct-2025 19:11:47 UTC] Automatic updates starting...
+[15-Oct-2025 19:11:48 UTC] Automatic updates complete.
+[15-Oct-2025 19:28:02 UTC] [SFB Debug] Lead capture enabled check: true
+[15-Oct-2025 19:28:02 UTC] [SFB Debug] Option value: '1'
+[15-Oct-2025 19:28:03 UTC] [SFB] ajax_list_products called
+[15-Oct-2025 19:28:03 UTC] [SFB] First product with lineage: Array
+(
+    [id] => 3413
+    [model] => 1/2" Type L Copper
+    [specs] => Array
+        (
+            [diameter] => 1/2 in
+            [material] => Copper (Type L)
+            [connection] => Solder
+            [pressure_rating] => 300 psi @ 100°F
+            [standard] => ASTM B88
+            [nsf] => NSF/ANSI 61
+        )
+
+    [category] => Pressure Pipe
+    [type_key] => T3412
+    [type_label] => Copper Tube (Type L)
+    [slug] => 1-2-type-l-copper
+    [composite_key] => pressure-pipe:copper-tube-type-l:1-2-type-l-copper
+    [search_tokens] => 1/2" type l copper copper tube (type l) pressure pipe 1/2 in diameter copper (type l) material solder connection 300 psi @ 100°f pressure_rating astm b88 standard nsf/ansi 61 nsf
+    [ordering] => 1
+)
+
+[15-Oct-2025 19:28:03 UTC] [SFB] Returning 7 products with lineage
+[20-Oct-2025 19:57:28 UTC] [SFB] Created sfb_operator role
+[20-Oct-2025 19:57:54 UTC] WordPress database error Unknown column 'fields_json' in 'field list' for query SELECT id,parent_id,node_type,title,position,fields_json
+                 FROM wp_sfb_nodes
+                 WHERE form_id=1
+                 ORDER BY parent_id ASC, position ASC, id ASC made by require('wp-blog-header.php'), wp, WP->main, WP->parse_request, do_action_ref_array('parse_request'), WP_Hook->do_action, WP_Hook->apply_filters, rest_api_loaded, WP_REST_Server->serve_request, WP_REST_Server->dispatch, WP_REST_Server->respond_to_request, SFB_Plugin->api_wipe_form
+[20-Oct-2025 19:58:09 UTC] Cron reschedule event error for hook: siteground_optimizer_performance_report_cron, Error code: invalid_schedule, Error message: Event schedule does not exist., Data: {"schedule":"sg_once_a_month","args":[],"interval":2592000}
+[20-Oct-2025 19:58:09 UTC] [SFB Weekly Export] Email attempt - To: ishlaos@gmail.com, Subject: [My Playground] Weekly Lead Export - 1 New Leads, Sent: YES, Attachment: C:\Windows\TEMP/sfb-leads-weekly-2025-10-20-195809-rSbiaU.tmp
+[20-Oct-2025 19:58:09 UTC] [SFB] Weekly lead export sent successfully: Successfully sent 1 leads to ishlaos@gmail.com
+[20-Oct-2025 20:11:43 UTC] [SFB Debug] Lead capture enabled check: true
+[20-Oct-2025 20:11:43 UTC] [SFB Debug] Option value: '1'
+[20-Oct-2025 21:47:53 UTC] SFB api_delete_node error: Call to private method SFB_Plugin::normalize_sibling_positions() from scope SFB_Rest
+[20-Oct-2025 22:03:06 UTC] SFB api_delete_node error: Call to private method SFB_Plugin::normalize_sibling_positions() from scope SFB_Rest
+[20-Oct-2025 22:55:10 UTC] [SFB Debug] Lead capture enabled check: true
+[20-Oct-2025 22:55:10 UTC] [SFB Debug] Option value: '1'
+[20-Oct-2025 22:55:10 UTC] [SFB] ajax_list_products called
+[20-Oct-2025 22:55:10 UTC] [SFB] First product with lineage: Array
+(
+    [id] => 3440
+    [model] => 1/2" Type L Copper
+    [specs] => Array
+        (
+            [diameter] => 1/2 in
+            [material] => Copper (Type L)
+            [connection] => Solder
+            [pressure_rating] => 300 psi @ 100°F
+            [standard] => ASTM B88
+            [nsf] => NSF/ANSI 61
+        )
+
+    [category] => Copper Tube (Type L)
+    [type_key] => T3479
+    [type_label] => Subtype
+    [slug] => 1-2-type-l-copper
+    [composite_key] => copper-tube-type-l:subtype:1-2-type-l-copper
+    [search_tokens] => 1/2" type l copper subtype copper tube (type l) 1/2 in diameter copper (type l) material solder connection 300 psi @ 100°f pressure_rating astm b88 standard nsf/ansi 61 nsf
+    [ordering] => 1
+)
+
+[20-Oct-2025 22:55:10 UTC] [SFB] Returning 12 products with lineage
+[20-Oct-2025 23:01:20 UTC] [SFB Debug] Lead capture enabled check: true
+[20-Oct-2025 23:01:20 UTC] [SFB Debug] Option value: '1'
+[20-Oct-2025 23:01:21 UTC] [SFB] ajax_list_products called
+[20-Oct-2025 23:01:21 UTC] [SFB] First product with lineage: Array
+(
+    [id] => 3440
+    [model] => 1/2" Type L Copper
+    [specs] => Array
+        (
+            [diameter] => 1/2 in
+            [material] => Copper (Type L)
+            [connection] => Solder
+            [pressure_rating] => 300 psi @ 100°F
+            [standard] => ASTM B88
+            [nsf] => NSF/ANSI 61
+        )
+
+    [category] => Copper Tube (Type L)
+    [type_key] => T3479
+    [type_label] => Subtype
+    [slug] => 1-2-type-l-copper
+    [composite_key] => copper-tube-type-l:subtype:1-2-type-l-copper
+    [search_tokens] => 1/2" type l copper subtype copper tube (type l) 1/2 in diameter copper (type l) material solder connection 300 psi @ 100°f pressure_rating astm b88 standard nsf/ansi 61 nsf
+    [ordering] => 1
+)
+
+[20-Oct-2025 23:01:21 UTC] [SFB] Returning 12 products with lineage
+[20-Oct-2025 23:06:22 UTC] [SFB Debug] Lead capture enabled check: true
+[20-Oct-2025 23:06:22 UTC] [SFB Debug] Option value: '1'
+[20-Oct-2025 23:06:22 UTC] [SFB] ajax_list_products called
+[20-Oct-2025 23:06:22 UTC] [SFB] First product with lineage: Array
+(
+    [id] => 3512
+    [model] => W8x24
+    [specs] => Array
+        (
+            [size] => 8"
+            [flange] => 6.5"
+            [thickness] => 0.4"
+            [ksi] => 50
+        )
+
+    [category] => Steel Beams
+    [type_key] => T3511
+    [type_label] => W-Beams
+    [slug] => w8x24
+    [composite_key] => steel-beams:w-beams:w8x24
+    [search_tokens] => w8x24 w-beams steel beams 8" size 6.5" flange 0.4" thickness 50 ksi
+    [ordering] => 1
+)
+
+[20-Oct-2025 23:06:22 UTC] [SFB] Returning 13 products with lineage
+[20-Oct-2025 23:06:23 UTC] [SFB Debug] Lead capture enabled check: true
+[20-Oct-2025 23:06:23 UTC] [SFB Debug] Option value: '1'
+[20-Oct-2025 23:06:23 UTC] [SFB] ajax_list_products called
+[20-Oct-2025 23:06:23 UTC] [SFB] First product with lineage: Array
+(
+    [id] => 3512
+    [model] => W8x24
+    [specs] => Array
+        (
+            [size] => 8"
+            [flange] => 6.5"
+            [thickness] => 0.4"
+            [ksi] => 50
+        )
+
+    [category] => Steel Beams
+    [type_key] => T3511
+    [type_label] => W-Beams
+    [slug] => w8x24
+    [composite_key] => steel-beams:w-beams:w8x24
+    [search_tokens] => w8x24 w-beams steel beams 8" size 6.5" flange 0.4" thickness 50 ksi
+    [ordering] => 1
+)
+
+[20-Oct-2025 23:06:23 UTC] [SFB] Returning 13 products with lineage
+[20-Oct-2025 23:14:43 UTC] WordPress database error Unknown column 'fields_json' in 'field list' for query SELECT id,parent_id,node_type,title,position,fields_json
+                 FROM wp_sfb_nodes
+                 WHERE form_id=1
+                 ORDER BY parent_id ASC, position ASC, id ASC made by require('wp-blog-header.php'), wp, WP->main, WP->parse_request, do_action_ref_array('parse_request'), WP_Hook->do_action, WP_Hook->apply_filters, rest_api_loaded, WP_REST_Server->serve_request, WP_REST_Server->dispatch, WP_REST_Server->respond_to_request, SFB_Plugin->api_wipe_form
+[20-Oct-2025 23:17:03 UTC] WordPress database error Unknown column 'fields_json' in 'field list' for query SELECT id,parent_id,node_type,title,position,fields_json
+                 FROM wp_sfb_nodes
+                 WHERE form_id=1
+                 ORDER BY parent_id ASC, position ASC, id ASC made by require('wp-blog-header.php'), wp, WP->main, WP->parse_request, do_action_ref_array('parse_request'), WP_Hook->do_action, WP_Hook->apply_filters, rest_api_loaded, WP_REST_Server->serve_request, WP_REST_Server->dispatch, WP_REST_Server->respond_to_request, SFB_Plugin->api_wipe_form
+[20-Oct-2025 23:19:07 UTC] WordPress database error Unknown column 'fields_json' in 'field list' for query SELECT id,parent_id,node_type,title,position,fields_json
+                 FROM wp_sfb_nodes
+                 WHERE form_id=1
+                 ORDER BY parent_id ASC, position ASC, id ASC made by require('wp-blog-header.php'), wp, WP->main, WP->parse_request, do_action_ref_array('parse_request'), WP_Hook->do_action, WP_Hook->apply_filters, rest_api_loaded, WP_REST_Server->serve_request, WP_REST_Server->dispatch, WP_REST_Server->respond_to_request, SFB_Plugin->api_wipe_form
+[20-Oct-2025 23:22:00 UTC] WordPress database error Unknown column 'fields_json' in 'field list' for query SELECT id,parent_id,node_type,title,position,fields_json
+                 FROM wp_sfb_nodes
+                 WHERE form_id=1
+                 ORDER BY parent_id ASC, position ASC, id ASC made by require('wp-blog-header.php'), wp, WP->main, WP->parse_request, do_action_ref_array('parse_request'), WP_Hook->do_action, WP_Hook->apply_filters, rest_api_loaded, WP_REST_Server->serve_request, WP_REST_Server->dispatch, WP_REST_Server->respond_to_request, SFB_Plugin->api_wipe_form
+[20-Oct-2025 23:49:20 UTC] SFB api_delete_node error: Call to private method SFB_Plugin::normalize_sibling_positions() from scope SFB_Rest
+[20-Oct-2025 23:57:16 UTC] WordPress database error Unknown column 'fields_json' in 'field list' for query SELECT id,parent_id,node_type,title,position,fields_json
+                 FROM wp_sfb_nodes
+                 WHERE form_id=1
+                 ORDER BY parent_id ASC, position ASC, id ASC made by require('wp-blog-header.php'), wp, WP->main, WP->parse_request, do_action_ref_array('parse_request'), WP_Hook->do_action, WP_Hook->apply_filters, rest_api_loaded, WP_REST_Server->serve_request, WP_REST_Server->dispatch, WP_REST_Server->respond_to_request, SFB_Plugin->api_wipe_form
+[21-Oct-2025 00:18:10 UTC] [SFB] Weekly lead export cron scheduled for: 2025-10-27 09:00:00
+[21-Oct-2025 00:23:16 UTC] [SFB Debug] Lead capture enabled check: true
+[21-Oct-2025 00:23:16 UTC] [SFB Debug] Option value: '1'
+[21-Oct-2025 00:23:16 UTC] [SFB] ajax_list_products called
+[21-Oct-2025 00:23:16 UTC] [SFB] First product with lineage: Array
+(
+    [id] => 3794
+    [model] => M8 x 25mm, Class 8.8, Zinc
+    [specs] => Array
+        (
+            [size] => M8
+            [length] => 25 mm
+            [thread] => 1.25 mm
+            [material] => Carbon Steel
+            [finish] => Zinc
+            [strength_class] => 8.8
+            [standard] => ISO 4014
+        )
+
+    [category] => Standard
+    [type_key] => T3827
+    [type_label] => My Subtype
+    [slug] => m8-x-25mm-class-8-8-zinc
+    [composite_key] => hex-head-bolts-standard:my-subtype:m8-x-25mm-class-8-8-zinc
+    [search_tokens] => m8 x 25mm, class 8.8, zinc my subtype standard m8 size 25 mm length 1.25 mm thread carbon steel material zinc finish 8.8 strength_class iso 4014 standard
+    [ordering] => 1
+)
+
+[21-Oct-2025 00:23:16 UTC] [SFB] Returning 14 products with lineage
+[21-Oct-2025 00:25:26 UTC] [SFB Debug] Lead capture enabled check: true
+[21-Oct-2025 00:25:26 UTC] [SFB Debug] Option value: '1'
+[21-Oct-2025 00:25:26 UTC] [SFB] ajax_list_products called
+[21-Oct-2025 00:25:26 UTC] [SFB] First product with lineage: Array
+(
+    [id] => 3794
+    [model] => M8 x 25mm, Class 8.8, Zinc
+    [specs] => Array
+        (
+            [size] => M8
+            [length] => 25 mm
+            [thread] => 1.25 mm
+            [material] => Carbon Steel
+            [finish] => Zinc
+            [strength_class] => 8.8
+            [standard] => ISO 4014
+        )
+
+    [category] => Standard
+    [type_key] => T3827
+    [type_label] => 1-1/4" Flange
+    [slug] => m8-x-25mm-class-8-8-zinc
+    [composite_key] => hex-head-bolts-standard:1-1-4-flange:m8-x-25mm-class-8-8-zinc
+    [search_tokens] => m8 x 25mm, class 8.8, zinc 1-1/4" flange standard m8 size 25 mm length 1.25 mm thread carbon steel material zinc finish 8.8 strength_class iso 4014 standard
+    [ordering] => 1
+)
+
+[21-Oct-2025 00:25:26 UTC] [SFB] Returning 14 products with lineage
+[21-Oct-2025 00:31:59 UTC] [SFB Debug] Lead capture enabled check: true
+[21-Oct-2025 00:31:59 UTC] [SFB Debug] Option value: '1'
+[21-Oct-2025 00:31:59 UTC] [SFB] ajax_list_products called
+[21-Oct-2025 00:31:59 UTC] [SFB] First product with lineage: Array
+(
+    [id] => 3794
+    [model] => M8 x 25mm, Class 8.8, Zinc
+    [specs] => Array
+        (
+            [size] => M8
+            [length] => 25 mm
+            [thread] => 1.25 mm
+            [material] => Carbon Steel
+            [finish] => Zinc
+            [strength_class] => 8.8
+            [standard] => ISO 4014
+        )
+
+    [category] => Standard
+    [type_key] => T3827
+    [type_label] => 1-1/4" Flange
+    [slug] => m8-x-25mm-class-8-8-zinc
+    [composite_key] => hex-head-bolts-standard:1-1-4-flange:m8-x-25mm-class-8-8-zinc
+    [search_tokens] => m8 x 25mm, class 8.8, zinc 1-1/4" flange standard m8 size 25 mm length 1.25 mm thread carbon steel material zinc finish 8.8 strength_class iso 4014 standard
+    [ordering] => 1
+)
+
+[21-Oct-2025 00:31:59 UTC] [SFB] Returning 14 products with lineage
+[21-Oct-2025 00:32:11 UTC] [SFB Debug] Lead capture enabled check: true
+[21-Oct-2025 00:32:11 UTC] [SFB Debug] Option value: '1'
+[21-Oct-2025 00:32:11 UTC] [SFB] ajax_list_products called
+[21-Oct-2025 00:32:11 UTC] [SFB] First product with lineage: Array
+(
+    [id] => 3794
+    [model] => M8 x 25mm, Class 8.8, Zinc
+    [specs] => Array
+        (
+            [size] => M8
+            [length] => 25 mm
+            [thread] => 1.25 mm
+            [material] => Carbon Steel
+            [finish] => Zinc
+            [strength_class] => 8.8
+            [standard] => ISO 4014
+        )
+
+    [category] => Standard
+    [type_key] => T3827
+    [type_label] => 1-1/4" Flange
+    [slug] => m8-x-25mm-class-8-8-zinc
+    [composite_key] => hex-head-bolts-standard:1-1-4-flange:m8-x-25mm-class-8-8-zinc
+    [search_tokens] => m8 x 25mm, class 8.8, zinc 1-1/4" flange standard m8 size 25 mm length 1.25 mm thread carbon steel material zinc finish 8.8 strength_class iso 4014 standard
+    [ordering] => 1
+)
+
+[21-Oct-2025 00:32:11 UTC] [SFB] Returning 14 products with lineage
+[21-Oct-2025 00:32:12 UTC] [SFB Debug] Lead capture enabled check: true
+[21-Oct-2025 00:32:12 UTC] [SFB Debug] Option value: '1'
+[21-Oct-2025 00:32:12 UTC] [SFB] ajax_list_products called
+[21-Oct-2025 00:32:12 UTC] [SFB] First product with lineage: Array
+(
+    [id] => 3794
+    [model] => M8 x 25mm, Class 8.8, Zinc
+    [specs] => Array
+        (
+            [size] => M8
+            [length] => 25 mm
+            [thread] => 1.25 mm
+            [material] => Carbon Steel
+            [finish] => Zinc
+            [strength_class] => 8.8
+            [standard] => ISO 4014
+        )
+
+    [category] => Standard
+    [type_key] => T3827
+    [type_label] => 1-1/4" Flange
+    [slug] => m8-x-25mm-class-8-8-zinc
+    [composite_key] => hex-head-bolts-standard:1-1-4-flange:m8-x-25mm-class-8-8-zinc
+    [search_tokens] => m8 x 25mm, class 8.8, zinc 1-1/4" flange standard m8 size 25 mm length 1.25 mm thread carbon steel material zinc finish 8.8 strength_class iso 4014 standard
+    [ordering] => 1
+)
+
+[21-Oct-2025 00:32:12 UTC] [SFB] Returning 14 products with lineage
+[21-Oct-2025 00:33:38 UTC] [SFB Debug] Lead capture enabled check: true
+[21-Oct-2025 00:33:38 UTC] [SFB Debug] Option value: '1'
+[21-Oct-2025 00:33:38 UTC] [SFB] ajax_list_products called
+[21-Oct-2025 00:33:38 UTC] [SFB] First product with lineage: Array
+(
+    [id] => 3794
+    [model] => M8 x 25mm, Class 8.8, Zinc
+    [specs] => Array
+        (
+            [size] => M8
+            [length] => 25 mm
+            [thread] => 1.25 mm
+            [material] => Carbon Steel
+            [finish] => Zinc
+            [strength_class] => 8.8
+            [standard] => ISO 4014
+        )
+
+    [category] => Standard
+    [type_key] => T3827
+    [type_label] => 1-1/4" Flange
+    [slug] => m8-x-25mm-class-8-8-zinc
+    [composite_key] => hex-head-bolts-standard:1-1-4-flange:m8-x-25mm-class-8-8-zinc
+    [search_tokens] => m8 x 25mm, class 8.8, zinc 1-1/4" flange standard m8 size 25 mm length 1.25 mm thread carbon steel material zinc finish 8.8 strength_class iso 4014 standard
+    [ordering] => 1
+)
+
+[21-Oct-2025 00:33:38 UTC] [SFB] Returning 14 products with lineage
+[21-Oct-2025 00:33:39 UTC] [SFB Debug] Lead capture enabled check: true
+[21-Oct-2025 00:33:39 UTC] [SFB Debug] Option value: '1'
+[21-Oct-2025 00:33:39 UTC] [SFB] ajax_list_products called
+[21-Oct-2025 00:33:39 UTC] [SFB] First product with lineage: Array
+(
+    [id] => 3794
+    [model] => M8 x 25mm, Class 8.8, Zinc
+    [specs] => Array
+        (
+            [size] => M8
+            [length] => 25 mm
+            [thread] => 1.25 mm
+            [material] => Carbon Steel
+            [finish] => Zinc
+            [strength_class] => 8.8
+            [standard] => ISO 4014
+        )
+
+    [category] => Standard
+    [type_key] => T3827
+    [type_label] => 1-1/4" Flange
+    [slug] => m8-x-25mm-class-8-8-zinc
+    [composite_key] => hex-head-bolts-standard:1-1-4-flange:m8-x-25mm-class-8-8-zinc
+    [search_tokens] => m8 x 25mm, class 8.8, zinc 1-1/4" flange standard m8 size 25 mm length 1.25 mm thread carbon steel material zinc finish 8.8 strength_class iso 4014 standard
+    [ordering] => 1
+)
+
+[21-Oct-2025 00:33:39 UTC] [SFB] Returning 14 products with lineage
+[21-Oct-2025 00:36:48 UTC] [SFB Debug] Lead capture enabled check: true
+[21-Oct-2025 00:36:48 UTC] [SFB Debug] Option value: '1'
+[21-Oct-2025 00:36:49 UTC] [SFB] ajax_list_products called
+[21-Oct-2025 00:36:49 UTC] [SFB] First product with lineage: Array
+(
+    [id] => 3794
+    [model] => M8 x 25mm, Class 8.8, Zinc
+    [specs] => Array
+        (
+            [size] => M8
+            [length] => 25 mm
+            [thread] => 1.25 mm
+            [material] => Carbon Steel
+            [finish] => Zinc
+            [strength_class] => 8.8
+            [standard] => ISO 4014
+        )
+
+    [category] => Standard
+    [type_key] => T3827
+    [type_label] => Test sub title
+    [slug] => m8-x-25mm-class-8-8-zinc
+    [composite_key] => hex-head-bolts-standard:test-sub-title:m8-x-25mm-class-8-8-zinc
+    [search_tokens] => m8 x 25mm, class 8.8, zinc test sub title standard m8 size 25 mm length 1.25 mm thread carbon steel material zinc finish 8.8 strength_class iso 4014 standard
+    [ordering] => 1
+)
+
+[21-Oct-2025 00:36:49 UTC] [SFB] Returning 14 products with lineage
+[21-Oct-2025 00:41:45 UTC] [SFB Debug] Lead capture enabled check: true
+[21-Oct-2025 00:41:45 UTC] [SFB Debug] Option value: '1'
+[21-Oct-2025 00:41:45 UTC] [SFB] ajax_list_products called
+[21-Oct-2025 00:41:45 UTC] [SFB] First product with lineage: Array
+(
+    [id] => 3794
+    [model] => M8 x 25mm, Class 8.8, Zinc
+    [specs] => Array
+        (
+            [size] => M8
+            [length] => 25 mm
+            [thread] => 1.25 mm
+            [material] => Carbon Steel
+            [finish] => Zinc
+            [strength_class] => 8.8
+            [standard] => ISO 4014
+        )
+
+    [category] => Bolts
+    [product_label] => Hex Head Bolts
+    [type_key] => T3793
+    [type_label] => Standard
+    [subtype_label] => Test sub title
+    [slug] => m8-x-25mm-class-8-8-zinc
+    [composite_key] => bolts:hex-head-bolts-standard:m8-x-25mm-class-8-8-zinc
+    [search_tokens] => m8 x 25mm, class 8.8, zinc test sub title standard hex head bolts bolts m8 size 25 mm length 1.25 mm thread carbon steel material zinc finish 8.8 strength_class iso 4014 standard
+    [ordering] => 1
+)
+
+[21-Oct-2025 00:41:45 UTC] [SFB] Returning 14 products with lineage
+[21-Oct-2025 00:41:47 UTC] [SFB Debug] Lead capture enabled check: true
+[21-Oct-2025 00:41:47 UTC] [SFB Debug] Option value: '1'
+[21-Oct-2025 00:41:48 UTC] [SFB] ajax_list_products called
+[21-Oct-2025 00:41:48 UTC] [SFB] First product with lineage: Array
+(
+    [id] => 3794
+    [model] => M8 x 25mm, Class 8.8, Zinc
+    [specs] => Array
+        (
+            [size] => M8
+            [length] => 25 mm
+            [thread] => 1.25 mm
+            [material] => Carbon Steel
+            [finish] => Zinc
+            [strength_class] => 8.8
+            [standard] => ISO 4014
+        )
+
+    [category] => Bolts
+    [product_label] => Hex Head Bolts
+    [type_key] => T3793
+    [type_label] => Standard
+    [subtype_label] => Test sub title
+    [slug] => m8-x-25mm-class-8-8-zinc
+    [composite_key] => bolts:hex-head-bolts-standard:m8-x-25mm-class-8-8-zinc
+    [search_tokens] => m8 x 25mm, class 8.8, zinc test sub title standard hex head bolts bolts m8 size 25 mm length 1.25 mm thread carbon steel material zinc finish 8.8 strength_class iso 4014 standard
+    [ordering] => 1
+)
+
+[21-Oct-2025 00:41:48 UTC] [SFB] Returning 14 products with lineage
+[21-Oct-2025 00:42:12 UTC] [SFB] Using review payload format with 0 products
+[21-Oct-2025 00:45:17 UTC] [SFB Debug] Lead capture enabled check: true
+[21-Oct-2025 00:45:17 UTC] [SFB Debug] Option value: '1'
+[21-Oct-2025 00:45:17 UTC] [SFB] ajax_list_products called
+[21-Oct-2025 00:45:17 UTC] [SFB] First product with lineage: Array
+(
+    [id] => 3794
+    [model] => M8 x 25mm, Class 8.8, Zinc
+    [specs] => Array
+        (
+            [size] => M8
+            [length] => 25 mm
+            [thread] => 1.25 mm
+            [material] => Carbon Steel
+            [finish] => Zinc
+            [strength_class] => 8.8
+            [standard] => ISO 4014
+        )
+
+    [category] => Bolts
+    [product_label] => Hex Head Bolts
+    [type_key] => T3793
+    [type_label] => Standard
+    [subtype_label] => Test sub title
+    [slug] => m8-x-25mm-class-8-8-zinc
+    [composite_key] => bolts:hex-head-bolts-standard:m8-x-25mm-class-8-8-zinc
+    [search_tokens] => m8 x 25mm, class 8.8, zinc test sub title standard hex head bolts bolts m8 size 25 mm length 1.25 mm thread carbon steel material zinc finish 8.8 strength_class iso 4014 standard
+    [ordering] => 1
+)
+
+[21-Oct-2025 00:45:17 UTC] [SFB] Returning 14 products with lineage
+[21-Oct-2025 00:45:19 UTC] [SFB Debug] Lead capture enabled check: true
+[21-Oct-2025 00:45:19 UTC] [SFB Debug] Option value: '1'
+[21-Oct-2025 00:45:19 UTC] [SFB] ajax_list_products called
+[21-Oct-2025 00:45:19 UTC] [SFB] First product with lineage: Array
+(
+    [id] => 3794
+    [model] => M8 x 25mm, Class 8.8, Zinc
+    [specs] => Array
+        (
+            [size] => M8
+            [length] => 25 mm
+            [thread] => 1.25 mm
+            [material] => Carbon Steel
+            [finish] => Zinc
+            [strength_class] => 8.8
+            [standard] => ISO 4014
+        )
+
+    [category] => Bolts
+    [product_label] => Hex Head Bolts
+    [type_key] => T3793
+    [type_label] => Standard
+    [subtype_label] => Test sub title
+    [slug] => m8-x-25mm-class-8-8-zinc
+    [composite_key] => bolts:hex-head-bolts-standard:m8-x-25mm-class-8-8-zinc
+    [search_tokens] => m8 x 25mm, class 8.8, zinc test sub title standard hex head bolts bolts m8 size 25 mm length 1.25 mm thread carbon steel material zinc finish 8.8 strength_class iso 4014 standard
+    [ordering] => 1
+)
+
+[21-Oct-2025 00:45:19 UTC] [SFB] Returning 14 products with lineage
+[21-Oct-2025 00:45:45 UTC] [SFB] Using review payload format with 5 products
+[21-Oct-2025 00:45:45 UTC] [SFB] Review payload structure: Array
+(
+    [project] => Array
+        (
+            [name] => 
+            [notes] => 
+        )
+
+    [products] => Array
+        (
+            [0] => Array
+                (
+                    [key] => washers:spring-split-lock-washers-standard:m10-split-lock-washer
+                    [id] => 3815
+                    [node_id] => 3815
+                    [quantity] => 1
+                    [note] => 
+                )
+
+            [1] => Array
+                (
+                    [key] => bolts:hex-head-bolts-standard:m8-x-25mm-class-8-8-zinc
+                    [id] => 3794
+                    [node_id] => 3794
+                    [quantity] => 1
+                    [note] => 
+                )
+
+            [2] => Array
+                (
+                    [key] => bolts:hex-head-bolts-standard:m12-x-50mm-class-10-9-black
+                    [id] => 3795
+                    [node_id] => 3795
+                    [quantity] => 1
+                    [note] => 
+                )
+
+            [3] => Array
+                (
+                    [key] => washers:flat-washers-standard:1-2-flat-washer-zinc
+                    [id] => 3812
+                    [node_id] => 3812
+                    [quantity] => 1
+                    [note] => 
+                )
+
+            [4] => Array
+                (
+                    [key] => washers:flat-washers-standard:m8-flat-washer-ss
+                    [id] => 3811
+                    [node_id] => 3811
+                    [quantity] => 1
+                    [note] => 
+                )
+
+        )
+
+)
+
+[21-Oct-2025 14:54:35 UTC] Automatic updates starting...
+[21-Oct-2025 14:54:35 UTC] Automatic updates complete.
+[21-Oct-2025 14:55:00 UTC] [SFB Debug] Lead capture enabled check: true
+[21-Oct-2025 14:55:00 UTC] [SFB Debug] Option value: '1'
+[21-Oct-2025 14:55:00 UTC] [SFB] ajax_list_products called
+[21-Oct-2025 14:55:00 UTC] [SFB] First product with lineage: Array
+(
+    [id] => 3815
+    [model] => M10 Split Lock Washer
+    [specs] => Array
+        (
+            [size] => M10
+            [material] => Carbon Steel
+            [finish] => Zinc
+            [standard] => DIN 127
+        )
+
+    [category] => Washers
+    [product_label] => Spring (Split Lock) Washers
+    [type_key] => T3814
+    [type_label] => Standard
+    [subtype_label] => 
+    [slug] => m10-split-lock-washer
+    [composite_key] => washers:spring-split-lock-washers-standard:m10-split-lock-washer
+    [search_tokens] => m10 split lock washer standard spring (split lock) washers washers m10 size carbon steel material zinc finish din 127 standard
+    [ordering] => 1
+)
+
+[21-Oct-2025 14:55:00 UTC] [SFB] Returning 13 products with lineage
+[21-Oct-2025 16:44:31 UTC] Automatic updates starting...
+[21-Oct-2025 16:44:31 UTC] Automatic updates complete.
+[21-Oct-2025 18:26:11 UTC] [SFB Debug] Lead capture enabled check: true
+[21-Oct-2025 18:26:11 UTC] [SFB Debug] Option value: '1'
+[21-Oct-2025 18:26:11 UTC] [SFB] ajax_list_products called
+[21-Oct-2025 18:26:11 UTC] [SFB] First product with lineage: Array
+(
+    [id] => 3815
+    [model] => M10 Split Lock Washer
+    [specs] => Array
+        (
+            [size] => M10
+            [material] => Carbon Steel
+            [finish] => Zinc
+            [standard] => DIN 127
+        )
+
+    [category] => Washers
+    [product_label] => Spring (Split Lock) Washers
+    [product_position] => 1
+    [type_key] => T3814
+    [type_label] => Standard
+    [subtype_label] => 
+    [slug] => m10-split-lock-washer
+    [composite_key] => washers:spring-split-lock-washers-standard:m10-split-lock-washer
+    [search_tokens] => m10 split lock washer standard spring (split lock) washers washers m10 size carbon steel material zinc finish din 127 standard
+    [ordering] => 1
+)
+
+[21-Oct-2025 18:26:11 UTC] [SFB] Returning 13 products with lineage
+[21-Oct-2025 18:36:43 UTC] [SFB Debug] Lead capture enabled check: true
+[21-Oct-2025 18:36:43 UTC] [SFB Debug] Option value: '1'
+[21-Oct-2025 18:36:43 UTC] [SFB] ajax_list_products called
+[21-Oct-2025 18:36:43 UTC] [SFB] First product with lineage: Array
+(
+    [id] => 3815
+    [model] => M10 Split Lock Washer
+    [specs] => Array
+        (
+            [size] => M10
+            [material] => Carbon Steel
+            [finish] => Zinc
+            [standard] => DIN 127
+        )
+
+    [category] => Washers
+    [product_label] => Spring (Split Lock) Washers
+    [product_position] => 1
+    [type_key] => T3814
+    [type_label] => Standard
+    [subtype_label] => 
+    [slug] => m10-split-lock-washer
+    [composite_key] => washers:spring-split-lock-washers-standard:m10-split-lock-washer
+    [search_tokens] => m10 split lock washer standard spring (split lock) washers washers m10 size carbon steel material zinc finish din 127 standard
+    [ordering] => 1
+)
+
+[21-Oct-2025 18:36:43 UTC] [SFB] Returning 13 products with lineage
+[21-Oct-2025 18:36:46 UTC] [SFB Debug] Lead capture enabled check: true
+[21-Oct-2025 18:36:46 UTC] [SFB Debug] Option value: '1'
+[21-Oct-2025 18:36:46 UTC] [SFB] ajax_list_products called
+[21-Oct-2025 18:36:46 UTC] [SFB] First product with lineage: Array
+(
+    [id] => 3815
+    [model] => M10 Split Lock Washer
+    [specs] => Array
+        (
+            [size] => M10
+            [material] => Carbon Steel
+            [finish] => Zinc
+            [standard] => DIN 127
+        )
+
+    [category] => Washers
+    [product_label] => Spring (Split Lock) Washers
+    [product_position] => 1
+    [type_key] => T3814
+    [type_label] => Standard
+    [subtype_label] => 
+    [slug] => m10-split-lock-washer
+    [composite_key] => washers:spring-split-lock-washers-standard:m10-split-lock-washer
+    [search_tokens] => m10 split lock washer standard spring (split lock) washers washers m10 size carbon steel material zinc finish din 127 standard
+    [ordering] => 1
+)
+
+[21-Oct-2025 18:36:46 UTC] [SFB] Returning 13 products with lineage
+[21-Oct-2025 18:36:49 UTC] [SFB Debug] Lead capture enabled check: true
+[21-Oct-2025 18:36:49 UTC] [SFB Debug] Option value: '1'
+[21-Oct-2025 18:36:49 UTC] [SFB] ajax_list_products called
+[21-Oct-2025 18:36:49 UTC] [SFB] First product with lineage: Array
+(
+    [id] => 3815
+    [model] => M10 Split Lock Washer
+    [specs] => Array
+        (
+            [size] => M10
+            [material] => Carbon Steel
+            [finish] => Zinc
+            [standard] => DIN 127
+        )
+
+    [category] => Washers
+    [product_label] => Spring (Split Lock) Washers
+    [product_position] => 1
+    [type_key] => T3814
+    [type_label] => Standard
+    [subtype_label] => 
+    [slug] => m10-split-lock-washer
+    [composite_key] => washers:spring-split-lock-washers-standard:m10-split-lock-washer
+    [search_tokens] => m10 split lock washer standard spring (split lock) washers washers m10 size carbon steel material zinc finish din 127 standard
+    [ordering] => 1
+)
+
+[21-Oct-2025 18:36:49 UTC] [SFB] Returning 13 products with lineage
+[22-Oct-2025 23:07:48 UTC] WordPress database error Unknown column 'fields_json' in 'field list' for query SELECT id,parent_id,node_type,title,position,fields_json
+                 FROM wp_sfb_nodes
+                 WHERE form_id=1
+                 ORDER BY parent_id ASC, position ASC, id ASC made by require('wp-blog-header.php'), wp, WP->main, WP->parse_request, do_action_ref_array('parse_request'), WP_Hook->do_action, WP_Hook->apply_filters, rest_api_loaded, WP_REST_Server->serve_request, WP_REST_Server->dispatch, WP_REST_Server->respond_to_request, SFB_Plugin->api_wipe_form
+[24-Oct-2025 20:10:39 UTC] [SFB Debug] Lead capture enabled check: true
+[24-Oct-2025 20:10:39 UTC] [SFB Debug] Option value: '1'
+[24-Oct-2025 20:10:40 UTC] [SFB] ajax_list_products called
+[24-Oct-2025 20:10:40 UTC] [SFB] First product with lineage: Array
+(
+    [id] => 3840
+    [model] => 362S162-20
+    [specs] => Array
+        (
+            [Size] => 3-5/8"
+            [Flange] => 20 GA
+            [Thickness] => 33
+        )
+
+    [field_configs] => Array
+        (
+        )
+
+    [category] => Framing
+    [category_id] => 3837
+    [category_position] => 0
+    [product_label] => C-Studs
+    [product_id] => 3838
+    [product_position] => 0
+    [type_key] => T3839
+    [type_label] => 20 Gauge
+    [subtype_label] => 
+    [slug] => 362s162-20
+    [composite_key] => framing:20-gauge:362s162-20
+    [search_tokens] => 362s162-20 20 gauge c-studs framing 3-5/8" size 20 ga flange 33 thickness
+    [ordering] => 1
+)
+
+[24-Oct-2025 20:10:40 UTC] [SFB] Returning 3 products with lineage
+[24-Oct-2025 20:10:58 UTC] [SFB] Seeding size: large, multiply: 31
+[24-Oct-2025 20:11:05 UTC] [SFB Debug] Lead capture enabled check: true
+[24-Oct-2025 20:11:05 UTC] [SFB Debug] Option value: '1'
+[24-Oct-2025 20:11:05 UTC] [SFB] ajax_list_products called
+[24-Oct-2025 20:11:05 UTC] [SFB] First product with lineage: Array
+(
+    [id] => 3848
+    [model] => M8 x 25mm, Class 8.8, Zinc #1
+    [specs] => Array
+        (
+            [size] => M8
+            [length] => 25 mm
+            [thread] => 1.25 mm
+            [material] => Carbon Steel
+            [finish] => Zinc
+            [strength_class] => 8.8
+            [standard] => ISO 4014
+        )
+
+    [field_configs] => Array
+        (
+        )
+
+    [category] => Bolts
+    [category_id] => 3845
+    [category_position] => 0
+    [product_label] => Bolts
+    [product_id] => 3846
+    [product_position] => 0
+    [type_key] => T3847
+    [type_label] => Hex Head Bolts
+    [subtype_label] => 
+    [slug] => m8-x-25mm-class-8-8-zinc-1
+    [composite_key] => bolts:hex-head-bolts:m8-x-25mm-class-8-8-zinc-1
+    [search_tokens] => m8 x 25mm, class 8.8, zinc #1 hex head bolts bolts bolts m8 size 25 mm length 1.25 mm thread carbon steel material zinc finish 8.8 strength_class iso 4014 standard
+    [ordering] => 1
+)
+
+[24-Oct-2025 20:11:05 UTC] [SFB] Returning 434 products with lineage
+[24-Oct-2025 20:11:33 UTC] [SFB] Brand settings saved: success
+[24-Oct-2025 20:11:37 UTC] [SFB] Brand settings saved: success
+[24-Oct-2025 20:11:41 UTC] [SFB Debug] Lead capture enabled check: true
+[24-Oct-2025 20:11:41 UTC] [SFB Debug] Option value: '1'
+[24-Oct-2025 20:11:41 UTC] [SFB] ajax_list_products called
+[24-Oct-2025 20:11:41 UTC] [SFB] First product with lineage: Array
+(
+    [id] => 3848
+    [model] => M8 x 25mm, Class 8.8, Zinc #1
+    [specs] => Array
+        (
+            [size] => M8
+            [length] => 25 mm
+            [thread] => 1.25 mm
+            [material] => Carbon Steel
+            [finish] => Zinc
+            [strength_class] => 8.8
+            [standard] => ISO 4014
+        )
+
+    [field_configs] => Array
+        (
+        )
+
+    [category] => Bolts
+    [category_id] => 3845
+    [category_position] => 0
+    [product_label] => Bolts
+    [product_id] => 3846
+    [product_position] => 0
+    [type_key] => T3847
+    [type_label] => Hex Head Bolts
+    [subtype_label] => 
+    [slug] => m8-x-25mm-class-8-8-zinc-1
+    [composite_key] => bolts:hex-head-bolts:m8-x-25mm-class-8-8-zinc-1
+    [search_tokens] => m8 x 25mm, class 8.8, zinc #1 hex head bolts bolts bolts m8 size 25 mm length 1.25 mm thread carbon steel material zinc finish 8.8 strength_class iso 4014 standard
+    [ordering] => 1
+)
+
+[24-Oct-2025 20:11:41 UTC] [SFB] Returning 434 products with lineage
+[24-Oct-2025 22:05:33 UTC] WordPress database error Unknown column 'fields_json' in 'field list' for query SELECT id,parent_id,node_type,title,position,fields_json
+                 FROM wp_sfb_nodes
+                 WHERE form_id=1
+                 ORDER BY parent_id ASC, position ASC, id ASC made by require('wp-blog-header.php'), wp, WP->main, WP->parse_request, do_action_ref_array('parse_request'), WP_Hook->do_action, WP_Hook->apply_filters, rest_api_loaded, WP_REST_Server->serve_request, WP_REST_Server->dispatch, WP_REST_Server->respond_to_request, SFB_Plugin->api_wipe_form
+[24-Oct-2025 22:18:28 UTC] WordPress database error Unknown column 'fields_json' in 'field list' for query SELECT id,parent_id,node_type,title,position,fields_json
+                 FROM wp_sfb_nodes
+                 WHERE form_id=1
+                 ORDER BY parent_id ASC, position ASC, id ASC made by require('wp-blog-header.php'), wp, WP->main, WP->parse_request, do_action_ref_array('parse_request'), WP_Hook->do_action, WP_Hook->apply_filters, rest_api_loaded, WP_REST_Server->serve_request, WP_REST_Server->dispatch, WP_REST_Server->respond_to_request, SFB_Plugin->api_wipe_form
+[24-Oct-2025 22:50:56 UTC] WordPress database error Unknown column 'fields_json' in 'field list' for query SELECT id,parent_id,node_type,title,position,fields_json
+                 FROM wp_sfb_nodes
+                 WHERE form_id=1
+                 ORDER BY parent_id ASC, position ASC, id ASC made by require('wp-blog-header.php'), wp, WP->main, WP->parse_request, do_action_ref_array('parse_request'), WP_Hook->do_action, WP_Hook->apply_filters, rest_api_loaded, WP_REST_Server->serve_request, WP_REST_Server->dispatch, WP_REST_Server->respond_to_request, SFB_Plugin->api_wipe_form
+[24-Oct-2025 22:51:16 UTC] [SFB] Seeding size: medium, multiply: 1
+[24-Oct-2025 22:51:21 UTC] [SFB Debug] Lead capture enabled check: true
+[24-Oct-2025 22:51:21 UTC] [SFB Debug] Option value: '1'
+[24-Oct-2025 22:51:22 UTC] [SFB] ajax_list_products called
+[24-Oct-2025 22:51:22 UTC] [SFB] First product with lineage: Array
+(
+    [id] => 4314
+    [model] => 24x24 Fine Fissured, White
+    [specs] => Array
+        (
+            [size] => 24x24 in
+            [thickness] => 5/8 in
+            [nrc] => 0.70
+            [cac] => 35
+            [fire_rating] => Class A
+            [edge] => Square Lay-In
+            [notes] => Low VOC
+        )
+
+    [field_configs] => Array
+        (
+        )
+
+    [category] => Acoustic Ceilings
+    [category_id] => 4311
+    [category_position] => 0
+    [product_label] => Acoustic Ceilings
+    [product_id] => 4312
+    [product_position] => 0
+    [type_key] => T4313
+    [type_label] => Mineral Fiber Tiles
+    [subtype_label] => 
+    [slug] => 24x24-fine-fissured-white
+    [composite_key] => acoustic-ceilings:mineral-fiber-tiles:24x24-fine-fissured-white
+    [search_tokens] => 24x24 fine fissured, white mineral fiber tiles acoustic ceilings acoustic ceilings 24x24 in size 5/8 in thickness 0.70 nrc 35 cac class a fire_rating square lay-in edge low voc notes
+    [ordering] => 1
+)
+
+[24-Oct-2025 22:51:22 UTC] [SFB] Returning 10 products with lineage
+[24-Oct-2025 22:52:02 UTC] [SFB] Brand settings saved: success
+[24-Oct-2025 22:52:06 UTC] [SFB Debug] Lead capture enabled check: true
+[24-Oct-2025 22:52:06 UTC] [SFB Debug] Option value: '1'
+[24-Oct-2025 22:52:06 UTC] [SFB] ajax_list_products called
+[24-Oct-2025 22:52:06 UTC] [SFB] First product with lineage: Array
+(
+    [id] => 4314
+    [model] => 24x24 Fine Fissured, White
+    [specs] => Array
+        (
+            [size] => 24x24 in
+            [thickness] => 5/8 in
+            [nrc] => 0.70
+            [cac] => 35
+            [fire_rating] => Class A
+            [edge] => Square Lay-In
+            [notes] => Low VOC
+        )
+
+    [field_configs] => Array
+        (
+        )
+
+    [category] => Acoustic Ceilings
+    [category_id] => 4311
+    [category_position] => 0
+    [product_label] => Acoustic Ceilings
+    [product_id] => 4312
+    [product_position] => 0
+    [type_key] => T4313
+    [type_label] => Mineral Fiber Tiles
+    [subtype_label] => 
+    [slug] => 24x24-fine-fissured-white
+    [composite_key] => acoustic-ceilings:mineral-fiber-tiles:24x24-fine-fissured-white
+    [search_tokens] => 24x24 fine fissured, white mineral fiber tiles acoustic ceilings acoustic ceilings 24x24 in size 5/8 in thickness 0.70 nrc 35 cac class a fire_rating square lay-in edge low voc notes
+    [ordering] => 1
+)
+
+[24-Oct-2025 22:52:06 UTC] [SFB] Returning 10 products with lineage
+[24-Oct-2025 22:53:28 UTC] SFB Lead Capture: Lead notification sent to dev-email@wpengine.local for customer: ishlaos@gmail.com
+[24-Oct-2025 22:53:30 UTC] [SFB] Using review payload format with 0 products
+[24-Oct-2025 23:03:17 UTC] [SFB Debug] Lead capture enabled check: true
+[24-Oct-2025 23:03:17 UTC] [SFB Debug] Option value: '1'
+[24-Oct-2025 23:03:17 UTC] [SFB] ajax_list_products called
+[24-Oct-2025 23:03:17 UTC] [SFB] First product with lineage: Array
+(
+    [id] => 4314
+    [model] => 24x24 Fine Fissured, White
+    [specs] => Array
+        (
+            [size] => 24x24 in
+            [thickness] => 5/8 in
+            [nrc] => 0.70
+            [cac] => 35
+            [fire_rating] => Class A
+            [edge] => Square Lay-In
+            [notes] => Low VOC
+        )
+
+    [field_configs] => Array
+        (
+        )
+
+    [category] => Acoustic Ceilings
+    [category_id] => 4311
+    [category_position] => 0
+    [product_label] => Acoustic Ceilings
+    [product_id] => 4312
+    [product_position] => 0
+    [type_key] => T4313
+    [type_label] => Mineral Fiber Tiles
+    [subtype_label] => 
+    [slug] => 24x24-fine-fissured-white
+    [composite_key] => acoustic-ceilings:mineral-fiber-tiles:24x24-fine-fissured-white
+    [search_tokens] => 24x24 fine fissured, white mineral fiber tiles acoustic ceilings acoustic ceilings 24x24 in size 5/8 in thickness 0.70 nrc 35 cac class a fire_rating square lay-in edge low voc notes
+    [ordering] => 1
+)
+
+[24-Oct-2025 23:03:17 UTC] [SFB] Returning 10 products with lineage
+[24-Oct-2025 23:03:58 UTC] SFB Lead Capture: Lead notification sent to dev-email@wpengine.local for customer: ishlaos@gmail.com
+[24-Oct-2025 23:04:00 UTC] [SFB] Using review payload format with 0 products
+[24-Oct-2025 23:13:11 UTC] [SFB Debug] Lead capture enabled check: true
+[24-Oct-2025 23:13:11 UTC] [SFB Debug] Option value: '1'
+[24-Oct-2025 23:13:11 UTC] [SFB] ajax_list_products called
+[24-Oct-2025 23:13:11 UTC] [SFB] First product with lineage: Array
+(
+    [id] => 4314
+    [model] => 24x24 Fine Fissured, White
+    [specs] => Array
+        (
+            [size] => 24x24 in
+            [thickness] => 5/8 in
+            [nrc] => 0.70
+            [cac] => 35
+            [fire_rating] => Class A
+            [edge] => Square Lay-In
+            [notes] => Low VOC
+        )
+
+    [field_configs] => Array
+        (
+        )
+
+    [category] => Acoustic Ceilings
+    [category_id] => 4311
+    [category_position] => 0
+    [product_label] => Acoustic Ceilings
+    [product_id] => 4312
+    [product_position] => 0
+    [type_key] => T4313
+    [type_label] => Mineral Fiber Tiles
+    [subtype_label] => 
+    [slug] => 24x24-fine-fissured-white
+    [composite_key] => acoustic-ceilings:mineral-fiber-tiles:24x24-fine-fissured-white
+    [search_tokens] => 24x24 fine fissured, white mineral fiber tiles acoustic ceilings acoustic ceilings 24x24 in size 5/8 in thickness 0.70 nrc 35 cac class a fire_rating square lay-in edge low voc notes
+    [ordering] => 1
+)
+
+[24-Oct-2025 23:13:11 UTC] [SFB] Returning 10 products with lineage
+[24-Oct-2025 23:13:26 UTC] SFB Lead Capture: Lead notification sent to dev-email@wpengine.local for customer: ishlaos@gmail.com
+[24-Oct-2025 23:13:28 UTC] [SFB] Using review payload format with 4 products
+[24-Oct-2025 23:13:28 UTC] [SFB] Received selected field values: Array
+(
+)
+
+[24-Oct-2025 23:14:42 UTC] [SFB] Brand settings saved: success
+[24-Oct-2025 23:14:46 UTC] [SFB] Brand settings saved: success
+[24-Oct-2025 23:14:50 UTC] [SFB] Brand settings saved: success
+[24-Oct-2025 23:14:50 UTC] [SFB] Brand settings saved: no change
+[24-Oct-2025 23:14:53 UTC] [SFB] Brand settings saved: success
+[24-Oct-2025 23:15:17 UTC] [SFB Debug] Lead capture enabled check: true
+[24-Oct-2025 23:15:17 UTC] [SFB Debug] Option value: '1'
+[24-Oct-2025 23:15:17 UTC] [SFB] ajax_list_products called
+[24-Oct-2025 23:15:17 UTC] [SFB] First product with lineage: Array
+(
+    [id] => 4314
+    [model] => 24x24 Fine Fissured, White
+    [specs] => Array
+        (
+            [size] => 24x24 in
+            [thickness] => 5/8 in
+            [nrc] => 0.70
+            [cac] => 35
+            [fire_rating] => Class A
+            [edge] => Square Lay-In
+            [notes] => Low VOC
+        )
+
+    [field_configs] => Array
+        (
+        )
+
+    [category] => Acoustic Ceilings
+    [category_id] => 4311
+    [category_position] => 0
+    [product_label] => Acoustic Ceilings
+    [product_id] => 4312
+    [product_position] => 0
+    [type_key] => T4313
+    [type_label] => Mineral Fiber Tiles
+    [subtype_label] => 
+    [slug] => 24x24-fine-fissured-white
+    [composite_key] => acoustic-ceilings:mineral-fiber-tiles:24x24-fine-fissured-white
+    [search_tokens] => 24x24 fine fissured, white mineral fiber tiles acoustic ceilings acoustic ceilings 24x24 in size 5/8 in thickness 0.70 nrc 35 cac class a fire_rating square lay-in edge low voc notes
+    [ordering] => 1
+)
+
+[24-Oct-2025 23:15:17 UTC] [SFB] Returning 10 products with lineage
+[24-Oct-2025 23:15:35 UTC] SFB Lead Capture: Lead notification sent to dev-email@wpengine.local for customer: ishlaos@gmail.com
+[24-Oct-2025 23:15:36 UTC] [SFB] Using review payload format with 4 products
+[24-Oct-2025 23:15:36 UTC] [SFB] Received selected field values: Array
+(
+)
+
+[25-Oct-2025 17:00:22 UTC] [SFB Debug] Lead capture enabled check: true
+[25-Oct-2025 17:00:22 UTC] [SFB Debug] Option value: '1'
+[25-Oct-2025 17:00:23 UTC] [SFB] ajax_list_products called
+[25-Oct-2025 17:00:23 UTC] [SFB] First product with lineage: Array
+(
+    [id] => 4314
+    [model] => 24x24 Fine Fissured, White
+    [specs] => Array
+        (
+            [size] => 24x24 in
+            [thickness] => 5/8 in
+            [nrc] => 0.70
+            [cac] => 35
+            [fire_rating] => Class A
+            [edge] => Square Lay-In
+            [notes] => Low VOC
+        )
+
+    [field_configs] => Array
+        (
+        )
+
+    [category] => Acoustic Ceilings
+    [category_id] => 4311
+    [category_position] => 0
+    [product_label] => Acoustic Ceilings
+    [product_id] => 4312
+    [product_position] => 0
+    [type_key] => T4313
+    [type_label] => Mineral Fiber Tiles
+    [subtype_label] => 
+    [slug] => 24x24-fine-fissured-white
+    [composite_key] => acoustic-ceilings:mineral-fiber-tiles:24x24-fine-fissured-white
+    [search_tokens] => 24x24 fine fissured, white mineral fiber tiles acoustic ceilings acoustic ceilings 24x24 in size 5/8 in thickness 0.70 nrc 35 cac class a fire_rating square lay-in edge low voc notes
+    [ordering] => 1
+)
+
+[25-Oct-2025 17:00:23 UTC] [SFB] Returning 10 products with lineage
+[25-Oct-2025 17:00:54 UTC] SFB Lead Capture: Lead notification sent to dev-email@wpengine.local for customer: ishlaos@gmail.com
+[25-Oct-2025 17:00:55 UTC] [SFB] Using review payload format with 7 products
+[25-Oct-2025 17:00:55 UTC] [SFB] Received selected field values: Array
+(
+)
+
+[30-Oct-2025 22:30:35 UTC] PHP Warning:  mysqli_real_connect(): (HY000/2002): No connection could be made because the target machine actively refused it in C:\Users\ishla\Local Sites\my-playground\app\public\wp-includes\class-wpdb.php on line 1988
+[30-Oct-2025 22:32:20 UTC] WordPress database error Unknown column 'type' in 'where clause' for query SELECT COUNT(*) FROM wp_sfb_nodes WHERE type = 'model' made by do_action('submittal-builder_page_sfb-onboarding'), WP_Hook->do_action, WP_Hook->apply_filters, SFB_Plugin->render_onboarding_page, include('/plugins/submittal-spec-sheet-builder/templates/admin/welcome.php')
+[30-Oct-2025 22:32:20 UTC] WordPress database error Unknown column 'type' in 'where clause' for query SELECT COUNT(*) FROM wp_sfb_nodes WHERE type = 'category' made by do_action('submittal-builder_page_sfb-onboarding'), WP_Hook->do_action, WP_Hook->apply_filters, SFB_Plugin->render_onboarding_page, include('/plugins/submittal-spec-sheet-builder/templates/admin/welcome.php')
+[30-Oct-2025 22:32:20 UTC] PHP Deprecated:  number_format(): Passing null to parameter #1 ($num) of type float is deprecated in C:\Users\ishla\Local Sites\my-playground\app\public\wp-includes\functions.php on line 429
+[30-Oct-2025 22:32:20 UTC] PHP Deprecated:  number_format(): Passing null to parameter #1 ($num) of type float is deprecated in C:\Users\ishla\Local Sites\my-playground\app\public\wp-includes\functions.php on line 429
+[30-Oct-2025 22:32:20 UTC] Automatic updates starting...
+[30-Oct-2025 22:32:20 UTC]   Automatic theme updates starting...
+[30-Oct-2025 22:32:20 UTC]   Automatic theme updates complete.
+[30-Oct-2025 22:32:20 UTC] Automatic updates complete.
+[30-Oct-2025 22:32:21 UTC] [SFB] Weekly export skipped: Agency license required
+[30-Oct-2025 22:32:24 UTC] WordPress database error Unknown column 'type' in 'where clause' for query SELECT COUNT(*) FROM wp_sfb_nodes WHERE type = 'model' made by do_action('submittal-builder_page_sfb-onboarding'), WP_Hook->do_action, WP_Hook->apply_filters, SFB_Plugin->render_onboarding_page, include('/plugins/submittal-spec-sheet-builder/templates/admin/welcome.php')
+[30-Oct-2025 22:32:24 UTC] WordPress database error Unknown column 'type' in 'where clause' for query SELECT COUNT(*) FROM wp_sfb_nodes WHERE type = 'category' made by do_action('submittal-builder_page_sfb-onboarding'), WP_Hook->do_action, WP_Hook->apply_filters, SFB_Plugin->render_onboarding_page, include('/plugins/submittal-spec-sheet-builder/templates/admin/welcome.php')
+[30-Oct-2025 22:32:24 UTC] PHP Deprecated:  number_format(): Passing null to parameter #1 ($num) of type float is deprecated in C:\Users\ishla\Local Sites\my-playground\app\public\wp-includes\functions.php on line 429
+[30-Oct-2025 22:32:24 UTC] PHP Deprecated:  number_format(): Passing null to parameter #1 ($num) of type float is deprecated in C:\Users\ishla\Local Sites\my-playground\app\public\wp-includes\functions.php on line 429
+[30-Oct-2025 22:32:25 UTC] WordPress database error Unknown column 'type' in 'where clause' for query SELECT COUNT(*) FROM wp_sfb_nodes WHERE type = 'model' made by do_action('submittal-builder_page_sfb-onboarding'), WP_Hook->do_action, WP_Hook->apply_filters, SFB_Plugin->render_onboarding_page, include('/plugins/submittal-spec-sheet-builder/templates/admin/welcome.php')
+[30-Oct-2025 22:32:25 UTC] WordPress database error Unknown column 'type' in 'where clause' for query SELECT COUNT(*) FROM wp_sfb_nodes WHERE type = 'category' made by do_action('submittal-builder_page_sfb-onboarding'), WP_Hook->do_action, WP_Hook->apply_filters, SFB_Plugin->render_onboarding_page, include('/plugins/submittal-spec-sheet-builder/templates/admin/welcome.php')
+[30-Oct-2025 22:32:25 UTC] PHP Deprecated:  number_format(): Passing null to parameter #1 ($num) of type float is deprecated in C:\Users\ishla\Local Sites\my-playground\app\public\wp-includes\functions.php on line 429
+[30-Oct-2025 22:32:25 UTC] PHP Deprecated:  number_format(): Passing null to parameter #1 ($num) of type float is deprecated in C:\Users\ishla\Local Sites\my-playground\app\public\wp-includes\functions.php on line 429
+[31-Oct-2025 02:16:16 UTC] [SFB Debug] Lead capture enabled check: true
+[31-Oct-2025 02:16:16 UTC] [SFB Debug] Option value: '1'
+[31-Oct-2025 02:16:16 UTC] [SFB] ajax_list_products called
+[31-Oct-2025 02:16:16 UTC] [SFB] First product with lineage: Array
+(
+    [id] => 4314
+    [model] => 24x24 Fine Fissured, White
+    [specs] => Array
+        (
+            [size] => 24x24 in
+            [thickness] => 5/8 in
+            [nrc] => 0.70
+            [cac] => 35
+            [fire_rating] => Class A
+            [edge] => Square Lay-In
+            [notes] => Low VOC
+        )
+
+    [field_configs] => Array
+        (
+        )
+
+    [category] => Acoustic Ceilings
+    [category_id] => 4311
+    [category_position] => 0
+    [product_label] => Acoustic Ceilings
+    [product_id] => 4312
+    [product_position] => 0
+    [type_key] => T4313
+    [type_label] => Mineral Fiber Tiles
+    [subtype_label] => 
+    [slug] => 24x24-fine-fissured-white
+    [composite_key] => acoustic-ceilings:mineral-fiber-tiles:24x24-fine-fissured-white
+    [search_tokens] => 24x24 fine fissured, white mineral fiber tiles acoustic ceilings acoustic ceilings 24x24 in size 5/8 in thickness 0.70 nrc 35 cac class a fire_rating square lay-in edge low voc notes
+    [ordering] => 1
+)
+
+[31-Oct-2025 02:16:16 UTC] [SFB] Returning 10 products with lineage
+[31-Oct-2025 02:21:55 UTC] SFB License API Request: https://webstuffguylabs.com/?wc-api=software-api&request=activation&email=bonster11@gmail.com&license_key=SFB-c79f...&instance=5f45337a...&version=1.0.0
+[31-Oct-2025 02:21:58 UTC] SFB License API Response Code: 200
+[31-Oct-2025 02:21:58 UTC] SFB License API Response Body: {"error":"Invalid Request","code":"100","activated":false,"timestamp":1761877318,"sig":"5c78d47ce284cfb77d9edf6114e9adb9"}
+[31-Oct-2025 02:21:58 UTC] SFB License Activation Failed - Raw API Response: Array
+(
+    [error] => Invalid Request
+    [code] => 100
+    [activated] => 
+    [timestamp] => 1761877318
+    [sig] => 5c78d47ce284cfb77d9edf6114e9adb9
+)
+
+[31-Oct-2025 02:21:58 UTC] SFB License Activation Failed - License Key: SFB-c79f...
+[31-Oct-2025 02:21:58 UTC] SFB License Activation Failed - Email: bonster11@gmail.com
+[31-Oct-2025 02:23:38 UTC] SFB License API Request: https://webstuffguylabs.com/?wc-api=software-api&request=activation&email=bonster11@gmail.com&license_key=SFB-c79f...&instance=5f45337a...&version=1.0.0
+[31-Oct-2025 02:23:41 UTC] SFB License API Response Code: 200
+[31-Oct-2025 02:23:41 UTC] SFB License API Response Body: {"error":"Invalid Request","code":"100","activated":false,"timestamp":1761877421,"sig":"1f26aed2ee78620ba827451227bfe7ac"}
+[31-Oct-2025 02:23:41 UTC] SFB License Activation Failed - Raw API Response: Array
+(
+    [error] => Invalid Request
+    [code] => 100
+    [activated] => 
+    [timestamp] => 1761877421
+    [sig] => 1f26aed2ee78620ba827451227bfe7ac
+)
+
+[31-Oct-2025 02:23:41 UTC] SFB License Activation Failed - License Key: SFB-c79f...
+[31-Oct-2025 02:23:41 UTC] SFB License Activation Failed - Email: bonster11@gmail.com
+[31-Oct-2025 02:25:53 UTC] [SFB Debug] Lead capture enabled check: true
+[31-Oct-2025 02:25:53 UTC] [SFB Debug] Option value: '1'
+[31-Oct-2025 02:25:53 UTC] [SFB] ajax_list_products called
+[31-Oct-2025 02:25:53 UTC] [SFB] First product with lineage: Array
+(
+    [id] => 4314
+    [model] => 24x24 Fine Fissured, White
+    [specs] => Array
+        (
+            [size] => 24x24 in
+            [thickness] => 5/8 in
+            [nrc] => 0.70
+            [cac] => 35
+            [fire_rating] => Class A
+            [edge] => Square Lay-In
+            [notes] => Low VOC
+        )
+
+    [field_configs] => Array
+        (
+        )
+
+    [category] => Acoustic Ceilings
+    [category_id] => 4311
+    [category_position] => 0
+    [product_label] => Acoustic Ceilings
+    [product_id] => 4312
+    [product_position] => 0
+    [type_key] => T4313
+    [type_label] => Mineral Fiber Tiles
+    [subtype_label] => 
+    [slug] => 24x24-fine-fissured-white
+    [composite_key] => acoustic-ceilings:mineral-fiber-tiles:24x24-fine-fissured-white
+    [search_tokens] => 24x24 fine fissured, white mineral fiber tiles acoustic ceilings acoustic ceilings 24x24 in size 5/8 in thickness 0.70 nrc 35 cac class a fire_rating square lay-in edge low voc notes
+    [ordering] => 1
+)
+
+[31-Oct-2025 02:25:53 UTC] [SFB] Returning 10 products with lineage
+[31-Oct-2025 02:35:42 UTC] SFB License API Request: https://webstuffguylabs.com/?wc-api=software-api&request=activation&email=bonster11@gmail.com&license_key=SFB-c79f...&instance=5f45337a...&version=1.0.0&product_id=199
+[31-Oct-2025 02:35:45 UTC] SFB License API Response Code: 200
+[31-Oct-2025 02:35:45 UTC] SFB License API Response Body: {"error":"Invalid License Key","code":"101","activated":false,"timestamp":1761878145,"sig":"e9dbcb046ed6fb6ba18fb3f2f38bd13b"}
+[31-Oct-2025 02:35:45 UTC] SFB License Activation Failed - Raw API Response: Array
+(
+    [error] => Invalid License Key
+    [code] => 101
+    [activated] => 
+    [timestamp] => 1761878145
+    [sig] => e9dbcb046ed6fb6ba18fb3f2f38bd13b
+)
+
+[31-Oct-2025 02:35:45 UTC] SFB License Activation Failed - License Key: SFB-c79f...
+[31-Oct-2025 02:35:45 UTC] SFB License Activation Failed - Email: bonster11@gmail.com
+[31-Oct-2025 02:53:16 UTC] === SFB LICENSE ACTIVATION ATTEMPT ===
+[31-Oct-2025 02:53:16 UTC] License Key (full): SFB-c79f1340-755e-47f7-a63f-25bbf0baa0a5
+[31-Oct-2025 02:53:16 UTC] Email: bonster11@gmail.com
+[31-Oct-2025 02:53:16 UTC] Trying Product ID: 199 (Pro)
+[31-Oct-2025 02:53:16 UTC] Site Instance ID: 5f45337a3139850a62e017c59fe849df
+[31-Oct-2025 02:53:16 UTC] Site URL: http://my-playground.local
+[31-Oct-2025 02:53:16 UTC] --- API REQUEST DETAILS ---
+[31-Oct-2025 02:53:16 UTC] Action: activation
+[31-Oct-2025 02:53:16 UTC] Full URL (with params): https://webstuffguylabs.com/?wc-api=software-api&request=activation&email=bonster11@gmail.com&license_key=SFB-c79f1340-755e-47f7-a63f-25bbf0baa0a5&instance=5f45337a3139850a62e017c59fe849df&version=1.0.0&product_id=199
+[31-Oct-2025 02:53:16 UTC] API Parameters being sent:
+[31-Oct-2025 02:53:16 UTC]   - request: activation
+[31-Oct-2025 02:53:16 UTC]   - email: bonster11@gmail.com
+[31-Oct-2025 02:53:16 UTC]   - license_key: SFB-c79f1340-755e-47f7-a63f-25bbf0baa0a5
+[31-Oct-2025 02:53:16 UTC]   - instance: 5f45337a3139850a62e017c59fe849df
+[31-Oct-2025 02:53:16 UTC]   - version: 1.0.0
+[31-Oct-2025 02:53:16 UTC]   - product_id: 199
+[31-Oct-2025 02:53:16 UTC] API Base URL: https://webstuffguylabs.com/?wc-api=software-api
+[31-Oct-2025 02:53:18 UTC] --- API RESPONSE DETAILS ---
+[31-Oct-2025 02:53:18 UTC] HTTP Status Code: 200
+[31-Oct-2025 02:53:18 UTC] Response Headers: WpOrg\Requests\Utility\CaseInsensitiveDictionary Object
+(
+    [data:protected] => Array
+        (
+            [date] => Fri, 31 Oct 2025 02:53:17 GMT
+            [server] => Apache
+            [x-powered-by] => PHP/8.2.29
+            [expires] => Wed, 11 Jan 1984 05:00:00 GMT
+            [cache-control] => no-cache, must-revalidate, max-age=0, no-store, private
+            [upgrade] => h2,h2c
+            [content-encoding] => gzip
+            [content-length] => 131
+            [content-type] => application/json; charset=UTF-8
+        )
+
+)
+
+[31-Oct-2025 02:53:18 UTC] Response Body (raw): {"error":"Invalid License Key","code":"101","activated":false,"timestamp":1761879198,"sig":"24b0c2433eb8fa2170f57a0468501a21"}
+[31-Oct-2025 02:53:18 UTC] Parsed JSON data: Array
+(
+    [error] => Invalid License Key
+    [code] => 101
+    [activated] => 
+    [timestamp] => 1761879198
+    [sig] => 24b0c2433eb8fa2170f57a0468501a21
+)
+
+[31-Oct-2025 02:53:18 UTC] Pro activation response type: Array
+[31-Oct-2025 02:53:18 UTC] Pro activation response data: Array
+(
+    [error] => Invalid License Key
+    [code] => 101
+    [activated] => 
+    [timestamp] => 1761879198
+    [sig] => 24b0c2433eb8fa2170f57a0468501a21
+)
+
+[31-Oct-2025 02:53:18 UTC] === LICENSE ACTIVATION FAILED ===
+[31-Oct-2025 02:53:18 UTC] Error Message: Invalid License Key
+[31-Oct-2025 02:53:18 UTC] Error Code: 101
+[31-Oct-2025 02:53:18 UTC] Full API Response: Array
+(
+    [error] => Invalid License Key
+    [code] => 101
+    [activated] => 
+    [timestamp] => 1761879198
+    [sig] => 24b0c2433eb8fa2170f57a0468501a21
+)
+
+[31-Oct-2025 02:53:18 UTC] License Key Used: SFB-c79f1340-755e-47f7-a63f-25bbf0baa0a5
+[31-Oct-2025 02:53:18 UTC] Email Used: bonster11@gmail.com
+[31-Oct-2025 02:53:18 UTC] Product ID Used: 199

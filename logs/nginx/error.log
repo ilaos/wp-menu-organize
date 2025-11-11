@@ -16,3 +16,5 @@
 2025/08/30 14:43:13 [alert] 30176#29688: OpenEvent("ngx_master_13176") failed (2: The system cannot find the file specified)
 2025/09/06 11:42:31 [alert] 10260#11512: OpenEvent("ngx_master_5048") failed (2: The system cannot find the file specified)
 2025/10/08 16:49:26 [alert] 23216#17880: OpenEvent("ngx_master_8356") failed (2: The system cannot find the file specified)
+2025/10/14 21:44:45 [error] 22512#7180: *8682 WSARecv() failed (10054: An existing connection was forcibly closed by the remote host) while reading response header from upstream, client: 127.0.0.1, server: , request: "POST /wp-admin/admin-ajax.php HTTP/1.1", upstream: "fastcgi://127.0.0.1:10002", host: "my-playground.local", referrer: "http://my-playground.local/"
+2025/10/24 20:06:01 [alert] 23440#17532: OpenEvent("ngx_master_21556") failed (2: The system cannot find the file specified)

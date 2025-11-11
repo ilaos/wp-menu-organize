@@ -1,0 +1,4399 @@
+{
+  "ok": true,
+  "form": {
+    "id": 1,
+    "title": "Default Catalog",
+    "settings": {
+      "field_definitions": [
+        "Size",
+        "Flange",
+        "Thickness",
+        "KSI"
+      ]
+    }
+  },
+  "nodes": [
+    {
+      "id": "1",
+      "form_id": "1",
+      "parent_id": "0",
+      "node_type": "category",
+      "title": "Framing - Drywall - Non Structural",
+      "slug": "framing-drywall-non-structural",
+      "position": "1.00",
+      "settings": {
+        "note": ""
+      }
+    },
+    {
+      "id": "16",
+      "form_id": "1",
+      "parent_id": "1",
+      "node_type": "product",
+      "title": "25 Gauge 18 mil",
+      "slug": "25-gauge-18-mil",
+      "position": "1.00",
+      "settings": []
+    },
+    {
+      "id": "17",
+      "form_id": "1",
+      "parent_id": "16",
+      "node_type": "type",
+      "title": "1-1/4\" Flange",
+      "slug": "1-1-4-flange",
+      "position": "1.00",
+      "settings": []
+    },
+    {
+      "id": "19",
+      "form_id": "1",
+      "parent_id": "17",
+      "node_type": "model",
+      "title": "162S125-18",
+      "slug": "162s125-18",
+      "position": "1.00",
+      "settings": {
+        "fields": {
+          "Size": "1-5/8\"",
+          "Flange": "1-1/4\"",
+          "Thickness": "18 mils or 25G",
+          "KSI": "33"
+        },
+        "note": ""
+      }
+    },
+    {
+      "id": "28",
+      "form_id": "1",
+      "parent_id": "27",
+      "node_type": "type",
+      "title": "1-1/4\" Flange",
+      "slug": "1-1-4-flange",
+      "position": "1.00",
+      "settings": []
+    },
+    {
+      "id": "29",
+      "form_id": "1",
+      "parent_id": "28",
+      "node_type": "model",
+      "title": "162S125-30",
+      "slug": "162s125-30",
+      "position": "1.00",
+      "settings": {
+        "fields": {
+          "Size": "1-5/8\"",
+          "Flange": "1-1/4\"",
+          "Thickness": "30 mils or 20G",
+          "KSI": "33"
+        },
+        "note": ""
+      }
+    },
+    {
+      "id": "43",
+      "form_id": "1",
+      "parent_id": "42",
+      "node_type": "type",
+      "title": "1-1/4\" Flange",
+      "slug": "1-1-4-flange",
+      "position": "1.00",
+      "settings": []
+    },
+    {
+      "id": "44",
+      "form_id": "1",
+      "parent_id": "43",
+      "node_type": "model",
+      "title": "162S125-33",
+      "slug": "162s125-33",
+      "position": "1.00",
+      "settings": {
+        "fields": {
+          "Size": "1-5/8\"",
+          "Flange": "1-1/4\"",
+          "Thickness": "33 mils or 20G ST",
+          "KSI": "33"
+        },
+        "note": ""
+      }
+    },
+    {
+      "id": "58",
+      "form_id": "1",
+      "parent_id": "11",
+      "node_type": "product",
+      "title": "20 Gauge ST 33 mil",
+      "slug": "20-gauge-st-33-mil",
+      "position": "1.00",
+      "settings": {
+        "note": ""
+      }
+    },
+    {
+      "id": "59",
+      "form_id": "1",
+      "parent_id": "58",
+      "node_type": "type",
+      "title": "1-1/4\" Flange",
+      "slug": "1-1-4-flange",
+      "position": "1.00",
+      "settings": []
+    },
+    {
+      "id": "67",
+      "form_id": "1",
+      "parent_id": "59",
+      "node_type": "model",
+      "title": "250S137-33",
+      "slug": "250s137-33",
+      "position": "1.00",
+      "settings": {
+        "fields": {
+          "Size": "2-1/2\"",
+          "Flange": "1-3/8\"",
+          "Thickness": "33 mils or 20G ST",
+          "KSI": "33"
+        },
+        "note": ""
+      }
+    },
+    {
+      "id": "72",
+      "form_id": "1",
+      "parent_id": "61",
+      "node_type": "model",
+      "title": "362S250-33",
+      "slug": "362s250-33",
+      "position": "1.00",
+      "settings": {
+        "fields": {
+          "Size": "3-5/8\"",
+          "Flange": "2-1/2\"",
+          "Thickness": "33 mils or 20G ST",
+          "KSI": "33"
+        },
+        "note": ""
+      }
+    },
+    {
+      "id": "74",
+      "form_id": "1",
+      "parent_id": "62",
+      "node_type": "model",
+      "title": "362S400-33",
+      "slug": "362s400-33",
+      "position": "1.00",
+      "settings": {
+        "fields": {
+          "Size": "3-5/8\"",
+          "Flange": "4\"",
+          "Thickness": "33 mils or 20G ST",
+          "KSI": "33"
+        },
+        "note": ""
+      }
+    },
+    {
+      "id": "76",
+      "form_id": "1",
+      "parent_id": "63",
+      "node_type": "model",
+      "title": "250S162-33",
+      "slug": "250s162-33",
+      "position": "1.00",
+      "settings": {
+        "fields": {
+          "Size": "Size: 2-1/2\"",
+          "Flange": "1-5/8\"",
+          "Thickness": "33 mils or 20G ST",
+          "KSI": "33"
+        },
+        "note": ""
+      }
+    },
+    {
+      "id": "83",
+      "form_id": "1",
+      "parent_id": "64",
+      "node_type": "model",
+      "title": "362S300-33",
+      "slug": "362s300-33",
+      "position": "1.00",
+      "settings": {
+        "fields": {
+          "Size": "3-5/8\"",
+          "Flange": "3\"",
+          "Thickness": "33 mils or 20G ST",
+          "KSI": "33"
+        },
+        "note": ""
+      }
+    },
+    {
+      "id": "85",
+      "form_id": "1",
+      "parent_id": "65",
+      "node_type": "model",
+      "title": "362S200-33",
+      "slug": "362s200-33",
+      "position": "1.00",
+      "settings": {
+        "fields": {
+          "Size": "3-5/8\"",
+          "Flange": "2\"",
+          "Thickness": "33 mils or 20G ST",
+          "KSI": "33"
+        },
+        "note": ""
+      }
+    },
+    {
+      "id": "89",
+      "form_id": "1",
+      "parent_id": "66",
+      "node_type": "model",
+      "title": "362S350-33",
+      "slug": "362s350-33",
+      "position": "1.00",
+      "settings": {
+        "fields": {
+          "Size": "Size: 3-5/8\"",
+          "Flange": "3-1/2\"",
+          "Thickness": "33 mils or 20G ST",
+          "KSI": "33"
+        },
+        "note": ""
+      }
+    },
+    {
+      "id": "90",
+      "form_id": "1",
+      "parent_id": "12",
+      "node_type": "product",
+      "title": "25 Gauge 18 mil",
+      "slug": "25-gauge-18-mil",
+      "position": "1.00",
+      "settings": []
+    },
+    {
+      "id": "91",
+      "form_id": "1",
+      "parent_id": "90",
+      "node_type": "type",
+      "title": "1-1/4\" Flange",
+      "slug": "1-1-4-flange",
+      "position": "1.00",
+      "settings": {
+        "note": ""
+      }
+    },
+    {
+      "id": "92",
+      "form_id": "1",
+      "parent_id": "91",
+      "node_type": "model",
+      "title": "162T125-18",
+      "slug": "162t125-18",
+      "position": "1.00",
+      "settings": {
+        "fields": {
+          "Size": "1-5/8\"",
+          "Flange": "1-1/4\"",
+          "Thickness": "18 mils or 25G",
+          "KSI": "33"
+        },
+        "note": ""
+      }
+    },
+    {
+      "id": "99",
+      "form_id": "1",
+      "parent_id": "98",
+      "node_type": "model",
+      "title": "162T200-18",
+      "slug": "162t200-18",
+      "position": "1.00",
+      "settings": {
+        "fields": {
+          "Size": "1-5/8\"",
+          "Flange": "2\"",
+          "Thickness": "18 mils or 25G",
+          "KSI": "33"
+        },
+        "note": ""
+      }
+    },
+    {
+      "id": "111",
+      "form_id": "1",
+      "parent_id": "110",
+      "node_type": "model",
+      "title": "362T300-18",
+      "slug": "362t300-18",
+      "position": "1.00",
+      "settings": {
+        "fields": {
+          "Size": " 3-5/8\"",
+          "Flange": "3\"",
+          "Thickness": "18 mils or 25G",
+          "KSI": "33"
+        },
+        "note": ""
+      }
+    },
+    {
+      "id": "117",
+      "form_id": "1",
+      "parent_id": "13",
+      "node_type": "product",
+      "title": "25 Gauge 18 mil",
+      "slug": "25-gauge-18-mil",
+      "position": "1.00",
+      "settings": []
+    },
+    {
+      "id": "118",
+      "form_id": "1",
+      "parent_id": "117",
+      "node_type": "type",
+      "title": "2-1/2\" Flange",
+      "slug": "2-1-2-flange",
+      "position": "1.00",
+      "settings": []
+    },
+    {
+      "id": "119",
+      "form_id": "1",
+      "parent_id": "118",
+      "node_type": "model",
+      "title": "400T300-18",
+      "slug": "400t300-18",
+      "position": "1.00",
+      "settings": {
+        "fields": {
+          "Size": "2-1/2\"",
+          "Flange": "2-1/2\"",
+          "Thickness": "18 mils or 25G",
+          "KSI": "33"
+        },
+        "note": ""
+      }
+    },
+    {
+      "id": "124",
+      "form_id": "1",
+      "parent_id": "123",
+      "node_type": "type",
+      "title": "2-1/2\" Flange",
+      "slug": "2-1-2-flange",
+      "position": "1.00",
+      "settings": []
+    },
+    {
+      "id": "125",
+      "form_id": "1",
+      "parent_id": "124",
+      "node_type": "model",
+      "title": "250SLT250-30",
+      "slug": "250slt250-30",
+      "position": "1.00",
+      "settings": {
+        "fields": {
+          "Size": "2-1/2\"",
+          "Flange": "2-1/2\"",
+          "Thickness": "30 mils or 20G",
+          "KSI": "33"
+        },
+        "note": ""
+      }
+    },
+    {
+      "id": "138",
+      "form_id": "1",
+      "parent_id": "133",
+      "node_type": "model",
+      "title": "250SLT300-30",
+      "slug": "250slt300-30",
+      "position": "1.00",
+      "settings": {
+        "fields": {
+          "Size": "2-1/2\"",
+          "Flange": "3\"",
+          "Thickness": "30 mils or 20G",
+          "KSI": "33"
+        },
+        "note": ""
+      }
+    },
+    {
+      "id": "144",
+      "form_id": "1",
+      "parent_id": "143",
+      "node_type": "model",
+      "title": "250SLT350-30",
+      "slug": "250slt350-30",
+      "position": "1.00",
+      "settings": {
+        "fields": {
+          "Size": "2-1/2\"",
+          "Flange": "3-1/2\"",
+          "Thickness": "30 mils or 20G",
+          "KSI": "33"
+        },
+        "note": ""
+      }
+    },
+    {
+      "id": "154",
+      "form_id": "1",
+      "parent_id": "153",
+      "node_type": "type",
+      "title": "2-1/2\" Flange",
+      "slug": "2-1-2-flange",
+      "position": "1.00",
+      "settings": []
+    },
+    {
+      "id": "155",
+      "form_id": "1",
+      "parent_id": "154",
+      "node_type": "model",
+      "title": "250SLT250-33",
+      "slug": "250slt250-33",
+      "position": "1.00",
+      "settings": {
+        "fields": {
+          "Size": "2-1/2\"",
+          "Flange": "2-1/2\"",
+          "Thickness": "33 mils or 20G ST",
+          "KSI": "33"
+        },
+        "note": ""
+      }
+    },
+    {
+      "id": "161",
+      "form_id": "1",
+      "parent_id": "160",
+      "node_type": "model",
+      "title": "250SLT300-33",
+      "slug": "250slt300-33",
+      "position": "1.00",
+      "settings": {
+        "fields": {
+          "Size": "2-1/2\"",
+          "Flange": "3\"",
+          "Thickness": "33 mils or 20G ST",
+          "KSI": "33"
+        },
+        "note": ""
+      }
+    },
+    {
+      "id": "167",
+      "form_id": "1",
+      "parent_id": "166",
+      "node_type": "model",
+      "title": "250SLT350-33",
+      "slug": "250slt350-33",
+      "position": "1.00",
+      "settings": {
+        "fields": {
+          "Size": "2-1/2\"",
+          "Flange": "3-1/2\"",
+          "Thickness": "33 mils or 20G ST",
+          "KSI": "33"
+        },
+        "note": ""
+      }
+    },
+    {
+      "id": "185",
+      "form_id": "1",
+      "parent_id": "184",
+      "node_type": "type",
+      "title": "2-1/2\" Flange",
+      "slug": "2-1-2-flange",
+      "position": "1.00",
+      "settings": {
+        "note": "",
+        "field_configs": [
+          {
+            "name": "Size",
+            "type": "text"
+          },
+          {
+            "name": "Flange",
+            "type": "text"
+          },
+          {
+            "name": "Thickness",
+            "type": "text"
+          },
+          {
+            "name": "KSI",
+            "type": "select",
+            "options": [
+              "33",
+              "50"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "186",
+      "form_id": "1",
+      "parent_id": "185",
+      "node_type": "model",
+      "title": "250SLT250-43",
+      "slug": "250slt250-43",
+      "position": "1.00",
+      "settings": {
+        "fields": {
+          "Size": "2-1/2\"",
+          "Flange": "2-1/2\"",
+          "Thickness": "43 mils or 18",
+          "KSI": "33 or 50 (please circle)"
+        },
+        "note": ""
+      }
+    },
+    {
+      "id": "192",
+      "form_id": "1",
+      "parent_id": "191",
+      "node_type": "model",
+      "title": "250SLT350-43",
+      "slug": "250slt350-43",
+      "position": "1.00",
+      "settings": {
+        "fields": {
+          "Size": "2-1/2\"",
+          "Flange": "3-1/2\"",
+          "Thickness": "43 mils or 18",
+          "KSI": ""
+        },
+        "note": ""
+      }
+    },
+    {
+      "id": "198",
+      "form_id": "1",
+      "parent_id": "197",
+      "node_type": "model",
+      "title": "250SLT350-33",
+      "slug": "250slt350-33",
+      "position": "1.00",
+      "settings": {
+        "fields": {
+          "Size": "2-1/2\"",
+          "Flange": "3-1/2\"",
+          "Thickness": "43 mils or 18",
+          "KSI": "33"
+        },
+        "note": ""
+      }
+    },
+    {
+      "id": "215",
+      "form_id": "1",
+      "parent_id": "214",
+      "node_type": "type",
+      "title": "2-1/2\" Flange",
+      "slug": "2-1-2-flange",
+      "position": "1.00",
+      "settings": {
+        "note": "",
+        "field_configs": [
+          {
+            "name": "Size",
+            "type": "text"
+          },
+          {
+            "name": "Flange",
+            "type": "text"
+          },
+          {
+            "name": "Thickness",
+            "type": "text"
+          },
+          {
+            "name": "KSI",
+            "type": "text"
+          }
+        ]
+      }
+    },
+    {
+      "id": "216",
+      "form_id": "1",
+      "parent_id": "215",
+      "node_type": "model",
+      "title": "250SLT250-54",
+      "slug": "250slt250-54",
+      "position": "1.00",
+      "settings": {
+        "fields": {
+          "Size": "2-1/2\"",
+          "Flange": "2-1/2\"",
+          "Thickness": "54 mils or 16G",
+          "KSI": "50"
+        },
+        "note": ""
+      }
+    },
+    {
+      "id": "231",
+      "form_id": "1",
+      "parent_id": "230",
+      "node_type": "model",
+      "title": "250SLT350-54",
+      "slug": "250slt350-54",
+      "position": "1.00",
+      "settings": {
+        "fields": {
+          "Size": "2-1/2\"",
+          "Flange": "3-1/2\"",
+          "Thickness": "54 mils or 16G",
+          "KSI": "50"
+        },
+        "note": ""
+      }
+    },
+    {
+      "id": "232",
+      "form_id": "1",
+      "parent_id": "197",
+      "node_type": "model",
+      "title": "362SLT350-43",
+      "slug": "362slt350-43",
+      "position": "1.00",
+      "settings": {
+        "fields": {
+          "Size": "3-5/8\"",
+          "Flange": "3-1/2\"",
+          "Thickness": "43 mils or 18",
+          "KSI": ""
+        },
+        "note": ""
+      }
+    },
+    {
+      "id": "260",
+      "form_id": "1",
+      "parent_id": "222",
+      "node_type": "model",
+      "title": "250SLT300-54",
+      "slug": "250slt300-54",
+      "position": "1.00",
+      "settings": {
+        "fields": {
+          "Size": "2-1/2\"",
+          "Flange": "3\"",
+          "Thickness": "54 mils or 16G",
+          "KSI": "50"
+        },
+        "note": ""
+      }
+    },
+    {
+      "id": "295",
+      "form_id": "1",
+      "parent_id": "294",
+      "node_type": "type",
+      "title": "2-1/2\" Flange",
+      "slug": "2-1-2-flange",
+      "position": "1.00",
+      "settings": {
+        "note": "",
+        "field_configs": [
+          {
+            "name": "Size",
+            "type": "text"
+          },
+          {
+            "name": "Flange",
+            "type": "text"
+          },
+          {
+            "name": "Thickness",
+            "type": "text"
+          },
+          {
+            "name": "KSI",
+            "type": "text"
+          }
+        ]
+      }
+    },
+    {
+      "id": "296",
+      "form_id": "1",
+      "parent_id": "295",
+      "node_type": "model",
+      "title": "250SLT250-68",
+      "slug": "250slt250-68",
+      "position": "1.00",
+      "settings": {
+        "fields": {
+          "Size": "2-1/2\"",
+          "Flange": "2-1/2\"",
+          "Thickness": "68 mils or 14G",
+          "KSI": "50"
+        },
+        "note": ""
+      }
+    },
+    {
+      "id": "303",
+      "form_id": "1",
+      "parent_id": "302",
+      "node_type": "model",
+      "title": "250SLT300-68",
+      "slug": "250slt300-68",
+      "position": "1.00",
+      "settings": {
+        "fields": {
+          "Size": "2-1/2\"",
+          "Flange": "3\"",
+          "Thickness": "68 mils or 14G",
+          "KSI": "50"
+        },
+        "note": ""
+      }
+    },
+    {
+      "id": "310",
+      "form_id": "1",
+      "parent_id": "309",
+      "node_type": "model",
+      "title": "250SLT350-68",
+      "slug": "250slt350-68",
+      "position": "1.00",
+      "settings": {
+        "fields": {
+          "Size": "2-1/2\"",
+          "Flange": "3-1/2\"",
+          "Thickness": "68 mils or 14G",
+          "KSI": "50"
+        },
+        "note": ""
+      }
+    },
+    {
+      "id": "445",
+      "form_id": "1",
+      "parent_id": "331",
+      "node_type": "product",
+      "title": "EQ Studs",
+      "slug": "eq-studs",
+      "position": "1.00",
+      "settings": {
+        "note": ""
+      }
+    },
+    {
+      "id": "446",
+      "form_id": "1",
+      "parent_id": "445",
+      "node_type": "type",
+      "title": "20 EQ PrimeWall Stud 19/21 mil",
+      "slug": "20-eq-primewall-stud-19-21-mil",
+      "position": "1.00",
+      "settings": {
+        "note": "",
+        "field_configs": [
+          {
+            "name": "Size",
+            "type": "text"
+          },
+          {
+            "name": "Flange",
+            "type": "text"
+          },
+          {
+            "name": "Thickness",
+            "type": "text"
+          },
+          {
+            "name": "KSI",
+            "type": "text"
+          }
+        ]
+      }
+    },
+    {
+      "id": "447",
+      "form_id": "1",
+      "parent_id": "446",
+      "node_type": "subtype",
+      "title": "1-11/32\" Flange",
+      "slug": "1-11-32-flange",
+      "position": "1.00",
+      "settings": []
+    },
+    {
+      "id": "448",
+      "form_id": "1",
+      "parent_id": "447",
+      "node_type": "model",
+      "title": "162PWS134-21",
+      "slug": "162pws134-21",
+      "position": "1.00",
+      "settings": {
+        "fields": {
+          "Size": "1-5/8\"",
+          "Flange": "1-11/32\"",
+          "Thickness": "21 mils or 20 EQ",
+          "KSI": "55"
+        },
+        "note": ""
+      }
+    },
+    {
+      "id": "460",
+      "form_id": "1",
+      "parent_id": "459",
+      "node_type": "subtype",
+      "title": "1-1/4\" Flange",
+      "slug": "1-1-4-flange",
+      "position": "1.00",
+      "settings": {
+        "note": "",
+        "field_configs": [
+          {
+            "name": "Size",
+            "type": "text"
+          },
+          {
+            "name": "Flange",
+            "type": "text"
+          },
+          {
+            "name": "Thickness",
+            "type": "text"
+          },
+          {
+            "name": "KSI",
+            "type": "text"
+          }
+        ]
+      }
+    },
+    {
+      "id": "461",
+      "form_id": "1",
+      "parent_id": "460",
+      "node_type": "model",
+      "title": "162SES125-27",
+      "slug": "162ses125-27",
+      "position": "1.00",
+      "settings": {
+        "fields": {
+          "Size": "1-5/8\"",
+          "Flange": "1-1/4\"",
+          "Thickness": "27 mils or 20 EQ",
+          "KSI": "43"
+        },
+        "note": ""
+      }
+    },
+    {
+      "id": "479",
+      "form_id": "1",
+      "parent_id": "478",
+      "node_type": "type",
+      "title": "20 EQ PrimeWall Track 19 mil",
+      "slug": "20-eq-primewall-track-19-mil",
+      "position": "1.00",
+      "settings": {
+        "note": "",
+        "field_configs": [
+          {
+            "name": "Size",
+            "type": "text"
+          },
+          {
+            "name": "Flange",
+            "type": "text"
+          },
+          {
+            "name": "Thickness",
+            "type": "text"
+          },
+          {
+            "name": "KSI",
+            "type": "text"
+          }
+        ]
+      }
+    },
+    {
+      "id": "480",
+      "form_id": "1",
+      "parent_id": "479",
+      "node_type": "subtype",
+      "title": "1-1/4\" Flange",
+      "slug": "1-1-4-flange",
+      "position": "1.00",
+      "settings": {
+        "note": "",
+        "field_configs": [
+          {
+            "name": "Size",
+            "type": "text"
+          },
+          {
+            "name": "Flange",
+            "type": "text"
+          },
+          {
+            "name": "Thickness",
+            "type": "text"
+          },
+          {
+            "name": "KSI",
+            "type": "text"
+          }
+        ]
+      }
+    },
+    {
+      "id": "481",
+      "form_id": "1",
+      "parent_id": "480",
+      "node_type": "model",
+      "title": "162PWS134-21",
+      "slug": "162pws134-21",
+      "position": "1.00",
+      "settings": {
+        "fields": {
+          "Size": "1-5/8\"",
+          "Flange": "1-11/32\"",
+          "Thickness": "21 mils or 20 EQ",
+          "KSI": "55"
+        },
+        "note": ""
+      }
+    },
+    {
+      "id": "487",
+      "form_id": "1",
+      "parent_id": "486",
+      "node_type": "subtype",
+      "title": "1-1/4\" Flange",
+      "slug": "1-1-4-flange",
+      "position": "1.00",
+      "settings": {
+        "note": "",
+        "field_configs": [
+          {
+            "name": "Size",
+            "type": "text"
+          },
+          {
+            "name": "Flange",
+            "type": "text"
+          },
+          {
+            "name": "Thickness",
+            "type": "text"
+          },
+          {
+            "name": "KSI",
+            "type": "text"
+          }
+        ]
+      }
+    },
+    {
+      "id": "488",
+      "form_id": "1",
+      "parent_id": "487",
+      "node_type": "model",
+      "title": "162SET125-27",
+      "slug": "162set125-27",
+      "position": "1.00",
+      "settings": {
+        "fields": {
+          "Size": "1-5/8\"",
+          "Flange": "1-1/4\"",
+          "Thickness": "27 mils or 20 EQ",
+          "KSI": "43"
+        },
+        "note": ""
+      }
+    },
+    {
+      "id": "500",
+      "form_id": "1",
+      "parent_id": "499",
+      "node_type": "model",
+      "title": "162SET200-27",
+      "slug": "162set200-27",
+      "position": "1.00",
+      "settings": {
+        "fields": {
+          "Size": "1-5/8\"",
+          "Flange": "2\"",
+          "Thickness": "27 mils or 20 EQ",
+          "KSI": "43"
+        },
+        "note": ""
+      }
+    },
+    {
+      "id": "508",
+      "form_id": "1",
+      "parent_id": "507",
+      "node_type": "model",
+      "title": "350SET300-27",
+      "slug": "350set300-27",
+      "position": "1.00",
+      "settings": {
+        "fields": {
+          "Size": "3-1/2\"",
+          "Flange": "3\"",
+          "Thickness": "27 mils or 20 EQ",
+          "KSI": "43"
+        },
+        "note": ""
+      }
+    },
+    {
+      "id": "516",
+      "form_id": "1",
+      "parent_id": "515",
+      "node_type": "product",
+      "title": "Angle",
+      "slug": "angle",
+      "position": "1.00",
+      "settings": []
+    },
+    {
+      "id": "11",
+      "form_id": "1",
+      "parent_id": "0",
+      "node_type": "category",
+      "title": "Framing - Structural / Curtainwall",
+      "slug": "framing-structural-curtainwall",
+      "position": "2.00",
+      "settings": {
+        "note": ""
+      }
+    },
+    {
+      "id": "20",
+      "form_id": "1",
+      "parent_id": "17",
+      "node_type": "model",
+      "title": "250S125-18",
+      "slug": "250s125-18",
+      "position": "2.00",
+      "settings": {
+        "fields": {
+          "Size": "2-1/2\"",
+          "Flange": "1-1/4\"",
+          "Thickness": "18 mils or 25G",
+          "KSI": "33"
+        },
+        "note": ""
+      }
+    },
+    {
+      "id": "27",
+      "form_id": "1",
+      "parent_id": "1",
+      "node_type": "product",
+      "title": "20 Gauge 30 mil",
+      "slug": "20-gauge-30-mil",
+      "position": "2.00",
+      "settings": []
+    },
+    {
+      "id": "30",
+      "form_id": "1",
+      "parent_id": "28",
+      "node_type": "model",
+      "title": "250S125-30",
+      "slug": "250s125-30",
+      "position": "2.00",
+      "settings": {
+        "fields": {
+          "Size": "2-1/2\"",
+          "Flange": "1-1/4\"",
+          "Thickness": "30 mils or 20G",
+          "KSI": "33"
+        },
+        "note": ""
+      }
+    },
+    {
+      "id": "51",
+      "form_id": "1",
+      "parent_id": "43",
+      "node_type": "model",
+      "title": "250S125-33",
+      "slug": "250s125-33",
+      "position": "2.00",
+      "settings": {
+        "fields": {
+          "Size": "2-1/2\"",
+          "Flange": "1-1/4\"",
+          "Thickness": "33 mils or 20G ST",
+          "KSI": "33"
+        },
+        "note": ""
+      }
+    },
+    {
+      "id": "61",
+      "form_id": "1",
+      "parent_id": "58",
+      "node_type": "type",
+      "title": "2-1/2\" Flange",
+      "slug": "2-1-2-flange",
+      "position": "2.00",
+      "settings": {
+        "note": ""
+      }
+    },
+    {
+      "id": "68",
+      "form_id": "1",
+      "parent_id": "59",
+      "node_type": "model",
+      "title": "362S137-33",
+      "slug": "362s137-33",
+      "position": "2.00",
+      "settings": {
+        "fields": {
+          "Size": "3-5/8\"",
+          "Flange": "1-3/8\"",
+          "Thickness": "33 mils or 20G ST",
+          "KSI": "33"
+        },
+        "note": ""
+      }
+    },
+    {
+      "id": "73",
+      "form_id": "1",
+      "parent_id": "61",
+      "node_type": "model",
+      "title": "400S250-33",
+      "slug": "400s250-33",
+      "position": "2.00",
+      "settings": {
+        "fields": {
+          "Size": "4\"",
+          "Flange": "2-1/2\"",
+          "Thickness": "33 mils or 20G ST",
+          "KSI": "33"
+        },
+        "note": ""
+      }
+    },
+    {
+      "id": "75",
+      "form_id": "1",
+      "parent_id": "62",
+      "node_type": "model",
+      "title": "600S400-33",
+      "slug": "600s400-33",
+      "position": "2.00",
+      "settings": {
+        "fields": {
+          "Size": "6\"",
+          "Flange": "4\"",
+          "Thickness": "33 mils or 20G ST",
+          "KSI": "33"
+        },
+        "note": ""
+      }
+    },
+    {
+      "id": "77",
+      "form_id": "1",
+      "parent_id": "63",
+      "node_type": "model",
+      "title": "350S162-33",
+      "slug": "350s162-33",
+      "position": "2.00",
+      "settings": {
+        "fields": {
+          "Size": "3-1/2\"",
+          "Flange": "1-5/8\"",
+          "Thickness": "33 mils or 20G ST",
+          "KSI": "33"
+        },
+        "note": ""
+      }
+    },
+    {
+      "id": "84",
+      "form_id": "1",
+      "parent_id": "64",
+      "node_type": "model",
+      "title": "400S300-33",
+      "slug": "400s300-33",
+      "position": "2.00",
+      "settings": {
+        "fields": {
+          "Size": "4\"",
+          "Flange": "3\"",
+          "Thickness": "33 mils or 20G ST",
+          "KSI": "33"
+        },
+        "note": ""
+      }
+    },
+    {
+      "id": "86",
+      "form_id": "1",
+      "parent_id": "65",
+      "node_type": "model",
+      "title": "400S200-33",
+      "slug": "400s200-33",
+      "position": "2.00",
+      "settings": {
+        "fields": {
+          "Size": "4\"",
+          "Flange": "2\"",
+          "Thickness": "33 mils or 20G ST",
+          "KSI": "33"
+        },
+        "note": ""
+      }
+    },
+    {
+      "id": "93",
+      "form_id": "1",
+      "parent_id": "91",
+      "node_type": "model",
+      "title": "250T125-18",
+      "slug": "250t125-18",
+      "position": "2.00",
+      "settings": {
+        "fields": {
+          "Size": "2-1/2\"",
+          "Flange": "1-1/4\"",
+          "Thickness": "18 mils or 25G",
+          "KSI": "33"
+        },
+        "note": ""
+      }
+    },
+    {
+      "id": "98",
+      "form_id": "1",
+      "parent_id": "90",
+      "node_type": "type",
+      "title": "2\" Flange",
+      "slug": "2-flange",
+      "position": "2.00",
+      "settings": {
+        "note": ""
+      }
+    },
+    {
+      "id": "105",
+      "form_id": "1",
+      "parent_id": "98",
+      "node_type": "model",
+      "title": "250T200-18",
+      "slug": "250t200-18",
+      "position": "2.00",
+      "settings": {
+        "fields": {
+          "Size": "2-1/2\"",
+          "Flange": "2\"",
+          "Thickness": "18 mils or 25G",
+          "KSI": "33"
+        },
+        "note": ""
+      }
+    },
+    {
+      "id": "116",
+      "form_id": "1",
+      "parent_id": "110",
+      "node_type": "model",
+      "title": "400T300-18",
+      "slug": "400t300-18",
+      "position": "2.00",
+      "settings": {
+        "fields": {
+          "Size": "4\"",
+          "Flange": "3\"",
+          "Thickness": "18 mils or 25G",
+          "KSI": "33"
+        },
+        "note": ""
+      }
+    },
+    {
+      "id": "120",
+      "form_id": "1",
+      "parent_id": "118",
+      "node_type": "model",
+      "title": "362SLT250-18",
+      "slug": "362slt250-18",
+      "position": "2.00",
+      "settings": {
+        "fields": {
+          "Size": "3-5/8\"",
+          "Flange": "2-1/2\"",
+          "Thickness": "18 mils or 25G",
+          "KSI": "33"
+        },
+        "note": ""
+      }
+    },
+    {
+      "id": "123",
+      "form_id": "1",
+      "parent_id": "13",
+      "node_type": "product",
+      "title": "20 Gauge 30 mil",
+      "slug": "20-gauge-30-mil",
+      "position": "2.00",
+      "settings": {
+        "note": ""
+      }
+    },
+    {
+      "id": "129",
+      "form_id": "1",
+      "parent_id": "124",
+      "node_type": "model",
+      "title": "362SLT250-30",
+      "slug": "362slt250-30",
+      "position": "2.00",
+      "settings": {
+        "fields": {
+          "Size": "3-5/8\"",
+          "Flange": "2-1/2\"",
+          "Thickness": "30 mils or 20G",
+          "KSI": "33"
+        },
+        "note": ""
+      }
+    },
+    {
+      "id": "133",
+      "form_id": "1",
+      "parent_id": "123",
+      "node_type": "type",
+      "title": "3\" Flange",
+      "slug": "3-flange",
+      "position": "2.00",
+      "settings": {
+        "note": ""
+      }
+    },
+    {
+      "id": "139",
+      "form_id": "1",
+      "parent_id": "133",
+      "node_type": "model",
+      "title": "362SLT300-30",
+      "slug": "362slt300-30",
+      "position": "2.00",
+      "settings": {
+        "fields": {
+          "Size": "3-5/8\"",
+          "Flange": "3\"",
+          "Thickness": "30 mils or 20G",
+          "KSI": "33"
+        },
+        "note": ""
+      }
+    },
+    {
+      "id": "149",
+      "form_id": "1",
+      "parent_id": "143",
+      "node_type": "model",
+      "title": "362SLT350-30",
+      "slug": "362slt350-30",
+      "position": "2.00",
+      "settings": {
+        "fields": {
+          "Size": "3-5/8\"",
+          "Flange": "3-1/2\"",
+          "Thickness": "30 mils or 20G",
+          "KSI": "33"
+        },
+        "note": ""
+      }
+    },
+    {
+      "id": "160",
+      "form_id": "1",
+      "parent_id": "153",
+      "node_type": "type",
+      "title": "3\" Flange",
+      "slug": "3-flange",
+      "position": "2.00",
+      "settings": {
+        "note": ""
+      }
+    },
+    {
+      "id": "172",
+      "form_id": "1",
+      "parent_id": "154",
+      "node_type": "model",
+      "title": "362SLT250-33",
+      "slug": "362slt250-33",
+      "position": "2.00",
+      "settings": {
+        "fields": {
+          "Size": "3-5/8\"",
+          "Flange": "2-1/2\"",
+          "Thickness": "33 mils or 20G ST",
+          "KSI": "33"
+        },
+        "note": ""
+      }
+    },
+    {
+      "id": "176",
+      "form_id": "1",
+      "parent_id": "160",
+      "node_type": "model",
+      "title": "362SLT300-33",
+      "slug": "362slt300-33",
+      "position": "2.00",
+      "settings": {
+        "fields": {
+          "Size": "3-5/8\"",
+          "Flange": "3\"",
+          "Thickness": "33 mils or 20G ST",
+          "KSI": "33"
+        },
+        "note": ""
+      }
+    },
+    {
+      "id": "180",
+      "form_id": "1",
+      "parent_id": "166",
+      "node_type": "model",
+      "title": "362SLT350-33",
+      "slug": "362slt350-33",
+      "position": "2.00",
+      "settings": {
+        "fields": {
+          "Size": "3-5/8\"",
+          "Flange": "3-1/2\"",
+          "Thickness": "33 mils or 20G ST",
+          "KSI": "33"
+        },
+        "note": ""
+      }
+    },
+    {
+      "id": "191",
+      "form_id": "1",
+      "parent_id": "184",
+      "node_type": "type",
+      "title": "3\" Flange",
+      "slug": "3-flange",
+      "position": "2.00",
+      "settings": {
+        "note": "",
+        "field_configs": [
+          {
+            "name": "Size",
+            "type": "text"
+          },
+          {
+            "name": "Flange",
+            "type": "text"
+          },
+          {
+            "name": "Thickness",
+            "type": "text"
+          },
+          {
+            "name": "KSI",
+            "type": "text"
+          }
+        ]
+      }
+    },
+    {
+      "id": "203",
+      "form_id": "1",
+      "parent_id": "185",
+      "node_type": "model",
+      "title": "362SLT250-43",
+      "slug": "362slt250-43",
+      "position": "2.00",
+      "settings": {
+        "fields": {
+          "Size": "3-5/8\"",
+          "Flange": "2-1/2\"",
+          "Thickness": "43 mils or 18",
+          "KSI": "33 or 50 (please circle)"
+        },
+        "note": ""
+      }
+    },
+    {
+      "id": "208",
+      "form_id": "1",
+      "parent_id": "191",
+      "node_type": "model",
+      "title": "362SLT350-43",
+      "slug": "362slt350-43",
+      "position": "2.00",
+      "settings": {
+        "fields": {
+          "Size": " 3-5/8\"",
+          "Flange": "3-1/2\"",
+          "Thickness": "43 mils or 18",
+          "KSI": ""
+        },
+        "note": ""
+      }
+    },
+    {
+      "id": "222",
+      "form_id": "1",
+      "parent_id": "214",
+      "node_type": "type",
+      "title": "3\" Flange",
+      "slug": "3-flange",
+      "position": "2.00",
+      "settings": {
+        "note": "",
+        "field_configs": [
+          {
+            "name": "Size",
+            "type": "text"
+          },
+          {
+            "name": "Flange",
+            "type": "text"
+          },
+          {
+            "name": "Thickness",
+            "type": "text"
+          },
+          {
+            "name": "KSI",
+            "type": "text"
+          }
+        ]
+      }
+    },
+    {
+      "id": "233",
+      "form_id": "1",
+      "parent_id": "197",
+      "node_type": "model",
+      "title": "400SLT350-43",
+      "slug": "400slt350-43",
+      "position": "2.00",
+      "settings": {
+        "fields": {
+          "Size": " 4\"",
+          "Flange": "3-1/2\"",
+          "Thickness": "43 mils or 18",
+          "KSI": ""
+        },
+        "note": ""
+      }
+    },
+    {
+      "id": "246",
+      "form_id": "1",
+      "parent_id": "215",
+      "node_type": "model",
+      "title": "362SLT250-54",
+      "slug": "362slt250-54",
+      "position": "2.00",
+      "settings": {
+        "fields": {
+          "Size": "3-5/8\"",
+          "Flange": "2-1/2\"",
+          "Thickness": "54 mils or 16G",
+          "KSI": "50"
+        },
+        "note": ""
+      }
+    },
+    {
+      "id": "261",
+      "form_id": "1",
+      "parent_id": "230",
+      "node_type": "model",
+      "title": "362SLT350-54",
+      "slug": "362slt350-54",
+      "position": "2.00",
+      "settings": {
+        "fields": {
+          "Size": "3-5/8\"",
+          "Flange": "3-1/2\"",
+          "Thickness": "54 mils or 16G",
+          "KSI": "50"
+        },
+        "note": ""
+      }
+    },
+    {
+      "id": "262",
+      "form_id": "1",
+      "parent_id": "222",
+      "node_type": "model",
+      "title": "362SLT300-54",
+      "slug": "362slt300-54",
+      "position": "2.00",
+      "settings": {
+        "fields": {
+          "Size": "3-5/8\"",
+          "Flange": "3\"",
+          "Thickness": "54 mils or 16G",
+          "KSI": "50"
+        },
+        "note": ""
+      }
+    },
+    {
+      "id": "302",
+      "form_id": "1",
+      "parent_id": "294",
+      "node_type": "type",
+      "title": "3\" Flange",
+      "slug": "3-flange",
+      "position": "2.00",
+      "settings": {
+        "note": "",
+        "field_configs": [
+          {
+            "name": "Size",
+            "type": "text"
+          },
+          {
+            "name": "Flange",
+            "type": "text"
+          },
+          {
+            "name": "Thickness",
+            "type": "text"
+          },
+          {
+            "name": "KSI",
+            "type": "text"
+          }
+        ]
+      }
+    },
+    {
+      "id": "316",
+      "form_id": "1",
+      "parent_id": "295",
+      "node_type": "model",
+      "title": "362SLT250-68",
+      "slug": "362slt250-68",
+      "position": "2.00",
+      "settings": {
+        "fields": {
+          "Size": "3-5/8\"",
+          "Flange": "2-1/2\"",
+          "Thickness": "68 mils or 14G",
+          "KSI": "50"
+        },
+        "note": ""
+      }
+    },
+    {
+      "id": "321",
+      "form_id": "1",
+      "parent_id": "302",
+      "node_type": "model",
+      "title": "362SLT300-68",
+      "slug": "362slt300-68",
+      "position": "2.00",
+      "settings": {
+        "fields": {
+          "Size": "3-5/8\"",
+          "Flange": "3\"",
+          "Thickness": "68 mils or 14G",
+          "KSI": "50"
+        },
+        "note": ""
+      }
+    },
+    {
+      "id": "326",
+      "form_id": "1",
+      "parent_id": "309",
+      "node_type": "model",
+      "title": "362SLT350-68",
+      "slug": "362slt350-68",
+      "position": "2.00",
+      "settings": {
+        "fields": {
+          "Size": "3-5/8\"",
+          "Flange": "3-1/2\"",
+          "Thickness": "68 mils or 14G",
+          "KSI": "50"
+        },
+        "note": ""
+      }
+    },
+    {
+      "id": "449",
+      "form_id": "1",
+      "parent_id": "447",
+      "node_type": "model",
+      "title": "250PWS134-19",
+      "slug": "250pws134-19",
+      "position": "2.00",
+      "settings": {
+        "fields": {
+          "Size": "2-1/2\"",
+          "Flange": "1-11/32\"",
+          "Thickness": "19 mils or 20 EQ",
+          "KSI": "55"
+        },
+        "note": ""
+      }
+    },
+    {
+      "id": "459",
+      "form_id": "1",
+      "parent_id": "445",
+      "node_type": "type",
+      "title": "20 EQ Smart Stud 27 mil",
+      "slug": "20-eq-smart-stud-27-mil",
+      "position": "2.00",
+      "settings": {
+        "note": "",
+        "field_configs": [
+          {
+            "name": "Size",
+            "type": "text"
+          },
+          {
+            "name": "Flange",
+            "type": "text"
+          },
+          {
+            "name": "Thickness",
+            "type": "text"
+          },
+          {
+            "name": "KSI",
+            "type": "text"
+          }
+        ]
+      }
+    },
+    {
+      "id": "472",
+      "form_id": "1",
+      "parent_id": "460",
+      "node_type": "model",
+      "title": "250SES125-27",
+      "slug": "250ses125-27",
+      "position": "2.00",
+      "settings": {
+        "fields": {
+          "Size": "2-1/2\"",
+          "Flange": "1-1/4\"",
+          "Thickness": "27 mils or 20 EQ",
+          "KSI": "43"
+        },
+        "note": ""
+      }
+    },
+    {
+      "id": "478",
+      "form_id": "1",
+      "parent_id": "331",
+      "node_type": "product",
+      "title": "EQ Tracks",
+      "slug": "eq-tracks",
+      "position": "2.00",
+      "settings": {
+        "note": ""
+      }
+    },
+    {
+      "id": "482",
+      "form_id": "1",
+      "parent_id": "480",
+      "node_type": "model",
+      "title": "250PWS134-19",
+      "slug": "250pws134-19",
+      "position": "2.00",
+      "settings": {
+        "fields": {
+          "Size": "2-1/2\"",
+          "Flange": "1-11/32\"",
+          "Thickness": "19 mils or 20 EQ",
+          "KSI": "55"
+        },
+        "note": ""
+      }
+    },
+    {
+      "id": "486",
+      "form_id": "1",
+      "parent_id": "478",
+      "node_type": "type",
+      "title": "20 EQ Smart Stud 27 mil",
+      "slug": "20-eq-smart-stud-27-mil",
+      "position": "2.00",
+      "settings": {
+        "note": "",
+        "field_configs": [
+          {
+            "name": "Size",
+            "type": "text"
+          },
+          {
+            "name": "Flange",
+            "type": "text"
+          },
+          {
+            "name": "Thickness",
+            "type": "text"
+          },
+          {
+            "name": "KSI",
+            "type": "text"
+          }
+        ]
+      }
+    },
+    {
+      "id": "494",
+      "form_id": "1",
+      "parent_id": "487",
+      "node_type": "model",
+      "title": "250SET125-27",
+      "slug": "250set125-27",
+      "position": "2.00",
+      "settings": {
+        "fields": {
+          "Size": "2-1/2\"",
+          "Flange": "1-1/4\"",
+          "Thickness": "27 mils or 20 EQ",
+          "KSI": "43"
+        },
+        "note": ""
+      }
+    },
+    {
+      "id": "499",
+      "form_id": "1",
+      "parent_id": "486",
+      "node_type": "subtype",
+      "title": "2\" Flange",
+      "slug": "2-flange",
+      "position": "2.00",
+      "settings": {
+        "note": "",
+        "field_configs": [
+          {
+            "name": "Size",
+            "type": "text"
+          },
+          {
+            "name": "Flange",
+            "type": "text"
+          },
+          {
+            "name": "Thickness",
+            "type": "text"
+          },
+          {
+            "name": "KSI",
+            "type": "text"
+          }
+        ]
+      }
+    },
+    {
+      "id": "501",
+      "form_id": "1",
+      "parent_id": "499",
+      "node_type": "model",
+      "title": "250SET200-27",
+      "slug": "250set200-27",
+      "position": "2.00",
+      "settings": {
+        "fields": {
+          "Size": "2-1/2\"",
+          "Flange": "2\"",
+          "Thickness": "27 mils or 20 EQ",
+          "KSI": "43"
+        },
+        "note": ""
+      }
+    },
+    {
+      "id": "509",
+      "form_id": "1",
+      "parent_id": "507",
+      "node_type": "model",
+      "title": "362SET300-27",
+      "slug": "362set300-27",
+      "position": "2.00",
+      "settings": {
+        "fields": {
+          "Size": " 3-5/8\"",
+          "Flange": "3\"",
+          "Thickness": "27 mils or 20 EQ",
+          "KSI": "43"
+        },
+        "note": ""
+      }
+    },
+    {
+      "id": "517",
+      "form_id": "1",
+      "parent_id": "515",
+      "node_type": "product",
+      "title": "Flat Strapping",
+      "slug": "flat-strapping",
+      "position": "2.00",
+      "settings": {
+        "note": ""
+      }
+    },
+    {
+      "id": "12",
+      "form_id": "1",
+      "parent_id": "0",
+      "node_type": "category",
+      "title": "Standard Tracks",
+      "slug": "standard-tracks",
+      "position": "3.00",
+      "settings": {
+        "note": ""
+      }
+    },
+    {
+      "id": "21",
+      "form_id": "1",
+      "parent_id": "17",
+      "node_type": "model",
+      "title": "350S125-18",
+      "slug": "350s125-18",
+      "position": "3.00",
+      "settings": {
+        "fields": {
+          "Size": "3-1/2\"",
+          "Flange": "1-1/4\"",
+          "Thickness": "18 mils or 25G",
+          "KSI": "33"
+        },
+        "note": ""
+      }
+    },
+    {
+      "id": "37",
+      "form_id": "1",
+      "parent_id": "28",
+      "node_type": "model",
+      "title": "350S125-30",
+      "slug": "350s125-30",
+      "position": "3.00",
+      "settings": {
+        "fields": {
+          "Size": "3-1/2\"",
+          "Flange": "1-1/4\"",
+          "Thickness": "30 mils or 20G",
+          "KSI": "33"
+        },
+        "note": ""
+      }
+    },
+    {
+      "id": "42",
+      "form_id": "1",
+      "parent_id": "1",
+      "node_type": "product",
+      "title": "20 Gauge ST 33 mil",
+      "slug": "20-gauge-st-33-mil",
+      "position": "3.00",
+      "settings": {
+        "note": ""
+      }
+    },
+    {
+      "id": "52",
+      "form_id": "1",
+      "parent_id": "43",
+      "node_type": "model",
+      "title": "350S125-33",
+      "slug": "350s125-33",
+      "position": "3.00",
+      "settings": {
+        "fields": {
+          "Size": "3-1/2\"",
+          "Flange": "1-1/4\"",
+          "Thickness": "33 mils or 20G ST",
+          "KSI": "33"
+        },
+        "note": ""
+      }
+    },
+    {
+      "id": "62",
+      "form_id": "1",
+      "parent_id": "58",
+      "node_type": "type",
+      "title": "4\" Flange",
+      "slug": "4-flange",
+      "position": "3.00",
+      "settings": {
+        "note": ""
+      }
+    },
+    {
+      "id": "69",
+      "form_id": "1",
+      "parent_id": "59",
+      "node_type": "model",
+      "title": "400S137-33",
+      "slug": "400s137-33",
+      "position": "3.00",
+      "settings": {
+        "fields": {
+          "Size": "4\"",
+          "Flange": "1-3/8\"",
+          "Thickness": "33 mils or 20G ST",
+          "KSI": "33"
+        },
+        "note": ""
+      }
+    },
+    {
+      "id": "78",
+      "form_id": "1",
+      "parent_id": "63",
+      "node_type": "model",
+      "title": "362S162-33",
+      "slug": "362s162-33",
+      "position": "3.00",
+      "settings": {
+        "fields": {
+          "Size": "3-5/8\"",
+          "Flange": "1-5/8\"",
+          "Thickness": "33 mils or 20G ST",
+          "KSI": "33"
+        },
+        "note": ""
+      }
+    },
+    {
+      "id": "87",
+      "form_id": "1",
+      "parent_id": "65",
+      "node_type": "model",
+      "title": "550S200-33",
+      "slug": "550s200-33",
+      "position": "3.00",
+      "settings": {
+        "fields": {
+          "Size": "5-1/2\"",
+          "Flange": "2\"",
+          "Thickness": "33 mils or 20G ST",
+          "KSI": "33"
+        },
+        "note": ""
+      }
+    },
+    {
+      "id": "94",
+      "form_id": "1",
+      "parent_id": "91",
+      "node_type": "model",
+      "title": "350T125-18",
+      "slug": "350t125-18",
+      "position": "3.00",
+      "settings": {
+        "fields": {
+          "Size": "2-1/2\"",
+          "Flange": "1-1/4\"",
+          "Thickness": "18 mils or 25G",
+          "KSI": "33"
+        },
+        "note": ""
+      }
+    },
+    {
+      "id": "106",
+      "form_id": "1",
+      "parent_id": "98",
+      "node_type": "model",
+      "title": "362T200-18",
+      "slug": "362t200-18",
+      "position": "3.00",
+      "settings": {
+        "fields": {
+          "Size": "3-5/8\"",
+          "Flange": "2\"",
+          "Thickness": "18 mils or 25G",
+          "KSI": "33"
+        },
+        "note": ""
+      }
+    },
+    {
+      "id": "110",
+      "form_id": "1",
+      "parent_id": "90",
+      "node_type": "type",
+      "title": "3\" Flange",
+      "slug": "3-flange",
+      "position": "3.00",
+      "settings": {
+        "note": ""
+      }
+    },
+    {
+      "id": "121",
+      "form_id": "1",
+      "parent_id": "118",
+      "node_type": "model",
+      "title": "400SLT250-18",
+      "slug": "400slt250-18",
+      "position": "3.00",
+      "settings": {
+        "fields": {
+          "Size": "4\"",
+          "Flange": "2-1/2\"",
+          "Thickness": "18 mils or 25G",
+          "KSI": "33"
+        },
+        "note": ""
+      }
+    },
+    {
+      "id": "130",
+      "form_id": "1",
+      "parent_id": "124",
+      "node_type": "model",
+      "title": "400SLT250-30",
+      "slug": "400slt250-30",
+      "position": "3.00",
+      "settings": {
+        "fields": {
+          "Size": "4\"",
+          "Flange": "2-1/2\"",
+          "Thickness": "30 mils or 20G",
+          "KSI": "33"
+        },
+        "note": ""
+      }
+    },
+    {
+      "id": "140",
+      "form_id": "1",
+      "parent_id": "133",
+      "node_type": "model",
+      "title": "400SLT300-30",
+      "slug": "400slt300-30",
+      "position": "3.00",
+      "settings": {
+        "fields": {
+          "Size": "4\"",
+          "Flange": "3\"",
+          "Thickness": "30 mils or 20G",
+          "KSI": "33"
+        },
+        "note": ""
+      }
+    },
+    {
+      "id": "143",
+      "form_id": "1",
+      "parent_id": "123",
+      "node_type": "type",
+      "title": "3-1/2\" Flange",
+      "slug": "3-1-2-flange",
+      "position": "3.00",
+      "settings": {
+        "note": ""
+      }
+    },
+    {
+      "id": "150",
+      "form_id": "1",
+      "parent_id": "143",
+      "node_type": "model",
+      "title": "400SLT350-30",
+      "slug": "400slt350-30",
+      "position": "3.00",
+      "settings": {
+        "fields": {
+          "Size": "4\"",
+          "Flange": "3-1/2\"",
+          "Thickness": "30 mils or 20G",
+          "KSI": "33"
+        },
+        "note": ""
+      }
+    },
+    {
+      "id": "153",
+      "form_id": "1",
+      "parent_id": "13",
+      "node_type": "product",
+      "title": "20 Gauge ST 33 mil",
+      "slug": "20-gauge-st-33-mil",
+      "position": "3.00",
+      "settings": {
+        "note": ""
+      }
+    },
+    {
+      "id": "166",
+      "form_id": "1",
+      "parent_id": "153",
+      "node_type": "type",
+      "title": "3-1/2\" Flange",
+      "slug": "3-1-2-flange",
+      "position": "3.00",
+      "settings": {
+        "note": ""
+      }
+    },
+    {
+      "id": "173",
+      "form_id": "1",
+      "parent_id": "154",
+      "node_type": "model",
+      "title": "400SLT250-33",
+      "slug": "400slt250-33",
+      "position": "3.00",
+      "settings": {
+        "fields": {
+          "Size": "4\"",
+          "Flange": "2-1/2\"",
+          "Thickness": "33 mils or 20G ST",
+          "KSI": "33"
+        },
+        "note": ""
+      }
+    },
+    {
+      "id": "177",
+      "form_id": "1",
+      "parent_id": "160",
+      "node_type": "model",
+      "title": "400SLT300-33",
+      "slug": "400slt300-33",
+      "position": "3.00",
+      "settings": {
+        "fields": {
+          "Size": "4\"",
+          "Flange": "3\"",
+          "Thickness": "33 mils or 20G ST",
+          "KSI": "33"
+        },
+        "note": ""
+      }
+    },
+    {
+      "id": "181",
+      "form_id": "1",
+      "parent_id": "166",
+      "node_type": "model",
+      "title": "400SLT350-33",
+      "slug": "400slt350-33",
+      "position": "3.00",
+      "settings": {
+        "fields": {
+          "Size": "4\"",
+          "Flange": "3-1/2\"",
+          "Thickness": "33 mils or 20G ST",
+          "KSI": "33"
+        },
+        "note": ""
+      }
+    },
+    {
+      "id": "197",
+      "form_id": "1",
+      "parent_id": "184",
+      "node_type": "type",
+      "title": "3-1/2\" Flange",
+      "slug": "3-1-2-flange",
+      "position": "3.00",
+      "settings": {
+        "note": "",
+        "field_configs": [
+          {
+            "name": "Size",
+            "type": "text"
+          },
+          {
+            "name": "Flange",
+            "type": "text"
+          },
+          {
+            "name": "Thickness",
+            "type": "text"
+          },
+          {
+            "name": "KSI",
+            "type": "text"
+          }
+        ]
+      }
+    },
+    {
+      "id": "204",
+      "form_id": "1",
+      "parent_id": "185",
+      "node_type": "model",
+      "title": "400SLT250-43",
+      "slug": "400slt250-43",
+      "position": "3.00",
+      "settings": {
+        "fields": {
+          "Size": "4\"",
+          "Flange": "2-1/2\"",
+          "Thickness": "43 mils or 18",
+          "KSI": "33 or 50 (please circle)"
+        },
+        "note": ""
+      }
+    },
+    {
+      "id": "209",
+      "form_id": "1",
+      "parent_id": "191",
+      "node_type": "model",
+      "title": "400SLT350-43",
+      "slug": "400slt350-43",
+      "position": "3.00",
+      "settings": {
+        "fields": {
+          "Size": "4\"",
+          "Flange": "3-1/2\"",
+          "Thickness": "43 mils or 18",
+          "KSI": ""
+        },
+        "note": ""
+      }
+    },
+    {
+      "id": "230",
+      "form_id": "1",
+      "parent_id": "214",
+      "node_type": "type",
+      "title": "3-1/2\" Flange",
+      "slug": "3-1-2-flange",
+      "position": "3.00",
+      "settings": {
+        "note": "",
+        "field_configs": [
+          {
+            "name": "Size",
+            "type": "text"
+          },
+          {
+            "name": "Flange",
+            "type": "text"
+          },
+          {
+            "name": "Thickness",
+            "type": "text"
+          },
+          {
+            "name": "KSI",
+            "type": "text"
+          }
+        ]
+      }
+    },
+    {
+      "id": "235",
+      "form_id": "1",
+      "parent_id": "197",
+      "node_type": "model",
+      "title": "600SLT350-43",
+      "slug": "600slt350-43",
+      "position": "3.00",
+      "settings": {
+        "fields": {
+          "Size": "6\"",
+          "Flange": "3-1/2\"",
+          "Thickness": "43 mils or 18",
+          "KSI": ""
+        },
+        "note": ""
+      }
+    },
+    {
+      "id": "247",
+      "form_id": "1",
+      "parent_id": "215",
+      "node_type": "model",
+      "title": "400SLT250-54",
+      "slug": "400slt250-54",
+      "position": "3.00",
+      "settings": {
+        "fields": {
+          "Size": "4\"",
+          "Flange": "2-1/2\"",
+          "Thickness": "54 mils or 16G",
+          "KSI": "50"
+        },
+        "note": ""
+      }
+    },
+    {
+      "id": "264",
+      "form_id": "1",
+      "parent_id": "222",
+      "node_type": "model",
+      "title": "400SLT300-54",
+      "slug": "400slt300-54",
+      "position": "3.00",
+      "settings": {
+        "fields": {
+          "Size": "4\"",
+          "Flange": "3\"",
+          "Thickness": "54 mils or 16G",
+          "KSI": "50"
+        },
+        "note": ""
+      }
+    },
+    {
+      "id": "268",
+      "form_id": "1",
+      "parent_id": "230",
+      "node_type": "model",
+      "title": "400SLT350-54",
+      "slug": "400slt350-54",
+      "position": "3.00",
+      "settings": {
+        "fields": {
+          "Size": "4\"",
+          "Flange": "3-1/2\"",
+          "Thickness": "54 mils or 16G",
+          "KSI": "50"
+        },
+        "note": ""
+      }
+    },
+    {
+      "id": "309",
+      "form_id": "1",
+      "parent_id": "294",
+      "node_type": "type",
+      "title": "3-1/2\" Flange",
+      "slug": "3-1-2-flange",
+      "position": "3.00",
+      "settings": {
+        "note": "",
+        "field_configs": [
+          {
+            "name": "Size",
+            "type": "text"
+          },
+          {
+            "name": "Flange",
+            "type": "text"
+          },
+          {
+            "name": "Thickness",
+            "type": "text"
+          },
+          {
+            "name": "KSI",
+            "type": "text"
+          }
+        ]
+      }
+    },
+    {
+      "id": "317",
+      "form_id": "1",
+      "parent_id": "295",
+      "node_type": "model",
+      "title": "400SLT250-68",
+      "slug": "400slt250-68",
+      "position": "3.00",
+      "settings": {
+        "fields": {
+          "Size": "4\"",
+          "Flange": "2-1/2\"",
+          "Thickness": "68 mils or 14G",
+          "KSI": "50"
+        },
+        "note": ""
+      }
+    },
+    {
+      "id": "322",
+      "form_id": "1",
+      "parent_id": "302",
+      "node_type": "model",
+      "title": "400SLT300-68",
+      "slug": "400slt300-68",
+      "position": "3.00",
+      "settings": {
+        "fields": {
+          "Size": "4\"",
+          "Flange": "3\"",
+          "Thickness": "68 mils or 14G",
+          "KSI": "50"
+        },
+        "note": ""
+      }
+    },
+    {
+      "id": "327",
+      "form_id": "1",
+      "parent_id": "309",
+      "node_type": "model",
+      "title": "400SLT350-68",
+      "slug": "400slt350-68",
+      "position": "3.00",
+      "settings": {
+        "fields": {
+          "Size": "4\"",
+          "Flange": "3-1/2\"",
+          "Thickness": "68 mils or 14G",
+          "KSI": "50"
+        },
+        "note": ""
+      }
+    },
+    {
+      "id": "450",
+      "form_id": "1",
+      "parent_id": "447",
+      "node_type": "model",
+      "title": "362PWS134-19",
+      "slug": "362pws134-19",
+      "position": "3.00",
+      "settings": {
+        "fields": {
+          "Size": "3-5/8\"",
+          "Flange": "1-11/32\"",
+          "Thickness": "19 mils or 20 EQ",
+          "KSI": "55"
+        },
+        "note": ""
+      }
+    },
+    {
+      "id": "473",
+      "form_id": "1",
+      "parent_id": "460",
+      "node_type": "model",
+      "title": "350SES125-27",
+      "slug": "350ses125-27",
+      "position": "3.00",
+      "settings": {
+        "fields": {
+          "Size": "3-1/2\"",
+          "Flange": "1-1/4\"",
+          "Thickness": "27 mils or 20 EQ",
+          "KSI": "43"
+        },
+        "note": ""
+      }
+    },
+    {
+      "id": "483",
+      "form_id": "1",
+      "parent_id": "480",
+      "node_type": "model",
+      "title": "362PWS134-19",
+      "slug": "362pws134-19",
+      "position": "3.00",
+      "settings": {
+        "fields": {
+          "Size": "3-5/8\"",
+          "Flange": "1-11/32\"",
+          "Thickness": "19 mils or 20 EQ",
+          "KSI": "55"
+        },
+        "note": ""
+      }
+    },
+    {
+      "id": "495",
+      "form_id": "1",
+      "parent_id": "487",
+      "node_type": "model",
+      "title": "350SET125-27",
+      "slug": "350set125-27",
+      "position": "3.00",
+      "settings": {
+        "fields": {
+          "Size": "3-1/2\"",
+          "Flange": "1-1/4\"",
+          "Thickness": "27 mils or 20 EQ",
+          "KSI": "43"
+        },
+        "note": ""
+      }
+    },
+    {
+      "id": "502",
+      "form_id": "1",
+      "parent_id": "499",
+      "node_type": "model",
+      "title": "350SET200-27",
+      "slug": "350set200-27",
+      "position": "3.00",
+      "settings": {
+        "fields": {
+          "Size": "3-1/2\"",
+          "Flange": "2\"",
+          "Thickness": "27 mils or 20 EQ",
+          "KSI": "43"
+        },
+        "note": ""
+      }
+    },
+    {
+      "id": "507",
+      "form_id": "1",
+      "parent_id": "486",
+      "node_type": "subtype",
+      "title": "3\" Flange",
+      "slug": "3-flange",
+      "position": "3.00",
+      "settings": {
+        "note": "",
+        "field_configs": [
+          {
+            "name": "Size",
+            "type": "text"
+          },
+          {
+            "name": "Flange",
+            "type": "text"
+          },
+          {
+            "name": "Thickness",
+            "type": "text"
+          },
+          {
+            "name": "KSI",
+            "type": "text"
+          }
+        ]
+      }
+    },
+    {
+      "id": "510",
+      "form_id": "1",
+      "parent_id": "507",
+      "node_type": "model",
+      "title": "400SET300-27",
+      "slug": "400set300-27",
+      "position": "3.00",
+      "settings": {
+        "fields": {
+          "Size": "4\"",
+          "Flange": "3\"",
+          "Thickness": "27 mils or 20 EQ",
+          "KSI": "43"
+        },
+        "note": ""
+      }
+    },
+    {
+      "id": "518",
+      "form_id": "1",
+      "parent_id": "515",
+      "node_type": "product",
+      "title": "Hat Furring Channel",
+      "slug": "hat-furring-channel",
+      "position": "3.00",
+      "settings": {
+        "note": ""
+      }
+    },
+    {
+      "id": "13",
+      "form_id": "1",
+      "parent_id": "0",
+      "node_type": "category",
+      "title": "Slotted Tracks",
+      "slug": "slotted-tracks",
+      "position": "4.00",
+      "settings": {
+        "note": ""
+      }
+    },
+    {
+      "id": "22",
+      "form_id": "1",
+      "parent_id": "17",
+      "node_type": "model",
+      "title": "362S125-18",
+      "slug": "362s125-18",
+      "position": "4.00",
+      "settings": {
+        "fields": {
+          "Size": "3-5/8\"",
+          "Flange": "1-1/4\"",
+          "Thickness": "18 mils or 25G",
+          "KSI": "33"
+        },
+        "note": ""
+      }
+    },
+    {
+      "id": "38",
+      "form_id": "1",
+      "parent_id": "28",
+      "node_type": "model",
+      "title": "362S125-30",
+      "slug": "362s125-30",
+      "position": "4.00",
+      "settings": {
+        "fields": {
+          "Size": "3-5/8\"",
+          "Flange": "1-1/4\"",
+          "Thickness": "30 mils or 20G",
+          "KSI": "33"
+        },
+        "note": ""
+      }
+    },
+    {
+      "id": "53",
+      "form_id": "1",
+      "parent_id": "43",
+      "node_type": "model",
+      "title": "362S125-33",
+      "slug": "362s125-33",
+      "position": "4.00",
+      "settings": {
+        "fields": {
+          "Size": "3-5/8\"",
+          "Flange": "1-1/4\"",
+          "Thickness": "33 mils or 20G ST",
+          "KSI": "33"
+        },
+        "note": ""
+      }
+    },
+    {
+      "id": "63",
+      "form_id": "1",
+      "parent_id": "58",
+      "node_type": "type",
+      "title": "1-5/8\" Flange",
+      "slug": "1-5-8-flange",
+      "position": "4.00",
+      "settings": {
+        "note": ""
+      }
+    },
+    {
+      "id": "70",
+      "form_id": "1",
+      "parent_id": "59",
+      "node_type": "model",
+      "title": "600S137-33",
+      "slug": "600s137-33",
+      "position": "4.00",
+      "settings": {
+        "fields": {
+          "Size": "6\"",
+          "Flange": "1-3/8\"",
+          "Thickness": "33 mils or 20G ST",
+          "KSI": "33"
+        },
+        "note": ""
+      }
+    },
+    {
+      "id": "79",
+      "form_id": "1",
+      "parent_id": "63",
+      "node_type": "model",
+      "title": "400S162-33",
+      "slug": "400s162-33",
+      "position": "4.00",
+      "settings": {
+        "fields": {
+          "Size": "4\"",
+          "Flange": "1-5/8\"",
+          "Thickness": "33 mils or 20G ST",
+          "KSI": "33"
+        },
+        "note": ""
+      }
+    },
+    {
+      "id": "88",
+      "form_id": "1",
+      "parent_id": "65",
+      "node_type": "model",
+      "title": "800S200-33",
+      "slug": "800s200-33",
+      "position": "4.00",
+      "settings": {
+        "fields": {
+          "Size": "8\"",
+          "Flange": "2\"",
+          "Thickness": "33 mils or 20G ST",
+          "KSI": "33"
+        },
+        "note": ""
+      }
+    },
+    {
+      "id": "95",
+      "form_id": "1",
+      "parent_id": "91",
+      "node_type": "model",
+      "title": "362T125-18",
+      "slug": "362t125-18",
+      "position": "4.00",
+      "settings": {
+        "fields": {
+          "Size": "3-5/8\"",
+          "Flange": "1-1/4\"",
+          "Thickness": "18 mils or 25G",
+          "KSI": "33"
+        },
+        "note": ""
+      }
+    },
+    {
+      "id": "107",
+      "form_id": "1",
+      "parent_id": "98",
+      "node_type": "model",
+      "title": "400T200-18",
+      "slug": "400t200-18",
+      "position": "4.00",
+      "settings": {
+        "fields": {
+          "Size": "4\"",
+          "Flange": "2\"",
+          "Thickness": "18 mils or 25G",
+          "KSI": "33"
+        },
+        "note": ""
+      }
+    },
+    {
+      "id": "122",
+      "form_id": "1",
+      "parent_id": "118",
+      "node_type": "model",
+      "title": "600SLT250-18",
+      "slug": "600slt250-18",
+      "position": "4.00",
+      "settings": {
+        "fields": {
+          "Size": "6\"",
+          "Flange": "2-1/2\"",
+          "Thickness": "18 mils or 25G",
+          "KSI": "33"
+        },
+        "note": ""
+      }
+    },
+    {
+      "id": "131",
+      "form_id": "1",
+      "parent_id": "124",
+      "node_type": "model",
+      "title": "600SLT250-30",
+      "slug": "600slt250-30",
+      "position": "4.00",
+      "settings": {
+        "fields": {
+          "Size": "6\"",
+          "Flange": "2-1/2\"",
+          "Thickness": "30 mils or 20G",
+          "KSI": "33"
+        },
+        "note": ""
+      }
+    },
+    {
+      "id": "141",
+      "form_id": "1",
+      "parent_id": "133",
+      "node_type": "model",
+      "title": "600SLT300-30",
+      "slug": "600slt300-30",
+      "position": "4.00",
+      "settings": {
+        "fields": {
+          "Size": "6\"",
+          "Flange": "3\"",
+          "Thickness": "30 mils or 20G",
+          "KSI": "33"
+        },
+        "note": ""
+      }
+    },
+    {
+      "id": "151",
+      "form_id": "1",
+      "parent_id": "143",
+      "node_type": "model",
+      "title": "600SLT350-30",
+      "slug": "600slt350-30",
+      "position": "4.00",
+      "settings": {
+        "fields": {
+          "Size": "6\"",
+          "Flange": "3-1/2\"",
+          "Thickness": "30 mils or 20G",
+          "KSI": "33"
+        },
+        "note": ""
+      }
+    },
+    {
+      "id": "174",
+      "form_id": "1",
+      "parent_id": "154",
+      "node_type": "model",
+      "title": "600SLT250-33",
+      "slug": "600slt250-33",
+      "position": "4.00",
+      "settings": {
+        "fields": {
+          "Size": "6\"",
+          "Flange": "2-1/2\"",
+          "Thickness": "33 mils or 20G ST",
+          "KSI": "33"
+        },
+        "note": ""
+      }
+    },
+    {
+      "id": "178",
+      "form_id": "1",
+      "parent_id": "160",
+      "node_type": "model",
+      "title": "600SLT300-33",
+      "slug": "600slt300-33",
+      "position": "4.00",
+      "settings": {
+        "fields": {
+          "Size": "6\"",
+          "Flange": "3\"",
+          "Thickness": "33 mils or 20G ST",
+          "KSI": "33"
+        },
+        "note": ""
+      }
+    },
+    {
+      "id": "182",
+      "form_id": "1",
+      "parent_id": "166",
+      "node_type": "model",
+      "title": "600SLT350-33",
+      "slug": "600slt350-33",
+      "position": "4.00",
+      "settings": {
+        "fields": {
+          "Size": "6\"",
+          "Flange": "3-1/2\"",
+          "Thickness": "33 mils or 20G ST",
+          "KSI": "33"
+        },
+        "note": ""
+      }
+    },
+    {
+      "id": "184",
+      "form_id": "1",
+      "parent_id": "13",
+      "node_type": "product",
+      "title": "18 Gauge 43 mil",
+      "slug": "18-gauge-43-mil",
+      "position": "4.00",
+      "settings": {
+        "note": ""
+      }
+    },
+    {
+      "id": "205",
+      "form_id": "1",
+      "parent_id": "185",
+      "node_type": "model",
+      "title": "600SLT250-43",
+      "slug": "600slt250-43",
+      "position": "4.00",
+      "settings": {
+        "fields": {
+          "Size": " 6\"",
+          "Flange": "2-1/2\"",
+          "Thickness": "43 mils or 18",
+          "KSI": "33 or 50 (please circle)"
+        },
+        "note": ""
+      }
+    },
+    {
+      "id": "210",
+      "form_id": "1",
+      "parent_id": "191",
+      "node_type": "model",
+      "title": "600SLT350-43",
+      "slug": "600slt350-43",
+      "position": "4.00",
+      "settings": {
+        "fields": {
+          "Size": "6\"",
+          "Flange": "3-1/2\"",
+          "Thickness": "43 mils or 18",
+          "KSI": ""
+        },
+        "note": ""
+      }
+    },
+    {
+      "id": "234",
+      "form_id": "1",
+      "parent_id": "197",
+      "node_type": "model",
+      "title": "800SLT350-43",
+      "slug": "800slt350-43",
+      "position": "4.00",
+      "settings": {
+        "fields": {
+          "Size": "8\"",
+          "Flange": "3-1/2\"",
+          "Thickness": "43 mils or 18",
+          "KSI": ""
+        },
+        "note": ""
+      }
+    },
+    {
+      "id": "248",
+      "form_id": "1",
+      "parent_id": "215",
+      "node_type": "model",
+      "title": "600SLT250-54",
+      "slug": "600slt250-54",
+      "position": "4.00",
+      "settings": {
+        "fields": {
+          "Size": "6\"",
+          "Flange": "2-1/2\"",
+          "Thickness": "54 mils or 16G",
+          "KSI": "50"
+        },
+        "note": ""
+      }
+    },
+    {
+      "id": "265",
+      "form_id": "1",
+      "parent_id": "222",
+      "node_type": "model",
+      "title": "600SLT300-54",
+      "slug": "600slt300-54",
+      "position": "4.00",
+      "settings": {
+        "fields": {
+          "Size": "6\"",
+          "Flange": "3\"",
+          "Thickness": "54 mils or 16G",
+          "KSI": "50"
+        },
+        "note": ""
+      }
+    },
+    {
+      "id": "269",
+      "form_id": "1",
+      "parent_id": "230",
+      "node_type": "model",
+      "title": "600SLT350-54",
+      "slug": "600slt350-54",
+      "position": "4.00",
+      "settings": {
+        "fields": {
+          "Size": "6\"",
+          "Flange": "3-1/2\"",
+          "Thickness": "54 mils or 16G",
+          "KSI": "50"
+        },
+        "note": ""
+      }
+    },
+    {
+      "id": "318",
+      "form_id": "1",
+      "parent_id": "295",
+      "node_type": "model",
+      "title": "600SLT250-68",
+      "slug": "600slt250-68",
+      "position": "4.00",
+      "settings": {
+        "fields": {
+          "Size": "6\"",
+          "Flange": "2-1/2\"",
+          "Thickness": "68 mils or 14G",
+          "KSI": "50"
+        },
+        "note": ""
+      }
+    },
+    {
+      "id": "323",
+      "form_id": "1",
+      "parent_id": "302",
+      "node_type": "model",
+      "title": "600SLT300-68",
+      "slug": "600slt300-68",
+      "position": "4.00",
+      "settings": {
+        "fields": {
+          "Size": "6\"",
+          "Flange": "3\"",
+          "Thickness": "68 mils or 14G",
+          "KSI": "50"
+        },
+        "note": ""
+      }
+    },
+    {
+      "id": "328",
+      "form_id": "1",
+      "parent_id": "309",
+      "node_type": "model",
+      "title": "600SLT350-68",
+      "slug": "600slt350-68",
+      "position": "4.00",
+      "settings": {
+        "fields": {
+          "Size": "6\"",
+          "Flange": "3-1/2\"",
+          "Thickness": "68 mils or 14G",
+          "KSI": "50"
+        },
+        "note": ""
+      }
+    },
+    {
+      "id": "451",
+      "form_id": "1",
+      "parent_id": "447",
+      "node_type": "model",
+      "title": "400PWS134-19",
+      "slug": "400pws134-19",
+      "position": "4.00",
+      "settings": {
+        "fields": {
+          "Size": "4\"",
+          "Flange": "1-11/32\"",
+          "Thickness": "19 mils or 20 EQ",
+          "KSI": "55"
+        },
+        "note": ""
+      }
+    },
+    {
+      "id": "474",
+      "form_id": "1",
+      "parent_id": "460",
+      "node_type": "model",
+      "title": "362SES125-27",
+      "slug": "362ses125-27",
+      "position": "4.00",
+      "settings": {
+        "fields": {
+          "Size": "3-5/8\"",
+          "Flange": "1-1/4\"",
+          "Thickness": "27 mils or 20 EQ",
+          "KSI": "43"
+        },
+        "note": ""
+      }
+    },
+    {
+      "id": "484",
+      "form_id": "1",
+      "parent_id": "480",
+      "node_type": "model",
+      "title": "400PWS134-19",
+      "slug": "400pws134-19",
+      "position": "4.00",
+      "settings": {
+        "fields": {
+          "Size": "4\"",
+          "Flange": "1-11/32\"",
+          "Thickness": "19 mils or 20 EQ",
+          "KSI": "55"
+        },
+        "note": ""
+      }
+    },
+    {
+      "id": "496",
+      "form_id": "1",
+      "parent_id": "487",
+      "node_type": "model",
+      "title": "362SET125-27",
+      "slug": "362set125-27",
+      "position": "4.00",
+      "settings": {
+        "fields": {
+          "Size": "3-5/8\"",
+          "Flange": "1-1/4\"",
+          "Thickness": "27 mils or 20 EQ",
+          "KSI": "43"
+        },
+        "note": ""
+      }
+    },
+    {
+      "id": "503",
+      "form_id": "1",
+      "parent_id": "499",
+      "node_type": "model",
+      "title": "362SET200-27",
+      "slug": "362set200-27",
+      "position": "4.00",
+      "settings": {
+        "fields": {
+          "Size": "3-5/8\"",
+          "Flange": "2\"",
+          "Thickness": "27 mils or 20 EQ",
+          "KSI": "43"
+        },
+        "note": ""
+      }
+    },
+    {
+      "id": "511",
+      "form_id": "1",
+      "parent_id": "507",
+      "node_type": "model",
+      "title": "550SET300-27",
+      "slug": "550set300-27",
+      "position": "4.00",
+      "settings": {
+        "fields": {
+          "Size": "5-1/2\"",
+          "Flange": "3\"",
+          "Thickness": "27 mils or 20 EQ",
+          "KSI": "43"
+        },
+        "note": ""
+      }
+    },
+    {
+      "id": "519",
+      "form_id": "1",
+      "parent_id": "515",
+      "node_type": "product",
+      "title": "Resilient Channel",
+      "slug": "resilient-channel",
+      "position": "4.00",
+      "settings": {
+        "note": ""
+      }
+    },
+    {
+      "id": "23",
+      "form_id": "1",
+      "parent_id": "17",
+      "node_type": "model",
+      "title": "400S125-18",
+      "slug": "400s125-18",
+      "position": "5.00",
+      "settings": {
+        "fields": {
+          "Size": "4\"",
+          "Flange": "1-1/4\"",
+          "Thickness": "18 mils or 25G",
+          "KSI": "33"
+        },
+        "note": ""
+      }
+    },
+    {
+      "id": "39",
+      "form_id": "1",
+      "parent_id": "28",
+      "node_type": "model",
+      "title": "400S125-30",
+      "slug": "400s125-30",
+      "position": "5.00",
+      "settings": {
+        "fields": {
+          "Size": "4\"",
+          "Flange": "1-1/4\"",
+          "Thickness": "30 mils or 20G",
+          "KSI": "33"
+        },
+        "note": ""
+      }
+    },
+    {
+      "id": "54",
+      "form_id": "1",
+      "parent_id": "43",
+      "node_type": "model",
+      "title": "400S125-33",
+      "slug": "400s125-33",
+      "position": "5.00",
+      "settings": {
+        "fields": {
+          "Size": "4\"",
+          "Flange": "1-1/4\"",
+          "Thickness": "33 mils or 20G ST",
+          "KSI": "33"
+        },
+        "note": ""
+      }
+    },
+    {
+      "id": "64",
+      "form_id": "1",
+      "parent_id": "58",
+      "node_type": "type",
+      "title": "3\" Flange",
+      "slug": "3-flange",
+      "position": "5.00",
+      "settings": {
+        "note": ""
+      }
+    },
+    {
+      "id": "71",
+      "form_id": "1",
+      "parent_id": "59",
+      "node_type": "model",
+      "title": "600S137-33 (copy)",
+      "slug": "600s137-33",
+      "position": "5.00",
+      "settings": {
+        "fields": {
+          "Size": "6\"",
+          "Flange": "1-3/8\"",
+          "Thickness": "33 mils or 20G ST",
+          "KSI": "33"
+        },
+        "note": ""
+      }
+    },
+    {
+      "id": "80",
+      "form_id": "1",
+      "parent_id": "63",
+      "node_type": "model",
+      "title": "550S162-33",
+      "slug": "550s162-33",
+      "position": "5.00",
+      "settings": {
+        "fields": {
+          "Size": " 5-1/2\"",
+          "Flange": "1-5/8\"",
+          "Thickness": "33 mils or 20G ST",
+          "KSI": "33"
+        },
+        "note": ""
+      }
+    },
+    {
+      "id": "96",
+      "form_id": "1",
+      "parent_id": "91",
+      "node_type": "model",
+      "title": "400T125-18",
+      "slug": "400t125-18",
+      "position": "5.00",
+      "settings": {
+        "fields": {
+          "Size": "4\"",
+          "Flange": "1-1/4\"",
+          "Thickness": "18 mils or 25G",
+          "KSI": "33"
+        },
+        "note": ""
+      }
+    },
+    {
+      "id": "108",
+      "form_id": "1",
+      "parent_id": "98",
+      "node_type": "model",
+      "title": "600T200-18",
+      "slug": "600t200-18",
+      "position": "5.00",
+      "settings": {
+        "fields": {
+          "Size": "6\"",
+          "Flange": "2\"",
+          "Thickness": "18 mils or 25G",
+          "KSI": "33"
+        },
+        "note": ""
+      }
+    },
+    {
+      "id": "132",
+      "form_id": "1",
+      "parent_id": "124",
+      "node_type": "model",
+      "title": "800SLT250-30",
+      "slug": "800slt250-30",
+      "position": "5.00",
+      "settings": {
+        "fields": {
+          "Size": "8\"",
+          "Flange": "2-1/2\"",
+          "Thickness": "30 mils or 20G",
+          "KSI": "33"
+        },
+        "note": ""
+      }
+    },
+    {
+      "id": "142",
+      "form_id": "1",
+      "parent_id": "133",
+      "node_type": "model",
+      "title": "800SLT300-30",
+      "slug": "800slt300-30",
+      "position": "5.00",
+      "settings": {
+        "fields": {
+          "Size": "8\"",
+          "Flange": "3\"",
+          "Thickness": "30 mils or 20G",
+          "KSI": "33"
+        },
+        "note": ""
+      }
+    },
+    {
+      "id": "152",
+      "form_id": "1",
+      "parent_id": "143",
+      "node_type": "model",
+      "title": "800SLT350-30",
+      "slug": "800slt350-30",
+      "position": "5.00",
+      "settings": {
+        "fields": {
+          "Size": "8\"",
+          "Flange": "3-1/2\"",
+          "Thickness": "30 mils or 20G",
+          "KSI": "33"
+        },
+        "note": ""
+      }
+    },
+    {
+      "id": "175",
+      "form_id": "1",
+      "parent_id": "154",
+      "node_type": "model",
+      "title": "800SLT250-33",
+      "slug": "800slt250-33",
+      "position": "5.00",
+      "settings": {
+        "fields": {
+          "Size": "8\"",
+          "Flange": "2-1/2\"",
+          "Thickness": "33 mils or 20G ST",
+          "KSI": "33"
+        },
+        "note": ""
+      }
+    },
+    {
+      "id": "179",
+      "form_id": "1",
+      "parent_id": "160",
+      "node_type": "model",
+      "title": "800SLT300-33",
+      "slug": "800slt300-33",
+      "position": "5.00",
+      "settings": {
+        "fields": {
+          "Size": "8\"",
+          "Flange": "3\"",
+          "Thickness": "33 mils or 20G ST",
+          "KSI": "33"
+        },
+        "note": ""
+      }
+    },
+    {
+      "id": "183",
+      "form_id": "1",
+      "parent_id": "166",
+      "node_type": "model",
+      "title": "800SLT350-33",
+      "slug": "800slt350-33",
+      "position": "5.00",
+      "settings": {
+        "fields": {
+          "Size": "6\"",
+          "Flange": "3-1/2\"",
+          "Thickness": "33 mils or 20G ST",
+          "KSI": "33"
+        },
+        "note": ""
+      }
+    },
+    {
+      "id": "206",
+      "form_id": "1",
+      "parent_id": "185",
+      "node_type": "model",
+      "title": "800SLT250-43",
+      "slug": "800slt250-43",
+      "position": "5.00",
+      "settings": {
+        "fields": {
+          "Size": " 8\"",
+          "Flange": "2-1/2\"",
+          "Thickness": "43 mils or 18",
+          "KSI": "33 or 50 (please circle)"
+        },
+        "note": ""
+      }
+    },
+    {
+      "id": "211",
+      "form_id": "1",
+      "parent_id": "191",
+      "node_type": "model",
+      "title": "800SLT350-43",
+      "slug": "800slt350-43",
+      "position": "5.00",
+      "settings": {
+        "fields": {
+          "Size": "8\"",
+          "Flange": "3-1/2\"",
+          "Thickness": "43 mils or 18",
+          "KSI": ""
+        },
+        "note": ""
+      }
+    },
+    {
+      "id": "214",
+      "form_id": "1",
+      "parent_id": "13",
+      "node_type": "product",
+      "title": "16 Gauge 54 mil",
+      "slug": "16-gauge-54-mil",
+      "position": "5.00",
+      "settings": {
+        "note": ""
+      }
+    },
+    {
+      "id": "249",
+      "form_id": "1",
+      "parent_id": "215",
+      "node_type": "model",
+      "title": "800SLT250-54",
+      "slug": "800slt250-54",
+      "position": "5.00",
+      "settings": {
+        "fields": {
+          "Size": "8\"",
+          "Flange": "2-1/2\"",
+          "Thickness": "54 mils or 16G",
+          "KSI": "50"
+        },
+        "note": ""
+      }
+    },
+    {
+      "id": "266",
+      "form_id": "1",
+      "parent_id": "222",
+      "node_type": "model",
+      "title": "800SLT300-54",
+      "slug": "800slt300-54",
+      "position": "5.00",
+      "settings": {
+        "fields": {
+          "Size": "8\"",
+          "Flange": "3\"",
+          "Thickness": "54 mils or 16G",
+          "KSI": "50"
+        },
+        "note": ""
+      }
+    },
+    {
+      "id": "270",
+      "form_id": "1",
+      "parent_id": "230",
+      "node_type": "model",
+      "title": "800SLT350-54",
+      "slug": "800slt350-54",
+      "position": "5.00",
+      "settings": {
+        "fields": {
+          "Size": "8\"",
+          "Flange": "3-1/2\"",
+          "Thickness": "54 mils or 16G",
+          "KSI": "50"
+        },
+        "note": ""
+      }
+    },
+    {
+      "id": "319",
+      "form_id": "1",
+      "parent_id": "295",
+      "node_type": "model",
+      "title": "800SLT250-68",
+      "slug": "800slt250-68",
+      "position": "5.00",
+      "settings": {
+        "fields": {
+          "Size": "8\"",
+          "Flange": "2-1/2\"",
+          "Thickness": "68 mils or 14G",
+          "KSI": "50"
+        },
+        "note": ""
+      }
+    },
+    {
+      "id": "324",
+      "form_id": "1",
+      "parent_id": "302",
+      "node_type": "model",
+      "title": "800SLT300-68",
+      "slug": "800slt300-68",
+      "position": "5.00",
+      "settings": {
+        "fields": {
+          "Size": "8\"",
+          "Flange": "3\"",
+          "Thickness": "68 mils or 14G",
+          "KSI": "50"
+        },
+        "note": ""
+      }
+    },
+    {
+      "id": "329",
+      "form_id": "1",
+      "parent_id": "309",
+      "node_type": "model",
+      "title": "800SLT350-68",
+      "slug": "800slt350-68",
+      "position": "5.00",
+      "settings": {
+        "fields": {
+          "Size": "8\"",
+          "Flange": "3-1/2\"",
+          "Thickness": "68 mils or 14G",
+          "KSI": "50"
+        },
+        "note": ""
+      }
+    },
+    {
+      "id": "331",
+      "form_id": "1",
+      "parent_id": "0",
+      "node_type": "category",
+      "title": "EQ Products",
+      "slug": "eq-products",
+      "position": "5.00",
+      "settings": {
+        "note": ""
+      }
+    },
+    {
+      "id": "452",
+      "form_id": "1",
+      "parent_id": "447",
+      "node_type": "model",
+      "title": "600PWS134-21",
+      "slug": "600pws134-21",
+      "position": "5.00",
+      "settings": {
+        "fields": {
+          "Size": "6\"",
+          "Flange": "1-11/32\"",
+          "Thickness": "21 mils or 20 EQ",
+          "KSI": "55"
+        },
+        "note": ""
+      }
+    },
+    {
+      "id": "475",
+      "form_id": "1",
+      "parent_id": "460",
+      "node_type": "model",
+      "title": "400SES125-27",
+      "slug": "400ses125-27",
+      "position": "5.00",
+      "settings": {
+        "fields": {
+          "Size": "4\"",
+          "Flange": "1-1/4\"",
+          "Thickness": "27 mils or 20 EQ",
+          "KSI": "43"
+        },
+        "note": ""
+      }
+    },
+    {
+      "id": "485",
+      "form_id": "1",
+      "parent_id": "480",
+      "node_type": "model",
+      "title": "600PWS134-21",
+      "slug": "600pws134-21",
+      "position": "5.00",
+      "settings": {
+        "fields": {
+          "Size": "6\"",
+          "Flange": "1-11/32\"",
+          "Thickness": "21 mils or 20 EQ",
+          "KSI": "55"
+        },
+        "note": ""
+      }
+    },
+    {
+      "id": "497",
+      "form_id": "1",
+      "parent_id": "487",
+      "node_type": "model",
+      "title": "550SET125-27",
+      "slug": "550set125-27",
+      "position": "5.00",
+      "settings": {
+        "fields": {
+          "Size": "5-1/2\"",
+          "Flange": "1-1/4\"",
+          "Thickness": "27 mils or 20 EQ",
+          "KSI": "43"
+        },
+        "note": ""
+      }
+    },
+    {
+      "id": "504",
+      "form_id": "1",
+      "parent_id": "499",
+      "node_type": "model",
+      "title": "400SET200-27",
+      "slug": "400set200-27",
+      "position": "5.00",
+      "settings": {
+        "fields": {
+          "Size": "4\"",
+          "Flange": "2\"",
+          "Thickness": "27 mils or 20 EQ",
+          "KSI": "43"
+        },
+        "note": ""
+      }
+    },
+    {
+      "id": "512",
+      "form_id": "1",
+      "parent_id": "507",
+      "node_type": "model",
+      "title": "600SET300-27",
+      "slug": "600set300-27",
+      "position": "5.00",
+      "settings": {
+        "fields": {
+          "Size": "6\"",
+          "Flange": "3\"",
+          "Thickness": "27 mils or 20 EQ",
+          "KSI": "43"
+        },
+        "note": ""
+      }
+    },
+    {
+      "id": "520",
+      "form_id": "1",
+      "parent_id": "515",
+      "node_type": "product",
+      "title": "U-Channel",
+      "slug": "u-channel",
+      "position": "5.00",
+      "settings": {
+        "note": ""
+      }
+    },
+    {
+      "id": "24",
+      "form_id": "1",
+      "parent_id": "17",
+      "node_type": "model",
+      "title": "550S125-18",
+      "slug": "550s125-18",
+      "position": "6.00",
+      "settings": {
+        "fields": {
+          "Size": "5-1/2\"",
+          "Flange": "1-1/4\"",
+          "Thickness": "18 mils or 25G",
+          "KSI": "33"
+        },
+        "note": ""
+      }
+    },
+    {
+      "id": "40",
+      "form_id": "1",
+      "parent_id": "28",
+      "node_type": "model",
+      "title": "550S125-30",
+      "slug": "550s125-30",
+      "position": "6.00",
+      "settings": {
+        "fields": {
+          "Size": "5-1/2\"",
+          "Flange": "1-1/4\"",
+          "Thickness": "30 mils or 20G",
+          "KSI": "33"
+        },
+        "note": ""
+      }
+    },
+    {
+      "id": "55",
+      "form_id": "1",
+      "parent_id": "43",
+      "node_type": "model",
+      "title": "550S125-33",
+      "slug": "550s125-33",
+      "position": "6.00",
+      "settings": {
+        "fields": {
+          "Size": "5-1/2\"",
+          "Flange": "1-1/4\"",
+          "Thickness": "33 mils or 20G ST",
+          "KSI": "33"
+        },
+        "note": ""
+      }
+    },
+    {
+      "id": "65",
+      "form_id": "1",
+      "parent_id": "58",
+      "node_type": "type",
+      "title": "2\" Flange",
+      "slug": "2-flange",
+      "position": "6.00",
+      "settings": {
+        "note": ""
+      }
+    },
+    {
+      "id": "81",
+      "form_id": "1",
+      "parent_id": "63",
+      "node_type": "model",
+      "title": "600S162-33",
+      "slug": "600s162-33",
+      "position": "6.00",
+      "settings": {
+        "fields": {
+          "Size": "6\"",
+          "Flange": "1-5/8\"",
+          "Thickness": "33 mils or 20G ST",
+          "KSI": "33"
+        },
+        "note": ""
+      }
+    },
+    {
+      "id": "97",
+      "form_id": "1",
+      "parent_id": "91",
+      "node_type": "model",
+      "title": "600T125-18",
+      "slug": "600t125-18",
+      "position": "6.00",
+      "settings": {
+        "fields": {
+          "Size": "6\"",
+          "Flange": "1-1/4\"",
+          "Thickness": "18 mils or 25G",
+          "KSI": "33"
+        },
+        "note": ""
+      }
+    },
+    {
+      "id": "207",
+      "form_id": "1",
+      "parent_id": "185",
+      "node_type": "model",
+      "title": "1000SLT250-43",
+      "slug": "1000slt250-43",
+      "position": "6.00",
+      "settings": {
+        "fields": {
+          "Size": "10\"",
+          "Flange": "2-1/2\"",
+          "Thickness": "43 mils or 18",
+          "KSI": "33 or 50 (please circle)"
+        },
+        "note": ""
+      }
+    },
+    {
+      "id": "212",
+      "form_id": "1",
+      "parent_id": "191",
+      "node_type": "model",
+      "title": "1000SLT350-43",
+      "slug": "1000slt350-43",
+      "position": "6.00",
+      "settings": {
+        "fields": {
+          "Size": "10\"",
+          "Flange": "3-1/2\"",
+          "Thickness": "43 mils or 18",
+          "KSI": ""
+        },
+        "note": ""
+      }
+    },
+    {
+      "id": "236",
+      "form_id": "1",
+      "parent_id": "197",
+      "node_type": "model",
+      "title": "1000SLT350-43",
+      "slug": "1000slt350-43",
+      "position": "6.00",
+      "settings": {
+        "fields": {
+          "Size": "10\"",
+          "Flange": "3-1/2\"",
+          "Thickness": "43 mils or 18",
+          "KSI": ""
+        },
+        "note": ""
+      }
+    },
+    {
+      "id": "250",
+      "form_id": "1",
+      "parent_id": "215",
+      "node_type": "model",
+      "title": "1000SLT250-54",
+      "slug": "1000slt250-54",
+      "position": "6.00",
+      "settings": {
+        "fields": {
+          "Size": "10\"",
+          "Flange": "2-1/2\"",
+          "Thickness": "54 mils or 16G",
+          "KSI": "50"
+        },
+        "note": ""
+      }
+    },
+    {
+      "id": "267",
+      "form_id": "1",
+      "parent_id": "222",
+      "node_type": "model",
+      "title": "1000SLT300-54",
+      "slug": "1000slt300-54",
+      "position": "6.00",
+      "settings": {
+        "fields": {
+          "Size": "10\"",
+          "Flange": "3\"",
+          "Thickness": "54 mils or 16G",
+          "KSI": "50"
+        },
+        "note": ""
+      }
+    },
+    {
+      "id": "271",
+      "form_id": "1",
+      "parent_id": "230",
+      "node_type": "model",
+      "title": "1000SLT350-54",
+      "slug": "1000slt350-54",
+      "position": "6.00",
+      "settings": {
+        "fields": {
+          "Size": "10\"",
+          "Flange": "3-1/2\"",
+          "Thickness": "54 mils or 16G",
+          "KSI": "50"
+        },
+        "note": ""
+      }
+    },
+    {
+      "id": "294",
+      "form_id": "1",
+      "parent_id": "13",
+      "node_type": "product",
+      "title": "14 Gauge 68 mil",
+      "slug": "14-gauge-68-mil",
+      "position": "6.00",
+      "settings": {
+        "note": ""
+      }
+    },
+    {
+      "id": "320",
+      "form_id": "1",
+      "parent_id": "295",
+      "node_type": "model",
+      "title": "1000SLT250-68",
+      "slug": "1000slt250-68",
+      "position": "6.00",
+      "settings": {
+        "fields": {
+          "Size": "10\"",
+          "Flange": "2-1/2\"",
+          "Thickness": "68 mils or 14G",
+          "KSI": "50"
+        },
+        "note": ""
+      }
+    },
+    {
+      "id": "325",
+      "form_id": "1",
+      "parent_id": "302",
+      "node_type": "model",
+      "title": "1000SLT300-68",
+      "slug": "1000slt300-68",
+      "position": "6.00",
+      "settings": {
+        "fields": {
+          "Size": "10\"",
+          "Flange": "3\"",
+          "Thickness": "68 mils or 14G",
+          "KSI": "50"
+        },
+        "note": ""
+      }
+    },
+    {
+      "id": "330",
+      "form_id": "1",
+      "parent_id": "309",
+      "node_type": "model",
+      "title": "1000SLT350-68",
+      "slug": "1000slt350-68",
+      "position": "6.00",
+      "settings": {
+        "fields": {
+          "Size": "10\"",
+          "Flange": "3-1/2\"",
+          "Thickness": "68 mils or 14G",
+          "KSI": "50"
+        },
+        "note": ""
+      }
+    },
+    {
+      "id": "476",
+      "form_id": "1",
+      "parent_id": "460",
+      "node_type": "model",
+      "title": "550SES125-27",
+      "slug": "550ses125-27",
+      "position": "6.00",
+      "settings": {
+        "fields": {
+          "Size": "5-1/2\"",
+          "Flange": "1-1/4\"",
+          "Thickness": "27 mils or 20 EQ",
+          "KSI": "43"
+        },
+        "note": ""
+      }
+    },
+    {
+      "id": "498",
+      "form_id": "1",
+      "parent_id": "487",
+      "node_type": "model",
+      "title": "600SET125-27",
+      "slug": "600set125-27",
+      "position": "6.00",
+      "settings": {
+        "fields": {
+          "Size": "6\"",
+          "Flange": "1-1/4\"",
+          "Thickness": "27 mils or 20 EQ",
+          "KSI": "43"
+        },
+        "note": ""
+      }
+    },
+    {
+      "id": "505",
+      "form_id": "1",
+      "parent_id": "499",
+      "node_type": "model",
+      "title": "550SET200-27",
+      "slug": "550set200-27",
+      "position": "6.00",
+      "settings": {
+        "fields": {
+          "Size": "5-1/2\"",
+          "Flange": "2\"",
+          "Thickness": "27 mils or 20 EQ",
+          "KSI": "43"
+        },
+        "note": ""
+      }
+    },
+    {
+      "id": "515",
+      "form_id": "1",
+      "parent_id": "0",
+      "node_type": "category",
+      "title": "Accessories",
+      "slug": "accessories",
+      "position": "6.00",
+      "settings": {
+        "note": ""
+      }
+    },
+    {
+      "id": "521",
+      "form_id": "1",
+      "parent_id": "515",
+      "node_type": "product",
+      "title": "Z-Furring",
+      "slug": "z-furring",
+      "position": "6.00",
+      "settings": {
+        "note": ""
+      }
+    },
+    {
+      "id": "25",
+      "form_id": "1",
+      "parent_id": "17",
+      "node_type": "model",
+      "title": "600S125-18",
+      "slug": "600s125-18",
+      "position": "7.00",
+      "settings": {
+        "fields": {
+          "Size": "6\"",
+          "Flange": "1-1/4\"",
+          "Thickness": "18 mils or 25G",
+          "KSI": "33"
+        },
+        "note": ""
+      }
+    },
+    {
+      "id": "41",
+      "form_id": "1",
+      "parent_id": "28",
+      "node_type": "model",
+      "title": "600S125-30",
+      "slug": "600s125-30",
+      "position": "7.00",
+      "settings": {
+        "fields": {
+          "Size": "6\"",
+          "Flange": "1-1/4\"",
+          "Thickness": "30 mils or 20G",
+          "KSI": "33"
+        },
+        "note": ""
+      }
+    },
+    {
+      "id": "56",
+      "form_id": "1",
+      "parent_id": "43",
+      "node_type": "model",
+      "title": "600S125-33",
+      "slug": "600s125-33",
+      "position": "7.00",
+      "settings": {
+        "fields": {
+          "Size": "6\"",
+          "Flange": "1-1/4\"",
+          "Thickness": "33 mils or 20G ST",
+          "KSI": "33"
+        },
+        "note": ""
+      }
+    },
+    {
+      "id": "66",
+      "form_id": "1",
+      "parent_id": "58",
+      "node_type": "type",
+      "title": "3-1/2\" Flange",
+      "slug": "3-1-2-flange",
+      "position": "7.00",
+      "settings": {
+        "note": ""
+      }
+    },
+    {
+      "id": "82",
+      "form_id": "1",
+      "parent_id": "63",
+      "node_type": "model",
+      "title": "800S162-33",
+      "slug": "800s162-33",
+      "position": "7.00",
+      "settings": {
+        "fields": {
+          "Size": "8\"",
+          "Flange": "1-5/8\"",
+          "Thickness": "33 mils or 20G ST",
+          "KSI": "33"
+        },
+        "note": ""
+      }
+    },
+    {
+      "id": "213",
+      "form_id": "1",
+      "parent_id": "191",
+      "node_type": "model",
+      "title": "800SLT350-43 (copy)",
+      "slug": "800slt350-43",
+      "position": "7.00",
+      "settings": {
+        "fields": {
+          "Size": "8\"",
+          "Flange": "3-1/2\"",
+          "Thickness": "43 mils or 18",
+          "KSI": ""
+        },
+        "note": ""
+      }
+    },
+    {
+      "id": "506",
+      "form_id": "1",
+      "parent_id": "499",
+      "node_type": "model",
+      "title": "600SET200-27",
+      "slug": "600set200-27",
+      "position": "7.00",
+      "settings": {
+        "fields": {
+          "Size": "6\"",
+          "Flange": "2\"",
+          "Thickness": "27 mils or 20 EQ",
+          "KSI": "43"
+        },
+        "note": ""
+      }
+    },
+    {
+      "id": "26",
+      "form_id": "1",
+      "parent_id": "17",
+      "node_type": "model",
+      "title": "800S137-33",
+      "slug": "800s137-33",
+      "position": "8.00",
+      "settings": {
+        "fields": {
+          "Size": "8\"",
+          "Flange": "1-1/4\"",
+          "Thickness": "18 mils or 25G",
+          "KSI": "33"
+        },
+        "note": ""
+      }
+    },
+    {
+      "id": "57",
+      "form_id": "1",
+      "parent_id": "43",
+      "node_type": "model",
+      "title": "800S125-33",
+      "slug": "800s125-33",
+      "position": "8.00",
+      "settings": {
+        "fields": {
+          "Size": "8\"",
+          "Flange": "1-1/4\"",
+          "Thickness": "33 mils or 20G ST",
+          "KSI": "33"
+        },
+        "note": ""
+      }
+    },
+    {
+      "id": "109",
+      "form_id": "1",
+      "parent_id": "28",
+      "node_type": "model",
+      "title": "162S125-30 (copy)",
+      "slug": "162s125-30",
+      "position": "8.00",
+      "settings": {
+        "fields": {
+          "Size": "1-5/8\"",
+          "Flange": "1-1/4\"",
+          "Thickness": "30 mils or 20G",
+          "KSI": "33"
+        },
+        "note": ""
+      }
+    },
+    {
+      "id": "263",
+      "form_id": "1",
+      "parent_id": "191",
+      "node_type": "model",
+      "title": "250SLT350-43 (copy)",
+      "slug": "250slt350-43",
+      "position": "8.00",
+      "settings": {
+        "fields": {
+          "Size": "2-1/2\"",
+          "Flange": "3-1/2\"",
+          "Thickness": "43 mils or 18",
+          "KSI": ""
+        },
+        "note": ""
+      }
+    }
+  ]
+}

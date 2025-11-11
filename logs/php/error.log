@@ -2008,3 +2008,32 @@ Stack trace:
 Stack trace:
 #0 {main}
   thrown in C:\Users\ishla\Local Sites\my-playground\app\public\wp-content\plugins\Submittal & Spec Sheet Builder\debug-license-check.php on line 8
+[15-Oct-2025 01:57:52 UTC] PHP Warning:  require_once(../../../../../wp-load.php): Failed to open stream: No such file or directory in C:\Users\ishla\Local Sites\my-playground\app\public\wp-content\plugins\Submittal & Spec Sheet Builder\test-lead-setting.php on line 8
+[15-Oct-2025 01:57:52 UTC] PHP Fatal error:  Uncaught Error: Failed opening required '../../../../../wp-load.php' (include_path='.:/usr/share/php:/www/wp-content/pear') in C:\Users\ishla\Local Sites\my-playground\app\public\wp-content\plugins\Submittal & Spec Sheet Builder\test-lead-setting.php:8
+Stack trace:
+#0 {main}
+  thrown in C:\Users\ishla\Local Sites\my-playground\app\public\wp-content\plugins\Submittal & Spec Sheet Builder\test-lead-setting.php on line 8
+[15-Oct-2025 01:58:40 UTC] PHP Warning:  require_once(../../../../wp-load.php): Failed to open stream: No such file or directory in C:\Users\ishla\Local Sites\my-playground\app\public\wp-content\plugins\Submittal & Spec Sheet Builder\test-lead-setting.php on line 8
+[15-Oct-2025 01:58:40 UTC] PHP Fatal error:  Uncaught Error: Failed opening required '../../../../wp-load.php' (include_path='.:/usr/share/php:/www/wp-content/pear') in C:\Users\ishla\Local Sites\my-playground\app\public\wp-content\plugins\Submittal & Spec Sheet Builder\test-lead-setting.php:8
+Stack trace:
+#0 {main}
+  thrown in C:\Users\ishla\Local Sites\my-playground\app\public\wp-content\plugins\Submittal & Spec Sheet Builder\test-lead-setting.php on line 8
+[15-Oct-2025 01:58:43 UTC] PHP Warning:  require_once(../../../../wp-load.php): Failed to open stream: No such file or directory in C:\Users\ishla\Local Sites\my-playground\app\public\wp-content\plugins\Submittal & Spec Sheet Builder\test-lead-setting.php on line 8
+[15-Oct-2025 01:58:43 UTC] PHP Fatal error:  Uncaught Error: Failed opening required '../../../../wp-load.php' (include_path='.:/usr/share/php:/www/wp-content/pear') in C:\Users\ishla\Local Sites\my-playground\app\public\wp-content\plugins\Submittal & Spec Sheet Builder\test-lead-setting.php:8
+Stack trace:
+#0 {main}
+  thrown in C:\Users\ishla\Local Sites\my-playground\app\public\wp-content\plugins\Submittal & Spec Sheet Builder\test-lead-setting.php on line 8
+[15-Oct-2025 19:10:33 UTC] PHP Fatal error:  Uncaught Error: Call to undefined function esc_html() in C:\Users\ishla\Local Sites\my-playground\app\public\wp-content\plugins\Submittal & Spec Sheet Builder\test-license-api.php:120
+Stack trace:
+#0 {main}
+  thrown in C:\Users\ishla\Local Sites\my-playground\app\public\wp-content\plugins\Submittal & Spec Sheet Builder\test-license-api.php on line 120
+[15-Oct-2025 19:11:11 UTC] PHP Warning:  require_once(C:\Users\ishla\Local Sites\my-playground\app\public\wp-content\plugins\Submittal &amp; Spec Sheet Builder/../../../../../wp-load.php): Failed to open stream: No such file or directory in C:\Users\ishla\Local Sites\my-playground\app\public\wp-content\plugins\Submittal & Spec Sheet Builder\test-license-api.php on line 14
+[15-Oct-2025 19:11:11 UTC] PHP Fatal error:  Uncaught Error: Failed opening required 'C:\Users\ishla\Local Sites\my-playground\app\public\wp-content\plugins\Submittal & Spec Sheet Builder/../../../../../wp-load.php' (include_path='.:/usr/share/php:/www/wp-content/pear') in C:\Users\ishla\Local Sites\my-playground\app\public\wp-content\plugins\Submittal & Spec Sheet Builder\test-license-api.php:14
+Stack trace:
+#0 {main}
+  thrown in C:\Users\ishla\Local Sites\my-playground\app\public\wp-content\plugins\Submittal & Spec Sheet Builder\test-license-api.php on line 14
+[15-Oct-2025 19:11:15 UTC] PHP Warning:  require_once(C:\Users\ishla\Local Sites\my-playground\app\public\wp-content\plugins\Submittal &amp; Spec Sheet Builder/../../../../../wp-load.php): Failed to open stream: No such file or directory in C:\Users\ishla\Local Sites\my-playground\app\public\wp-content\plugins\Submittal & Spec Sheet Builder\test-license-api.php on line 14
+[15-Oct-2025 19:11:15 UTC] PHP Fatal error:  Uncaught Error: Failed opening required 'C:\Users\ishla\Local Sites\my-playground\app\public\wp-content\plugins\Submittal & Spec Sheet Builder/../../../../../wp-load.php' (include_path='.:/usr/share/php:/www/wp-content/pear') in C:\Users\ishla\Local Sites\my-playground\app\public\wp-content\plugins\Submittal & Spec Sheet Builder\test-license-api.php:14
+Stack trace:
+#0 {main}
+  thrown in C:\Users\ishla\Local Sites\my-playground\app\public\wp-content\plugins\Submittal & Spec Sheet Builder\test-license-api.php on line 14

@@ -8,7 +8,7 @@
  * Author URI:  https://webstuffguylabs.com
  * License:     GPL v2 or later
  * License URI: https://www.gnu.org/licenses/gpl-2.0.html
- * Text Domain: submittal-builder
+ * Text Domain: submittal-spec-sheet-builder
  * Domain Path: /languages
  * Requires at least: 6.1
  * Requires PHP: 7.4
@@ -120,8 +120,7 @@ final class SFB_Plugin {
     // Custom capability enforcement
     add_filter('map_meta_cap', [$this, 'map_sfb_capabilities'], 10, 4);
 
-    // Load translations
-    add_action('init', [$this, 'load_textdomain']);
+    // Translations auto-loaded by WordPress.org since WP 4.6
 
     // Run database migrations
     add_action('init', [$this, 'check_db_migrations']);
@@ -180,14 +179,6 @@ final class SFB_Plugin {
     add_action('load-submittal-builder_page_sfb-upgrade', [$this, 'add_help_tabs']);
   }
 
-  /** Load plugin translations */
-  function load_textdomain() {
-    load_plugin_textdomain(
-      'submittal-builder',
-      false,
-      dirname(plugin_basename(__FILE__)) . '/languages/'
-    );
-  }
 
   /** Create DB tables we'll use later */
   function activate() {
@@ -239,7 +230,7 @@ final class SFB_Plugin {
     // Create Operator role with limited capabilities
     add_role(
       'sfb_operator',
-      __('Submittal Builder Operator', 'submittal-builder'),
+      __('Submittal Builder Operator', 'submittal-spec-sheet-builder'),
       [
         'read' => true, // Basic WordPress capability
         // Custom SFB capabilities (enforced via map_meta_cap)
@@ -449,7 +440,7 @@ final class SFB_Plugin {
     if (empty($key) || empty($email)) {
       return new WP_Error(
         'missing_fields',
-        __('License key and email are required.', 'submittal-builder'),
+        __('License key and email are required.', 'submittal-spec-sheet-builder'),
         ['status' => 400]
       );
     }
@@ -458,7 +449,7 @@ final class SFB_Plugin {
     if (!is_email($email)) {
       return new WP_Error(
         'invalid_email',
-        __('Invalid email address.', 'submittal-builder'),
+        __('Invalid email address.', 'submittal-spec-sheet-builder'),
         ['status' => 400]
       );
     }
@@ -477,7 +468,7 @@ final class SFB_Plugin {
     return [
       'ok' => true,
       'success' => true,
-      'message' => $result['message'] ?? __('License activated successfully!', 'submittal-builder'),
+      'message' => $result['message'] ?? __('License activated successfully!', 'submittal-spec-sheet-builder'),
       'license' => [
         'key' => $license_data['key'] ?? '',
         'email' => $license_data['email'] ?? '',
@@ -574,9 +565,9 @@ final class SFB_Plugin {
       <div class="sfb-builder-header">
         <div class="sfb-builder-header-content">
           <div class="sfb-builder-title-group">
-            <h1><?php esc_html_e('Product Catalog', 'submittal-builder'); ?></h1>
+            <h1><?php esc_html_e('Product Catalog', 'submittal-spec-sheet-builder'); ?></h1>
             <p class="sfb-builder-subtitle">
-              <?php esc_html_e('Manage your product catalog. Add categories, products, and specifications that contractors can select when building submittal packets.', 'submittal-builder'); ?>
+              <?php esc_html_e('Manage your product catalog. Add categories, products, and specifications that contractors can select when building submittal packets.', 'submittal-spec-sheet-builder'); ?>
             </p>
           </div>
         </div>
@@ -751,14 +742,14 @@ final class SFB_Plugin {
     $settings_saved = isset($_GET['settings-updated']) && $_GET['settings-updated'] === 'true';
     ?>
     <div class="wrap sfb-branding-wrap">
-      <h1><?php echo esc_html__('Branding', 'submittal-builder'); ?></h1>
+      <h1><?php echo esc_html__('Branding', 'submittal-spec-sheet-builder'); ?></h1>
       <p style="color: #6b7280; margin-top: -8px; margin-bottom: 24px;">
-        <?php echo esc_html__('Customize your company branding for PDF submittals and spec sheets.', 'submittal-builder'); ?>
+        <?php echo esc_html__('Customize your company branding for PDF submittals and spec sheets.', 'submittal-spec-sheet-builder'); ?>
       </p>
 
       <?php if ($settings_saved): ?>
       <div class="notice notice-success is-dismissible" style="margin-bottom: 20px;">
-        <p><strong>✅ <?php echo esc_html__('Branding settings saved successfully!', 'submittal-builder'); ?></strong></p>
+        <p><strong>✅ <?php echo esc_html__('Branding settings saved successfully!', 'submittal-spec-sheet-builder'); ?></strong></p>
       </div>
       <?php endif; ?>
 
@@ -770,18 +761,18 @@ final class SFB_Plugin {
 
             <!-- Company Identity Card -->
             <div class="sfb-card">
-              <h2>🏢 <?php echo esc_html__('Company Identity', 'submittal-builder'); ?></h2>
+              <h2>🏢 <?php echo esc_html__('Company Identity', 'submittal-spec-sheet-builder'); ?></h2>
               <p class="sfb-muted">
-                <?php echo esc_html__('Your company information will appear on all PDF documents.', 'submittal-builder'); ?>
+                <?php echo esc_html__('Your company information will appear on all PDF documents.', 'submittal-spec-sheet-builder'); ?>
               </p>
 
               <!-- Logo -->
               <div class="sfb-field-group">
                 <label class="sfb-field-label" for="sfb-logo-url">
-                  <?php esc_html_e('Company Logo', 'submittal-builder'); ?>
+                  <?php esc_html_e('Company Logo', 'submittal-spec-sheet-builder'); ?>
                 </label>
                 <p class="sfb-field-hint">
-                  <?php esc_html_e('Upload your logo to appear on PDF cover pages and headers. Recommended: 300x80px PNG with transparent background.', 'submittal-builder'); ?>
+                  <?php esc_html_e('Upload your logo to appear on PDF cover pages and headers. Recommended: 300x80px PNG with transparent background.', 'submittal-spec-sheet-builder'); ?>
                 </p>
                 <div class="sfb-logo-upload">
                   <input type="hidden"
@@ -789,11 +780,11 @@ final class SFB_Plugin {
                          name="<?php echo esc_attr($this->option_key()); ?>[logo_url]"
                          value="<?php echo esc_attr($options['logo_url']); ?>">
                   <button type="button" class="button sfb-media-button" id="sfb-upload-logo">
-                    <?php esc_html_e('Select from Media Library', 'submittal-builder'); ?>
+                    <?php esc_html_e('Select from Media Library', 'submittal-spec-sheet-builder'); ?>
                   </button>
                   <?php if (!empty($options['logo_url'])): ?>
                     <button type="button" class="button sfb-remove-logo" id="sfb-remove-logo">
-                      <?php esc_html_e('Remove Logo', 'submittal-builder'); ?>
+                      <?php esc_html_e('Remove Logo', 'submittal-spec-sheet-builder'); ?>
                     </button>
                   <?php endif; ?>
                   <div class="sfb-logo-preview" id="sfb-logo-preview">
@@ -807,65 +798,65 @@ final class SFB_Plugin {
               <!-- Company Name -->
               <div class="sfb-field-group">
                 <label class="sfb-field-label" for="sfb-company-name">
-                  <?php esc_html_e('Company Name', 'submittal-builder'); ?>
+                  <?php esc_html_e('Company Name', 'submittal-spec-sheet-builder'); ?>
                 </label>
                 <input type="text"
                        id="sfb-company-name"
                        name="<?php echo esc_attr($this->option_key()); ?>[company_name]"
                        value="<?php echo esc_attr($options['company_name']); ?>"
                        class="sfb-text-input"
-                       placeholder="<?php esc_attr_e('e.g., Acme Construction Supply', 'submittal-builder'); ?>">
+                       placeholder="<?php esc_attr_e('e.g., Acme Construction Supply', 'submittal-spec-sheet-builder'); ?>">
               </div>
 
               <!-- Address -->
               <div class="sfb-field-group">
                 <label class="sfb-field-label" for="sfb-company-address">
-                  <?php esc_html_e('Company Address', 'submittal-builder'); ?>
+                  <?php esc_html_e('Company Address', 'submittal-spec-sheet-builder'); ?>
                 </label>
                 <textarea id="sfb-company-address"
                           name="<?php echo esc_attr($this->option_key()); ?>[company_address]"
                           rows="3"
                           class="sfb-textarea"
-                          placeholder="<?php esc_attr_e('123 Main Street&#10;Suite 100&#10;City, State 12345', 'submittal-builder'); ?>"><?php echo esc_textarea($options['company_address']); ?></textarea>
+                          placeholder="<?php esc_attr_e('123 Main Street&#10;Suite 100&#10;City, State 12345', 'submittal-spec-sheet-builder'); ?>"><?php echo esc_textarea($options['company_address']); ?></textarea>
               </div>
 
               <!-- Phone -->
               <div class="sfb-field-group">
                 <label class="sfb-field-label" for="sfb-company-phone">
-                  <?php esc_html_e('Phone Number', 'submittal-builder'); ?>
+                  <?php esc_html_e('Phone Number', 'submittal-spec-sheet-builder'); ?>
                 </label>
                 <input type="text"
                        id="sfb-company-phone"
                        name="<?php echo esc_attr($this->option_key()); ?>[company_phone]"
                        value="<?php echo esc_attr($options['company_phone']); ?>"
                        class="sfb-text-input"
-                       placeholder="<?php esc_attr_e('(555) 123-4567', 'submittal-builder'); ?>">
+                       placeholder="<?php esc_attr_e('(555) 123-4567', 'submittal-spec-sheet-builder'); ?>">
               </div>
 
               <!-- Website -->
               <div class="sfb-field-group">
                 <label class="sfb-field-label" for="sfb-company-website">
-                  <?php esc_html_e('Website', 'submittal-builder'); ?>
+                  <?php esc_html_e('Website', 'submittal-spec-sheet-builder'); ?>
                 </label>
                 <input type="text"
                        id="sfb-company-website"
                        name="<?php echo esc_attr($this->option_key()); ?>[company_website]"
                        value="<?php echo esc_attr($options['company_website']); ?>"
                        class="sfb-text-input"
-                       placeholder="<?php esc_attr_e('www.example.com', 'submittal-builder'); ?>">
+                       placeholder="<?php esc_attr_e('www.example.com', 'submittal-spec-sheet-builder'); ?>">
               </div>
             </div>
 
             <!-- Brand Presets Card -->
             <div class="sfb-card">
               <h2>
-                🎛️ <?php echo esc_html__('Brand Presets', 'submittal-builder'); ?>
+                🎛️ <?php echo esc_html__('Brand Presets', 'submittal-spec-sheet-builder'); ?>
                 <span class="sfb-custom-badge" id="sfb-custom-badge" style="display: <?php echo $options['brand_preset'] === 'custom' ? 'inline-flex' : 'none'; ?>;">
-                  <?php esc_html_e('Custom', 'submittal-builder'); ?>
+                  <?php esc_html_e('Custom', 'submittal-spec-sheet-builder'); ?>
                 </span>
               </h2>
               <p class="sfb-muted">
-                <?php echo esc_html__('Choose a professional color scheme to get started, then customize as needed.', 'submittal-builder'); ?>
+                <?php echo esc_html__('Choose a professional color scheme to get started, then customize as needed.', 'submittal-spec-sheet-builder'); ?>
               </p>
 
               <div class="sfb-preset-grid">
@@ -881,10 +872,10 @@ final class SFB_Plugin {
                     </div>
                   </div>
                   <div class="sfb-preset-info">
-                    <h4><?php esc_html_e('Modern Blue', 'submittal-builder'); ?></h4>
-                    <p><?php esc_html_e('Professional and trustworthy', 'submittal-builder'); ?></p>
+                    <h4><?php esc_html_e('Modern Blue', 'submittal-spec-sheet-builder'); ?></h4>
+                    <p><?php esc_html_e('Professional and trustworthy', 'submittal-spec-sheet-builder'); ?></p>
                     <button type="button" class="button sfb-preset-button" data-preset="modern-blue">
-                      <?php esc_html_e('Use Preset', 'submittal-builder'); ?>
+                      <?php esc_html_e('Use Preset', 'submittal-spec-sheet-builder'); ?>
                     </button>
                   </div>
                   <?php if ($options['brand_preset'] === 'modern-blue'): ?>
@@ -906,10 +897,10 @@ final class SFB_Plugin {
                     </div>
                   </div>
                   <div class="sfb-preset-info">
-                    <h4><?php esc_html_e('Architect Gray', 'submittal-builder'); ?></h4>
-                    <p><?php esc_html_e('Minimal and sophisticated', 'submittal-builder'); ?></p>
+                    <h4><?php esc_html_e('Architect Gray', 'submittal-spec-sheet-builder'); ?></h4>
+                    <p><?php esc_html_e('Minimal and sophisticated', 'submittal-spec-sheet-builder'); ?></p>
                     <button type="button" class="button sfb-preset-button" data-preset="architect-gray">
-                      <?php esc_html_e('Use Preset', 'submittal-builder'); ?>
+                      <?php esc_html_e('Use Preset', 'submittal-spec-sheet-builder'); ?>
                     </button>
                   </div>
                   <?php if ($options['brand_preset'] === 'architect-gray'): ?>
@@ -931,10 +922,10 @@ final class SFB_Plugin {
                     </div>
                   </div>
                   <div class="sfb-preset-info">
-                    <h4><?php esc_html_e('Engineering Bold', 'submittal-builder'); ?></h4>
-                    <p><?php esc_html_e('Strong and confident', 'submittal-builder'); ?></p>
+                    <h4><?php esc_html_e('Engineering Bold', 'submittal-spec-sheet-builder'); ?></h4>
+                    <p><?php esc_html_e('Strong and confident', 'submittal-spec-sheet-builder'); ?></p>
                     <button type="button" class="button sfb-preset-button" data-preset="engineering-bold">
-                      <?php esc_html_e('Use Preset', 'submittal-builder'); ?>
+                      <?php esc_html_e('Use Preset', 'submittal-spec-sheet-builder'); ?>
                     </button>
                   </div>
                   <?php if ($options['brand_preset'] === 'engineering-bold'): ?>
@@ -956,10 +947,10 @@ final class SFB_Plugin {
                     </div>
                   </div>
                   <div class="sfb-preset-info">
-                    <h4><?php esc_html_e('Clean Violet', 'submittal-builder'); ?></h4>
-                    <p><?php esc_html_e('Creative and modern', 'submittal-builder'); ?></p>
+                    <h4><?php esc_html_e('Clean Violet', 'submittal-spec-sheet-builder'); ?></h4>
+                    <p><?php esc_html_e('Creative and modern', 'submittal-spec-sheet-builder'); ?></p>
                     <button type="button" class="button sfb-preset-button" data-preset="clean-violet">
-                      <?php esc_html_e('Use Preset', 'submittal-builder'); ?>
+                      <?php esc_html_e('Use Preset', 'submittal-spec-sheet-builder'); ?>
                     </button>
                   </div>
                   <?php if ($options['brand_preset'] === 'clean-violet'): ?>
@@ -979,18 +970,18 @@ final class SFB_Plugin {
 
             <!-- Visual Branding Card -->
             <div class="sfb-card">
-              <h2>🎨 <?php echo esc_html__('Visual Branding', 'submittal-builder'); ?></h2>
+              <h2>🎨 <?php echo esc_html__('Visual Branding', 'submittal-spec-sheet-builder'); ?></h2>
               <p class="sfb-muted">
-                <?php echo esc_html__('Customize the visual appearance of your PDF documents.', 'submittal-builder'); ?>
+                <?php echo esc_html__('Customize the visual appearance of your PDF documents.', 'submittal-spec-sheet-builder'); ?>
               </p>
 
               <!-- Primary Color -->
               <div class="sfb-field-group">
                 <label class="sfb-field-label" for="sfb-primary-color">
-                  <?php esc_html_e('Primary Brand Color', 'submittal-builder'); ?>
+                  <?php esc_html_e('Primary Brand Color', 'submittal-spec-sheet-builder'); ?>
                 </label>
                 <p class="sfb-field-hint">
-                  <?php esc_html_e('Used for PDF headers, accents, and section dividers.', 'submittal-builder'); ?>
+                  <?php esc_html_e('Used for PDF headers, accents, and section dividers.', 'submittal-spec-sheet-builder'); ?>
                 </p>
                 <div class="sfb-color-picker-group">
                   <input type="color"
@@ -1016,8 +1007,8 @@ final class SFB_Plugin {
                          value="1"
                          <?php checked(!empty($options['cover_default'])); ?>>
                   <span class="sfb-checkbox-label">
-                    <strong><?php esc_html_e('Include cover sheet by default', 'submittal-builder'); ?></strong>
-                    <small><?php esc_html_e('Automatically add a branded cover page to new PDF submittals.', 'submittal-builder'); ?></small>
+                    <strong><?php esc_html_e('Include cover sheet by default', 'submittal-spec-sheet-builder'); ?></strong>
+                    <small><?php esc_html_e('Automatically add a branded cover page to new PDF submittals.', 'submittal-spec-sheet-builder'); ?></small>
                   </span>
                 </label>
               </div>
@@ -1030,7 +1021,7 @@ final class SFB_Plugin {
               <!-- PDF Theme Selector (Pro Feature) -->
               <div class="sfb-field-group">
                 <label class="sfb-field-label" for="sfb-pdf-theme">
-                  <?php esc_html_e('PDF Theme', 'submittal-builder'); ?>
+                  <?php esc_html_e('PDF Theme', 'submittal-spec-sheet-builder'); ?>
                   <?php if ($is_pro): ?>
                     <span class="sfb-pro-badge">PRO</span>
                   <?php else: ?>
@@ -1038,25 +1029,25 @@ final class SFB_Plugin {
                   <?php endif; ?>
                 </label>
                 <p class="sfb-field-hint">
-                  <?php esc_html_e('Choose a color scheme for PDF headers, accents, and section dividers.', 'submittal-builder'); ?>
+                  <?php esc_html_e('Choose a color scheme for PDF headers, accents, and section dividers.', 'submittal-spec-sheet-builder'); ?>
                 </p>
                 <select id="sfb-pdf-theme"
                         name="<?php echo esc_attr($this->option_key()); ?>[theme]"
                         class="sfb-select-input"
                         <?php echo !$is_pro ? 'disabled' : ''; ?>>
                   <option value="engineering" <?php selected($options['theme'] ?? 'engineering', 'engineering'); ?>>
-                    <?php esc_html_e('Engineering (Blue - #7861FF)', 'submittal-builder'); ?>
+                    <?php esc_html_e('Engineering (Blue - #7861FF)', 'submittal-spec-sheet-builder'); ?>
                   </option>
                   <option value="architectural" <?php selected($options['theme'] ?? 'engineering', 'architectural'); ?> <?php echo !$is_pro ? 'disabled' : ''; ?>>
-                    <?php esc_html_e('Architectural (Sky Blue - #0ea5e9)', 'submittal-builder'); ?> <?php echo !$is_pro ? '🔒' : ''; ?>
+                    <?php esc_html_e('Architectural (Sky Blue - #0ea5e9)', 'submittal-spec-sheet-builder'); ?> <?php echo !$is_pro ? '🔒' : ''; ?>
                   </option>
                   <option value="corporate" <?php selected($options['theme'] ?? 'engineering', 'corporate'); ?> <?php echo !$is_pro ? 'disabled' : ''; ?>>
-                    <?php esc_html_e('Corporate (Green - #10b981)', 'submittal-builder'); ?> <?php echo !$is_pro ? '🔒' : ''; ?>
+                    <?php esc_html_e('Corporate (Green - #10b981)', 'submittal-spec-sheet-builder'); ?> <?php echo !$is_pro ? '🔒' : ''; ?>
                   </option>
                 </select>
                 <?php if (!$is_pro): ?>
                   <p class="sfb-field-hint" style="color: #d97706; margin-top: 8px;">
-                    <?php esc_html_e('⭐ Upgrade to Pro to unlock Architectural and Corporate themes.', 'submittal-builder'); ?>
+                    <?php esc_html_e('⭐ Upgrade to Pro to unlock Architectural and Corporate themes.', 'submittal-spec-sheet-builder'); ?>
                   </p>
                 <?php endif; ?>
               </div>
@@ -1064,28 +1055,28 @@ final class SFB_Plugin {
               <!-- PDF Watermark (Pro Feature) -->
               <div class="sfb-field-group">
                 <label class="sfb-field-label" for="sfb-pdf-watermark">
-                  <?php esc_html_e('PDF Watermark Text', 'submittal-builder'); ?>
+                  <?php esc_html_e('PDF Watermark Text', 'submittal-spec-sheet-builder'); ?>
                   <?php if ($is_pro): ?>
                     <span class="sfb-pro-badge">PRO</span>
                   <?php else: ?>
                     <span class="sfb-free-badge">PRO ONLY</span>
                   <?php endif; ?>
-                  <span class="sfb-field-optional">(<?php esc_html_e('optional', 'submittal-builder'); ?>)</span>
+                  <span class="sfb-field-optional">(<?php esc_html_e('optional', 'submittal-spec-sheet-builder'); ?>)</span>
                 </label>
                 <p class="sfb-field-hint">
-                  <?php esc_html_e('Add diagonal watermark text across all PDF pages (e.g., "DRAFT", "CONFIDENTIAL", "PRELIMINARY").', 'submittal-builder'); ?>
+                  <?php esc_html_e('Add diagonal watermark text across all PDF pages (e.g., "DRAFT", "CONFIDENTIAL", "PRELIMINARY").', 'submittal-spec-sheet-builder'); ?>
                 </p>
                 <input type="text"
                        id="sfb-pdf-watermark"
                        name="<?php echo esc_attr($this->option_key()); ?>[watermark]"
                        value="<?php echo esc_attr($options['watermark'] ?? ''); ?>"
                        class="sfb-text-input"
-                       placeholder="<?php esc_attr_e('e.g., DRAFT, CONFIDENTIAL', 'submittal-builder'); ?>"
+                       placeholder="<?php esc_attr_e('e.g., DRAFT, CONFIDENTIAL', 'submittal-spec-sheet-builder'); ?>"
                        maxlength="50"
                        <?php echo !$is_pro ? 'disabled' : ''; ?>>
                 <?php if (!$is_pro): ?>
                   <p class="sfb-field-hint" style="color: #d97706; margin-top: 8px;">
-                    <?php esc_html_e('⭐ Upgrade to Pro to add custom watermarks to your PDFs.', 'submittal-builder'); ?>
+                    <?php esc_html_e('⭐ Upgrade to Pro to add custom watermarks to your PDFs.', 'submittal-spec-sheet-builder'); ?>
                   </p>
                 <?php endif; ?>
               </div>
@@ -1101,19 +1092,19 @@ final class SFB_Plugin {
                          <?php echo !$is_pro ? 'disabled' : ''; ?>>
                   <span class="sfb-checkbox-label">
                     <strong>
-                      <?php esc_html_e('Include signature block in PDFs', 'submittal-builder'); ?>
+                      <?php esc_html_e('Include signature block in PDFs', 'submittal-spec-sheet-builder'); ?>
                       <?php if ($is_pro): ?>
                         <span class="sfb-pro-badge">PRO</span>
                       <?php else: ?>
                         <span class="sfb-free-badge">PRO ONLY</span>
                       <?php endif; ?>
                     </strong>
-                    <small><?php esc_html_e('Add a 3-column approval signature table at the end of each product page.', 'submittal-builder'); ?></small>
+                    <small><?php esc_html_e('Add a 3-column approval signature table at the end of each product page.', 'submittal-spec-sheet-builder'); ?></small>
                   </span>
                 </label>
                 <?php if (!$is_pro): ?>
                   <p class="sfb-field-hint" style="color: #d97706; margin-top: 8px; margin-left: 24px;">
-                    <?php esc_html_e('⭐ Upgrade to Pro to add approval signature blocks to your PDFs.', 'submittal-builder'); ?>
+                    <?php esc_html_e('⭐ Upgrade to Pro to add approval signature blocks to your PDFs.', 'submittal-spec-sheet-builder'); ?>
                   </p>
                 <?php endif; ?>
               </div>
@@ -1130,11 +1121,11 @@ final class SFB_Plugin {
             <!-- White-Label Mode (Pro Feature) -->
             <div class="sfb-card sfb-white-label-card">
               <h2>
-                🏷️ <?php echo esc_html__('White-Label Mode', 'submittal-builder'); ?>
+                🏷️ <?php echo esc_html__('White-Label Mode', 'submittal-spec-sheet-builder'); ?>
                 <span class="sfb-pro-badge">PRO</span>
               </h2>
               <p class="sfb-muted">
-                <?php echo esc_html__('Remove plugin branding from PDFs, emails, and frontend. Perfect for professionals presenting to clients.', 'submittal-builder'); ?>
+                <?php echo esc_html__('Remove plugin branding from PDFs, emails, and frontend. Perfect for professionals presenting to clients.', 'submittal-spec-sheet-builder'); ?>
               </p>
 
               <!-- Enable White-Label Toggle -->
@@ -1146,8 +1137,8 @@ final class SFB_Plugin {
                          value="1"
                          <?php checked(!empty($white_label_settings['enabled'])); ?>>
                   <span class="sfb-checkbox-label">
-                    <strong><?php esc_html_e('Enable White-Label Mode', 'submittal-builder'); ?></strong>
-                    <small><?php esc_html_e('Hide all "Generated with Submittal & Spec Sheet Builder" credits from PDFs, emails, and frontend.', 'submittal-builder'); ?></small>
+                    <strong><?php esc_html_e('Enable White-Label Mode', 'submittal-spec-sheet-builder'); ?></strong>
+                    <small><?php esc_html_e('Hide all "Generated with Submittal & Spec Sheet Builder" credits from PDFs, emails, and frontend.', 'submittal-spec-sheet-builder'); ?></small>
                   </span>
                 </label>
               </div>
@@ -1158,28 +1149,28 @@ final class SFB_Plugin {
                 <!-- Custom PDF Footer Text -->
                 <div class="sfb-field-group">
                   <label class="sfb-field-label" for="sfb-white-label-footer">
-                    <?php esc_html_e('Custom PDF Footer Text', 'submittal-builder'); ?>
-                    <span class="sfb-field-optional">(<?php esc_html_e('optional', 'submittal-builder'); ?>)</span>
+                    <?php esc_html_e('Custom PDF Footer Text', 'submittal-spec-sheet-builder'); ?>
+                    <span class="sfb-field-optional">(<?php esc_html_e('optional', 'submittal-spec-sheet-builder'); ?>)</span>
                   </label>
                   <p class="sfb-field-hint">
-                    <?php esc_html_e('Replace the default footer with your own text. Leave blank to remove footer text entirely.', 'submittal-builder'); ?>
+                    <?php esc_html_e('Replace the default footer with your own text. Leave blank to remove footer text entirely.', 'submittal-spec-sheet-builder'); ?>
                   </p>
                   <input type="text"
                          id="sfb-white-label-footer"
                          name="<?php echo esc_attr($this->option_key()); ?>[white_label][custom_footer]"
                          value="<?php echo esc_attr($white_label_settings['custom_footer']); ?>"
                          class="sfb-text-input"
-                         placeholder="<?php esc_attr_e('e.g., Prepared by Your Company', 'submittal-builder'); ?>">
+                         placeholder="<?php esc_attr_e('e.g., Prepared by Your Company', 'submittal-spec-sheet-builder'); ?>">
                 </div>
 
                 <!-- Email From Name -->
                 <div class="sfb-field-group">
                   <label class="sfb-field-label" for="sfb-white-label-email-name">
-                    <?php esc_html_e('Email From Name', 'submittal-builder'); ?>
-                    <span class="sfb-field-optional">(<?php esc_html_e('optional', 'submittal-builder'); ?>)</span>
+                    <?php esc_html_e('Email From Name', 'submittal-spec-sheet-builder'); ?>
+                    <span class="sfb-field-optional">(<?php esc_html_e('optional', 'submittal-spec-sheet-builder'); ?>)</span>
                   </label>
                   <p class="sfb-field-hint">
-                    <?php esc_html_e('Customize the sender name for lead capture emails. Leave blank to use site name.', 'submittal-builder'); ?>
+                    <?php esc_html_e('Customize the sender name for lead capture emails. Leave blank to use site name.', 'submittal-spec-sheet-builder'); ?>
                   </p>
                   <input type="text"
                          id="sfb-white-label-email-name"
@@ -1192,11 +1183,11 @@ final class SFB_Plugin {
                 <!-- Email From Address -->
                 <div class="sfb-field-group">
                   <label class="sfb-field-label" for="sfb-white-label-email-address">
-                    <?php esc_html_e('Email From Address', 'submittal-builder'); ?>
-                    <span class="sfb-field-optional">(<?php esc_html_e('optional', 'submittal-builder'); ?>)</span>
+                    <?php esc_html_e('Email From Address', 'submittal-spec-sheet-builder'); ?>
+                    <span class="sfb-field-optional">(<?php esc_html_e('optional', 'submittal-spec-sheet-builder'); ?>)</span>
                   </label>
                   <p class="sfb-field-hint">
-                    <?php esc_html_e('Customize the sender email address. Leave blank to use WordPress default.', 'submittal-builder'); ?>
+                    <?php esc_html_e('Customize the sender email address. Leave blank to use WordPress default.', 'submittal-spec-sheet-builder'); ?>
                   </p>
                   <input type="email"
                          id="sfb-white-label-email-address"
@@ -1215,8 +1206,8 @@ final class SFB_Plugin {
                            value="1"
                            <?php checked(!empty($white_label_settings['show_subtle_credit'])); ?>>
                     <span class="sfb-checkbox-label">
-                      <strong><?php esc_html_e('Show subtle credit', 'submittal-builder'); ?></strong>
-                      <small><?php esc_html_e('Display a small "Powered by" credit in PDFs and emails (not shown on frontend).', 'submittal-builder'); ?></small>
+                      <strong><?php esc_html_e('Show subtle credit', 'submittal-spec-sheet-builder'); ?></strong>
+                      <small><?php esc_html_e('Display a small "Powered by" credit in PDFs and emails (not shown on frontend).', 'submittal-spec-sheet-builder'); ?></small>
                     </span>
                   </label>
                 </div>
@@ -1228,11 +1219,11 @@ final class SFB_Plugin {
             <!-- Save Section -->
             <div class="sfb-save-section">
               <p class="sfb-save-message">
-                💾 <?php echo esc_html__('Save your brand settings to apply them across all submittal PDFs.', 'submittal-builder'); ?>
+                💾 <?php echo esc_html__('Save your brand settings to apply them across all submittal PDFs.', 'submittal-spec-sheet-builder'); ?>
               </p>
               <div class="sfb-save-button-wrapper">
                 <button type="submit" class="button button-primary button-large sfb-save-button" id="sfb-save-branding">
-                  <?php esc_html_e('Save Branding', 'submittal-builder'); ?>
+                  <?php esc_html_e('Save Branding', 'submittal-spec-sheet-builder'); ?>
                 </button>
                 <span class="sfb-save-success" id="sfb-save-success">
                   <span class="dashicons dashicons-yes-alt"></span>
@@ -1245,9 +1236,9 @@ final class SFB_Plugin {
         <!-- Right Column: Live Preview -->
         <div class="sfb-branding-preview">
           <div class="sfb-card sfb-preview-card">
-            <h3><?php esc_html_e('Live Preview', 'submittal-builder'); ?></h3>
+            <h3><?php esc_html_e('Live Preview', 'submittal-spec-sheet-builder'); ?></h3>
             <p class="sfb-muted" style="margin-bottom: 16px;">
-              <?php esc_html_e('See how your branding will appear on PDFs', 'submittal-builder'); ?>
+              <?php esc_html_e('See how your branding will appear on PDFs', 'submittal-spec-sheet-builder'); ?>
             </p>
 
             <div class="sfb-pdf-preview" id="sfb-pdf-preview">
@@ -1260,12 +1251,12 @@ final class SFB_Plugin {
                   <?php endif; ?>
                 </div>
                 <div class="sfb-pdf-company" id="sfb-preview-company">
-                  <?php echo !empty($options['company_name']) ? esc_html($options['company_name']) : esc_html__('Your Company Name', 'submittal-builder'); ?>
+                  <?php echo !empty($options['company_name']) ? esc_html($options['company_name']) : esc_html__('Your Company Name', 'submittal-spec-sheet-builder'); ?>
                 </div>
               </div>
               <div class="sfb-pdf-body">
                 <div class="sfb-pdf-title" id="sfb-preview-title">
-                  <?php esc_html_e('Submittal Packet', 'submittal-builder'); ?>
+                  <?php esc_html_e('Submittal Packet', 'submittal-spec-sheet-builder'); ?>
                 </div>
                 <div class="sfb-pdf-content">
                   <div class="sfb-pdf-sample-line"></div>
@@ -1274,12 +1265,12 @@ final class SFB_Plugin {
                 </div>
               </div>
               <div class="sfb-pdf-footer" id="sfb-preview-footer">
-                <?php echo !empty($options['footer_text']) ? esc_html($options['footer_text']) : esc_html__('Generated by Submittal &amp; Spec Builder', 'submittal-builder'); ?>
+                <?php echo !empty($options['footer_text']) ? esc_html($options['footer_text']) : esc_html__('Generated by Submittal &amp; Spec Builder', 'submittal-spec-sheet-builder'); ?>
               </div>
             </div>
             <p class="sfb-preview-note">
               <span class="dashicons dashicons-update-alt"></span>
-              <?php esc_html_e('Your changes will reflect automatically in your next PDF.', 'submittal-builder'); ?>
+              <?php esc_html_e('Your changes will reflect automatically in your next PDF.', 'submittal-spec-sheet-builder'); ?>
             </p>
           </div>
         </div>
@@ -1293,9 +1284,9 @@ final class SFB_Plugin {
       ?>
       <!-- Brand Presets (Agency Feature) -->
       <div class="sfb-card" style="margin-top: 32px;">
-        <h2>💼 <?php esc_html_e('Brand Presets', 'submittal-builder'); ?> <span style="background:#7c3aed;color:#fff;font-size:11px;padding:4px 8px;border-radius:4px;font-weight:600;margin-left:8px;">AGENCY</span></h2>
+        <h2>💼 <?php esc_html_e('Brand Presets', 'submittal-spec-sheet-builder'); ?> <span style="background:#7c3aed;color:#fff;font-size:11px;padding:4px 8px;border-radius:4px;font-weight:600;margin-left:8px;">AGENCY</span></h2>
         <p class="sfb-muted">
-          <?php esc_html_e('Save and manage multiple brand configurations. Perfect for agencies managing multiple clients.', 'submittal-builder'); ?>
+          <?php esc_html_e('Save and manage multiple brand configurations. Perfect for agencies managing multiple clients.', 'submittal-spec-sheet-builder'); ?>
         </p>
 
         <!-- Create Preset -->
@@ -1303,21 +1294,21 @@ final class SFB_Plugin {
           <div style="display:flex;gap:12px;align-items:center;">
             <input type="text"
                    id="sfb-new-preset-name"
-                   placeholder="<?php esc_attr_e('Preset name (e.g., Client A)', 'submittal-builder'); ?>"
+                   placeholder="<?php esc_attr_e('Preset name (e.g., Client A)', 'submittal-spec-sheet-builder'); ?>"
                    style="flex:1;max-width:300px;">
             <button type="button" class="button button-primary" id="sfb-create-preset">
-              <?php esc_html_e('Save Current as Preset', 'submittal-builder'); ?>
+              <?php esc_html_e('Save Current as Preset', 'submittal-spec-sheet-builder'); ?>
             </button>
           </div>
           <p style="color:#6b7280;font-size:13px;margin:8px 0 0 0;">
-            <?php esc_html_e('Saves your current branding settings with a name you can apply later.', 'submittal-builder'); ?>
+            <?php esc_html_e('Saves your current branding settings with a name you can apply later.', 'submittal-spec-sheet-builder'); ?>
           </p>
         </div>
 
         <!-- Presets List -->
         <div id="sfb-presets-list">
           <p style="text-align:center;color:#9ca3af;padding:20px;">
-            <?php esc_html_e('Loading presets...', 'submittal-builder'); ?>
+            <?php esc_html_e('Loading presets...', 'submittal-spec-sheet-builder'); ?>
           </p>
         </div>
 
@@ -1329,10 +1320,10 @@ final class SFB_Plugin {
                    name="<?php echo esc_attr($this->option_key()); ?>[use_default_preset]"
                    value="1"
                    <?php checked(get_option('sfb_brand_use_default_on_pdf', false)); ?>>
-            <strong><?php esc_html_e('Use default preset automatically', 'submittal-builder'); ?></strong>
+            <strong><?php esc_html_e('Use default preset automatically', 'submittal-spec-sheet-builder'); ?></strong>
           </label>
           <p style="color:#6b7280;font-size:13px;margin:8px 0 0 28px;">
-            <?php esc_html_e('When a default Brand Preset is set, use it for the Review preview and generated PDFs. You can still change branding anytime.', 'submittal-builder'); ?>
+            <?php esc_html_e('When a default Brand Preset is set, use it for the Review preview and generated PDFs. You can still change branding anytime.', 'submittal-spec-sheet-builder'); ?>
           </p>
         </div>
       </div>
@@ -1361,8 +1352,8 @@ final class SFB_Plugin {
           return;
         }
         mediaUploader = wp.media({
-          title: '<?php esc_html_e('Select Company Logo', 'submittal-builder'); ?>',
-          button: { text: '<?php esc_html_e('Use this logo', 'submittal-builder'); ?>' },
+          title: '<?php esc_html_e('Select Company Logo', 'submittal-spec-sheet-builder'); ?>',
+          button: { text: '<?php esc_html_e('Use this logo', 'submittal-spec-sheet-builder'); ?>' },
           multiple: false,
           library: { type: 'image' }
         });
@@ -1389,7 +1380,7 @@ final class SFB_Plugin {
 
       // Live preview updates
       $('#sfb-company-name').on('input', function() {
-        const val = $(this).val() || '<?php esc_html_e('Your Company Name', 'submittal-builder'); ?>';
+        const val = $(this).val() || '<?php esc_html_e('Your Company Name', 'submittal-spec-sheet-builder'); ?>';
         $('#sfb-preview-company').text(val);
         markUnsaved();
       });
@@ -1399,7 +1390,7 @@ final class SFB_Plugin {
       });
 
       $('#sfb-footer-text').on('input', function() {
-        const val = $(this).val() || '<?php esc_html_e('Generated by Submittal &amp; Spec Builder', 'submittal-builder'); ?>';
+        const val = $(this).val() || '<?php esc_html_e('Generated by Submittal &amp; Spec Builder', 'submittal-spec-sheet-builder'); ?>';
         $('#sfb-preview-footer').text(val);
         markUnsaved();
       });
@@ -1540,7 +1531,7 @@ final class SFB_Plugin {
         // Create toast
         const $toast = $('<div class="sfb-preset-toast">' +
           '<span class="dashicons dashicons-yes-alt"></span> ' +
-          '<?php esc_html_e('Preset applied — remember to Save Branding to keep changes.', 'submittal-builder'); ?>' +
+          '<?php esc_html_e('Preset applied — remember to Save Branding to keep changes.', 'submittal-spec-sheet-builder'); ?>' +
         '</div>');
 
         $('body').append($toast);
@@ -1597,15 +1588,15 @@ final class SFB_Plugin {
       // Render presets list
       function renderPresets(presets) {
         if (!presets || presets.length === 0) {
-          $('#sfb-presets-list').html('<p style="text-align:center;color:#9ca3af;padding:20px;"><?php esc_html_e('No presets saved yet. Save your current branding as a preset above.', 'submittal-builder'); ?></p>');
+          $('#sfb-presets-list').html('<p style="text-align:center;color:#9ca3af;padding:20px;"><?php esc_html_e('No presets saved yet. Save your current branding as a preset above.', 'submittal-spec-sheet-builder'); ?></p>');
           return;
         }
 
         let html = '<table class="widefat striped" style="margin-top:16px;"><thead><tr>';
-        html += '<th><?php esc_html_e('Name', 'submittal-builder'); ?></th>';
-        html += '<th><?php esc_html_e('Updated', 'submittal-builder'); ?></th>';
-        html += '<th><?php esc_html_e('Actions', 'submittal-builder'); ?></th>';
-        html += '<th style="width:80px;text-align:center;"><?php esc_html_e('Default', 'submittal-builder'); ?></th>';
+        html += '<th><?php esc_html_e('Name', 'submittal-spec-sheet-builder'); ?></th>';
+        html += '<th><?php esc_html_e('Updated', 'submittal-spec-sheet-builder'); ?></th>';
+        html += '<th><?php esc_html_e('Actions', 'submittal-spec-sheet-builder'); ?></th>';
+        html += '<th style="width:80px;text-align:center;"><?php esc_html_e('Default', 'submittal-spec-sheet-builder'); ?></th>';
         html += '</tr></thead><tbody>';
 
         presets.forEach(function(preset) {
@@ -1614,9 +1605,9 @@ final class SFB_Plugin {
           html += '<td><strong>' + escapeHtml(preset.name) + '</strong></td>';
           html += '<td>' + updatedDate + '</td>';
           html += '<td>';
-          html += '<button class="button button-small sfb-apply-preset" data-id="' + preset.id + '" style="margin-right:4px;"><?php esc_html_e('Apply', 'submittal-builder'); ?></button>';
-          html += '<button class="button button-small sfb-rename-preset" data-id="' + preset.id + '" data-name="' + escapeHtml(preset.name) + '" style="margin-right:4px;"><?php esc_html_e('Rename', 'submittal-builder'); ?></button>';
-          html += '<button class="button button-small button-link-delete sfb-delete-preset" data-id="' + preset.id + '" data-name="' + escapeHtml(preset.name) + '"><?php esc_html_e('Delete', 'submittal-builder'); ?></button>';
+          html += '<button class="button button-small sfb-apply-preset" data-id="' + preset.id + '" style="margin-right:4px;"><?php esc_html_e('Apply', 'submittal-spec-sheet-builder'); ?></button>';
+          html += '<button class="button button-small sfb-rename-preset" data-id="' + preset.id + '" data-name="' + escapeHtml(preset.name) + '" style="margin-right:4px;"><?php esc_html_e('Rename', 'submittal-spec-sheet-builder'); ?></button>';
+          html += '<button class="button button-small button-link-delete sfb-delete-preset" data-id="' + preset.id + '" data-name="' + escapeHtml(preset.name) + '"><?php esc_html_e('Delete', 'submittal-spec-sheet-builder'); ?></button>';
           html += '</td>';
           html += '<td style="text-align:center;"><input type="checkbox" class="sfb-default-preset" data-id="' + preset.id + '" ' + (preset.is_default ? 'checked' : '') + '></td>';
           html += '</tr>';
@@ -1637,7 +1628,7 @@ final class SFB_Plugin {
       $('#sfb-create-preset').on('click', function() {
         const name = $('#sfb-new-preset-name').val().trim();
         if (!name) {
-          alert('<?php esc_html_e('Please enter a preset name.', 'submittal-builder'); ?>');
+          alert('<?php esc_html_e('Please enter a preset name.', 'submittal-spec-sheet-builder'); ?>');
           return;
         }
 
@@ -1650,7 +1641,7 @@ final class SFB_Plugin {
             name: name
           },
           beforeSend: function() {
-            $('#sfb-create-preset').prop('disabled', true).text('<?php esc_html_e('Saving...', 'submittal-builder'); ?>');
+            $('#sfb-create-preset').prop('disabled', true).text('<?php esc_html_e('Saving...', 'submittal-spec-sheet-builder'); ?>');
           },
           success: function(response) {
             if (response.success) {
@@ -1658,14 +1649,14 @@ final class SFB_Plugin {
               loadPresets();
               alert(response.data.message);
             } else {
-              alert(response.data.message || '<?php esc_html_e('Failed to create preset.', 'submittal-builder'); ?>');
+              alert(response.data.message || '<?php esc_html_e('Failed to create preset.', 'submittal-spec-sheet-builder'); ?>');
             }
           },
           error: function() {
-            alert('<?php esc_html_e('Server error. Please try again.', 'submittal-builder'); ?>');
+            alert('<?php esc_html_e('Server error. Please try again.', 'submittal-spec-sheet-builder'); ?>');
           },
           complete: function() {
-            $('#sfb-create-preset').prop('disabled', false).text('<?php esc_html_e('Save Current as Preset', 'submittal-builder'); ?>');
+            $('#sfb-create-preset').prop('disabled', false).text('<?php esc_html_e('Save Current as Preset', 'submittal-spec-sheet-builder'); ?>');
           }
         });
       });
@@ -1673,7 +1664,7 @@ final class SFB_Plugin {
       // Apply preset
       $(document).on('click', '.sfb-apply-preset', function() {
         const id = $(this).data('id');
-        if (!confirm('<?php esc_html_e('Apply this preset? Your current branding will be replaced.', 'submittal-builder'); ?>')) {
+        if (!confirm('<?php esc_html_e('Apply this preset? Your current branding will be replaced.', 'submittal-spec-sheet-builder'); ?>')) {
           return;
         }
 
@@ -1693,11 +1684,11 @@ final class SFB_Plugin {
               alert(response.data.message);
               location.reload();
             } else {
-              alert(response.data.message || '<?php esc_html_e('Failed to apply preset.', 'submittal-builder'); ?>');
+              alert(response.data.message || '<?php esc_html_e('Failed to apply preset.', 'submittal-spec-sheet-builder'); ?>');
             }
           },
           error: function() {
-            alert('<?php esc_html_e('Server error. Please try again.', 'submittal-builder'); ?>');
+            alert('<?php esc_html_e('Server error. Please try again.', 'submittal-spec-sheet-builder'); ?>');
           },
           complete: function() {
             $('.sfb-apply-preset').prop('disabled', false);
@@ -1709,7 +1700,7 @@ final class SFB_Plugin {
       $(document).on('click', '.sfb-rename-preset', function() {
         const id = $(this).data('id');
         const oldName = $(this).data('name');
-        const newName = prompt('<?php esc_html_e('Enter new name:', 'submittal-builder'); ?>', oldName);
+        const newName = prompt('<?php esc_html_e('Enter new name:', 'submittal-spec-sheet-builder'); ?>', oldName);
 
         if (!newName || newName === oldName) {
           return;
@@ -1728,11 +1719,11 @@ final class SFB_Plugin {
             if (response.success) {
               loadPresets();
             } else {
-              alert(response.data.message || '<?php esc_html_e('Failed to rename preset.', 'submittal-builder'); ?>');
+              alert(response.data.message || '<?php esc_html_e('Failed to rename preset.', 'submittal-spec-sheet-builder'); ?>');
             }
           },
           error: function() {
-            alert('<?php esc_html_e('Server error. Please try again.', 'submittal-builder'); ?>');
+            alert('<?php esc_html_e('Server error. Please try again.', 'submittal-spec-sheet-builder'); ?>');
           }
         });
       });
@@ -1742,7 +1733,7 @@ final class SFB_Plugin {
         const id = $(this).data('id');
         const name = $(this).data('name');
 
-        if (!confirm('<?php esc_html_e('Delete preset', 'submittal-builder'); ?> "' + name + '"?')) {
+        if (!confirm('<?php esc_html_e('Delete preset', 'submittal-spec-sheet-builder'); ?> "' + name + '"?')) {
           return;
         }
 
@@ -1758,11 +1749,11 @@ final class SFB_Plugin {
             if (response.success) {
               loadPresets();
             } else {
-              alert(response.data.message || '<?php esc_html_e('Failed to delete preset.', 'submittal-builder'); ?>');
+              alert(response.data.message || '<?php esc_html_e('Failed to delete preset.', 'submittal-spec-sheet-builder'); ?>');
             }
           },
           error: function() {
-            alert('<?php esc_html_e('Server error. Please try again.', 'submittal-builder'); ?>');
+            alert('<?php esc_html_e('Server error. Please try again.', 'submittal-spec-sheet-builder'); ?>');
           }
         });
       });
@@ -1785,11 +1776,11 @@ final class SFB_Plugin {
             if (response.success) {
               loadPresets();
             } else {
-              alert(response.data.message || '<?php esc_html_e('Failed to update default preset.', 'submittal-builder'); ?>');
+              alert(response.data.message || '<?php esc_html_e('Failed to update default preset.', 'submittal-spec-sheet-builder'); ?>');
             }
           },
           error: function() {
-            alert('<?php esc_html_e('Server error. Please try again.', 'submittal-builder'); ?>');
+            alert('<?php esc_html_e('Server error. Please try again.', 'submittal-spec-sheet-builder'); ?>');
           }
         });
       });
@@ -2465,7 +2456,7 @@ final class SFB_Plugin {
   function render_agency_page() {
     // Security check
     if (!sfb_is_agency_license()) {
-      wp_die(__('This feature requires an Agency license.', 'submittal-builder'));
+      wp_die(__('This feature requires an Agency license.', 'submittal-spec-sheet-builder'));
     }
 
     // Handle operator role assignment form submission
@@ -2551,29 +2542,29 @@ final class SFB_Plugin {
     ?>
     <div class="wrap sfb-agency-wrap">
       <h1 class="wp-heading-inline">
-        💼 <?php esc_html_e('Agency', 'submittal-builder'); ?>
+        💼 <?php esc_html_e('Agency', 'submittal-spec-sheet-builder'); ?>
         <span class="sfb-agency-badge">AGENCY</span>
       </h1>
 
       <p class="description" style="margin-top:12px;margin-bottom:24px;">
-        <?php esc_html_e('Agency-specific tools: save reusable catalog Packs, manage brand presets, configure white-label mode, and control client handoff settings.', 'submittal-builder'); ?>
+        <?php esc_html_e('Agency-specific tools: save reusable catalog Packs, manage brand presets, configure white-label mode, and control client handoff settings.', 'submittal-spec-sheet-builder'); ?>
       </p>
 
       <?php if (isset($settings_saved)): ?>
       <div class="notice notice-success is-dismissible" style="margin-bottom: 20px;">
-        <p><strong>✅ <?php echo esc_html__('Agency settings saved successfully!', 'submittal-builder'); ?></strong></p>
+        <p><strong>✅ <?php echo esc_html__('Agency settings saved successfully!', 'submittal-spec-sheet-builder'); ?></strong></p>
       </div>
       <?php endif; ?>
 
       <?php if (isset($operator_roles_saved)): ?>
       <div class="notice notice-success is-dismissible" style="margin-bottom: 20px;">
-        <p><strong>✅ <?php echo esc_html__('Operator roles updated successfully!', 'submittal-builder'); ?></strong></p>
+        <p><strong>✅ <?php echo esc_html__('Operator roles updated successfully!', 'submittal-spec-sheet-builder'); ?></strong></p>
       </div>
       <?php endif; ?>
 
       <?php if (isset($_GET['deleted'])): ?>
       <div class="notice notice-success is-dismissible" style="margin-bottom: 20px;">
-        <p><?php esc_html_e('Pack deleted successfully.', 'submittal-builder'); ?></p>
+        <p><?php esc_html_e('Pack deleted successfully.', 'submittal-spec-sheet-builder'); ?></p>
       </div>
       <?php endif; ?>
 
@@ -2583,10 +2574,10 @@ final class SFB_Plugin {
 
         <div class="sfb-card sfb-handoff-card">
           <h2>
-            🤝 <?php echo esc_html__('Client Handoff Mode', 'submittal-builder'); ?>
+            🤝 <?php echo esc_html__('Client Handoff Mode', 'submittal-spec-sheet-builder'); ?>
           </h2>
           <p class="sfb-muted">
-            <?php echo esc_html__('One-click toggle to make the site safe for client use. Hides agency-specific features while maintaining full functionality for clients.', 'submittal-builder'); ?>
+            <?php echo esc_html__('One-click toggle to make the site safe for client use. Hides agency-specific features while maintaining full functionality for clients.', 'submittal-spec-sheet-builder'); ?>
           </p>
 
           <!-- Enable Handoff Mode Toggle -->
@@ -2598,8 +2589,8 @@ final class SFB_Plugin {
                      value="1"
                      <?php checked($handoff_mode); ?>>
               <span class="sfb-checkbox-label">
-                <strong><?php esc_html_e('Enable Client Handoff Mode', 'submittal-builder'); ?></strong>
-                <small><?php esc_html_e('Hide Agency Packs and Brand Presets management from the admin interface.', 'submittal-builder'); ?></small>
+                <strong><?php esc_html_e('Enable Client Handoff Mode', 'submittal-spec-sheet-builder'); ?></strong>
+                <small><?php esc_html_e('Hide Agency Packs and Brand Presets management from the admin interface.', 'submittal-spec-sheet-builder'); ?></small>
               </span>
             </label>
           </div>
@@ -2607,33 +2598,33 @@ final class SFB_Plugin {
           <!-- What Changes Info Box -->
           <div class="sfb-info-box" style="margin-top:24px;">
             <div class="sfb-info-box-header">
-              <strong>ℹ️ <?php esc_html_e('What changes when enabled?', 'submittal-builder'); ?></strong>
+              <strong>ℹ️ <?php esc_html_e('What changes when enabled?', 'submittal-spec-sheet-builder'); ?></strong>
             </div>
             <div class="sfb-info-box-content">
               <ul class="sfb-info-list">
                 <li>
                   <span class="sfb-info-icon">📦</span>
-                  <strong><?php esc_html_e('Agency Packs', 'submittal-builder'); ?>:</strong>
-                  <?php esc_html_e('Section below hidden (your saved Packs remain safe)', 'submittal-builder'); ?>
+                  <strong><?php esc_html_e('Agency Packs', 'submittal-spec-sheet-builder'); ?>:</strong>
+                  <?php esc_html_e('Section below hidden (your saved Packs remain safe)', 'submittal-spec-sheet-builder'); ?>
                 </li>
                 <li>
                   <span class="sfb-info-icon">🎨</span>
-                  <strong><?php esc_html_e('Brand Presets', 'submittal-builder'); ?>:</strong>
-                  <?php esc_html_e('Management panel hidden on Branding page (active preset still works)', 'submittal-builder'); ?>
+                  <strong><?php esc_html_e('Brand Presets', 'submittal-spec-sheet-builder'); ?>:</strong>
+                  <?php esc_html_e('Management panel hidden on Branding page (active preset still works)', 'submittal-spec-sheet-builder'); ?>
                 </li>
                 <li>
                   <span class="sfb-info-icon">✅</span>
-                  <strong><?php esc_html_e('Client Access', 'submittal-builder'); ?>:</strong>
-                  <?php esc_html_e('Full access to Builder, Settings, Branding, Tracking, and Leads', 'submittal-builder'); ?>
+                  <strong><?php esc_html_e('Client Access', 'submittal-spec-sheet-builder'); ?>:</strong>
+                  <?php esc_html_e('Full access to Builder, Settings, Branding, Tracking, and Leads', 'submittal-spec-sheet-builder'); ?>
                 </li>
                 <li>
                   <span class="sfb-info-icon">🌐</span>
-                  <strong><?php esc_html_e('Frontend', 'submittal-builder'); ?>:</strong>
-                  <?php esc_html_e('No changes - frontend remains identical', 'submittal-builder'); ?>
+                  <strong><?php esc_html_e('Frontend', 'submittal-spec-sheet-builder'); ?>:</strong>
+                  <?php esc_html_e('No changes - frontend remains identical', 'submittal-spec-sheet-builder'); ?>
                 </li>
               </ul>
               <p class="sfb-info-note">
-                <?php esc_html_e('Toggle off anytime to instantly restore full agency access. All data remains intact.', 'submittal-builder'); ?>
+                <?php esc_html_e('Toggle off anytime to instantly restore full agency access. All data remains intact.', 'submittal-spec-sheet-builder'); ?>
               </p>
             </div>
           </div>
@@ -2641,7 +2632,7 @@ final class SFB_Plugin {
           <!-- Save Button -->
           <div style="margin-top:24px;">
             <button type="submit" class="button button-primary button-large">
-              <?php esc_html_e('Save Handoff Settings', 'submittal-builder'); ?>
+              <?php esc_html_e('Save Handoff Settings', 'submittal-spec-sheet-builder'); ?>
             </button>
           </div>
         </div>
@@ -2649,9 +2640,9 @@ final class SFB_Plugin {
 
       <!-- Assign Operator Role Tool -->
       <div class="sfb-card" style="margin-top:32px; border: 2px solid #e0e7ff; background: linear-gradient(to bottom, #f5f7ff, #fff);">
-        <h2>👥 <?php esc_html_e('Assign Operator Role', 'submittal-builder'); ?></h2>
+        <h2>👥 <?php esc_html_e('Assign Operator Role', 'submittal-spec-sheet-builder'); ?></h2>
         <p class="sfb-muted">
-          <?php esc_html_e('Assign the Operator role to users who should have limited access. Operators can use the Builder, view Tracking & Leads, but cannot edit Catalog, Branding, or Agency features.', 'submittal-builder'); ?>
+          <?php esc_html_e('Assign the Operator role to users who should have limited access. Operators can use the Builder, view Tracking & Leads, but cannot edit Catalog, Branding, or Agency features.', 'submittal-spec-sheet-builder'); ?>
         </p>
 
         <?php
@@ -2664,7 +2655,7 @@ final class SFB_Plugin {
         <?php if (empty($users)): ?>
           <div style="padding:24px;text-align:center;background:#f9fafb;border-radius:8px;margin-top:24px;">
             <p style="color:#6b7280;margin:0;">
-              <?php esc_html_e('No non-administrator users found.', 'submittal-builder'); ?>
+              <?php esc_html_e('No non-administrator users found.', 'submittal-spec-sheet-builder'); ?>
             </p>
           </div>
         <?php else: ?>
@@ -2688,7 +2679,7 @@ final class SFB_Plugin {
                     <span style="color:#64748b;font-size:13px;margin-left:8px;">(<?php echo esc_html($user->user_email); ?>)</span>
                     <br>
                     <span style="color:#64748b;font-size:12px;">
-                      <?php echo esc_html(sprintf(__('Current role: %s', 'submittal-builder'), $current_role)); ?>
+                      <?php echo esc_html(sprintf(__('Current role: %s', 'submittal-spec-sheet-builder'), $current_role)); ?>
                     </span>
                   </div>
                 </label>
@@ -2697,13 +2688,13 @@ final class SFB_Plugin {
 
             <div style="margin-top:16px;padding:12px;background:#fef3c7;border:1px solid #fbbf24;border-radius:6px;">
               <p style="margin:0;font-size:13px;color:#78350f;">
-                ℹ️ <?php esc_html_e('Assigning the Operator role will replace the user\'s current role. Use this in combination with Handoff Mode to restrict user access.', 'submittal-builder'); ?>
+                ℹ️ <?php esc_html_e('Assigning the Operator role will replace the user\'s current role. Use this in combination with Handoff Mode to restrict user access.', 'submittal-spec-sheet-builder'); ?>
               </p>
             </div>
 
             <div style="margin-top:24px;">
               <button type="submit" name="sfb_save_operator_roles" class="button button-primary">
-                <?php esc_html_e('Update Operator Roles', 'submittal-builder'); ?>
+                <?php esc_html_e('Update Operator Roles', 'submittal-spec-sheet-builder'); ?>
               </button>
             </div>
           </form>
@@ -2713,9 +2704,9 @@ final class SFB_Plugin {
       <?php if (!$handoff_mode): ?>
       <!-- Agency Packs Section (hidden in handoff mode) -->
       <div class="sfb-card" style="margin-top:32px;">
-        <h2>📦 <?php esc_html_e('Agency Packs', 'submittal-builder'); ?></h2>
+        <h2>📦 <?php esc_html_e('Agency Packs', 'submittal-spec-sheet-builder'); ?></h2>
         <p class="sfb-muted">
-          <?php esc_html_e('Reusable catalog Packs created from your sites. Use these to quickly seed new sites with pre-configured catalogs and branding.', 'submittal-builder'); ?>
+          <?php esc_html_e('Reusable catalog Packs created from your sites. Use these to quickly seed new sites with pre-configured catalogs and branding.', 'submittal-spec-sheet-builder'); ?>
         </p>
 
         <?php if (empty($packs)): ?>
@@ -2723,13 +2714,13 @@ final class SFB_Plugin {
           <div style="padding:48px;text-align:center;background:#f9fafb;border-radius:8px;margin-top:24px;">
             <div style="font-size:48px;margin-bottom:16px;opacity:0.3;">📦</div>
             <h3 style="margin:0 0 12px 0;color:#374151;">
-              <?php esc_html_e('No Agency Packs yet', 'submittal-builder'); ?>
+              <?php esc_html_e('No Agency Packs yet', 'submittal-spec-sheet-builder'); ?>
             </h3>
             <p style="color:#6b7280;margin-bottom:24px;max-width:500px;margin-left:auto;margin-right:auto;">
-              <?php esc_html_e('Create reusable Packs from your Builder catalog. Go to Builder → Save as Pack to get started.', 'submittal-builder'); ?>
+              <?php esc_html_e('Create reusable Packs from your Builder catalog. Go to Builder → Save as Pack to get started.', 'submittal-spec-sheet-builder'); ?>
             </p>
             <a href="<?php echo esc_url(admin_url('admin.php?page=sfb')); ?>" class="button button-primary">
-              <?php esc_html_e('Go to Builder', 'submittal-builder'); ?>
+              <?php esc_html_e('Go to Builder', 'submittal-spec-sheet-builder'); ?>
             </a>
           </div>
         <?php else: ?>
@@ -2737,11 +2728,11 @@ final class SFB_Plugin {
           <table class="wp-list-table widefat fixed striped" style="margin-top:24px;">
             <thead>
               <tr>
-                <th style="width:40%;"><?php esc_html_e('Pack Name', 'submittal-builder'); ?></th>
-                <th style="width:15%;"><?php esc_html_e('Products', 'submittal-builder'); ?></th>
-                <th style="width:15%;"><?php esc_html_e('Branding', 'submittal-builder'); ?></th>
-                <th style="width:15%;"><?php esc_html_e('Updated', 'submittal-builder'); ?></th>
-                <th style="width:15%;"><?php esc_html_e('Actions', 'submittal-builder'); ?></th>
+                <th style="width:40%;"><?php esc_html_e('Pack Name', 'submittal-spec-sheet-builder'); ?></th>
+                <th style="width:15%;"><?php esc_html_e('Products', 'submittal-spec-sheet-builder'); ?></th>
+                <th style="width:15%;"><?php esc_html_e('Branding', 'submittal-spec-sheet-builder'); ?></th>
+                <th style="width:15%;"><?php esc_html_e('Updated', 'submittal-spec-sheet-builder'); ?></th>
+                <th style="width:15%;"><?php esc_html_e('Actions', 'submittal-spec-sheet-builder'); ?></th>
               </tr>
             </thead>
             <tbody>
@@ -2761,7 +2752,7 @@ final class SFB_Plugin {
                   </td>
                   <td>
                     <?php if ($has_branding): ?>
-                      <span style="color:#10b981;">✓ <?php esc_html_e('Included', 'submittal-builder'); ?></span>
+                      <span style="color:#10b981;">✓ <?php esc_html_e('Included', 'submittal-spec-sheet-builder'); ?></span>
                     <?php else: ?>
                       <span style="color:#9ca3af;">—</span>
                     <?php endif; ?>
@@ -2773,12 +2764,12 @@ final class SFB_Plugin {
                     <a href="<?php echo esc_url(wp_nonce_url(admin_url('admin-ajax.php?action=sfb_pack_export&pack_id=' . urlencode($pack_id)), 'sfb_export_pack_' . $pack_id)); ?>"
                        class="button button-small"
                        download="<?php echo esc_attr(sanitize_file_name($pack_name) . '.json'); ?>">
-                      <?php esc_html_e('Export JSON', 'submittal-builder'); ?>
+                      <?php esc_html_e('Export JSON', 'submittal-spec-sheet-builder'); ?>
                     </a>
                     <a href="<?php echo esc_url(wp_nonce_url(admin_url('admin.php?page=sfb-agency&action=delete&pack_id=' . urlencode($pack_id)), 'sfb_delete_pack_' . $pack_id)); ?>"
                        class="button button-small button-link-delete"
-                       onclick="return confirm('<?php esc_attr_e('Are you sure you want to delete this Pack? This cannot be undone.', 'submittal-builder'); ?>');">
-                      <?php esc_html_e('Delete', 'submittal-builder'); ?>
+                       onclick="return confirm('<?php esc_attr_e('Are you sure you want to delete this Pack? This cannot be undone.', 'submittal-spec-sheet-builder'); ?>');">
+                      <?php esc_html_e('Delete', 'submittal-spec-sheet-builder'); ?>
                     </a>
                   </td>
                 </tr>
@@ -2789,8 +2780,8 @@ final class SFB_Plugin {
           <!-- Info box -->
           <div style="margin-top:24px;padding:16px;background:#f0f9ff;border-left:4px solid #0ea5e9;border-radius:8px;">
             <p style="margin:0;color:#0c4a6e;font-size:13px;">
-              <strong><?php esc_html_e('💡 Using Packs:', 'submittal-builder'); ?></strong>
-              <?php esc_html_e('Export a Pack as JSON and use it during onboarding on another site. Go to Welcome → Load Sample Catalog → Upload JSON to seed.', 'submittal-builder'); ?>
+              <strong><?php esc_html_e('💡 Using Packs:', 'submittal-spec-sheet-builder'); ?></strong>
+              <?php esc_html_e('Export a Pack as JSON and use it during onboarding on another site. Go to Welcome → Load Sample Catalog → Upload JSON to seed.', 'submittal-spec-sheet-builder'); ?>
             </p>
           </div>
         <?php endif; ?>
@@ -2800,14 +2791,14 @@ final class SFB_Plugin {
       <!-- Advanced Lead Routing Section (Agency only, hidden in handoff mode) -->
       <?php if (!$handoff_mode): ?>
       <div class="sfb-card" style="margin-top:32px;">
-        <h2>🔀 <?php esc_html_e('Advanced Lead Routing', 'submittal-builder'); ?></h2>
+        <h2>🔀 <?php esc_html_e('Advanced Lead Routing', 'submittal-spec-sheet-builder'); ?></h2>
         <p class="sfb-muted">
-          <?php esc_html_e('Automatically route leads to email recipients and/or webhooks based on rules (email domain, UTM parameters, category).', 'submittal-builder'); ?>
+          <?php esc_html_e('Automatically route leads to email recipients and/or webhooks based on rules (email domain, UTM parameters, category).', 'submittal-spec-sheet-builder'); ?>
         </p>
 
         <div id="sfb-lead-routing-app">
           <p style="text-align:center;padding:40px;color:#9ca3af;">
-            <?php esc_html_e('Loading...', 'submittal-builder'); ?>
+            <?php esc_html_e('Loading...', 'submittal-spec-sheet-builder'); ?>
           </p>
         </div>
       </div>
@@ -2900,14 +2891,14 @@ final class SFB_Plugin {
     $settings_saved = isset($_GET['settings-updated']) && $_GET['settings-updated'] === 'true';
     ?>
     <div class="wrap sfb-settings-wrap">
-      <h1><?php echo esc_html__('Settings', 'submittal-builder'); ?></h1>
+      <h1><?php echo esc_html__('Settings', 'submittal-spec-sheet-builder'); ?></h1>
       <p style="color: #6b7280; margin-top: -8px; margin-bottom: 24px;">
-        <?php echo esc_html__('Configure plugin features including draft saving, lead capture, auto-email delivery, and data retention policies.', 'submittal-builder'); ?>
+        <?php echo esc_html__('Configure plugin features including draft saving, lead capture, auto-email delivery, and data retention policies.', 'submittal-spec-sheet-builder'); ?>
       </p>
 
       <?php if ($settings_saved): ?>
       <div class="notice notice-success is-dismissible" style="margin-bottom: 20px;">
-        <p><strong>✅ <?php echo esc_html__('Settings saved successfully!', 'submittal-builder'); ?></strong></p>
+        <p><strong>✅ <?php echo esc_html__('Settings saved successfully!', 'submittal-spec-sheet-builder'); ?></strong></p>
       </div>
       <?php endif; ?>
 
@@ -2916,9 +2907,9 @@ final class SFB_Plugin {
 
         <!-- Draft Settings Card -->
         <div class="sfb-card">
-          <h2>💾 <?php echo esc_html__('Draft Settings', 'submittal-builder'); ?></h2>
+          <h2>💾 <?php echo esc_html__('Draft Settings', 'submittal-spec-sheet-builder'); ?></h2>
           <p class="sfb-muted">
-            <?php echo esc_html__('Control how and where user selections are saved during the form-building process.', 'submittal-builder'); ?>
+            <?php echo esc_html__('Control how and where user selections are saved during the form-building process.', 'submittal-spec-sheet-builder'); ?>
           </p>
 
           <!-- Local Autosave -->
@@ -2930,10 +2921,10 @@ final class SFB_Plugin {
                        name="<?php echo esc_attr($this->option_key()); ?>[drafts_autosave_enabled]"
                        value="1"
                        <?php checked(!empty($options['drafts_autosave_enabled'])); ?>>
-                <span class="sfb-setting-title"><?php esc_html_e('Enable local autosave', 'submittal-builder'); ?></span>
+                <span class="sfb-setting-title"><?php esc_html_e('Enable local autosave', 'submittal-spec-sheet-builder'); ?></span>
               </label>
               <p class="sfb-setting-desc">
-                <?php esc_html_e('Automatically saves user selections to browser localStorage. Selections persist across sessions without requiring server storage.', 'submittal-builder'); ?>
+                <?php esc_html_e('Automatically saves user selections to browser localStorage. Selections persist across sessions without requiring server storage.', 'submittal-spec-sheet-builder'); ?>
               </p>
             </div>
           </div>
@@ -2949,11 +2940,11 @@ final class SFB_Plugin {
                        value="1"
                        <?php checked(!empty($options['drafts_server_enabled'])); ?>>
                 <span class="sfb-setting-title">
-                  <?php esc_html_e('Enable server-side shareable drafts', 'submittal-builder'); ?>
+                  <?php esc_html_e('Enable server-side shareable drafts', 'submittal-spec-sheet-builder'); ?>
                 </span>
               </label>
               <p class="sfb-setting-desc">
-                <?php esc_html_e('Allows users to save progress to the server and generate a shareable URL. Ideal for collaboration or accessing drafts from multiple devices.', 'submittal-builder'); ?>
+                <?php esc_html_e('Allows users to save progress to the server and generate a shareable URL. Ideal for collaboration or accessing drafts from multiple devices.', 'submittal-spec-sheet-builder'); ?>
               </p>
             </div>
           </div>
@@ -2963,9 +2954,9 @@ final class SFB_Plugin {
         <!-- Privacy & Retention Card (Pro only - controls server draft settings) -->
         <?php if ($is_pro): ?>
         <div class="sfb-card">
-          <h2>🔒 <?php echo esc_html__('Privacy & Retention', 'submittal-builder'); ?></h2>
+          <h2>🔒 <?php echo esc_html__('Privacy & Retention', 'submittal-spec-sheet-builder'); ?></h2>
           <p class="sfb-muted">
-            <?php echo esc_html__('Configure data retention and privacy policies for server-stored drafts.', 'submittal-builder'); ?>
+            <?php echo esc_html__('Configure data retention and privacy policies for server-stored drafts.', 'submittal-spec-sheet-builder'); ?>
           </p>
 
           <!-- Draft Expiry -->
@@ -2973,10 +2964,10 @@ final class SFB_Plugin {
             <div class="sfb-setting-icon">⏱️</div>
             <div class="sfb-setting-content">
               <label class="sfb-setting-title" for="sfb-expiry-days">
-                <?php esc_html_e('Automatic deletion after', 'submittal-builder'); ?>
+                <?php esc_html_e('Automatic deletion after', 'submittal-spec-sheet-builder'); ?>
               </label>
               <p class="sfb-setting-desc" style="margin-top: 4px;">
-                <?php esc_html_e('Automatically delete saved drafts from your server after this many days to free up database space and comply with data minimization policies. This only affects server-saved drafts (shareable links), not local browser storage.', 'submittal-builder'); ?>
+                <?php esc_html_e('Automatically delete saved drafts from your server after this many days to free up database space and comply with data minimization policies. This only affects server-saved drafts (shareable links), not local browser storage.', 'submittal-spec-sheet-builder'); ?>
               </p>
               <div class="sfb-input-group">
                 <input type="number"
@@ -2986,7 +2977,7 @@ final class SFB_Plugin {
                        min="1"
                        max="365"
                        class="sfb-number-input">
-                <span class="sfb-input-suffix"><?php esc_html_e('days', 'submittal-builder'); ?></span>
+                <span class="sfb-input-suffix"><?php esc_html_e('days', 'submittal-spec-sheet-builder'); ?></span>
               </div>
             </div>
           </div>
@@ -2996,16 +2987,16 @@ final class SFB_Plugin {
             <div class="sfb-setting-icon">📝</div>
             <div class="sfb-setting-content">
               <label class="sfb-setting-title" for="sfb-privacy-note">
-                <?php esc_html_e('Privacy message shown to users', 'submittal-builder'); ?>
+                <?php esc_html_e('Privacy message shown to users', 'submittal-spec-sheet-builder'); ?>
               </label>
               <p class="sfb-setting-desc" style="margin-top: 4px;">
-                <?php esc_html_e('Add an optional privacy notice that users will see when saving a draft to the server. Use this to explain your data retention policy or comply with GDPR/CCPA requirements. Leave blank to hide the message.', 'submittal-builder'); ?>
+                <?php esc_html_e('Add an optional privacy notice that users will see when saving a draft to the server. Use this to explain your data retention policy or comply with GDPR/CCPA requirements. Leave blank to hide the message.', 'submittal-spec-sheet-builder'); ?>
               </p>
               <textarea id="sfb-privacy-note"
                         name="<?php echo esc_attr($this->option_key()); ?>[drafts_privacy_note]"
                         rows="3"
                         class="sfb-textarea"
-                        placeholder="<?php esc_attr_e('Example: Your draft will be stored on our server for 45 days and then automatically deleted. No personal information is collected.', 'submittal-builder'); ?>"><?php echo esc_textarea($options['drafts_privacy_note']); ?></textarea>
+                        placeholder="<?php esc_attr_e('Example: Your draft will be stored on our server for 45 days and then automatically deleted. No personal information is collected.', 'submittal-spec-sheet-builder'); ?>"><?php echo esc_textarea($options['drafts_privacy_note']); ?></textarea>
             </div>
           </div>
         </div>
@@ -3013,9 +3004,9 @@ final class SFB_Plugin {
 
         <!-- Performance Card -->
         <div class="sfb-card">
-          <h2>⚡ <?php echo esc_html__('Performance', 'submittal-builder'); ?></h2>
+          <h2>⚡ <?php echo esc_html__('Performance', 'submittal-spec-sheet-builder'); ?></h2>
           <p class="sfb-muted">
-            <?php echo esc_html__('Control save request throttling to prevent server overload.', 'submittal-builder'); ?>
+            <?php echo esc_html__('Control save request throttling to prevent server overload.', 'submittal-spec-sheet-builder'); ?>
           </p>
 
           <!-- Rate Limit -->
@@ -3023,10 +3014,10 @@ final class SFB_Plugin {
             <div class="sfb-setting-icon">🚦</div>
             <div class="sfb-setting-content">
               <label class="sfb-setting-title" for="sfb-rate-limit">
-                <?php esc_html_e('Save rate limit', 'submittal-builder'); ?>
+                <?php esc_html_e('Save rate limit', 'submittal-spec-sheet-builder'); ?>
               </label>
               <p class="sfb-setting-desc" style="margin-top: 4px;">
-                <?php esc_html_e('Minimum time between save requests from the same user. Prevents excessive server load. Range: 5-120 seconds.', 'submittal-builder'); ?>
+                <?php esc_html_e('Minimum time between save requests from the same user. Prevents excessive server load. Range: 5-120 seconds.', 'submittal-spec-sheet-builder'); ?>
               </p>
               <div class="sfb-input-group">
                 <input type="number"
@@ -3036,7 +3027,7 @@ final class SFB_Plugin {
                        min="5"
                        max="120"
                        class="sfb-number-input">
-                <span class="sfb-input-suffix"><?php esc_html_e('seconds', 'submittal-builder'); ?></span>
+                <span class="sfb-input-suffix"><?php esc_html_e('seconds', 'submittal-spec-sheet-builder'); ?></span>
               </div>
             </div>
           </div>
@@ -3044,9 +3035,9 @@ final class SFB_Plugin {
 
         <!-- Lead Capture Card (Pro) -->
         <div class="sfb-card">
-          <h2>📧 <?php echo esc_html__('Lead Capture (Pro)', 'submittal-builder'); ?></h2>
+          <h2>📧 <?php echo esc_html__('Lead Capture (Pro)', 'submittal-spec-sheet-builder'); ?></h2>
           <p class="sfb-muted">
-            <?php echo esc_html__('Capture user contact information before allowing PDF downloads. Stores leads in the database and sends email notifications.', 'submittal-builder'); ?>
+            <?php echo esc_html__('Capture user contact information before allowing PDF downloads. Stores leads in the database and sends email notifications.', 'submittal-spec-sheet-builder'); ?>
           </p>
 
           <!-- Enable Lead Capture -->
@@ -3062,18 +3053,18 @@ final class SFB_Plugin {
                        <?php checked(get_option('sfb_lead_capture_enabled', false)); ?>
                        <?php disabled(!$is_pro); ?>>
                 <span class="sfb-setting-title">
-                  <?php esc_html_e('Enable lead capture modal', 'submittal-builder'); ?>
+                  <?php esc_html_e('Enable lead capture modal', 'submittal-spec-sheet-builder'); ?>
                   <?php if (!$is_pro): ?>
-                    <span class="sfb-pro-badge"><?php esc_html_e('PRO', 'submittal-builder'); ?></span>
+                    <span class="sfb-pro-badge"><?php esc_html_e('PRO', 'submittal-spec-sheet-builder'); ?></span>
                   <?php endif; ?>
                 </span>
               </label>
               <p class="sfb-setting-desc">
-                <?php esc_html_e('When enabled, users must enter their email (and optionally phone) before downloading PDFs. Leads are stored in the database with timestamp, IP hash, and UTM tracking.', 'submittal-builder'); ?>
+                <?php esc_html_e('When enabled, users must enter their email (and optionally phone) before downloading PDFs. Leads are stored in the database with timestamp, IP hash, and UTM tracking.', 'submittal-spec-sheet-builder'); ?>
               </p>
               <?php if (!$is_pro): ?>
                 <a href="https://webstuffguylabs.com/plugins/submittal-spec-sheet-builder-pro/" target="_blank" rel="noopener noreferrer" class="sfb-upgrade-link">
-                  <?php esc_html_e('Upgrade to Pro to unlock →', 'submittal-builder'); ?>
+                  <?php esc_html_e('Upgrade to Pro to unlock →', 'submittal-spec-sheet-builder'); ?>
                 </a>
               <?php endif; ?>
             </div>
@@ -3085,11 +3076,11 @@ final class SFB_Plugin {
             <div class="sfb-setting-icon">📧</div>
             <div class="sfb-setting-content">
               <label class="sfb-setting-title" for="sfb-lead-notification-email">
-                <?php esc_html_e('Lead notification email', 'submittal-builder'); ?>
-                <span class="sfb-pro-badge"><?php esc_html_e('PRO', 'submittal-builder'); ?></span>
+                <?php esc_html_e('Lead notification email', 'submittal-spec-sheet-builder'); ?>
+                <span class="sfb-pro-badge"><?php esc_html_e('PRO', 'submittal-spec-sheet-builder'); ?></span>
               </label>
               <p class="sfb-setting-desc" style="margin-top: 4px; margin-bottom: 12px;">
-                <?php esc_html_e('Email address to receive lead notifications. When someone fills out the lead form, a notification will be sent to this address with their contact details. Leave blank to use site admin email.', 'submittal-builder'); ?>
+                <?php esc_html_e('Email address to receive lead notifications. When someone fills out the lead form, a notification will be sent to this address with their contact details. Leave blank to use site admin email.', 'submittal-spec-sheet-builder'); ?>
               </p>
               <input type="email"
                      id="sfb-lead-notification-email"
@@ -3100,7 +3091,7 @@ final class SFB_Plugin {
                      style="max-width: 400px;">
               <p class="sfb-setting-desc" style="margin-top: 8px; font-size: 12px; color: #6b7280;">
                 <?php printf(
-                  esc_html__('Default: %s (site admin email)', 'submittal-builder'),
+                  esc_html__('Default: %s (site admin email)', 'submittal-spec-sheet-builder'),
                   '<code>' . esc_html(get_option('admin_email')) . '</code>'
                 ); ?>
               </p>
@@ -3111,14 +3102,14 @@ final class SFB_Plugin {
             <div class="sfb-setting-icon">📧</div>
             <div class="sfb-setting-content">
               <label class="sfb-setting-title">
-                <?php esc_html_e('Lead notification email', 'submittal-builder'); ?>
-                <span class="sfb-pro-badge"><?php esc_html_e('PRO', 'submittal-builder'); ?></span>
+                <?php esc_html_e('Lead notification email', 'submittal-spec-sheet-builder'); ?>
+                <span class="sfb-pro-badge"><?php esc_html_e('PRO', 'submittal-spec-sheet-builder'); ?></span>
               </label>
               <p class="sfb-setting-desc">
-                <?php esc_html_e('Customize where lead notifications are sent. Upgrade to Pro to unlock this feature.', 'submittal-builder'); ?>
+                <?php esc_html_e('Customize where lead notifications are sent. Upgrade to Pro to unlock this feature.', 'submittal-spec-sheet-builder'); ?>
               </p>
               <a href="https://webstuffguylabs.com/plugins/submittal-spec-sheet-builder-pro/" target="_blank" rel="noopener noreferrer" class="sfb-button sfb-button-primary">
-                <?php esc_html_e('Upgrade to Pro', 'submittal-builder'); ?>
+                <?php esc_html_e('Upgrade to Pro', 'submittal-spec-sheet-builder'); ?>
               </a>
             </div>
           </div>
@@ -3128,9 +3119,9 @@ final class SFB_Plugin {
         <!-- Weekly Lead Export Card (Agency) -->
         <?php if (sfb_is_agency_license()): ?>
         <div class="sfb-card">
-          <h2>📅 <?php echo esc_html__('Weekly Lead Export (Agency)', 'submittal-builder'); ?></h2>
+          <h2>📅 <?php echo esc_html__('Weekly Lead Export (Agency)', 'submittal-spec-sheet-builder'); ?></h2>
           <p class="sfb-muted">
-            <?php echo esc_html__('Automatically send a CSV of new leads each week to a configured email address. Ideal for project managers who need regular lead reports.', 'submittal-builder'); ?>
+            <?php echo esc_html__('Automatically send a CSV of new leads each week to a configured email address. Ideal for project managers who need regular lead reports.', 'submittal-spec-sheet-builder'); ?>
           </p>
 
           <!-- Enable Weekly Export -->
@@ -3143,10 +3134,10 @@ final class SFB_Plugin {
                        value="1"
                        id="sfb-weekly-export-enabled"
                        <?php checked(get_option('sfb_lead_weekly_export_enabled', false)); ?>>
-                <span class="sfb-setting-title"><?php esc_html_e('Enable weekly lead CSV email', 'submittal-builder'); ?></span>
+                <span class="sfb-setting-title"><?php esc_html_e('Enable weekly lead CSV email', 'submittal-spec-sheet-builder'); ?></span>
               </label>
               <p class="sfb-setting-desc">
-                <?php esc_html_e('When enabled, a CSV file with new leads will be emailed weekly. Only leads that haven\'t been sent before will be included.', 'submittal-builder'); ?>
+                <?php esc_html_e('When enabled, a CSV file with new leads will be emailed weekly. Only leads that haven\'t been sent before will be included.', 'submittal-spec-sheet-builder'); ?>
               </p>
             </div>
           </div>
@@ -3156,17 +3147,17 @@ final class SFB_Plugin {
             <div class="sfb-setting-icon">📧</div>
             <div class="sfb-setting-content">
               <label class="sfb-setting-title" for="sfb-weekly-export-email">
-                <?php esc_html_e('Recipient email address', 'submittal-builder'); ?>
+                <?php esc_html_e('Recipient email address', 'submittal-spec-sheet-builder'); ?>
               </label>
               <p class="sfb-setting-desc" style="margin-top: 4px;">
-                <?php esc_html_e('Email address to receive weekly lead exports. Typically your project manager or sales team.', 'submittal-builder'); ?>
+                <?php esc_html_e('Email address to receive weekly lead exports. Typically your project manager or sales team.', 'submittal-spec-sheet-builder'); ?>
               </p>
               <input type="email"
                      id="sfb-weekly-export-email"
                      name="sfb_lead_weekly_export_email"
                      value="<?php echo esc_attr(get_option('sfb_lead_weekly_export_email', '')); ?>"
                      class="sfb-text-input"
-                     placeholder="<?php esc_attr_e('project-manager@yourcompany.com', 'submittal-builder'); ?>">
+                     placeholder="<?php esc_attr_e('project-manager@yourcompany.com', 'submittal-spec-sheet-builder'); ?>">
             </div>
           </div>
 
@@ -3175,13 +3166,13 @@ final class SFB_Plugin {
             <div class="sfb-setting-icon">🕐</div>
             <div class="sfb-setting-content">
               <label class="sfb-setting-title">
-                <?php esc_html_e('Schedule (site timezone)', 'submittal-builder'); ?>
+                <?php esc_html_e('Schedule (site timezone)', 'submittal-spec-sheet-builder'); ?>
               </label>
               <p class="sfb-setting-desc" style="margin-top: 4px;">
                 <?php
                 $tz = wp_timezone_string();
                 printf(
-                  esc_html__('Choose when to send the weekly export. Time is in %s timezone.', 'submittal-builder'),
+                  esc_html__('Choose when to send the weekly export. Time is in %s timezone.', 'submittal-spec-sheet-builder'),
                   '<strong>' . esc_html($tz) . '</strong>'
                 );
                 ?>
@@ -3189,7 +3180,7 @@ final class SFB_Plugin {
               <div style="display: flex; gap: 12px; margin-top: 8px;">
                 <div style="flex: 1;">
                   <label for="sfb-weekly-export-day" style="display: block; font-size: 12px; color: #6b7280; margin-bottom: 4px;">
-                    <?php esc_html_e('Day of week', 'submittal-builder'); ?>
+                    <?php esc_html_e('Day of week', 'submittal-spec-sheet-builder'); ?>
                   </label>
                   <select id="sfb-weekly-export-day"
                           name="sfb_lead_weekly_export_day"
@@ -3197,13 +3188,13 @@ final class SFB_Plugin {
                     <?php
                     $current_day = get_option('sfb_lead_weekly_export_day', 'monday');
                     $days = [
-                      'monday' => __('Monday', 'submittal-builder'),
-                      'tuesday' => __('Tuesday', 'submittal-builder'),
-                      'wednesday' => __('Wednesday', 'submittal-builder'),
-                      'thursday' => __('Thursday', 'submittal-builder'),
-                      'friday' => __('Friday', 'submittal-builder'),
-                      'saturday' => __('Saturday', 'submittal-builder'),
-                      'sunday' => __('Sunday', 'submittal-builder'),
+                      'monday' => __('Monday', 'submittal-spec-sheet-builder'),
+                      'tuesday' => __('Tuesday', 'submittal-spec-sheet-builder'),
+                      'wednesday' => __('Wednesday', 'submittal-spec-sheet-builder'),
+                      'thursday' => __('Thursday', 'submittal-spec-sheet-builder'),
+                      'friday' => __('Friday', 'submittal-spec-sheet-builder'),
+                      'saturday' => __('Saturday', 'submittal-spec-sheet-builder'),
+                      'sunday' => __('Sunday', 'submittal-spec-sheet-builder'),
                     ];
                     foreach ($days as $value => $label) {
                       printf(
@@ -3218,7 +3209,7 @@ final class SFB_Plugin {
                 </div>
                 <div style="flex: 1;">
                   <label for="sfb-weekly-export-time" style="display: block; font-size: 12px; color: #6b7280; margin-bottom: 4px;">
-                    <?php esc_html_e('Time of day', 'submittal-builder'); ?>
+                    <?php esc_html_e('Time of day', 'submittal-spec-sheet-builder'); ?>
                   </label>
                   <input type="time"
                          id="sfb-weekly-export-time"
@@ -3236,16 +3227,16 @@ final class SFB_Plugin {
             <div class="sfb-setting-content">
               <div style="display: flex; justify-content: space-between; align-items: center;">
                 <div>
-                  <div class="sfb-setting-title"><?php esc_html_e('Test weekly export', 'submittal-builder'); ?></div>
+                  <div class="sfb-setting-title"><?php esc_html_e('Test weekly export', 'submittal-spec-sheet-builder'); ?></div>
                   <p class="sfb-setting-desc" style="margin-top: 4px;">
-                    <?php esc_html_e('Send a test email now with all new leads. Use this to verify your configuration before the scheduled run.', 'submittal-builder'); ?>
+                    <?php esc_html_e('Send a test email now with all new leads. Use this to verify your configuration before the scheduled run.', 'submittal-spec-sheet-builder'); ?>
                   </p>
                 </div>
                 <button type="button"
                         id="sfb-send-now-btn"
                         class="button button-secondary"
                         style="white-space: nowrap;">
-                  <?php esc_html_e('Send Now', 'submittal-builder'); ?>
+                  <?php esc_html_e('Send Now', 'submittal-spec-sheet-builder'); ?>
                 </button>
               </div>
               <div id="sfb-send-now-result" style="margin-top: 12px; display: none;"></div>
@@ -3259,14 +3250,14 @@ final class SFB_Plugin {
             var btn = $(this);
             var result = $('#sfb-send-now-result');
 
-            btn.prop('disabled', true).text('<?php esc_html_e('Sending...', 'submittal-builder'); ?>');
+            btn.prop('disabled', true).text('<?php esc_html_e('Sending...', 'submittal-spec-sheet-builder'); ?>');
             result.hide();
 
             $.post(ajaxurl, {
               action: 'sfb_send_weekly_export_now',
               nonce: '<?php echo wp_create_nonce('sfb_send_weekly_export_now'); ?>'
             }, function(response) {
-              btn.prop('disabled', false).text('<?php esc_html_e('Send Now', 'submittal-builder'); ?>');
+              btn.prop('disabled', false).text('<?php esc_html_e('Send Now', 'submittal-spec-sheet-builder'); ?>');
 
               if (response.success) {
                 result.html('<div class="notice notice-success inline" style="margin: 0; padding: 8px 12px;"><p style="margin: 0;"><strong>✅ ' + response.data.message + '</strong></p></div>').show();
@@ -3274,7 +3265,7 @@ final class SFB_Plugin {
                 result.html('<div class="notice notice-error inline" style="margin: 0; padding: 8px 12px;"><p style="margin: 0;"><strong>❌ ' + response.data + '</strong></p></div>').show();
               }
             }).fail(function() {
-              btn.prop('disabled', false).text('<?php esc_html_e('Send Now', 'submittal-builder'); ?>');
+              btn.prop('disabled', false).text('<?php esc_html_e('Send Now', 'submittal-spec-sheet-builder'); ?>');
               result.html('<div class="notice notice-error inline" style="margin: 0; padding: 8px 12px;"><p style="margin: 0;"><strong>❌ Failed to send. Please try again.</strong></p></div>').show();
             });
           });
@@ -3284,9 +3275,9 @@ final class SFB_Plugin {
 
         <!-- Help Us Improve Card -->
         <div class="sfb-card">
-          <h2>📊 <?php echo esc_html__('Help Us Improve', 'submittal-builder'); ?></h2>
+          <h2>📊 <?php echo esc_html__('Help Us Improve', 'submittal-spec-sheet-builder'); ?></h2>
           <p class="sfb-muted">
-            <?php echo esc_html__('Share anonymous usage data to help us make the plugin better for everyone.', 'submittal-builder'); ?>
+            <?php echo esc_html__('Share anonymous usage data to help us make the plugin better for everyone.', 'submittal-spec-sheet-builder'); ?>
           </p>
 
           <div class="sfb-setting-row">
@@ -3298,9 +3289,9 @@ final class SFB_Plugin {
                        value="1"
                        <?php checked(SFB_Telemetry::is_enabled()); ?>>
                 <span class="sfb-setting-title">
-                  <?php esc_html_e('Become a super contributor by helping us understand how you use our service to enhance your experience and improve our product.', 'submittal-builder'); ?>
+                  <?php esc_html_e('Become a super contributor by helping us understand how you use our service to enhance your experience and improve our product.', 'submittal-spec-sheet-builder'); ?>
                   <a href="https://webstuffguylabs.com/share-usage-data/" target="_blank" style="text-decoration: none;">
-                    <?php esc_html_e('Learn more', 'submittal-builder'); ?> ↗
+                    <?php esc_html_e('Learn more', 'submittal-spec-sheet-builder'); ?> ↗
                   </a>
                 </span>
               </label>
@@ -3312,7 +3303,7 @@ final class SFB_Plugin {
         <div class="sfb-save-section">
           <button type="submit" class="button button-primary button-large">
             <span class="dashicons dashicons-saved" style="margin-top: 3px;"></span>
-            <?php esc_html_e('Save Changes', 'submittal-builder'); ?>
+            <?php esc_html_e('Save Changes', 'submittal-spec-sheet-builder'); ?>
           </button>
         </div>
       </form>
@@ -3610,7 +3601,7 @@ final class SFB_Plugin {
     // Add Drafts section
     add_settings_section(
       'sfb_section_drafts',
-      __('Drafts', 'submittal-builder'),
+      __('Drafts', 'submittal-spec-sheet-builder'),
       [$this, 'render_drafts_section_desc'],
       'sfb_settings_page'
     );
@@ -3618,7 +3609,7 @@ final class SFB_Plugin {
     // Add fields
     add_settings_field(
       'drafts_autosave_enabled',
-      __('Local Autosave', 'submittal-builder'),
+      __('Local Autosave', 'submittal-spec-sheet-builder'),
       [$this, 'render_autosave_field'],
       'sfb_settings_page',
       'sfb_section_drafts'
@@ -3626,7 +3617,7 @@ final class SFB_Plugin {
 
     add_settings_field(
       'drafts_server_enabled',
-      __('Server Drafts', 'submittal-builder'),
+      __('Server Drafts', 'submittal-spec-sheet-builder'),
       [$this, 'render_server_drafts_field'],
       'sfb_settings_page',
       'sfb_section_drafts'
@@ -3634,7 +3625,7 @@ final class SFB_Plugin {
 
     add_settings_field(
       'drafts_expiry_days',
-      __('Draft Expiry', 'submittal-builder'),
+      __('Draft Expiry', 'submittal-spec-sheet-builder'),
       [$this, 'render_expiry_field'],
       'sfb_settings_page',
       'sfb_section_drafts'
@@ -3642,7 +3633,7 @@ final class SFB_Plugin {
 
     add_settings_field(
       'drafts_rate_limit_sec',
-      __('Save Rate Limit', 'submittal-builder'),
+      __('Save Rate Limit', 'submittal-spec-sheet-builder'),
       [$this, 'render_rate_limit_field'],
       'sfb_settings_page',
       'sfb_section_drafts'
@@ -3650,7 +3641,7 @@ final class SFB_Plugin {
 
     add_settings_field(
       'drafts_privacy_note',
-      __('Privacy Note', 'submittal-builder'),
+      __('Privacy Note', 'submittal-spec-sheet-builder'),
       [$this, 'render_privacy_note_field'],
       'sfb_settings_page',
       'sfb_section_drafts'
@@ -3659,7 +3650,7 @@ final class SFB_Plugin {
     // Add License Behavior section
     add_settings_section(
       'sfb_section_license_behavior',
-      __('License & Cleanup', 'submittal-builder'),
+      __('License & Cleanup', 'submittal-spec-sheet-builder'),
       [$this, 'render_license_behavior_section_desc'],
       'sfb_settings_page'
     );
@@ -3674,7 +3665,7 @@ final class SFB_Plugin {
 
     add_settings_field(
       'sfb_auto_deactivate_on_deactivate',
-      __('Auto-deactivate License', 'submittal-builder'),
+      __('Auto-deactivate License', 'submittal-spec-sheet-builder'),
       [$this, 'render_auto_deactivate_field'],
       'sfb_settings_page',
       'sfb_section_license_behavior'
@@ -3690,7 +3681,7 @@ final class SFB_Plugin {
 
     add_settings_field(
       'sfb_remove_data_on_uninstall',
-      __('Remove Data on Uninstall', 'submittal-builder'),
+      __('Remove Data on Uninstall', 'submittal-spec-sheet-builder'),
       [$this, 'render_remove_data_field'],
       'sfb_settings_page',
       'sfb_section_license_behavior'
@@ -3699,21 +3690,21 @@ final class SFB_Plugin {
     // Add External Links section
     add_settings_section(
       'sfb_section_external_links',
-      __('External Links', 'submittal-builder'),
+      __('External Links', 'submittal-spec-sheet-builder'),
       [$this, 'render_external_links_section_desc'],
       'sfb_settings_page'
     );
 
     // Register individual link settings
     $link_fields = [
-      'account'   => __('Account Dashboard URL', 'submittal-builder'),
-      'invoices'  => __('Invoices/Downloads URL', 'submittal-builder'),
-      'docs'      => __('Documentation URL', 'submittal-builder'),
-      'tutorials' => __('Tutorials URL', 'submittal-builder'),
-      'roadmap'   => __('Roadmap/Feature Requests URL', 'submittal-builder'),
-      'support'   => __('Support URL or Email', 'submittal-builder'),
-      'renew'     => __('Renew License URL', 'submittal-builder'),
-      'pricing'   => __('Pricing/Get License URL', 'submittal-builder'),
+      'account'   => __('Account Dashboard URL', 'submittal-spec-sheet-builder'),
+      'invoices'  => __('Invoices/Downloads URL', 'submittal-spec-sheet-builder'),
+      'docs'      => __('Documentation URL', 'submittal-spec-sheet-builder'),
+      'tutorials' => __('Tutorials URL', 'submittal-spec-sheet-builder'),
+      'roadmap'   => __('Roadmap/Feature Requests URL', 'submittal-spec-sheet-builder'),
+      'support'   => __('Support URL or Email', 'submittal-spec-sheet-builder'),
+      'renew'     => __('Renew License URL', 'submittal-spec-sheet-builder'),
+      'pricing'   => __('Pricing/Get License URL', 'submittal-spec-sheet-builder'),
     ];
 
     foreach ($link_fields as $key => $label) {
@@ -3742,7 +3733,7 @@ final class SFB_Plugin {
     // Add Lead Capture section (Pro feature)
     add_settings_section(
       'sfb_section_lead_capture',
-      __('Lead Capture (Pro)', 'submittal-builder'),
+      __('Lead Capture (Pro)', 'submittal-spec-sheet-builder'),
       [$this, 'render_lead_capture_section_desc'],
       'sfb_settings_page'
     );
@@ -3758,7 +3749,7 @@ final class SFB_Plugin {
 
     add_settings_field(
       'sfb_lead_capture_enabled',
-      __('Enable Lead Capture', 'submittal-builder'),
+      __('Enable Lead Capture', 'submittal-spec-sheet-builder'),
       [$this, 'render_lead_capture_enabled_field'],
       'sfb_settings_page',
       'sfb_section_lead_capture'
@@ -3778,7 +3769,7 @@ final class SFB_Plugin {
 
     add_settings_field(
       'sfb_lead_notification_email',
-      __('Lead Notification Email', 'submittal-builder'),
+      __('Lead Notification Email', 'submittal-spec-sheet-builder'),
       [$this, 'render_lead_notification_email_field'],
       'sfb_settings_page',
       'sfb_section_lead_capture'
@@ -3794,7 +3785,7 @@ final class SFB_Plugin {
 
     add_settings_field(
       'sfb_lead_bcc_admin',
-      __('BCC Admin on Lead Emails', 'submittal-builder'),
+      __('BCC Admin on Lead Emails', 'submittal-spec-sheet-builder'),
       [$this, 'render_lead_bcc_admin_field'],
       'sfb_settings_page',
       'sfb_section_lead_capture'
@@ -3879,7 +3870,7 @@ final class SFB_Plugin {
   function render_drafts_section_desc() {
     ?>
     <p class="description">
-      <?php echo esc_html__( 'Local autosave stores selections in your browser. "Save progress" (Pro) creates a private, unlisted link you can share. Drafts auto-expire after 45 days (configurable).', 'submittal-builder' ); ?>
+      <?php echo esc_html__( 'Local autosave stores selections in your browser. "Save progress" (Pro) creates a private, unlisted link you can share. Drafts auto-expire after 45 days (configurable).', 'submittal-spec-sheet-builder' ); ?>
     </p>
     <?php
   }
@@ -3891,9 +3882,9 @@ final class SFB_Plugin {
     ?>
     <label>
       <input type="checkbox" name="<?php echo esc_attr($this->option_key()); ?>[drafts_autosave_enabled]" value="1" <?php echo $checked; ?>>
-      <?php esc_html_e('Enable local autosave (recommended)', 'submittal-builder'); ?>
+      <?php esc_html_e('Enable local autosave (recommended)', 'submittal-spec-sheet-builder'); ?>
     </label>
-    <span class="sfb-field-desc"><?php esc_html_e('Automatically saves selections to browser localStorage while users work.', 'submittal-builder'); ?></span>
+    <span class="sfb-field-desc"><?php esc_html_e('Automatically saves selections to browser localStorage while users work.', 'submittal-spec-sheet-builder'); ?></span>
     <?php
   }
 
@@ -3906,15 +3897,15 @@ final class SFB_Plugin {
     ?>
     <label>
       <input type="checkbox" name="<?php echo esc_attr($this->option_key()); ?>[drafts_server_enabled]" value="1" <?php echo $checked; ?> <?php echo $disabled; ?>>
-      <?php esc_html_e('Enable server-side shareable drafts', 'submittal-builder'); ?>
+      <?php esc_html_e('Enable server-side shareable drafts', 'submittal-spec-sheet-builder'); ?>
       <?php if (!$is_pro): ?>
-        <span class="sfb-pro-badge"><?php esc_html_e('Pro', 'submittal-builder'); ?></span>
+        <span class="sfb-pro-badge"><?php esc_html_e('Pro', 'submittal-spec-sheet-builder'); ?></span>
         <a href="https://webstuffguylabs.com/plugins/submittal-spec-sheet-builder-pro/" target="_blank" rel="noopener noreferrer" style="margin-left:6px;">
-          <?php esc_html_e('Upgrade to Pro', 'submittal-builder'); ?>
+          <?php esc_html_e('Upgrade to Pro', 'submittal-spec-sheet-builder'); ?>
         </a>
       <?php endif; ?>
     </label>
-    <span class="sfb-field-desc"><?php esc_html_e('Allows users to save selections to the server and share via URL.', 'submittal-builder'); ?></span>
+    <span class="sfb-field-desc"><?php esc_html_e('Allows users to save selections to the server and share via URL.', 'submittal-spec-sheet-builder'); ?></span>
     <?php
   }
 
@@ -3924,8 +3915,8 @@ final class SFB_Plugin {
     $value = isset($options['drafts_expiry_days']) ? intval($options['drafts_expiry_days']) : 45;
     ?>
     <input type="number" name="<?php echo esc_attr($this->option_key()); ?>[drafts_expiry_days]" value="<?php echo esc_attr($value); ?>" min="1" max="365" style="width:80px;">
-    <span><?php esc_html_e('days', 'submittal-builder'); ?></span>
-    <span class="sfb-field-desc"><?php esc_html_e('How long server drafts remain accessible before auto-deletion (1-365 days).', 'submittal-builder'); ?></span>
+    <span><?php esc_html_e('days', 'submittal-spec-sheet-builder'); ?></span>
+    <span class="sfb-field-desc"><?php esc_html_e('How long server drafts remain accessible before auto-deletion (1-365 days).', 'submittal-spec-sheet-builder'); ?></span>
     <?php
   }
 
@@ -3935,8 +3926,8 @@ final class SFB_Plugin {
     $value = isset($options['drafts_rate_limit_sec']) ? intval($options['drafts_rate_limit_sec']) : 20;
     ?>
     <input type="number" name="<?php echo esc_attr($this->option_key()); ?>[drafts_rate_limit_sec]" value="<?php echo esc_attr($value); ?>" min="5" max="120" style="width:80px;">
-    <span><?php esc_html_e('seconds', 'submittal-builder'); ?></span>
-    <span class="sfb-field-desc"><?php esc_html_e('Minimum time between save requests per user (5-120 seconds).', 'submittal-builder'); ?></span>
+    <span><?php esc_html_e('seconds', 'submittal-spec-sheet-builder'); ?></span>
+    <span class="sfb-field-desc"><?php esc_html_e('Minimum time between save requests per user (5-120 seconds).', 'submittal-spec-sheet-builder'); ?></span>
     <?php
   }
 
@@ -3946,7 +3937,7 @@ final class SFB_Plugin {
     $value = isset($options['drafts_privacy_note']) ? $options['drafts_privacy_note'] : '';
     ?>
     <textarea name="<?php echo esc_attr($this->option_key()); ?>[drafts_privacy_note]" rows="3" style="width:100%;max-width:500px;"><?php echo esc_textarea($value); ?></textarea>
-    <span class="sfb-field-desc"><?php esc_html_e('Optional note shown near the Save button to inform users about privacy/retention policies.', 'submittal-builder'); ?></span>
+    <span class="sfb-field-desc"><?php esc_html_e('Optional note shown near the Save button to inform users about privacy/retention policies.', 'submittal-spec-sheet-builder'); ?></span>
     <?php
   }
 
@@ -3954,13 +3945,13 @@ final class SFB_Plugin {
   function render_license_behavior_section_desc() {
     ?>
     <p class="description">
-      <?php esc_html_e('Control what happens when you deactivate or uninstall this plugin.', 'submittal-builder'); ?>
+      <?php esc_html_e('Control what happens when you deactivate or uninstall this plugin.', 'submittal-spec-sheet-builder'); ?>
     </p>
     <?php if (defined('SFB_PRO_DEV') && SFB_PRO_DEV): ?>
       <div class="notice notice-warning inline" style="margin:12px 0; padding:8px 12px;">
         <p style="margin:0;">
-          <strong><?php esc_html_e('Dev Override Active:', 'submittal-builder'); ?></strong>
-          <?php esc_html_e('SFB_PRO_DEV is enabled. License checks and auto-deactivation are bypassed.', 'submittal-builder'); ?>
+          <strong><?php esc_html_e('Dev Override Active:', 'submittal-spec-sheet-builder'); ?></strong>
+          <?php esc_html_e('SFB_PRO_DEV is enabled. License checks and auto-deactivation are bypassed.', 'submittal-spec-sheet-builder'); ?>
         </p>
       </div>
     <?php endif; ?>
@@ -3978,13 +3969,13 @@ final class SFB_Plugin {
         value="1"
         <?php checked($value, true); ?>
       >
-      <?php esc_html_e('Automatically deactivate license when plugin is deactivated or uninstalled', 'submittal-builder'); ?>
+      <?php esc_html_e('Automatically deactivate license when plugin is deactivated or uninstalled', 'submittal-spec-sheet-builder'); ?>
     </label>
     <p class="description">
-      <?php esc_html_e('When enabled, we\'ll release your license seat on this site automatically when you deactivate or delete the plugin. This frees up an activation for use on another site.', 'submittal-builder'); ?>
+      <?php esc_html_e('When enabled, we\'ll release your license seat on this site automatically when you deactivate or delete the plugin. This frees up an activation for use on another site.', 'submittal-spec-sheet-builder'); ?>
     </p>
     <p class="description" style="color:#666; font-size:12px;">
-      <?php esc_html_e('Note: Your license key and settings are preserved when you deactivate (only cleared on uninstall if "Remove Data" is enabled below).', 'submittal-builder'); ?>
+      <?php esc_html_e('Note: Your license key and settings are preserved when you deactivate (only cleared on uninstall if "Remove Data" is enabled below).', 'submittal-spec-sheet-builder'); ?>
     </p>
     <?php
   }
@@ -4000,14 +3991,14 @@ final class SFB_Plugin {
         value="1"
         <?php checked($value, true); ?>
       >
-      <?php esc_html_e('Remove all plugin data when uninstalling', 'submittal-builder'); ?>
+      <?php esc_html_e('Remove all plugin data when uninstalling', 'submittal-spec-sheet-builder'); ?>
     </label>
     <p class="description">
-      <?php esc_html_e('When enabled, all plugin settings, license data, and cached information will be permanently deleted when you uninstall (delete) the plugin.', 'submittal-builder'); ?>
+      <?php esc_html_e('When enabled, all plugin settings, license data, and cached information will be permanently deleted when you uninstall (delete) the plugin.', 'submittal-spec-sheet-builder'); ?>
     </p>
     <p class="description" style="color:#d63638; font-size:12px;">
-      <strong><?php esc_html_e('Warning:', 'submittal-builder'); ?></strong>
-      <?php esc_html_e('This action cannot be undone. You will need to re-enter your license key and reconfigure all settings if you reinstall later.', 'submittal-builder'); ?>
+      <strong><?php esc_html_e('Warning:', 'submittal-spec-sheet-builder'); ?></strong>
+      <?php esc_html_e('This action cannot be undone. You will need to re-enter your license key and reconfigure all settings if you reinstall later.', 'submittal-spec-sheet-builder'); ?>
     </p>
     <?php
   }
@@ -4016,10 +4007,10 @@ final class SFB_Plugin {
   function render_external_links_section_desc() {
     ?>
     <p class="description">
-      <?php esc_html_e('Configure external URLs used in License & Support pages. Leave blank to use default placeholder URLs or show "Coming soon" state.', 'submittal-builder'); ?>
+      <?php esc_html_e('Configure external URLs used in License & Support pages. Leave blank to use default placeholder URLs or show "Coming soon" state.', 'submittal-spec-sheet-builder'); ?>
     </p>
     <p class="description">
-      <?php esc_html_e('For Support URL, you can use either a URL (https://...) or email address (mailto:support@example.com).', 'submittal-builder'); ?>
+      <?php esc_html_e('For Support URL, you can use either a URL (https://...) or email address (mailto:support@example.com).', 'submittal-spec-sheet-builder'); ?>
     </p>
     <?php
   }
@@ -4045,7 +4036,7 @@ final class SFB_Plugin {
       style="width: 100%; max-width: 500px;"
     >
     <?php if ($key === 'support'): ?>
-      <span class="sfb-field-desc"><?php esc_html_e('Enter a URL or email address (e.g., mailto:support@example.com)', 'submittal-builder'); ?></span>
+      <span class="sfb-field-desc"><?php esc_html_e('Enter a URL or email address (e.g., mailto:support@example.com)', 'submittal-spec-sheet-builder'); ?></span>
     <?php endif; ?>
     <?php
   }
@@ -4053,7 +4044,7 @@ final class SFB_Plugin {
   /** Lead Capture Section Description */
   function render_lead_capture_section_desc() {
     ?>
-    <p><?php esc_html_e('Capture user contact information before allowing PDF downloads. Stores leads in the database and sends email notifications.', 'submittal-builder'); ?></p>
+    <p><?php esc_html_e('Capture user contact information before allowing PDF downloads. Stores leads in the database and sends email notifications.', 'submittal-spec-sheet-builder'); ?></p>
     <?php
   }
 
@@ -4066,9 +4057,9 @@ final class SFB_Plugin {
     <input type="hidden" name="sfb_lead_capture_enabled" value="0">
     <label>
       <input type="checkbox" name="sfb_lead_capture_enabled" value="1" <?php echo $checked; ?>>
-      <?php esc_html_e('Show lead capture modal before PDF generation', 'submittal-builder'); ?>
+      <?php esc_html_e('Show lead capture modal before PDF generation', 'submittal-spec-sheet-builder'); ?>
     </label>
-    <span class="sfb-field-desc"><?php esc_html_e('When enabled, users must enter their email (and optionally phone) before downloading PDFs. Leads are stored in the database.', 'submittal-builder'); ?></span>
+    <span class="sfb-field-desc"><?php esc_html_e('When enabled, users must enter their email (and optionally phone) before downloading PDFs. Leads are stored in the database.', 'submittal-spec-sheet-builder'); ?></span>
     <?php
   }
 
@@ -4084,15 +4075,15 @@ final class SFB_Plugin {
            class="regular-text"
            <?php echo !sfb_is_pro_active() ? 'disabled' : ''; ?>>
     <p class="description">
-      <?php esc_html_e('Email address to receive lead notifications. Leave blank to use site admin email.', 'submittal-builder'); ?>
+      <?php esc_html_e('Email address to receive lead notifications. Leave blank to use site admin email.', 'submittal-spec-sheet-builder'); ?>
       <?php if (!empty($placeholder)): ?>
         <br>
-        <?php printf(esc_html__('Default: %s', 'submittal-builder'), '<code>' . esc_html($placeholder) . '</code>'); ?>
+        <?php printf(esc_html__('Default: %s', 'submittal-spec-sheet-builder'), '<code>' . esc_html($placeholder) . '</code>'); ?>
       <?php endif; ?>
     </p>
     <?php if (!sfb_is_pro_active()): ?>
       <p class="description" style="color: #d97706;">
-        <?php esc_html_e('⚠️ This is a Pro feature. Upgrade to customize the notification email address.', 'submittal-builder'); ?>
+        <?php esc_html_e('⚠️ This is a Pro feature. Upgrade to customize the notification email address.', 'submittal-spec-sheet-builder'); ?>
       </p>
     <?php endif; ?>
     <?php
@@ -4105,9 +4096,9 @@ final class SFB_Plugin {
     ?>
     <label>
       <input type="checkbox" name="sfb_lead_bcc_admin" value="1" <?php echo $checked; ?>>
-      <?php esc_html_e('BCC site admin email on lead notification emails', 'submittal-builder'); ?>
+      <?php esc_html_e('BCC site admin email on lead notification emails', 'submittal-spec-sheet-builder'); ?>
     </label>
-    <span class="sfb-field-desc"><?php printf(esc_html__('When enabled, all lead notification emails will BCC %s', 'submittal-builder'), get_option('admin_email')); ?></span>
+    <span class="sfb-field-desc"><?php printf(esc_html__('When enabled, all lead notification emails will BCC %s', 'submittal-spec-sheet-builder'), get_option('admin_email')); ?></span>
     <?php
   }
 
@@ -4146,7 +4137,7 @@ final class SFB_Plugin {
     } else {
       // Error state - neither template found
       echo '<div class="wrap"><div class="notice notice-error"><p>';
-      echo esc_html__('Welcome template not found. Please reinstall the plugin.', 'submittal-builder');
+      echo esc_html__('Welcome template not found. Please reinstall the plugin.', 'submittal-spec-sheet-builder');
       echo '</p></div></div>';
     }
   }
@@ -4158,12 +4149,12 @@ final class SFB_Plugin {
 
     // Get Pro status
     $pro_active = sfb_is_pro_active();
-    $pro_status_label = $pro_active ? __('Active', 'submittal-builder') : __('Free', 'submittal-builder');
+    $pro_status_label = $pro_active ? __('Active', 'submittal-spec-sheet-builder') : __('Free', 'submittal-spec-sheet-builder');
     $is_agency = sfb_is_agency_license();
 
     // Get shareable drafts status
     $shareable_enabled = sfb_feature_enabled('server_drafts');
-    $shareable_label = $shareable_enabled ? __('Enabled', 'submittal-builder') : __('Disabled', 'submittal-builder');
+    $shareable_label = $shareable_enabled ? __('Enabled', 'submittal-spec-sheet-builder') : __('Disabled', 'submittal-spec-sheet-builder');
 
     // Get draft statistics
     $draft_stats = $this->get_draft_stats();
@@ -4182,48 +4173,48 @@ final class SFB_Plugin {
     $next_run = wp_next_scheduled('sfb_purge_expired_drafts');
     if ($next_run) {
       $next_time = wp_date(get_option('time_format'), $next_run);
-      $cron_status_html = '🟢 <strong>' . sprintf(__('Next: %s', 'submittal-builder'), $next_time) . '</strong>';
+      $cron_status_html = '🟢 <strong>' . sprintf(__('Next: %s', 'submittal-spec-sheet-builder'), $next_time) . '</strong>';
     } else {
-      $cron_status_html = '🔴 <strong>' . __('Not scheduled', 'submittal-builder') . '</strong>';
+      $cron_status_html = '🔴 <strong>' . __('Not scheduled', 'submittal-spec-sheet-builder') . '</strong>';
     }
 
     ?>
     <div class="wrap sfb-utilities">
-      <h1><?php echo esc_html__('Utilities', 'submittal-builder'); ?></h1>
-      <p class="description"><?php esc_html_e('Maintenance and testing tools. Clean up old data, test email delivery, optimize database, and run system diagnostics.', 'submittal-builder'); ?></p>
+      <h1><?php echo esc_html__('Utilities', 'submittal-spec-sheet-builder'); ?></h1>
+      <p class="description"><?php esc_html_e('Maintenance and testing tools. Clean up old data, test email delivery, optimize database, and run system diagnostics.', 'submittal-spec-sheet-builder'); ?></p>
 
       <!-- Draft Management Card -->
       <div class="sfb-card">
-        <h2>🧹 <?php echo esc_html__('Draft Management', 'submittal-builder'); ?></h2>
-        <p class="sfb-muted"><?php echo esc_html__('Clean up temp drafts and verify the system is healthy.', 'submittal-builder'); ?></p>
+        <h2>🧹 <?php echo esc_html__('Draft Management', 'submittal-spec-sheet-builder'); ?></h2>
+        <p class="sfb-muted"><?php echo esc_html__('Clean up temp drafts and verify the system is healthy.', 'submittal-spec-sheet-builder'); ?></p>
 
         <div class="sfb-actions">
           <button id="sfb-purge-btn"
                   class="button button-primary sfb-btn"
                   data-nonce="<?php echo esc_attr(wp_create_nonce('sfb_purge')); ?>">
-            <?php esc_html_e('Purge Expired Drafts', 'submittal-builder'); ?>
+            <?php esc_html_e('Purge Expired Drafts', 'submittal-spec-sheet-builder'); ?>
           </button>
 
           <button id="sfb-smoke-btn"
                   class="button sfb-btn"
                   data-nonce="<?php echo esc_attr(wp_create_nonce('sfb_smoke')); ?>">
-            <?php esc_html_e('Run Smoke Test', 'submittal-builder'); ?>
+            <?php esc_html_e('Run Smoke Test', 'submittal-spec-sheet-builder'); ?>
           </button>
         </div>
 
         <div id="sfb-drafts-status" class="sfb-status">
-          <?php echo esc_html__('Idle — ready when you are.', 'submittal-builder'); ?>
+          <?php echo esc_html__('Idle — ready when you are.', 'submittal-spec-sheet-builder'); ?>
         </div>
 
         <div class="sfb-grid" style="margin-top:10px;">
           <div class="sfb-kv">
-            <div class="k"><?php esc_html_e('Cron Status', 'submittal-builder'); ?></div>
+            <div class="k"><?php esc_html_e('Cron Status', 'submittal-spec-sheet-builder'); ?></div>
             <div class="v" id="sfb-cron-status">
               <?php echo wp_kses_post($cron_status_html); ?>
             </div>
           </div>
           <div class="sfb-kv">
-            <div class="k"><?php esc_html_e('Draft Statistics', 'submittal-builder'); ?></div>
+            <div class="k"><?php esc_html_e('Draft Statistics', 'submittal-spec-sheet-builder'); ?></div>
             <div class="v" id="sfb-draft-stats">
               <?php echo esc_html($draft_stats['text']); ?>
             </div>
@@ -4233,22 +4224,22 @@ final class SFB_Plugin {
 
       <!-- System Information Card -->
       <div class="sfb-card">
-        <h2>🧩 <?php echo esc_html__('System Information', 'submittal-builder'); ?></h2>
+        <h2>🧩 <?php echo esc_html__('System Information', 'submittal-spec-sheet-builder'); ?></h2>
         <div class="sfb-grid">
           <div class="sfb-kv">
-            <div class="k"><?php esc_html_e('Plugin Version', 'submittal-builder'); ?></div>
+            <div class="k"><?php esc_html_e('Plugin Version', 'submittal-spec-sheet-builder'); ?></div>
             <div class="v"><?php echo esc_html($plugin_version); ?></div>
           </div>
           <div class="sfb-kv">
-            <div class="k"><?php esc_html_e('Pro Status', 'submittal-builder'); ?></div>
+            <div class="k"><?php esc_html_e('Pro Status', 'submittal-spec-sheet-builder'); ?></div>
             <div class="v"><?php echo esc_html($pro_status_label); ?></div>
           </div>
           <div class="sfb-kv">
-            <div class="k"><?php esc_html_e('Shareable Drafts', 'submittal-builder'); ?></div>
+            <div class="k"><?php esc_html_e('Shareable Drafts', 'submittal-spec-sheet-builder'); ?></div>
             <div class="v"><?php echo esc_html($shareable_label); ?></div>
           </div>
           <div class="sfb-kv">
-            <div class="k"><?php esc_html_e('WordPress', 'submittal-builder'); ?></div>
+            <div class="k"><?php esc_html_e('WordPress', 'submittal-spec-sheet-builder'); ?></div>
             <div class="v"><?php echo esc_html(get_bloginfo('version')); ?></div>
           </div>
         </div>
@@ -4256,43 +4247,43 @@ final class SFB_Plugin {
 
       <!-- Email Testing Card -->
       <div class="sfb-card">
-        <h2>📧 <?php echo esc_html__('Email Testing', 'submittal-builder'); ?></h2>
-        <p class="sfb-muted"><?php echo esc_html__('Test email delivery to verify SMTP configuration is working correctly.', 'submittal-builder'); ?></p>
+        <h2>📧 <?php echo esc_html__('Email Testing', 'submittal-spec-sheet-builder'); ?></h2>
+        <p class="sfb-muted"><?php echo esc_html__('Test email delivery to verify SMTP configuration is working correctly.', 'submittal-spec-sheet-builder'); ?></p>
 
         <div class="sfb-actions">
           <input type="email"
                  id="sfb-test-email-input"
-                 placeholder="<?php esc_attr_e('recipient@example.com', 'submittal-builder'); ?>"
+                 placeholder="<?php esc_attr_e('recipient@example.com', 'submittal-spec-sheet-builder'); ?>"
                  style="width: 300px; margin-right: 10px;"
                  value="<?php echo esc_attr(wp_get_current_user()->user_email); ?>" />
 
           <button id="sfb-test-email-btn"
                   class="button button-primary sfb-btn"
                   data-nonce="<?php echo esc_attr(wp_create_nonce('sfb_test_email')); ?>">
-            <?php esc_html_e('Send Test Email', 'submittal-builder'); ?>
+            <?php esc_html_e('Send Test Email', 'submittal-spec-sheet-builder'); ?>
           </button>
         </div>
 
         <div id="sfb-email-status" class="sfb-status">
-          <?php echo esc_html__('Enter recipient email and click Send Test Email.', 'submittal-builder'); ?>
+          <?php echo esc_html__('Enter recipient email and click Send Test Email.', 'submittal-spec-sheet-builder'); ?>
         </div>
       </div>
 
       <?php if ($pro_active): ?>
       <!-- Tracking Data Management (Pro) -->
       <div class="sfb-card">
-        <h2>📊 <?php echo esc_html__('Tracking Data Management', 'submittal-builder'); ?> <span class="sfb-pro-badge">PRO</span></h2>
-        <p class="sfb-muted"><?php echo esc_html__('Clear old tracking links and view statistics. This does not delete PDFs, only tracking data.', 'submittal-builder'); ?></p>
+        <h2>📊 <?php echo esc_html__('Tracking Data Management', 'submittal-spec-sheet-builder'); ?> <span class="sfb-pro-badge">PRO</span></h2>
+        <p class="sfb-muted"><?php echo esc_html__('Clear old tracking links and view statistics. This does not delete PDFs, only tracking data.', 'submittal-spec-sheet-builder'); ?></p>
 
         <div class="sfb-grid" style="margin-bottom:16px;">
           <div class="sfb-kv">
-            <div class="k"><?php esc_html_e('Total Tracking Links', 'submittal-builder'); ?></div>
+            <div class="k"><?php esc_html_e('Total Tracking Links', 'submittal-spec-sheet-builder'); ?></div>
             <div class="v" id="sfb-tracking-total">
               <?php echo esc_html($tracking_stats['total']); ?>
             </div>
           </div>
           <div class="sfb-kv">
-            <div class="k"><?php esc_html_e('Links with Views', 'submittal-builder'); ?></div>
+            <div class="k"><?php esc_html_e('Links with Views', 'submittal-spec-sheet-builder'); ?></div>
             <div class="v" id="sfb-tracking-viewed">
               <?php echo esc_html($tracking_stats['viewed']); ?>
             </div>
@@ -4303,37 +4294,37 @@ final class SFB_Plugin {
           <button id="sfb-clear-tracking-btn"
                   class="button button-secondary sfb-btn"
                   data-nonce="<?php echo esc_attr(wp_create_nonce('sfb_clear_tracking')); ?>">
-            <?php esc_html_e('Clear All Tracking Data', 'submittal-builder'); ?>
+            <?php esc_html_e('Clear All Tracking Data', 'submittal-spec-sheet-builder'); ?>
           </button>
         </div>
 
         <div id="sfb-tracking-status" class="sfb-status">
-          <?php echo esc_html__('Tracking data helps monitor customer engagement.', 'submittal-builder'); ?>
+          <?php echo esc_html__('Tracking data helps monitor customer engagement.', 'submittal-spec-sheet-builder'); ?>
         </div>
       </div>
       <?php endif; ?>
 
       <!-- Database Cleanup Card -->
       <div class="sfb-card">
-        <h2>🗄️ <?php echo esc_html__('Database Cleanup', 'submittal-builder'); ?></h2>
-        <p class="sfb-muted"><?php echo esc_html__('Optimize database tables and remove orphaned data. Safe to run anytime.', 'submittal-builder'); ?></p>
+        <h2>🗄️ <?php echo esc_html__('Database Cleanup', 'submittal-spec-sheet-builder'); ?></h2>
+        <p class="sfb-muted"><?php echo esc_html__('Optimize database tables and remove orphaned data. Safe to run anytime.', 'submittal-spec-sheet-builder'); ?></p>
 
         <div class="sfb-actions">
           <button id="sfb-optimize-db-btn"
                   class="button sfb-btn"
                   data-nonce="<?php echo esc_attr(wp_create_nonce('sfb_optimize_db')); ?>">
-            <?php esc_html_e('Optimize Database', 'submittal-builder'); ?>
+            <?php esc_html_e('Optimize Database', 'submittal-spec-sheet-builder'); ?>
           </button>
 
           <button id="sfb-clean-orphans-btn"
                   class="button sfb-btn"
                   data-nonce="<?php echo esc_attr(wp_create_nonce('sfb_clean_orphans')); ?>">
-            <?php esc_html_e('Remove Orphaned Data', 'submittal-builder'); ?>
+            <?php esc_html_e('Remove Orphaned Data', 'submittal-spec-sheet-builder'); ?>
           </button>
         </div>
 
         <div id="sfb-db-status" class="sfb-status">
-          <?php echo esc_html__('Database is healthy.', 'submittal-builder'); ?>
+          <?php echo esc_html__('Database is healthy.', 'submittal-spec-sheet-builder'); ?>
         </div>
       </div>
 
@@ -4341,7 +4332,7 @@ final class SFB_Plugin {
       <!-- Advanced Tools Link (Dev Mode Only) -->
       <div style="margin-top: 20px; padding: 10px; background: #f0f0f1; border-radius: 4px; text-align: center;">
         <a href="<?php echo esc_url(admin_url('admin.php?page=sfb-demo-tools')); ?>" style="font-size: 12px; color: #646970;">
-          <?php echo esc_html__('Advanced', 'submittal-builder'); ?> →
+          <?php echo esc_html__('Advanced', 'submittal-spec-sheet-builder'); ?> →
         </a>
       </div>
       <?php endif; ?>
@@ -4365,27 +4356,27 @@ final class SFB_Plugin {
           const nonce = btn.data('nonce');
 
           if (!email) {
-            status.html('❌ <?php esc_html_e('Please enter an email address.', 'submittal-builder'); ?>').css('color', '#dc2626');
+            status.html('❌ <?php esc_html_e('Please enter an email address.', 'submittal-spec-sheet-builder'); ?>').css('color', '#dc2626');
             return;
           }
 
-          btn.prop('disabled', true).text('<?php esc_html_e('Sending...', 'submittal-builder'); ?>');
-          status.html('⏳ <?php esc_html_e('Sending test email...', 'submittal-builder'); ?>').css('color', '#f59e0b');
+          btn.prop('disabled', true).text('<?php esc_html_e('Sending...', 'submittal-spec-sheet-builder'); ?>');
+          status.html('⏳ <?php esc_html_e('Sending test email...', 'submittal-spec-sheet-builder'); ?>').css('color', '#f59e0b');
 
           $.post(ajaxurl, {
             action: 'sfb_test_email',
             _ajax_nonce: nonce,
             email: email
           }, function(response) {
-            btn.prop('disabled', false).text('<?php esc_html_e('Send Test Email', 'submittal-builder'); ?>');
+            btn.prop('disabled', false).text('<?php esc_html_e('Send Test Email', 'submittal-spec-sheet-builder'); ?>');
             if (response.success) {
               status.html(response.data.message).css('color', '#16a34a');
             } else {
-              status.html(response.data.message || '❌ <?php esc_html_e('Failed to send email.', 'submittal-builder'); ?>').css('color', '#dc2626');
+              status.html(response.data.message || '❌ <?php esc_html_e('Failed to send email.', 'submittal-spec-sheet-builder'); ?>').css('color', '#dc2626');
             }
           }).fail(function() {
-            btn.prop('disabled', false).text('<?php esc_html_e('Send Test Email', 'submittal-builder'); ?>');
-            status.html('❌ <?php esc_html_e('Network error. Please try again.', 'submittal-builder'); ?>').css('color', '#dc2626');
+            btn.prop('disabled', false).text('<?php esc_html_e('Send Test Email', 'submittal-spec-sheet-builder'); ?>');
+            status.html('❌ <?php esc_html_e('Network error. Please try again.', 'submittal-spec-sheet-builder'); ?>').css('color', '#dc2626');
           });
         });
 
@@ -4395,25 +4386,25 @@ final class SFB_Plugin {
           const status = $('#sfb-drafts-status');
           const nonce = btn.data('nonce');
 
-          btn.prop('disabled', true).text('<?php esc_html_e('Purging...', 'submittal-builder'); ?>');
-          status.html('⏳ <?php esc_html_e('Deleting expired drafts...', 'submittal-builder'); ?>').css('color', '#f59e0b');
+          btn.prop('disabled', true).text('<?php esc_html_e('Purging...', 'submittal-spec-sheet-builder'); ?>');
+          status.html('⏳ <?php esc_html_e('Deleting expired drafts...', 'submittal-spec-sheet-builder'); ?>').css('color', '#f59e0b');
 
           $.post(ajaxurl, {
             action: 'sfb_purge_expired_drafts',
             _ajax_nonce: nonce
           }, function(response) {
-            btn.prop('disabled', false).text('<?php esc_html_e('Purge Expired Drafts', 'submittal-builder'); ?>');
+            btn.prop('disabled', false).text('<?php esc_html_e('Purge Expired Drafts', 'submittal-spec-sheet-builder'); ?>');
             if (response.success) {
               status.html(response.data.message).css('color', '#16a34a');
               if (response.data.stats_text) {
                 $('#sfb-draft-stats').html(response.data.stats_text);
               }
             } else {
-              status.html(response.data.message || '❌ <?php esc_html_e('Failed to purge drafts.', 'submittal-builder'); ?>').css('color', '#dc2626');
+              status.html(response.data.message || '❌ <?php esc_html_e('Failed to purge drafts.', 'submittal-spec-sheet-builder'); ?>').css('color', '#dc2626');
             }
           }).fail(function() {
-            btn.prop('disabled', false).text('<?php esc_html_e('Purge Expired Drafts', 'submittal-builder'); ?>');
-            status.html('❌ <?php esc_html_e('Network error. Please try again.', 'submittal-builder'); ?>').css('color', '#dc2626');
+            btn.prop('disabled', false).text('<?php esc_html_e('Purge Expired Drafts', 'submittal-spec-sheet-builder'); ?>');
+            status.html('❌ <?php esc_html_e('Network error. Please try again.', 'submittal-spec-sheet-builder'); ?>').css('color', '#dc2626');
           });
         });
 
@@ -4423,31 +4414,31 @@ final class SFB_Plugin {
           const status = $('#sfb-drafts-status');
           const nonce = btn.data('nonce');
 
-          btn.prop('disabled', true).text('<?php esc_html_e('Testing...', 'submittal-builder'); ?>');
-          status.html('⏳ <?php esc_html_e('Running smoke test...', 'submittal-builder'); ?>').css('color', '#f59e0b');
+          btn.prop('disabled', true).text('<?php esc_html_e('Testing...', 'submittal-spec-sheet-builder'); ?>');
+          status.html('⏳ <?php esc_html_e('Running smoke test...', 'submittal-spec-sheet-builder'); ?>').css('color', '#f59e0b');
 
           $.post(ajaxurl, {
             action: 'sfb_run_smoke_test',
             _ajax_nonce: nonce
           }, function(response) {
-            btn.prop('disabled', false).text('<?php esc_html_e('Run Smoke Test', 'submittal-builder'); ?>');
+            btn.prop('disabled', false).text('<?php esc_html_e('Run Smoke Test', 'submittal-spec-sheet-builder'); ?>');
             if (response.success) {
               status.html(response.data.message).css('color', '#16a34a');
               if (response.data.stats_text) {
                 $('#sfb-draft-stats').html(response.data.stats_text);
               }
             } else {
-              status.html(response.data.message || '❌ <?php esc_html_e('Smoke test failed.', 'submittal-builder'); ?>').css('color', '#dc2626');
+              status.html(response.data.message || '❌ <?php esc_html_e('Smoke test failed.', 'submittal-spec-sheet-builder'); ?>').css('color', '#dc2626');
             }
           }).fail(function() {
-            btn.prop('disabled', false).text('<?php esc_html_e('Run Smoke Test', 'submittal-builder'); ?>');
-            status.html('❌ <?php esc_html_e('Network error. Please try again.', 'submittal-builder'); ?>').css('color', '#dc2626');
+            btn.prop('disabled', false).text('<?php esc_html_e('Run Smoke Test', 'submittal-spec-sheet-builder'); ?>');
+            status.html('❌ <?php esc_html_e('Network error. Please try again.', 'submittal-spec-sheet-builder'); ?>').css('color', '#dc2626');
           });
         });
 
         // Clear Tracking Data Button (Pro only)
         $('#sfb-clear-tracking-btn').on('click', function() {
-          if (!confirm('<?php esc_html_e('Are you sure you want to clear all tracking data? This cannot be undone.', 'submittal-builder'); ?>')) {
+          if (!confirm('<?php esc_html_e('Are you sure you want to clear all tracking data? This cannot be undone.', 'submittal-spec-sheet-builder'); ?>')) {
             return;
           }
 
@@ -4455,24 +4446,24 @@ final class SFB_Plugin {
           const status = $('#sfb-tracking-status');
           const nonce = btn.data('nonce');
 
-          btn.prop('disabled', true).text('<?php esc_html_e('Clearing...', 'submittal-builder'); ?>');
-          status.html('⏳ <?php esc_html_e('Clearing tracking data...', 'submittal-builder'); ?>').css('color', '#f59e0b');
+          btn.prop('disabled', true).text('<?php esc_html_e('Clearing...', 'submittal-spec-sheet-builder'); ?>');
+          status.html('⏳ <?php esc_html_e('Clearing tracking data...', 'submittal-spec-sheet-builder'); ?>').css('color', '#f59e0b');
 
           $.post(ajaxurl, {
             action: 'sfb_clear_tracking',
             _ajax_nonce: nonce
           }, function(response) {
-            btn.prop('disabled', false).text('<?php esc_html_e('Clear All Tracking Data', 'submittal-builder'); ?>');
+            btn.prop('disabled', false).text('<?php esc_html_e('Clear All Tracking Data', 'submittal-spec-sheet-builder'); ?>');
             if (response.success) {
               status.html(response.data.message).css('color', '#16a34a');
               $('#sfb-tracking-total').html('0');
               $('#sfb-tracking-viewed').html('0');
             } else {
-              status.html(response.data.message || '❌ <?php esc_html_e('Failed to clear tracking data.', 'submittal-builder'); ?>').css('color', '#dc2626');
+              status.html(response.data.message || '❌ <?php esc_html_e('Failed to clear tracking data.', 'submittal-spec-sheet-builder'); ?>').css('color', '#dc2626');
             }
           }).fail(function() {
-            btn.prop('disabled', false).text('<?php esc_html_e('Clear All Tracking Data', 'submittal-builder'); ?>');
-            status.html('❌ <?php esc_html_e('Network error. Please try again.', 'submittal-builder'); ?>').css('color', '#dc2626');
+            btn.prop('disabled', false).text('<?php esc_html_e('Clear All Tracking Data', 'submittal-spec-sheet-builder'); ?>');
+            status.html('❌ <?php esc_html_e('Network error. Please try again.', 'submittal-spec-sheet-builder'); ?>').css('color', '#dc2626');
           });
         });
 
@@ -4482,28 +4473,28 @@ final class SFB_Plugin {
           const status = $('#sfb-db-status');
           const nonce = btn.data('nonce');
 
-          btn.prop('disabled', true).text('<?php esc_html_e('Optimizing...', 'submittal-builder'); ?>');
-          status.html('⏳ <?php esc_html_e('Optimizing database tables...', 'submittal-builder'); ?>').css('color', '#f59e0b');
+          btn.prop('disabled', true).text('<?php esc_html_e('Optimizing...', 'submittal-spec-sheet-builder'); ?>');
+          status.html('⏳ <?php esc_html_e('Optimizing database tables...', 'submittal-spec-sheet-builder'); ?>').css('color', '#f59e0b');
 
           $.post(ajaxurl, {
             action: 'sfb_optimize_db',
             _ajax_nonce: nonce
           }, function(response) {
-            btn.prop('disabled', false).text('<?php esc_html_e('Optimize Database', 'submittal-builder'); ?>');
+            btn.prop('disabled', false).text('<?php esc_html_e('Optimize Database', 'submittal-spec-sheet-builder'); ?>');
             if (response.success) {
               status.html(response.data.message).css('color', '#16a34a');
             } else {
-              status.html(response.data.message || '❌ <?php esc_html_e('Failed to optimize database.', 'submittal-builder'); ?>').css('color', '#dc2626');
+              status.html(response.data.message || '❌ <?php esc_html_e('Failed to optimize database.', 'submittal-spec-sheet-builder'); ?>').css('color', '#dc2626');
             }
           }).fail(function() {
-            btn.prop('disabled', false).text('<?php esc_html_e('Optimize Database', 'submittal-builder'); ?>');
-            status.html('❌ <?php esc_html_e('Network error. Please try again.', 'submittal-builder'); ?>').css('color', '#dc2626');
+            btn.prop('disabled', false).text('<?php esc_html_e('Optimize Database', 'submittal-spec-sheet-builder'); ?>');
+            status.html('❌ <?php esc_html_e('Network error. Please try again.', 'submittal-spec-sheet-builder'); ?>').css('color', '#dc2626');
           });
         });
 
         // Remove Orphaned Data Button
         $('#sfb-clean-orphans-btn').on('click', function() {
-          if (!confirm('<?php esc_html_e('Remove orphaned data? This is safe but cannot be undone.', 'submittal-builder'); ?>')) {
+          if (!confirm('<?php esc_html_e('Remove orphaned data? This is safe but cannot be undone.', 'submittal-spec-sheet-builder'); ?>')) {
             return;
           }
 
@@ -4511,22 +4502,22 @@ final class SFB_Plugin {
           const status = $('#sfb-db-status');
           const nonce = btn.data('nonce');
 
-          btn.prop('disabled', true).text('<?php esc_html_e('Cleaning...', 'submittal-builder'); ?>');
-          status.html('⏳ <?php esc_html_e('Removing orphaned data...', 'submittal-builder'); ?>').css('color', '#f59e0b');
+          btn.prop('disabled', true).text('<?php esc_html_e('Cleaning...', 'submittal-spec-sheet-builder'); ?>');
+          status.html('⏳ <?php esc_html_e('Removing orphaned data...', 'submittal-spec-sheet-builder'); ?>').css('color', '#f59e0b');
 
           $.post(ajaxurl, {
             action: 'sfb_clean_orphans',
             _ajax_nonce: nonce
           }, function(response) {
-            btn.prop('disabled', false).text('<?php esc_html_e('Remove Orphaned Data', 'submittal-builder'); ?>');
+            btn.prop('disabled', false).text('<?php esc_html_e('Remove Orphaned Data', 'submittal-spec-sheet-builder'); ?>');
             if (response.success) {
               status.html(response.data.message).css('color', '#16a34a');
             } else {
-              status.html(response.data.message || '❌ <?php esc_html_e('Failed to clean orphaned data.', 'submittal-builder'); ?>').css('color', '#dc2626');
+              status.html(response.data.message || '❌ <?php esc_html_e('Failed to clean orphaned data.', 'submittal-spec-sheet-builder'); ?>').css('color', '#dc2626');
             }
           }).fail(function() {
-            btn.prop('disabled', false).text('<?php esc_html_e('Remove Orphaned Data', 'submittal-builder'); ?>');
-            status.html('❌ <?php esc_html_e('Network error. Please try again.', 'submittal-builder'); ?>').css('color', '#dc2626');
+            btn.prop('disabled', false).text('<?php esc_html_e('Remove Orphaned Data', 'submittal-spec-sheet-builder'); ?>');
+            status.html('❌ <?php esc_html_e('Network error. Please try again.', 'submittal-spec-sheet-builder'); ?>').css('color', '#dc2626');
           });
         });
       });
@@ -4541,7 +4532,7 @@ final class SFB_Plugin {
   function render_agency_analytics_page() {
     // Security check
     if (!sfb_is_agency_license()) {
-      wp_die(__('This feature requires an Agency license.', 'submittal-builder'));
+      wp_die(__('This feature requires an Agency license.', 'submittal-spec-sheet-builder'));
     }
 
     // Get filter (default to 30 days)
@@ -4556,23 +4547,23 @@ final class SFB_Plugin {
     ?>
     <div class="wrap sfb-analytics-wrap">
       <h1 class="wp-heading-inline">
-        📊 <?php esc_html_e('Agency Analytics', 'submittal-builder'); ?>
+        📊 <?php esc_html_e('Agency Analytics', 'submittal-spec-sheet-builder'); ?>
         <span class="sfb-agency-badge">AGENCY</span>
       </h1>
 
       <p class="description" style="margin-top:12px;margin-bottom:24px;">
-        <?php esc_html_e('Monitor client activity across your sites. Track PDF generation, lead captures, and popular products to optimize your catalog.', 'submittal-builder'); ?>
+        <?php esc_html_e('Monitor client activity across your sites. Track PDF generation, lead captures, and popular products to optimize your catalog.', 'submittal-spec-sheet-builder'); ?>
       </p>
 
       <!-- Date Range Filter -->
       <div style="margin-bottom:24px;">
         <label for="sfb-analytics-days" style="margin-right:8px;font-weight:600;">
-          <?php esc_html_e('Date Range:', 'submittal-builder'); ?>
+          <?php esc_html_e('Date Range:', 'submittal-spec-sheet-builder'); ?>
         </label>
         <select id="sfb-analytics-days" onchange="window.location.href='<?php echo esc_js(admin_url('admin.php?page=sfb-agency-analytics&days=')); ?>' + this.value;">
-          <option value="7" <?php selected($days, 7); ?>><?php esc_html_e('Last 7 days', 'submittal-builder'); ?></option>
-          <option value="30" <?php selected($days, 30); ?>><?php esc_html_e('Last 30 days', 'submittal-builder'); ?></option>
-          <option value="90" <?php selected($days, 90); ?>><?php esc_html_e('Last 90 days', 'submittal-builder'); ?></option>
+          <option value="7" <?php selected($days, 7); ?>><?php esc_html_e('Last 7 days', 'submittal-spec-sheet-builder'); ?></option>
+          <option value="30" <?php selected($days, 30); ?>><?php esc_html_e('Last 30 days', 'submittal-spec-sheet-builder'); ?></option>
+          <option value="90" <?php selected($days, 90); ?>><?php esc_html_e('Last 90 days', 'submittal-spec-sheet-builder'); ?></option>
         </select>
       </div>
 
@@ -4584,7 +4575,7 @@ final class SFB_Plugin {
             <?php echo esc_html(number_format($analytics['pdf_count'])); ?>
           </div>
           <div style="font-size:14px;font-weight:600;color:#6b7280;text-transform:uppercase;letter-spacing:0.5px;">
-            <?php esc_html_e('PDFs Generated', 'submittal-builder'); ?>
+            <?php esc_html_e('PDFs Generated', 'submittal-spec-sheet-builder'); ?>
           </div>
         </div>
 
@@ -4594,7 +4585,7 @@ final class SFB_Plugin {
             <?php echo esc_html(number_format($analytics['lead_count'])); ?>
           </div>
           <div style="font-size:14px;font-weight:600;color:#6b7280;text-transform:uppercase;letter-spacing:0.5px;">
-            <?php esc_html_e('Leads Captured', 'submittal-builder'); ?>
+            <?php esc_html_e('Leads Captured', 'submittal-spec-sheet-builder'); ?>
           </div>
         </div>
 
@@ -4604,30 +4595,30 @@ final class SFB_Plugin {
             <?php if ($analytics['last_heartbeat']): ?>
               <?php echo esc_html(human_time_diff(strtotime($analytics['last_heartbeat']), current_time('timestamp')) . ' ago'); ?>
             <?php else: ?>
-              <?php esc_html_e('Never', 'submittal-builder'); ?>
+              <?php esc_html_e('Never', 'submittal-spec-sheet-builder'); ?>
             <?php endif; ?>
           </div>
           <div style="font-size:14px;font-weight:600;color:#6b7280;text-transform:uppercase;letter-spacing:0.5px;">
-            <?php esc_html_e('Last Heartbeat', 'submittal-builder'); ?>
+            <?php esc_html_e('Last Heartbeat', 'submittal-spec-sheet-builder'); ?>
           </div>
         </div>
       </div>
 
       <!-- Current Site Info -->
       <div class="sfb-card" style="margin-bottom:32px;">
-        <h2><?php esc_html_e('📍 Current Site', 'submittal-builder'); ?></h2>
+        <h2><?php esc_html_e('📍 Current Site', 'submittal-spec-sheet-builder'); ?></h2>
         <table class="widefat" style="margin-top:16px;">
           <tbody>
             <tr>
-              <td style="width:200px;font-weight:600;"><?php esc_html_e('Site URL:', 'submittal-builder'); ?></td>
+              <td style="width:200px;font-weight:600;"><?php esc_html_e('Site URL:', 'submittal-spec-sheet-builder'); ?></td>
               <td><?php echo esc_html($analytics['site_url']); ?></td>
             </tr>
             <tr>
-              <td style="font-weight:600;"><?php esc_html_e('Plugin Version:', 'submittal-builder'); ?></td>
+              <td style="font-weight:600;"><?php esc_html_e('Plugin Version:', 'submittal-spec-sheet-builder'); ?></td>
               <td><?php echo esc_html($analytics['version']); ?></td>
             </tr>
             <tr>
-              <td style="font-weight:600;"><?php esc_html_e('Site ID:', 'submittal-builder'); ?></td>
+              <td style="font-weight:600;"><?php esc_html_e('Site ID:', 'submittal-spec-sheet-builder'); ?></td>
               <td><code><?php echo esc_html(substr($analytics['site_id'], 0, 16) . '...'); ?></code></td>
             </tr>
           </tbody>
@@ -4637,9 +4628,9 @@ final class SFB_Plugin {
       <!-- Top Products -->
       <?php if (!empty($analytics['top_products'])): ?>
       <div class="sfb-card">
-        <h2><?php esc_html_e('🏆 Top 5 Products', 'submittal-builder'); ?></h2>
+        <h2><?php esc_html_e('🏆 Top 5 Products', 'submittal-spec-sheet-builder'); ?></h2>
         <p class="sfb-muted">
-          <?php echo esc_html(sprintf(__('Most frequently selected products in the last %d days', 'submittal-builder'), $days)); ?>
+          <?php echo esc_html(sprintf(__('Most frequently selected products in the last %d days', 'submittal-spec-sheet-builder'), $days)); ?>
         </p>
 
         <div style="margin-top:24px;display:flex;flex-wrap:wrap;gap:12px;">
@@ -4657,11 +4648,11 @@ final class SFB_Plugin {
       </div>
       <?php else: ?>
       <div class="sfb-card">
-        <h2><?php esc_html_e('🏆 Top 5 Products', 'submittal-builder'); ?></h2>
+        <h2><?php esc_html_e('🏆 Top 5 Products', 'submittal-spec-sheet-builder'); ?></h2>
         <div style="padding:48px;text-align:center;background:#f9fafb;border-radius:8px;margin-top:24px;">
           <div style="font-size:48px;margin-bottom:16px;opacity:0.3;">📦</div>
           <p style="color:#6b7280;margin:0;">
-            <?php esc_html_e('No product data yet. Products will appear here once PDFs are generated.', 'submittal-builder'); ?>
+            <?php esc_html_e('No product data yet. Products will appear here once PDFs are generated.', 'submittal-spec-sheet-builder'); ?>
           </p>
         </div>
       </div>
@@ -4670,8 +4661,8 @@ final class SFB_Plugin {
       <!-- Info Box -->
       <div style="margin-top:32px;padding:16px;background:#fef3c7;border-left:4px solid #fbbf24;border-radius:8px;">
         <p style="margin:0;font-size:13px;color:#78350f;">
-          <strong><?php esc_html_e('ℹ️ Privacy Notice:', 'submittal-builder'); ?></strong>
-          <?php esc_html_e('Analytics track counts only - no personally identifiable information (PII) from leads is stored or transmitted. Product names and counts are aggregated for insights.', 'submittal-builder'); ?>
+          <strong><?php esc_html_e('ℹ️ Privacy Notice:', 'submittal-spec-sheet-builder'); ?></strong>
+          <?php esc_html_e('Analytics track counts only - no personally identifiable information (PII) from leads is stored or transmitted. Product names and counts are aggregated for insights.', 'submittal-spec-sheet-builder'); ?>
         </p>
       </div>
     </div>
@@ -4752,7 +4743,7 @@ final class SFB_Plugin {
         foreach ($packet['views'] as $view) {
           $recent_views[] = [
             'timestamp' => $view['timestamp'] ?? '',
-            'project' => $packet['project'] ?? __('(No Project Name)', 'submittal-builder'),
+            'project' => $packet['project'] ?? __('(No Project Name)', 'submittal-spec-sheet-builder'),
             'token' => $token
           ];
         }
@@ -4896,49 +4887,49 @@ final class SFB_Plugin {
         }
       </style>
 
-      <h1><?php echo esc_html__('Tracking', 'submittal-builder'); ?></h1>
+      <h1><?php echo esc_html__('Tracking', 'submittal-spec-sheet-builder'); ?></h1>
       <p class="description">
-        <?php echo esc_html__('Monitor customer engagement. See when recipients view your submittal packets and track PDF download activity.', 'submittal-builder'); ?>
+        <?php echo esc_html__('Monitor customer engagement. See when recipients view your submittal packets and track PDF download activity.', 'submittal-spec-sheet-builder'); ?>
       </p>
 
       <!-- Enhanced Summary Stats -->
       <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 20px; margin-top: 25px;">
         <div class="sfb-stat-card">
           <div class="sfb-stat-icon">🔗</div>
-          <div class="sfb-stat-label"><?php esc_html_e('Total Links', 'submittal-builder'); ?></div>
+          <div class="sfb-stat-label"><?php esc_html_e('Total Links', 'submittal-spec-sheet-builder'); ?></div>
           <div class="sfb-stat-number"><?php echo esc_html(number_format($total_packets)); ?></div>
           <div class="sfb-stat-sublabel">
-            <?php printf(esc_html__('%d active tracking links', 'submittal-builder'), $total_packets); ?>
+            <?php printf(esc_html__('%d active tracking links', 'submittal-spec-sheet-builder'), $total_packets); ?>
           </div>
         </div>
 
         <div class="sfb-stat-card">
           <div class="sfb-stat-icon">👁️</div>
-          <div class="sfb-stat-label"><?php esc_html_e('Total Views', 'submittal-builder'); ?></div>
+          <div class="sfb-stat-label"><?php esc_html_e('Total Views', 'submittal-spec-sheet-builder'); ?></div>
           <div class="sfb-stat-number"><?php echo esc_html(number_format($total_views)); ?></div>
           <div class="sfb-stat-sublabel">
-            <?php printf(esc_html__('%s avg per link', 'submittal-builder'), $total_packets > 0 ? number_format($total_views / $total_packets, 1) : '0'); ?>
+            <?php printf(esc_html__('%s avg per link', 'submittal-spec-sheet-builder'), $total_packets > 0 ? number_format($total_views / $total_packets, 1) : '0'); ?>
           </div>
         </div>
 
         <div class="sfb-stat-card">
           <div class="sfb-stat-icon">✅</div>
-          <div class="sfb-stat-label"><?php esc_html_e('Engagement Rate', 'submittal-builder'); ?></div>
+          <div class="sfb-stat-label"><?php esc_html_e('Engagement Rate', 'submittal-spec-sheet-builder'); ?></div>
           <div class="sfb-stat-number"><?php echo esc_html(number_format($engagement_rate, 0)); ?>%</div>
           <div class="sfb-engagement-bar">
             <div class="sfb-engagement-fill" style="width: <?php echo esc_attr($engagement_rate); ?>%;"></div>
           </div>
           <div class="sfb-stat-sublabel">
-            <?php printf(esc_html__('%d of %d links viewed', 'submittal-builder'), $packets_with_views, $total_packets); ?>
+            <?php printf(esc_html__('%d of %d links viewed', 'submittal-spec-sheet-builder'), $packets_with_views, $total_packets); ?>
           </div>
         </div>
 
         <div class="sfb-stat-card">
           <div class="sfb-stat-icon">📧</div>
-          <div class="sfb-stat-label"><?php esc_html_e('Recipients', 'submittal-builder'); ?></div>
+          <div class="sfb-stat-label"><?php esc_html_e('Recipients', 'submittal-spec-sheet-builder'); ?></div>
           <div class="sfb-stat-number"><?php echo esc_html(number_format(count($unique_recipients))); ?></div>
           <div class="sfb-stat-sublabel">
-            <?php esc_html_e('unique email addresses', 'submittal-builder'); ?>
+            <?php esc_html_e('unique email addresses', 'submittal-spec-sheet-builder'); ?>
           </div>
         </div>
       </div>
@@ -4946,7 +4937,7 @@ final class SFB_Plugin {
       <?php if (!empty($recent_views)): ?>
       <!-- Recent Activity -->
       <div class="sfb-card" style="margin-top: 30px;">
-        <h2>⚡ <?php echo esc_html__('Recent Activity', 'submittal-builder'); ?></h2>
+        <h2>⚡ <?php echo esc_html__('Recent Activity', 'submittal-spec-sheet-builder'); ?></h2>
         <div style="margin-top: 15px;">
           <?php foreach ($recent_views as $view): ?>
             <div class="sfb-activity-item">
@@ -4962,33 +4953,33 @@ final class SFB_Plugin {
 
       <!-- Tracking Links Table -->
       <div class="sfb-card" style="margin-top: 30px;">
-        <h2>🔗 <?php echo esc_html__('All Tracking Links', 'submittal-builder'); ?></h2>
+        <h2>🔗 <?php echo esc_html__('All Tracking Links', 'submittal-spec-sheet-builder'); ?></h2>
 
         <?php if (empty($all_packets)): ?>
           <div class="sfb-empty-state">
             <div class="sfb-empty-icon">📭</div>
-            <h3><?php esc_html_e('No Tracking Links Yet', 'submittal-builder'); ?></h3>
+            <h3><?php esc_html_e('No Tracking Links Yet', 'submittal-spec-sheet-builder'); ?></h3>
             <p style="color: #666; max-width: 500px; margin: 10px auto;">
-              <?php esc_html_e('Tracking links are automatically created when you use Auto-Email to send PDFs. Start sending PDFs to see engagement analytics here.', 'submittal-builder'); ?>
+              <?php esc_html_e('Tracking links are automatically created when you use Auto-Email to send PDFs. Start sending PDFs to see engagement analytics here.', 'submittal-spec-sheet-builder'); ?>
             </p>
           </div>
         <?php else: ?>
           <table class="wp-list-table widefat fixed striped" style="margin-top: 15px;">
             <thead>
               <tr>
-                <th style="width: 20%;"><?php esc_html_e('Project', 'submittal-builder'); ?></th>
-                <th style="width: 18%;"><?php esc_html_e('Recipient', 'submittal-builder'); ?></th>
-                <th style="width: 12%;"><?php esc_html_e('Created', 'submittal-builder'); ?></th>
-                <th style="width: 10%;"><?php esc_html_e('Engagement', 'submittal-builder'); ?></th>
-                <th style="width: 12%;"><?php esc_html_e('Last Viewed', 'submittal-builder'); ?></th>
-                <th style="width: 28%;"><?php esc_html_e('Tracking Link', 'submittal-builder'); ?></th>
+                <th style="width: 20%;"><?php esc_html_e('Project', 'submittal-spec-sheet-builder'); ?></th>
+                <th style="width: 18%;"><?php esc_html_e('Recipient', 'submittal-spec-sheet-builder'); ?></th>
+                <th style="width: 12%;"><?php esc_html_e('Created', 'submittal-spec-sheet-builder'); ?></th>
+                <th style="width: 10%;"><?php esc_html_e('Engagement', 'submittal-spec-sheet-builder'); ?></th>
+                <th style="width: 12%;"><?php esc_html_e('Last Viewed', 'submittal-spec-sheet-builder'); ?></th>
+                <th style="width: 28%;"><?php esc_html_e('Tracking Link', 'submittal-spec-sheet-builder'); ?></th>
               </tr>
             </thead>
             <tbody>
               <?php foreach ($all_packets as $token => $packet): ?>
                 <?php
-                $project = $packet['project'] ?? __('(No Project Name)', 'submittal-builder');
-                $email_to = $packet['email_to'] ?? __('(Unknown)', 'submittal-builder');
+                $project = $packet['project'] ?? __('(No Project Name)', 'submittal-spec-sheet-builder');
+                $email_to = $packet['email_to'] ?? __('(Unknown)', 'submittal-spec-sheet-builder');
                 $created = $packet['created'] ?? '';
                 $view_count = $packet['view_count'] ?? 0;
                 $last_viewed = $packet['last_viewed'] ?? null;
@@ -5019,7 +5010,7 @@ final class SFB_Plugin {
                              style="flex: 1; font-size: 11px; font-family: monospace; padding: 6px 8px; border: 1px solid #ddd; border-radius: 4px; background: #f9f9f9;"
                              onclick="this.select();">
                       <button type="button" class="sfb-btn-copy" data-url="<?php echo esc_attr($tracking_url); ?>">
-                        <?php esc_html_e('Copy', 'submittal-builder'); ?>
+                        <?php esc_html_e('Copy', 'submittal-spec-sheet-builder'); ?>
                       </button>
                     </div>
                   </td>
@@ -5047,7 +5038,7 @@ final class SFB_Plugin {
 
         // Visual feedback
         var originalText = btn.text();
-        btn.addClass('copied').text('<?php esc_html_e('Copied!', 'submittal-builder'); ?>');
+        btn.addClass('copied').text('<?php esc_html_e('Copied!', 'submittal-spec-sheet-builder'); ?>');
 
         setTimeout(function() {
           btn.removeClass('copied').text(originalText);
@@ -5090,16 +5081,16 @@ final class SFB_Plugin {
 
     ?>
     <div class="wrap sfb-leads-wrap">
-      <h1><?php esc_html_e('Leads', 'submittal-builder'); ?></h1>
+      <h1><?php esc_html_e('Leads', 'submittal-spec-sheet-builder'); ?></h1>
       <p class="description" style="margin-top:-8px;margin-bottom:24px;">
-        <?php esc_html_e('View and export captured lead information from your submittal forms. Track contact details, project names, and download activity.', 'submittal-builder'); ?>
+        <?php esc_html_e('View and export captured lead information from your submittal forms. Track contact details, project names, and download activity.', 'submittal-spec-sheet-builder'); ?>
       </p>
 
       <!-- Stats Summary -->
       <div class="sfb-stats-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin: 20px 0;">
         <div class="sfb-stat-card" style="background: white; padding: 20px; border: 1px solid #ddd; border-radius: 8px;">
           <div style="font-size: 32px; font-weight: 700; color: #2271b1;"><?php echo esc_html($total_leads); ?></div>
-          <div style="color: #666; font-size: 13px; margin-top: 4px;"><?php esc_html_e('Total Leads', 'submittal-builder'); ?></div>
+          <div style="color: #666; font-size: 13px; margin-top: 4px;"><?php esc_html_e('Total Leads', 'submittal-spec-sheet-builder'); ?></div>
         </div>
       </div>
 
@@ -5110,34 +5101,34 @@ final class SFB_Plugin {
         <div style="display: grid; grid-template-columns: 1fr 1fr 1fr auto; gap: 12px; align-items: end;">
           <div>
             <label for="sfb-search" style="display: block; margin-bottom: 4px; font-weight: 600; font-size: 13px;">
-              <?php esc_html_e('Search', 'submittal-builder'); ?>
+              <?php esc_html_e('Search', 'submittal-spec-sheet-builder'); ?>
             </label>
             <input
               type="text"
               id="sfb-search"
               name="s"
               value="<?php echo esc_attr($search); ?>"
-              placeholder="<?php esc_attr_e('Email, Project, UTM...', 'submittal-builder'); ?>"
+              placeholder="<?php esc_attr_e('Email, Project, UTM...', 'submittal-spec-sheet-builder'); ?>"
               style="width: 100%;">
           </div>
 
           <div>
             <label for="date-from" style="display: block; margin-bottom: 4px; font-weight: 600; font-size: 13px;">
-              <?php esc_html_e('From Date', 'submittal-builder'); ?>
+              <?php esc_html_e('From Date', 'submittal-spec-sheet-builder'); ?>
             </label>
             <input type="date" id="date-from" name="date_from" value="<?php echo esc_attr($date_from); ?>" style="width: 100%;">
           </div>
 
           <div>
             <label for="date-to" style="display: block; margin-bottom: 4px; font-weight: 600; font-size: 13px;">
-              <?php esc_html_e('To Date', 'submittal-builder'); ?>
+              <?php esc_html_e('To Date', 'submittal-spec-sheet-builder'); ?>
             </label>
             <input type="date" id="date-to" name="date_to" value="<?php echo esc_attr($date_to); ?>" style="width: 100%;">
           </div>
 
           <div style="display: flex; gap: 8px;">
-            <button type="submit" class="button button-primary"><?php esc_html_e('Filter', 'submittal-builder'); ?></button>
-            <a href="<?php echo esc_url(admin_url('admin.php?page=sfb-leads')); ?>" class="button"><?php esc_html_e('Reset', 'submittal-builder'); ?></a>
+            <button type="submit" class="button button-primary"><?php esc_html_e('Filter', 'submittal-spec-sheet-builder'); ?></button>
+            <a href="<?php echo esc_url(admin_url('admin.php?page=sfb-leads')); ?>" class="button"><?php esc_html_e('Reset', 'submittal-spec-sheet-builder'); ?></a>
           </div>
         </div>
       </form>
@@ -5146,7 +5137,7 @@ final class SFB_Plugin {
       <div style="margin: 16px 0;">
         <a href="<?php echo esc_url($export_url); ?>" class="button">
           <span class="dashicons dashicons-download" style="margin-top: 3px;"></span>
-          <?php esc_html_e('Export to CSV', 'submittal-builder'); ?>
+          <?php esc_html_e('Export to CSV', 'submittal-spec-sheet-builder'); ?>
         </a>
       </div>
 
@@ -5155,23 +5146,23 @@ final class SFB_Plugin {
         <div class="sfb-empty-state" style="background: white; padding: 60px 20px; text-align: center; border: 1px solid #ddd; border-radius: 8px;">
           <p style="font-size: 18px; color: #666; margin: 0;">
             <?php echo $search || $date_from || $date_to
-              ? esc_html__('No leads found matching your filters.', 'submittal-builder')
-              : esc_html__('No leads captured yet.', 'submittal-builder'); ?>
+              ? esc_html__('No leads found matching your filters.', 'submittal-spec-sheet-builder')
+              : esc_html__('No leads captured yet.', 'submittal-spec-sheet-builder'); ?>
           </p>
         </div>
       <?php else: ?>
         <table class="wp-list-table widefat fixed striped" style="margin-top: 16px;">
           <thead>
             <tr>
-              <th style="width: 140px;"><?php esc_html_e('Date', 'submittal-builder'); ?></th>
-              <th><?php esc_html_e('Email', 'submittal-builder'); ?></th>
-              <th><?php esc_html_e('Phone', 'submittal-builder'); ?></th>
-              <th><?php esc_html_e('Project', 'submittal-builder'); ?></th>
-              <th style="width: 80px; text-align: center;"><?php esc_html_e('Items', 'submittal-builder'); ?></th>
-              <th><?php esc_html_e('Top Category', 'submittal-builder'); ?></th>
-              <th style="width: 80px; text-align: center;"><?php esc_html_e('Consent', 'submittal-builder'); ?></th>
-              <th><?php esc_html_e('UTM', 'submittal-builder'); ?></th>
-              <th style="width: 100px;"><?php esc_html_e('Actions', 'submittal-builder'); ?></th>
+              <th style="width: 140px;"><?php esc_html_e('Date', 'submittal-spec-sheet-builder'); ?></th>
+              <th><?php esc_html_e('Email', 'submittal-spec-sheet-builder'); ?></th>
+              <th><?php esc_html_e('Phone', 'submittal-spec-sheet-builder'); ?></th>
+              <th><?php esc_html_e('Project', 'submittal-spec-sheet-builder'); ?></th>
+              <th style="width: 80px; text-align: center;"><?php esc_html_e('Items', 'submittal-spec-sheet-builder'); ?></th>
+              <th><?php esc_html_e('Top Category', 'submittal-spec-sheet-builder'); ?></th>
+              <th style="width: 80px; text-align: center;"><?php esc_html_e('Consent', 'submittal-spec-sheet-builder'); ?></th>
+              <th><?php esc_html_e('UTM', 'submittal-spec-sheet-builder'); ?></th>
+              <th style="width: 100px;"><?php esc_html_e('Actions', 'submittal-spec-sheet-builder'); ?></th>
             </tr>
           </thead>
           <tbody>
@@ -5196,7 +5187,7 @@ final class SFB_Plugin {
                 <td style="font-size: 11px; color: #666;"><?php echo esc_html($utm_str); ?></td>
                 <td>
                   <button type="button" class="button button-small sfb-view-details" data-lead-id="<?php echo esc_attr($lead['id']); ?>">
-                    <?php esc_html_e('Details', 'submittal-builder'); ?>
+                    <?php esc_html_e('Details', 'submittal-spec-sheet-builder'); ?>
                   </button>
                 </td>
               </tr>
@@ -5208,7 +5199,7 @@ final class SFB_Plugin {
         <?php if ($total_pages > 1): ?>
           <div class="tablenav" style="margin-top: 16px;">
             <div class="tablenav-pages">
-              <span class="displaying-num"><?php printf(_n('%s lead', '%s leads', $total_leads, 'submittal-builder'), number_format_i18n($total_leads)); ?></span>
+              <span class="displaying-num"><?php printf(_n('%s lead', '%s leads', $total_leads, 'submittal-spec-sheet-builder'), number_format_i18n($total_leads)); ?></span>
               <?php
               $page_links = paginate_links([
                 'base' => add_query_arg('paged', '%#%'),
@@ -5232,7 +5223,7 @@ final class SFB_Plugin {
     <div id="sfb-lead-details-modal" style="display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.7); z-index: 100000; align-items: center; justify-content: center;">
       <div style="background: white; border-radius: 8px; max-width: 600px; width: 90%; max-height: 80vh; overflow-y: auto; box-shadow: 0 4px 12px rgba(0,0,0,0.3);">
         <div style="padding: 20px; border-bottom: 1px solid #ddd; display: flex; justify-content: space-between; align-items: center;">
-          <h2 style="margin: 0;"><?php esc_html_e('Lead Details', 'submittal-builder'); ?></h2>
+          <h2 style="margin: 0;"><?php esc_html_e('Lead Details', 'submittal-spec-sheet-builder'); ?></h2>
           <button type="button" class="sfb-close-modal" style="background: none; border: none; font-size: 24px; cursor: pointer; color: #666;">&times;</button>
         </div>
         <div id="sfb-lead-details-content" style="padding: 20px;">
@@ -5262,19 +5253,19 @@ final class SFB_Plugin {
         var ipHash = leadData.ip_hash ? leadData.ip_hash.substring(0, 8) + '...' : '—';
 
         var html = '<table class="form-table">';
-        html += '<tr><th><?php esc_html_e('Date', 'submittal-builder'); ?></th><td>' + new Date(leadData.created_at).toLocaleString() + '</td></tr>';
-        html += '<tr><th><?php esc_html_e('Email', 'submittal-builder'); ?></th><td><strong>' + leadData.email + '</strong></td></tr>';
-        html += '<tr><th><?php esc_html_e('Phone', 'submittal-builder'); ?></th><td>' + (leadData.phone || '—') + '</td></tr>';
-        html += '<tr><th><?php esc_html_e('Project Name', 'submittal-builder'); ?></th><td>' + (leadData.project_name || '—') + '</td></tr>';
-        html += '<tr><th><?php esc_html_e('Items', 'submittal-builder'); ?></th><td>' + leadData.num_items + '</td></tr>';
-        html += '<tr><th><?php esc_html_e('Top Category', 'submittal-builder'); ?></th><td>' + (leadData.top_category || '—') + '</td></tr>';
-        html += '<tr><th><?php esc_html_e('Consent', 'submittal-builder'); ?></th><td>' + (leadData.consent ? '<?php esc_html_e('Yes', 'submittal-builder'); ?>' : '<?php esc_html_e('No', 'submittal-builder'); ?>') + '</td></tr>';
-        html += '<tr><th><?php esc_html_e('UTM Source', 'submittal-builder'); ?></th><td>' + (utm.source || '—') + '</td></tr>';
-        html += '<tr><th><?php esc_html_e('UTM Medium', 'submittal-builder'); ?></th><td>' + (utm.medium || '—') + '</td></tr>';
-        html += '<tr><th><?php esc_html_e('UTM Campaign', 'submittal-builder'); ?></th><td>' + (utm.campaign || '—') + '</td></tr>';
-        html += '<tr><th><?php esc_html_e('UTM Term', 'submittal-builder'); ?></th><td>' + (utm.term || '—') + '</td></tr>';
-        html += '<tr><th><?php esc_html_e('UTM Content', 'submittal-builder'); ?></th><td>' + (utm.content || '—') + '</td></tr>';
-        html += '<tr><th><?php esc_html_e('IP Hash (first 8)', 'submittal-builder'); ?></th><td><code>' + ipHash + '</code></td></tr>';
+        html += '<tr><th><?php esc_html_e('Date', 'submittal-spec-sheet-builder'); ?></th><td>' + new Date(leadData.created_at).toLocaleString() + '</td></tr>';
+        html += '<tr><th><?php esc_html_e('Email', 'submittal-spec-sheet-builder'); ?></th><td><strong>' + leadData.email + '</strong></td></tr>';
+        html += '<tr><th><?php esc_html_e('Phone', 'submittal-spec-sheet-builder'); ?></th><td>' + (leadData.phone || '—') + '</td></tr>';
+        html += '<tr><th><?php esc_html_e('Project Name', 'submittal-spec-sheet-builder'); ?></th><td>' + (leadData.project_name || '—') + '</td></tr>';
+        html += '<tr><th><?php esc_html_e('Items', 'submittal-spec-sheet-builder'); ?></th><td>' + leadData.num_items + '</td></tr>';
+        html += '<tr><th><?php esc_html_e('Top Category', 'submittal-spec-sheet-builder'); ?></th><td>' + (leadData.top_category || '—') + '</td></tr>';
+        html += '<tr><th><?php esc_html_e('Consent', 'submittal-spec-sheet-builder'); ?></th><td>' + (leadData.consent ? '<?php esc_html_e('Yes', 'submittal-spec-sheet-builder'); ?>' : '<?php esc_html_e('No', 'submittal-spec-sheet-builder'); ?>') + '</td></tr>';
+        html += '<tr><th><?php esc_html_e('UTM Source', 'submittal-spec-sheet-builder'); ?></th><td>' + (utm.source || '—') + '</td></tr>';
+        html += '<tr><th><?php esc_html_e('UTM Medium', 'submittal-spec-sheet-builder'); ?></th><td>' + (utm.medium || '—') + '</td></tr>';
+        html += '<tr><th><?php esc_html_e('UTM Campaign', 'submittal-spec-sheet-builder'); ?></th><td>' + (utm.campaign || '—') + '</td></tr>';
+        html += '<tr><th><?php esc_html_e('UTM Term', 'submittal-spec-sheet-builder'); ?></th><td>' + (utm.term || '—') + '</td></tr>';
+        html += '<tr><th><?php esc_html_e('UTM Content', 'submittal-spec-sheet-builder'); ?></th><td>' + (utm.content || '—') + '</td></tr>';
+        html += '<tr><th><?php esc_html_e('IP Hash (first 8)', 'submittal-spec-sheet-builder'); ?></th><td><code>' + ipHash + '</code></td></tr>';
         html += '</table>';
 
         $('#sfb-lead-details-content').html(html);
@@ -5368,82 +5359,82 @@ final class SFB_Plugin {
 
     ?>
     <div class="wrap sfb-admin-page">
-      <h1><?php esc_html_e('Import Catalog', 'submittal-builder'); ?></h1>
+      <h1><?php esc_html_e('Import Catalog', 'submittal-spec-sheet-builder'); ?></h1>
       <p class="description">
-        <?php esc_html_e('Import products from a CSV file. The importer will automatically detect your hierarchy structure and create categories, products, types, and models.', 'submittal-builder'); ?>
+        <?php esc_html_e('Import products from a CSV file. The importer will automatically detect your hierarchy structure and create categories, products, types, and models.', 'submittal-spec-sheet-builder'); ?>
       </p>
 
       <div class="sfb-import-container">
         <!-- Upload Form -->
         <div class="sfb-import-card">
-          <h2><?php esc_html_e('1. Upload CSV File', 'submittal-builder'); ?></h2>
+          <h2><?php esc_html_e('1. Upload CSV File', 'submittal-spec-sheet-builder'); ?></h2>
           <form id="sfb-import-form" enctype="multipart/form-data">
             <input type="file" id="sfb-import-file" name="csv_file" accept=".csv" required>
             <p class="description">
-              <?php esc_html_e('CSV files only (.csv). Maximum file size: 5MB', 'submittal-builder'); ?>
+              <?php esc_html_e('CSV files only (.csv). Maximum file size: 5MB', 'submittal-spec-sheet-builder'); ?>
             </p>
             <button type="submit" class="button button-primary">
-              <?php esc_html_e('Upload & Preview', 'submittal-builder'); ?>
+              <?php esc_html_e('Upload & Preview', 'submittal-spec-sheet-builder'); ?>
             </button>
           </form>
         </div>
 
         <!-- Preview Section (hidden initially) -->
         <div id="sfb-import-preview" class="sfb-import-card" style="display:none;">
-          <h2><?php esc_html_e('2. Preview Import', 'submittal-builder'); ?></h2>
+          <h2><?php esc_html_e('2. Preview Import', 'submittal-spec-sheet-builder'); ?></h2>
           <div id="sfb-preview-content"></div>
 
           <!-- Import Mode Selection -->
           <div class="sfb-import-mode" style="margin: 20px 0; padding: 15px; background: #f6f7f7; border-radius: 4px;">
-            <h4 style="margin-top: 0;"><?php esc_html_e('Import Mode', 'submittal-builder'); ?></h4>
+            <h4 style="margin-top: 0;"><?php esc_html_e('Import Mode', 'submittal-spec-sheet-builder'); ?></h4>
             <label style="display: block; margin-bottom: 10px;">
               <input type="radio" name="sfb_import_mode" value="merge" checked>
-              <strong><?php esc_html_e('Merge - Keep Existing', 'submittal-builder'); ?></strong>
+              <strong><?php esc_html_e('Merge - Keep Existing', 'submittal-spec-sheet-builder'); ?></strong>
               <p class="description" style="margin: 5px 0 0 24px;">
-                <?php esc_html_e('Add imported items to your current catalog. Existing items will be preserved.', 'submittal-builder'); ?>
+                <?php esc_html_e('Add imported items to your current catalog. Existing items will be preserved.', 'submittal-spec-sheet-builder'); ?>
               </p>
             </label>
             <label style="display: block;">
               <input type="radio" name="sfb_import_mode" value="replace">
-              <strong><?php esc_html_e('Replace Existing', 'submittal-builder'); ?></strong>
+              <strong><?php esc_html_e('Replace Existing', 'submittal-spec-sheet-builder'); ?></strong>
               <p class="description" style="margin: 5px 0 0 24px;">
-                <?php esc_html_e('Delete all existing catalog items and replace with imported data.', 'submittal-builder'); ?>
+                <?php esc_html_e('Delete all existing catalog items and replace with imported data.', 'submittal-spec-sheet-builder'); ?>
               </p>
             </label>
           </div>
 
           <div class="sfb-import-actions">
             <button id="sfb-import-confirm" class="button button-primary">
-              <?php esc_html_e('Import Now', 'submittal-builder'); ?>
+              <?php esc_html_e('Import Now', 'submittal-spec-sheet-builder'); ?>
             </button>
             <button id="sfb-import-cancel" class="button">
-              <?php esc_html_e('Cancel', 'submittal-builder'); ?>
+              <?php esc_html_e('Cancel', 'submittal-spec-sheet-builder'); ?>
             </button>
           </div>
         </div>
 
         <!-- Results Section (hidden initially) -->
         <div id="sfb-import-results" class="sfb-import-card" style="display:none;">
-          <h2><?php esc_html_e('Import Results', 'submittal-builder'); ?></h2>
+          <h2><?php esc_html_e('Import Results', 'submittal-spec-sheet-builder'); ?></h2>
           <div id="sfb-results-content"></div>
         </div>
 
         <!-- Guide Card -->
         <div class="sfb-import-guide sfb-import-card">
-          <h3><?php esc_html_e('CSV Format Guide', 'submittal-builder'); ?></h3>
-          <p><?php esc_html_e('Your CSV file should have headers in the first row. The importer supports flexible hierarchy:', 'submittal-builder'); ?></p>
+          <h3><?php esc_html_e('CSV Format Guide', 'submittal-spec-sheet-builder'); ?></h3>
+          <p><?php esc_html_e('Your CSV file should have headers in the first row. The importer supports flexible hierarchy:', 'submittal-spec-sheet-builder'); ?></p>
 
-          <h4><?php esc_html_e('Simple Structure (Category → Product)', 'submittal-builder'); ?></h4>
+          <h4><?php esc_html_e('Simple Structure (Category → Product)', 'submittal-spec-sheet-builder'); ?></h4>
           <pre>Category,Product,Size,Weight
 Framing,C-Stud 20GA,3-5/8",2.5 lb</pre>
 
-          <h4><?php esc_html_e('Complex Structure (Category → Product → Type → Model)', 'submittal-builder'); ?></h4>
+          <h4><?php esc_html_e('Complex Structure (Category → Product → Type → Model)', 'submittal-spec-sheet-builder'); ?></h4>
           <pre>Category,Product,Type,Model,Size,Flange,KSI
 Framing,C-Studs,20 Gauge,362S162-20,3-5/8",1-5/8",33</pre>
 
           <p class="description">
-            <strong><?php esc_html_e('Column Detection:', 'submittal-builder'); ?></strong>
-            <?php esc_html_e('Category, Product, Type, Model columns create hierarchy. All other columns become product specifications.', 'submittal-builder'); ?>
+            <strong><?php esc_html_e('Column Detection:', 'submittal-spec-sheet-builder'); ?></strong>
+            <?php esc_html_e('Category, Product, Type, Model columns create hierarchy. All other columns become product specifications.', 'submittal-spec-sheet-builder'); ?>
           </p>
         </div>
       </div>
@@ -5540,7 +5531,7 @@ Framing,C-Studs,20 Gauge,362S162-20,3-5/8",1-5/8",33</pre>
         const file = fileInput.files[0];
 
         if (!file) {
-          alert('<?php esc_html_e('Please select a CSV file', 'submittal-builder'); ?>');
+          alert('<?php esc_html_e('Please select a CSV file', 'submittal-spec-sheet-builder'); ?>');
           return;
         }
 
@@ -5609,12 +5600,12 @@ Framing,C-Studs,20 Gauge,362S162-20,3-5/8",1-5/8",33</pre>
 
         // Confirm if replacing
         if (importMode === 'replace') {
-          if (!confirm('<?php esc_html_e('Are you sure you want to delete all existing catalog items and replace them with the imported data? This action cannot be undone.', 'submittal-builder'); ?>')) {
+          if (!confirm('<?php esc_html_e('Are you sure you want to delete all existing catalog items and replace them with the imported data? This action cannot be undone.', 'submittal-spec-sheet-builder'); ?>')) {
             return;
           }
         }
 
-        $(this).prop('disabled', true).text('<?php esc_html_e('Importing...', 'submittal-builder'); ?>');
+        $(this).prop('disabled', true).text('<?php esc_html_e('Importing...', 'submittal-spec-sheet-builder'); ?>');
 
         $.ajax({
           url: '<?php echo esc_url(rest_url('sfb/v1/catalog/import')); ?>',
@@ -5633,11 +5624,11 @@ Framing,C-Studs,20 Gauge,362S162-20,3-5/8",1-5/8",33</pre>
             } else {
               alert('Import failed: ' + (response.message || 'Unknown error'));
             }
-            $('#sfb-import-confirm').prop('disabled', false).text('<?php esc_html_e('Import Now', 'submittal-builder'); ?>');
+            $('#sfb-import-confirm').prop('disabled', false).text('<?php esc_html_e('Import Now', 'submittal-spec-sheet-builder'); ?>');
           },
           error: function(xhr) {
             alert('Import failed: ' + (xhr.responseJSON?.message || 'Unknown error'));
-            $('#sfb-import-confirm').prop('disabled', false).text('<?php esc_html_e('Import Now', 'submittal-builder'); ?>');
+            $('#sfb-import-confirm').prop('disabled', false).text('<?php esc_html_e('Import Now', 'submittal-spec-sheet-builder'); ?>');
           }
         });
       });
@@ -5716,11 +5707,11 @@ Framing,C-Studs,20 Gauge,362S162-20,3-5/8",1-5/8",33</pre>
 
     // Get Pro status
     $pro_active = sfb_is_pro_active();
-    $pro_status_label = $pro_active ? __('Active', 'submittal-builder') : __('Free', 'submittal-builder');
+    $pro_status_label = $pro_active ? __('Active', 'submittal-spec-sheet-builder') : __('Free', 'submittal-spec-sheet-builder');
 
     // Get shareable drafts status
     $shareable_enabled = sfb_feature_enabled('server_drafts');
-    $shareable_label = $shareable_enabled ? __('Enabled', 'submittal-builder') : __('Disabled', 'submittal-builder');
+    $shareable_label = $shareable_enabled ? __('Enabled', 'submittal-spec-sheet-builder') : __('Disabled', 'submittal-spec-sheet-builder');
 
     // Get draft statistics
     $draft_stats = $this->get_draft_stats();
@@ -5729,9 +5720,9 @@ Framing,C-Studs,20 Gauge,362S162-20,3-5/8",1-5/8",33</pre>
     $next_run = wp_next_scheduled('sfb_purge_expired_drafts');
     if ($next_run) {
       $next_time = wp_date(get_option('time_format'), $next_run);
-      $cron_status_html = '🟢 <strong>' . sprintf(__('Next: %s', 'submittal-builder'), $next_time) . '</strong>';
+      $cron_status_html = '🟢 <strong>' . sprintf(__('Next: %s', 'submittal-spec-sheet-builder'), $next_time) . '</strong>';
     } else {
-      $cron_status_html = '🔴 <strong>' . __('Not scheduled', 'submittal-builder') . '</strong>';
+      $cron_status_html = '🔴 <strong>' . __('Not scheduled', 'submittal-spec-sheet-builder') . '</strong>';
     }
 
     // Handle actions
@@ -5749,7 +5740,7 @@ Framing,C-Studs,20 Gauge,362S162-20,3-5/8",1-5/8",33</pre>
           update_option('sfb_license', [], false);
           delete_option('sfb_license');
           wp_cache_delete('sfb_license', 'options');
-          $license_test_result = __('License set to Free (empty). Menu will show "⭐ Upgrade".', 'submittal-builder');
+          $license_test_result = __('License set to Free (empty). Menu will show "⭐ Upgrade".', 'submittal-spec-sheet-builder');
 
           // Check for dev constant overrides
           $dev_warnings = [];
@@ -5760,7 +5751,7 @@ Framing,C-Studs,20 Gauge,362S162-20,3-5/8",1-5/8",33</pre>
             $dev_warnings[] = 'SFB_AGENCY_DEV';
           }
           if (!empty($dev_warnings)) {
-            $license_test_result .= ' ' . sprintf(__('WARNING: %s constant(s) active - overriding license checks!', 'submittal-builder'), implode(', ', $dev_warnings));
+            $license_test_result .= ' ' . sprintf(__('WARNING: %s constant(s) active - overriding license checks!', 'submittal-spec-sheet-builder'), implode(', ', $dev_warnings));
           }
           break;
 
@@ -5771,7 +5762,7 @@ Framing,C-Studs,20 Gauge,362S162-20,3-5/8",1-5/8",33</pre>
             'status' => 'expired'
           ], false);
           wp_cache_delete('sfb_license', 'options');
-          $license_test_result = __('License set to Expired. Menu will show "Manage License".', 'submittal-builder');
+          $license_test_result = __('License set to Expired. Menu will show "Manage License".', 'submittal-spec-sheet-builder');
 
           // Check for dev constant overrides
           $dev_warnings = [];
@@ -5782,7 +5773,7 @@ Framing,C-Studs,20 Gauge,362S162-20,3-5/8",1-5/8",33</pre>
             $dev_warnings[] = 'SFB_AGENCY_DEV';
           }
           if (!empty($dev_warnings)) {
-            $license_test_result .= ' ' . sprintf(__('WARNING: %s constant(s) active - may override this state!', 'submittal-builder'), implode(', ', $dev_warnings));
+            $license_test_result .= ' ' . sprintf(__('WARNING: %s constant(s) active - may override this state!', 'submittal-spec-sheet-builder'), implode(', ', $dev_warnings));
           }
           break;
 
@@ -5793,11 +5784,11 @@ Framing,C-Studs,20 Gauge,362S162-20,3-5/8",1-5/8",33</pre>
             'status' => 'active'
           ], false);
           wp_cache_delete('sfb_license', 'options');
-          $license_test_result = __('License set to Active (Pro). Pro features enabled.', 'submittal-builder');
+          $license_test_result = __('License set to Active (Pro). Pro features enabled.', 'submittal-spec-sheet-builder');
 
           // Check for agency dev constant
           if (defined('SFB_AGENCY_DEV') && SFB_AGENCY_DEV) {
-            $license_test_result .= ' ' . __('WARNING: SFB_AGENCY_DEV is active - Agency features will still show!', 'submittal-builder');
+            $license_test_result .= ' ' . __('WARNING: SFB_AGENCY_DEV is active - Agency features will still show!', 'submittal-spec-sheet-builder');
           }
           break;
 
@@ -5809,7 +5800,7 @@ Framing,C-Studs,20 Gauge,362S162-20,3-5/8",1-5/8",33</pre>
             'tier' => 'agency'
           ], false);
           wp_cache_delete('sfb_license', 'options');
-          $license_test_result = __('License set to Active (Agency). All Pro + Agency features enabled.', 'submittal-builder');
+          $license_test_result = __('License set to Active (Agency). All Pro + Agency features enabled.', 'submittal-spec-sheet-builder');
           break;
       }
     }
@@ -5825,12 +5816,12 @@ Framing,C-Studs,20 Gauge,362S162-20,3-5/8",1-5/8",33</pre>
       // Verify SFB_PRO_DEV constant
       if (!defined('SFB_PRO_DEV') || SFB_PRO_DEV !== true) {
         wp_die(
-          '<h1>' . esc_html__('Development Mode Required', 'submittal-builder') . '</h1>' .
-          '<p>' . esc_html__('This action requires SFB_PRO_DEV to be enabled.', 'submittal-builder') . '</p>' .
-          '<p>' . esc_html__('Add this line to your wp-config.php file:', 'submittal-builder') . '</p>' .
+          '<h1>' . esc_html__('Development Mode Required', 'submittal-spec-sheet-builder') . '</h1>' .
+          '<p>' . esc_html__('This action requires SFB_PRO_DEV to be enabled.', 'submittal-spec-sheet-builder') . '</p>' .
+          '<p>' . esc_html__('Add this line to your wp-config.php file:', 'submittal-spec-sheet-builder') . '</p>' .
           '<pre style="background:#f5f5f5;padding:10px;border-radius:4px">define(\'SFB_PRO_DEV\', true);</pre>' .
-          '<p><a href="' . esc_url(admin_url('admin.php?page=sfb-demo-tools')) . '">' . esc_html__('← Back to Demo Tools', 'submittal-builder') . '</a></p>',
-          esc_html__('Permission Denied', 'submittal-builder'),
+          '<p><a href="' . esc_url(admin_url('admin.php?page=sfb-demo-tools')) . '">' . esc_html__('← Back to Demo Tools', 'submittal-spec-sheet-builder') . '</a></p>',
+          esc_html__('Permission Denied', 'submittal-spec-sheet-builder'),
           ['back_link' => true]
         );
       }
@@ -5838,10 +5829,10 @@ Framing,C-Studs,20 Gauge,362S162-20,3-5/8",1-5/8",33</pre>
       // Verify checkbox confirmation
       if (empty($_POST['sfb_confirm_demo_reset'])) {
         wp_die(
-          '<h1>' . esc_html__('Confirmation Required', 'submittal-builder') . '</h1>' .
-          '<p>' . esc_html__('Please confirm the reset checkbox before proceeding.', 'submittal-builder') . '</p>' .
-          '<p><a href="' . esc_url(admin_url('admin.php?page=sfb-demo-tools')) . '">' . esc_html__('← Back to Demo Tools', 'submittal-builder') . '</a></p>',
-          esc_html__('Confirmation Required', 'submittal-builder'),
+          '<h1>' . esc_html__('Confirmation Required', 'submittal-spec-sheet-builder') . '</h1>' .
+          '<p>' . esc_html__('Please confirm the reset checkbox before proceeding.', 'submittal-spec-sheet-builder') . '</p>' .
+          '<p><a href="' . esc_url(admin_url('admin.php?page=sfb-demo-tools')) . '">' . esc_html__('← Back to Demo Tools', 'submittal-spec-sheet-builder') . '</a></p>',
+          esc_html__('Confirmation Required', 'submittal-spec-sheet-builder'),
           ['back_link' => true]
         );
       }
@@ -5873,43 +5864,43 @@ Framing,C-Studs,20 Gauge,362S162-20,3-5/8",1-5/8",33</pre>
 
     ?>
     <div class="wrap sfb-tools">
-      <h1><?php echo esc_html__('Demo Tools', 'submittal-builder'); ?></h1>
+      <h1><?php echo esc_html__('Demo Tools', 'submittal-spec-sheet-builder'); ?></h1>
       <p class="description" style="margin-top:-8px;margin-bottom:24px;">
-        <?php esc_html_e('Developer tools for testing and demonstration. Load sample catalogs, preview PDFs, test license states, and reset data.', 'submittal-builder'); ?>
+        <?php esc_html_e('Developer tools for testing and demonstration. Load sample catalogs, preview PDFs, test license states, and reset data.', 'submittal-spec-sheet-builder'); ?>
       </p>
 
       <!-- Draft Management Card -->
       <div class="sfb-card">
-        <h2>🧹 <?php echo esc_html__('Draft Management', 'submittal-builder'); ?></h2>
-        <p class="sfb-muted"><?php echo esc_html__('Clean up temp drafts and verify the system is healthy.', 'submittal-builder'); ?></p>
+        <h2>🧹 <?php echo esc_html__('Draft Management', 'submittal-spec-sheet-builder'); ?></h2>
+        <p class="sfb-muted"><?php echo esc_html__('Clean up temp drafts and verify the system is healthy.', 'submittal-spec-sheet-builder'); ?></p>
 
         <div class="sfb-actions">
           <button id="sfb-purge-btn"
                   class="button button-primary sfb-btn"
                   data-nonce="<?php echo esc_attr(wp_create_nonce('sfb_purge')); ?>">
-            <?php esc_html_e('Purge Expired Drafts', 'submittal-builder'); ?>
+            <?php esc_html_e('Purge Expired Drafts', 'submittal-spec-sheet-builder'); ?>
           </button>
 
           <button id="sfb-smoke-btn"
                   class="button sfb-btn"
                   data-nonce="<?php echo esc_attr(wp_create_nonce('sfb_smoke')); ?>">
-            <?php esc_html_e('Run Smoke Test', 'submittal-builder'); ?>
+            <?php esc_html_e('Run Smoke Test', 'submittal-spec-sheet-builder'); ?>
           </button>
         </div>
 
         <div id="sfb-drafts-status" class="sfb-status">
-          <?php echo esc_html__('Idle — ready when you are.', 'submittal-builder'); ?>
+          <?php echo esc_html__('Idle — ready when you are.', 'submittal-spec-sheet-builder'); ?>
         </div>
 
         <div class="sfb-grid" style="margin-top:10px;">
           <div class="sfb-kv">
-            <div class="k"><?php esc_html_e('Cron Status', 'submittal-builder'); ?></div>
+            <div class="k"><?php esc_html_e('Cron Status', 'submittal-spec-sheet-builder'); ?></div>
             <div class="v" id="sfb-cron-status">
               <?php echo wp_kses_post($cron_status_html); ?>
             </div>
           </div>
           <div class="sfb-kv">
-            <div class="k"><?php esc_html_e('Draft Statistics', 'submittal-builder'); ?></div>
+            <div class="k"><?php esc_html_e('Draft Statistics', 'submittal-spec-sheet-builder'); ?></div>
             <div class="v" id="sfb-draft-stats">
               <?php echo esc_html($draft_stats['text']); ?>
             </div>
@@ -5919,22 +5910,22 @@ Framing,C-Studs,20 Gauge,362S162-20,3-5/8",1-5/8",33</pre>
 
       <!-- System Information Card -->
       <div class="sfb-card">
-        <h2>🧩 <?php echo esc_html__('System Information', 'submittal-builder'); ?></h2>
+        <h2>🧩 <?php echo esc_html__('System Information', 'submittal-spec-sheet-builder'); ?></h2>
         <div class="sfb-grid">
           <div class="sfb-kv">
-            <div class="k"><?php esc_html_e('Plugin Version', 'submittal-builder'); ?></div>
+            <div class="k"><?php esc_html_e('Plugin Version', 'submittal-spec-sheet-builder'); ?></div>
             <div class="v"><?php echo esc_html($plugin_version); ?></div>
           </div>
           <div class="sfb-kv">
-            <div class="k"><?php esc_html_e('Pro Status', 'submittal-builder'); ?></div>
+            <div class="k"><?php esc_html_e('Pro Status', 'submittal-spec-sheet-builder'); ?></div>
             <div class="v"><?php echo esc_html($pro_status_label); ?></div>
           </div>
           <div class="sfb-kv">
-            <div class="k"><?php esc_html_e('Shareable Drafts', 'submittal-builder'); ?></div>
+            <div class="k"><?php esc_html_e('Shareable Drafts', 'submittal-spec-sheet-builder'); ?></div>
             <div class="v"><?php echo esc_html($shareable_label); ?></div>
           </div>
           <div class="sfb-kv">
-            <div class="k"><?php esc_html_e('WordPress', 'submittal-builder'); ?></div>
+            <div class="k"><?php esc_html_e('WordPress', 'submittal-spec-sheet-builder'); ?></div>
             <div class="v"><?php echo esc_html(get_bloginfo('version')); ?></div>
           </div>
         </div>
@@ -5948,7 +5939,7 @@ Framing,C-Studs,20 Gauge,362S162-20,3-5/8",1-5/8",33</pre>
               <p>
                 <?php
                 printf(
-                  esc_html__('Created %d categories, %d types, %d items.', 'submittal-builder'),
+                  esc_html__('Created %d categories, %d types, %d items.', 'submittal-spec-sheet-builder'),
                   (int)$result['stats']['categories'],
                   (int)$result['stats']['types'],
                   (int)$result['stats']['items']
@@ -5961,7 +5952,7 @@ Framing,C-Studs,20 Gauge,362S162-20,3-5/8",1-5/8",33</pre>
                 <strong><?php
                 $expiry_days = get_option('sfb_branding')['drafts_expiry_days'] ?? 45;
                 printf(
-                  esc_html__('Demo draft link (expires in %d days):', 'submittal-builder'),
+                  esc_html__('Demo draft link (expires in %d days):', 'submittal-spec-sheet-builder'),
                   $expiry_days
                 );
                 ?></strong><br>
@@ -5970,10 +5961,10 @@ Framing,C-Studs,20 Gauge,362S162-20,3-5/8",1-5/8",33</pre>
             <?php endif; ?>
             <?php if (!empty($result['admin_url'])): ?>
               <p>
-                <strong><?php echo esc_html__('Quick Links:', 'submittal-builder'); ?></strong><br>
-                <a href="<?php echo esc_url($result['admin_url']); ?>"><?php echo esc_html__('View in Admin Builder', 'submittal-builder'); ?></a>
+                <strong><?php echo esc_html__('Quick Links:', 'submittal-spec-sheet-builder'); ?></strong><br>
+                <a href="<?php echo esc_url($result['admin_url']); ?>"><?php echo esc_html__('View in Admin Builder', 'submittal-spec-sheet-builder'); ?></a>
                 <?php if (!empty($result['frontend_url'])): ?>
-                  | <a href="<?php echo esc_url($result['frontend_url']); ?>" target="_blank"><?php echo esc_html__('View Frontend Page', 'submittal-builder'); ?></a>
+                  | <a href="<?php echo esc_url($result['frontend_url']); ?>" target="_blank"><?php echo esc_html__('View Frontend Page', 'submittal-spec-sheet-builder'); ?></a>
                 <?php endif; ?>
               </p>
             <?php endif; ?>
@@ -5989,9 +5980,9 @@ Framing,C-Studs,20 Gauge,362S162-20,3-5/8",1-5/8",33</pre>
         <div class="notice notice-success is-dismissible">
           <p>
             <span class="dashicons dashicons-yes" style="color:#46b450;"></span>
-            <strong><?php echo esc_html__('Saved:', 'submittal-builder'); ?></strong>
+            <strong><?php echo esc_html__('Saved:', 'submittal-spec-sheet-builder'); ?></strong>
             <?php echo esc_html($license_test_result); ?>
-            <em><?php echo esc_html__('(Refresh the page to see the menu update)', 'submittal-builder'); ?></em>
+            <em><?php echo esc_html__('(Refresh the page to see the menu update)', 'submittal-spec-sheet-builder'); ?></em>
           </p>
         </div>
         <script>
@@ -6005,8 +5996,8 @@ Framing,C-Studs,20 Gauge,362S162-20,3-5/8",1-5/8",33</pre>
       <?php if (!$drafts_enabled): ?>
         <div class="notice notice-info">
           <p>
-            <?php echo esc_html__('Server drafts are currently disabled.', 'submittal-builder'); ?>
-            <a href="<?php echo esc_url(admin_url('admin.php?page=sfb-settings')); ?>"><?php echo esc_html__('Enable in Settings → Drafts', 'submittal-builder'); ?></a>
+            <?php echo esc_html__('Server drafts are currently disabled.', 'submittal-spec-sheet-builder'); ?>
+            <a href="<?php echo esc_url(admin_url('admin.php?page=sfb-settings')); ?>"><?php echo esc_html__('Enable in Settings → Drafts', 'submittal-spec-sheet-builder'); ?></a>
           </p>
         </div>
       <?php endif; ?>
@@ -6014,32 +6005,32 @@ Framing,C-Studs,20 Gauge,362S162-20,3-5/8",1-5/8",33</pre>
       <!-- License State Tester (Temp) -->
       <div class="card" style="max-width: 800px; background: #fff3cd; border-left: 4px solid #ffc107;">
         <h2 style="margin-top: 0;">
-          <?php echo esc_html__('License State Tester (Temp)', 'submittal-builder'); ?>
+          <?php echo esc_html__('License State Tester (Temp)', 'submittal-spec-sheet-builder'); ?>
           <span style="font-size: 12px; font-weight: normal; color: #856404;">
-            — <?php echo esc_html__('Admin Only', 'submittal-builder'); ?>
+            — <?php echo esc_html__('Admin Only', 'submittal-spec-sheet-builder'); ?>
           </span>
         </h2>
         <p class="description" style="margin-bottom: 16px;">
-          <?php echo esc_html__('Test different license states to see how the admin menu adapts. Changes take effect immediately.', 'submittal-builder'); ?>
+          <?php echo esc_html__('Test different license states to see how the admin menu adapts. Changes take effect immediately.', 'submittal-spec-sheet-builder'); ?>
         </p>
 
         <form method="post" style="display: flex; flex-wrap: wrap; gap: 8px; align-items: center;">
           <?php wp_nonce_field('sfb_test_license_state'); ?>
 
           <button type="submit" name="sfb_test_license_state" value="1" class="button" onclick="document.querySelector('input[name=license_state]').value='free'">
-            <?php echo esc_html__('Set to Free', 'submittal-builder'); ?>
+            <?php echo esc_html__('Set to Free', 'submittal-spec-sheet-builder'); ?>
           </button>
 
           <button type="submit" name="sfb_test_license_state" value="1" class="button" onclick="document.querySelector('input[name=license_state]').value='expired'">
-            <?php echo esc_html__('Set to Expired', 'submittal-builder'); ?>
+            <?php echo esc_html__('Set to Expired', 'submittal-spec-sheet-builder'); ?>
           </button>
 
           <button type="submit" name="sfb_test_license_state" value="1" class="button" onclick="document.querySelector('input[name=license_state]').value='active'">
-            <?php echo esc_html__('Set to Pro', 'submittal-builder'); ?>
+            <?php echo esc_html__('Set to Pro', 'submittal-spec-sheet-builder'); ?>
           </button>
 
           <button type="submit" name="sfb_test_license_state" value="1" class="button button-primary" onclick="document.querySelector('input[name=license_state]').value='agency'" style="background: #7c3aed; border-color: #7c3aed;">
-            <?php echo esc_html__('Set to Agency', 'submittal-builder'); ?>
+            <?php echo esc_html__('Set to Agency', 'submittal-spec-sheet-builder'); ?>
           </button>
 
           <input type="hidden" name="license_state" value="">
@@ -6052,14 +6043,14 @@ Framing,C-Studs,20 Gauge,362S162-20,3-5/8",1-5/8",33</pre>
 
             // Display current state
             if (empty($current_lic)) {
-              echo '📍 <strong>' . esc_html__('Current: Free (no license)', 'submittal-builder') . '</strong>';
+              echo '📍 <strong>' . esc_html__('Current: Free (no license)', 'submittal-spec-sheet-builder') . '</strong>';
             } else {
               if ($current_status === 'active' && $current_tier === 'agency') {
-                echo '📍 <strong>' . esc_html__('Current: Active (Agency)', 'submittal-builder') . '</strong>';
+                echo '📍 <strong>' . esc_html__('Current: Active (Agency)', 'submittal-spec-sheet-builder') . '</strong>';
               } elseif ($current_status === 'active') {
-                echo '📍 <strong>' . esc_html__('Current: Active (Pro)', 'submittal-builder') . '</strong>';
+                echo '📍 <strong>' . esc_html__('Current: Active (Pro)', 'submittal-spec-sheet-builder') . '</strong>';
               } else {
-                echo '📍 <strong>' . sprintf(esc_html__('Current: %s', 'submittal-builder'), esc_html(ucfirst($current_status))) . '</strong>';
+                echo '📍 <strong>' . sprintf(esc_html__('Current: %s', 'submittal-spec-sheet-builder'), esc_html(ucfirst($current_status))) . '</strong>';
               }
             }
 
@@ -6072,8 +6063,8 @@ Framing,C-Studs,20 Gauge,362S162-20,3-5/8",1-5/8",33</pre>
               $dev_warnings[] = 'SFB_AGENCY_DEV';
             }
             if (!empty($dev_warnings)) {
-              echo '<br><strong style="color: #dc2626;">⚠️ ' . sprintf(esc_html__('%s constant(s) ACTIVE - overriding all license checks!', 'submittal-builder'), implode(', ', $dev_warnings)) . '</strong>';
-              echo '<br><span style="color: #856404;">' . esc_html__('Remove from wp-config.php to test license states properly.', 'submittal-builder') . '</span>';
+              echo '<br><strong style="color: #dc2626;">⚠️ ' . sprintf(esc_html__('%s constant(s) ACTIVE - overriding all license checks!', 'submittal-spec-sheet-builder'), implode(', ', $dev_warnings)) . '</strong>';
+              echo '<br><span style="color: #856404;">' . esc_html__('Remove from wp-config.php to test license states properly.', 'submittal-spec-sheet-builder') . '</span>';
             }
             ?>
           </div>
@@ -6083,9 +6074,9 @@ Framing,C-Studs,20 Gauge,362S162-20,3-5/8",1-5/8",33</pre>
       <!-- License Debug Info (Temp) -->
       <div class="card" style="max-width: 800px; background: #e0f2fe; border-left: 4px solid #0284c7;">
         <h2 style="margin-top: 0;">
-          <?php echo esc_html__('🔍 License Debug Info', 'submittal-builder'); ?>
+          <?php echo esc_html__('🔍 License Debug Info', 'submittal-spec-sheet-builder'); ?>
           <span style="font-size: 12px; font-weight: normal; color: #0c4a6e;">
-            — <?php echo esc_html__('Temp Debugging', 'submittal-builder'); ?>
+            — <?php echo esc_html__('Temp Debugging', 'submittal-spec-sheet-builder'); ?>
           </span>
         </h2>
 
@@ -6115,9 +6106,9 @@ Framing,C-Studs,20 Gauge,362S162-20,3-5/8",1-5/8",33</pre>
 
       <!-- Preview Sample PDF -->
       <div class="card" style="max-width: 800px;">
-        <h2><?php echo esc_html__('Preview Sample PDF', 'submittal-builder'); ?></h2>
+        <h2><?php echo esc_html__('Preview Sample PDF', 'submittal-spec-sheet-builder'); ?></h2>
         <p class="description" style="margin-bottom: 16px;">
-          <?php echo esc_html__('Generate a sample submittal packet PDF using your current branding settings (company name, logo, and brand color).', 'submittal-builder'); ?>
+          <?php echo esc_html__('Generate a sample submittal packet PDF using your current branding settings (company name, logo, and brand color).', 'submittal-spec-sheet-builder'); ?>
         </p>
         <a
           href="<?php echo esc_url(wp_nonce_url(admin_url('admin-post.php?action=sfb_test_pdf'), 'sfb_test_pdf')); ?>"
@@ -6129,7 +6120,7 @@ Framing,C-Studs,20 Gauge,362S162-20,3-5/8",1-5/8",33</pre>
       </div>
 
       <div class="card" style="max-width: 800px;">
-        <h2><?php echo esc_html__('Seed Industry Catalog', 'submittal-builder'); ?></h2>
+        <h2><?php echo esc_html__('Seed Industry Catalog', 'submittal-spec-sheet-builder'); ?></h2>
 
         <form method="post">
           <?php wp_nonce_field('sfb_seed_pack'); ?>
@@ -6137,7 +6128,7 @@ Framing,C-Studs,20 Gauge,362S162-20,3-5/8",1-5/8",33</pre>
           <table class="form-table">
             <tr>
               <th scope="row">
-                <label for="industry_pack"><?php echo esc_html__('Industry Pack', 'submittal-builder'); ?></label>
+                <label for="industry_pack"><?php echo esc_html__('Industry Pack', 'submittal-spec-sheet-builder'); ?></label>
               </th>
               <td>
                 <select name="industry_pack" id="industry_pack" class="regular-text">
@@ -6146,22 +6137,22 @@ Framing,C-Studs,20 Gauge,362S162-20,3-5/8",1-5/8",33</pre>
                   <?php endforeach; ?>
                 </select>
                 <p class="description">
-                  <?php echo esc_html__('Choose an industry-specific demo catalog. Each pack includes 3-5 categories with realistic products and metadata.', 'submittal-builder'); ?>
+                  <?php echo esc_html__('Choose an industry-specific demo catalog. Each pack includes 3-5 categories with realistic products and metadata.', 'submittal-spec-sheet-builder'); ?>
                 </p>
               </td>
             </tr>
 
             <tr>
-              <th scope="row"><?php echo esc_html__('Options', 'submittal-builder'); ?></th>
+              <th scope="row"><?php echo esc_html__('Options', 'submittal-spec-sheet-builder'); ?></th>
               <td>
                 <label>
                   <input type="checkbox" name="create_draft" value="1" <?php checked(!$drafts_enabled, false); ?> <?php disabled(!$drafts_enabled); ?>>
-                  <?php echo esc_html__('Also create a demo draft', 'submittal-builder'); ?>
+                  <?php echo esc_html__('Also create a demo draft', 'submittal-spec-sheet-builder'); ?>
                 </label>
                 <p class="description">
-                  <?php echo esc_html__('Automatically creates a server draft with 6-10 preselected items and returns the shareable URL.', 'submittal-builder'); ?>
+                  <?php echo esc_html__('Automatically creates a server draft with 6-10 preselected items and returns the shareable URL.', 'submittal-spec-sheet-builder'); ?>
                   <?php if (!$drafts_enabled): ?>
-                    <br><strong><?php echo esc_html__('(Requires server drafts to be enabled)', 'submittal-builder'); ?></strong>
+                    <br><strong><?php echo esc_html__('(Requires server drafts to be enabled)', 'submittal-spec-sheet-builder'); ?></strong>
                   <?php endif; ?>
                 </p>
               </td>
@@ -6170,25 +6161,25 @@ Framing,C-Studs,20 Gauge,362S162-20,3-5/8",1-5/8",33</pre>
 
           <p class="submit">
             <button type="submit" name="sfb_seed_pack" class="button button-primary">
-              <?php echo esc_html__('Seed Selected Pack', 'submittal-builder'); ?>
+              <?php echo esc_html__('Seed Selected Pack', 'submittal-spec-sheet-builder'); ?>
             </button>
           </p>
         </form>
       </div>
 
       <div class="card" style="max-width: 800px; margin-top: 20px;">
-        <h2><?php echo esc_html__('Reset Demo Content', 'submittal-builder'); ?></h2>
+        <h2><?php echo esc_html__('Reset Demo Content', 'submittal-spec-sheet-builder'); ?></h2>
 
         <style>
           .sfb-danger {color:#dc2626;font-weight:600}
         </style>
 
         <div class="notice notice-error" style="border-left-color:#dc2626;margin: 15px 0;">
-          <p><strong><?php echo esc_html__('Danger zone:', 'submittal-builder'); ?></strong> <?php echo esc_html__('This removes ONLY demo content created by the seeder (items tagged', 'submittal-builder'); ?> <code>_sfb_demo_seed=1</code>). <?php echo esc_html__('Your own catalogs are not touched.', 'submittal-builder'); ?></p>
-          <p style="margin-top:6px"><?php echo esc_html__('To proceed, check the box and click Reset.', 'submittal-builder'); ?></p>
+          <p><strong><?php echo esc_html__('Danger zone:', 'submittal-spec-sheet-builder'); ?></strong> <?php echo esc_html__('This removes ONLY demo content created by the seeder (items tagged', 'submittal-spec-sheet-builder'); ?> <code>_sfb_demo_seed=1</code>). <?php echo esc_html__('Your own catalogs are not touched.', 'submittal-spec-sheet-builder'); ?></p>
+          <p style="margin-top:6px"><?php echo esc_html__('To proceed, check the box and click Reset.', 'submittal-spec-sheet-builder'); ?></p>
           <?php if (!defined('SFB_PRO_DEV') || SFB_PRO_DEV !== true): ?>
             <p style="margin-top:10px;padding-top:10px;border-top:1px solid #ddd">
-              <strong><?php echo esc_html__('Note:', 'submittal-builder'); ?></strong> <?php echo esc_html__('This action requires', 'submittal-builder'); ?> <code>define('SFB_PRO_DEV', true)</code> <?php echo esc_html__('in your wp-config.php file.', 'submittal-builder'); ?>
+              <strong><?php echo esc_html__('Note:', 'submittal-spec-sheet-builder'); ?></strong> <?php echo esc_html__('This action requires', 'submittal-spec-sheet-builder'); ?> <code>define('SFB_PRO_DEV', true)</code> <?php echo esc_html__('in your wp-config.php file.', 'submittal-spec-sheet-builder'); ?>
             </p>
           <?php endif; ?>
         </div>
@@ -6198,11 +6189,11 @@ Framing,C-Studs,20 Gauge,362S162-20,3-5/8",1-5/8",33</pre>
 
           <table class="form-table">
             <tr>
-              <th scope="row"><?php echo esc_html__('Confirmation', 'submittal-builder'); ?></th>
+              <th scope="row"><?php echo esc_html__('Confirmation', 'submittal-spec-sheet-builder'); ?></th>
               <td>
                 <label>
                   <input type="checkbox" name="sfb_confirm_demo_reset" value="1" required>
-                  <span class="sfb-danger"><?php echo esc_html__('I understand this will delete all demo-seeded content.', 'submittal-builder'); ?></span>
+                  <span class="sfb-danger"><?php echo esc_html__('I understand this will delete all demo-seeded content.', 'submittal-spec-sheet-builder'); ?></span>
                 </label>
               </td>
             </tr>
@@ -6210,7 +6201,7 @@ Framing,C-Studs,20 Gauge,362S162-20,3-5/8",1-5/8",33</pre>
 
           <p class="submit">
             <button type="submit" name="sfb_reset_demo" class="button button-secondary" style="border-color: #d63638; color: #d63638;">
-              <?php echo esc_html__('Reset Seeded Demo Content', 'submittal-builder'); ?>
+              <?php echo esc_html__('Reset Seeded Demo Content', 'submittal-spec-sheet-builder'); ?>
             </button>
           </p>
         </form>
@@ -6219,51 +6210,51 @@ Framing,C-Studs,20 Gauge,362S162-20,3-5/8",1-5/8",33</pre>
       <!-- Demo Data Generator (for Screenshots) -->
       <div class="card" style="max-width: 800px; margin-top: 20px; background: #f0f9ff; border-left: 4px solid #0ea5e9;">
         <h2 style="margin-top: 0;">
-          📸 <?php echo esc_html__('Demo Data Generator (for Screenshots)', 'submittal-builder'); ?>
+          📸 <?php echo esc_html__('Demo Data Generator (for Screenshots)', 'submittal-spec-sheet-builder'); ?>
         </h2>
 
-        <p><?php echo esc_html__('Generate realistic demo data for Tracking, Agency, and Analytics pages to help with WordPress plugin submission screenshots.', 'submittal-builder'); ?></p>
+        <p><?php echo esc_html__('Generate realistic demo data for Tracking, Agency, and Analytics pages to help with WordPress plugin submission screenshots.', 'submittal-spec-sheet-builder'); ?></p>
 
         <div class="notice notice-info" style="margin: 15px 0;">
-          <p><strong><?php echo esc_html__('What will be created:', 'submittal-builder'); ?></strong></p>
+          <p><strong><?php echo esc_html__('What will be created:', 'submittal-spec-sheet-builder'); ?></strong></p>
           <ul style="margin-left: 20px; list-style: disc;">
-            <li><?php echo esc_html__('10 tracking links with realistic project names, views, and timestamps', 'submittal-builder'); ?></li>
-            <li><?php echo esc_html__('5 Agency Packs with sample catalog items (Electrical, HVAC, Plumbing, etc.)', 'submittal-builder'); ?></li>
-            <li><?php echo esc_html__('30 days of analytics activity data for the Agency Analytics dashboard', 'submittal-builder'); ?></li>
+            <li><?php echo esc_html__('10 tracking links with realistic project names, views, and timestamps', 'submittal-spec-sheet-builder'); ?></li>
+            <li><?php echo esc_html__('5 Agency Packs with sample catalog items (Electrical, HVAC, Plumbing, etc.)', 'submittal-spec-sheet-builder'); ?></li>
+            <li><?php echo esc_html__('30 days of analytics activity data for the Agency Analytics dashboard', 'submittal-spec-sheet-builder'); ?></li>
           </ul>
-          <p style="margin-top: 10px;"><em><?php echo esc_html__('All demo data is tagged and can be easily cleared with the "Clear Demo Data" button below.', 'submittal-builder'); ?></em></p>
+          <p style="margin-top: 10px;"><em><?php echo esc_html__('All demo data is tagged and can be easily cleared with the "Clear Demo Data" button below.', 'submittal-spec-sheet-builder'); ?></em></p>
         </div>
 
         <form method="post" style="margin-top: 20px;">
           <?php wp_nonce_field('sfb_generate_demo_data'); ?>
           <p class="submit" style="margin-top: 0;">
             <button type="submit" name="sfb_generate_demo_data" class="button button-primary">
-              <?php echo esc_html__('Generate Demo Data', 'submittal-builder'); ?>
+              <?php echo esc_html__('Generate Demo Data', 'submittal-spec-sheet-builder'); ?>
             </button>
             <button type="submit" name="sfb_clear_demo_data" class="button button-secondary" style="margin-left: 10px;">
-              <?php echo esc_html__('Clear Demo Data', 'submittal-builder'); ?>
+              <?php echo esc_html__('Clear Demo Data', 'submittal-spec-sheet-builder'); ?>
             </button>
           </p>
         </form>
       </div>
 
       <div class="card" style="max-width: 800px; margin-top: 20px;">
-        <h2><?php echo esc_html__('Quick Links', 'submittal-builder'); ?></h2>
+        <h2><?php echo esc_html__('Quick Links', 'submittal-spec-sheet-builder'); ?></h2>
         <table class="form-table">
           <tr>
-            <th scope="row"><?php echo esc_html__('Frontend Page', 'submittal-builder'); ?></th>
+            <th scope="row"><?php echo esc_html__('Frontend Page', 'submittal-spec-sheet-builder'); ?></th>
             <td>
               <?php if ($frontend_url): ?>
                 <a href="<?php echo esc_url($frontend_url); ?>" target="_blank"><?php echo esc_html($frontend_url); ?></a>
               <?php else: ?>
-                <em><?php echo esc_html__('No page found with [submittal_builder] shortcode', 'submittal-builder'); ?></em>
+                <em><?php echo esc_html__('No page found with [submittal_builder] shortcode', 'submittal-spec-sheet-builder'); ?></em>
               <?php endif; ?>
             </td>
           </tr>
           <tr>
-            <th scope="row"><?php echo esc_html__('Admin Builder', 'submittal-builder'); ?></th>
+            <th scope="row"><?php echo esc_html__('Admin Builder', 'submittal-spec-sheet-builder'); ?></th>
             <td>
-              <a href="<?php echo esc_url(admin_url('admin.php?page=sfb')); ?>"><?php echo esc_html__('Submittal Builder → Builder', 'submittal-builder'); ?></a>
+              <a href="<?php echo esc_url(admin_url('admin.php?page=sfb')); ?>"><?php echo esc_html__('Submittal Builder → Builder', 'submittal-spec-sheet-builder'); ?></a>
             </td>
           </tr>
         </table>
@@ -6748,10 +6739,10 @@ Framing,C-Studs,20 Gauge,362S162-20,3-5/8",1-5/8",33</pre>
       ?>
       <div class="notice notice-warning">
         <p>
-          <strong><?php esc_html_e('Submittal Builder License Expired', 'submittal-builder'); ?></strong> —
-          <?php esc_html_e('Your license has expired. Renew to continue receiving updates and support.', 'submittal-builder'); ?>
+          <strong><?php esc_html_e('Submittal Builder License Expired', 'submittal-spec-sheet-builder'); ?></strong> —
+          <?php esc_html_e('Your license has expired. Renew to continue receiving updates and support.', 'submittal-spec-sheet-builder'); ?>
           <a href="<?php echo esc_url($renew_url); ?>" class="button button-small" style="margin-left:10px;">
-            <?php esc_html_e('Renew License', 'submittal-builder'); ?>
+            <?php esc_html_e('Renew License', 'submittal-spec-sheet-builder'); ?>
           </a>
         </p>
       </div>
@@ -6763,10 +6754,10 @@ Framing,C-Studs,20 Gauge,362S162-20,3-5/8",1-5/8",33</pre>
       ?>
       <div class="notice notice-error">
         <p>
-          <strong><?php esc_html_e('Submittal Builder License Invalid', 'submittal-builder'); ?></strong> —
-          <?php esc_html_e('Your license key is invalid. Please check your license settings.', 'submittal-builder'); ?>
+          <strong><?php esc_html_e('Submittal Builder License Invalid', 'submittal-spec-sheet-builder'); ?></strong> —
+          <?php esc_html_e('Your license key is invalid. Please check your license settings.', 'submittal-spec-sheet-builder'); ?>
           <a href="<?php echo esc_url(admin_url('admin.php?page=sfb-license')); ?>" class="button button-small" style="margin-left:10px;">
-            <?php esc_html_e('Manage License', 'submittal-builder'); ?>
+            <?php esc_html_e('Manage License', 'submittal-spec-sheet-builder'); ?>
           </a>
         </p>
       </div>
@@ -6778,10 +6769,10 @@ Framing,C-Studs,20 Gauge,362S162-20,3-5/8",1-5/8",33</pre>
       ?>
       <div class="notice notice-info is-dismissible">
         <p>
-          <strong><?php esc_html_e('Submittal Builder License Check Failed', 'submittal-builder'); ?></strong> —
-          <?php esc_html_e('Could not connect to license server. This is usually temporary.', 'submittal-builder'); ?>
+          <strong><?php esc_html_e('Submittal Builder License Check Failed', 'submittal-spec-sheet-builder'); ?></strong> —
+          <?php esc_html_e('Could not connect to license server. This is usually temporary.', 'submittal-spec-sheet-builder'); ?>
           <?php if ($license['status'] === 'active'): ?>
-            <?php esc_html_e('Using cached license status.', 'submittal-builder'); ?>
+            <?php esc_html_e('Using cached license status.', 'submittal-spec-sheet-builder'); ?>
           <?php endif; ?>
         </p>
       </div>
@@ -6793,7 +6784,7 @@ Framing,C-Studs,20 Gauge,362S162-20,3-5/8",1-5/8",33</pre>
   function ajax_purge_expired_drafts() {
     // Check permission
     if (!current_user_can('manage_options')) {
-      wp_send_json_error(['message' => __('Unauthorized', 'submittal-builder')], 403);
+      wp_send_json_error(['message' => __('Unauthorized', 'submittal-spec-sheet-builder')], 403);
     }
 
     // Verify nonce
@@ -6815,7 +6806,7 @@ Framing,C-Studs,20 Gauge,362S162-20,3-5/8",1-5/8",33</pre>
   function ajax_run_smoke_test() {
     // Check permission
     if (!current_user_can('manage_options')) {
-      wp_send_json_error(['message' => __('Unauthorized', 'submittal-builder')], 403);
+      wp_send_json_error(['message' => __('Unauthorized', 'submittal-spec-sheet-builder')], 403);
     }
 
     // Verify nonce
@@ -6840,7 +6831,7 @@ Framing,C-Studs,20 Gauge,362S162-20,3-5/8",1-5/8",33</pre>
   function ajax_test_email() {
     // Check permission
     if (!current_user_can('manage_options')) {
-      wp_send_json_error(['message' => __('Unauthorized', 'submittal-builder')], 403);
+      wp_send_json_error(['message' => __('Unauthorized', 'submittal-spec-sheet-builder')], 403);
     }
 
     // Verify nonce
@@ -6849,7 +6840,7 @@ Framing,C-Studs,20 Gauge,362S162-20,3-5/8",1-5/8",33</pre>
     // Get recipient email
     $to = isset($_POST['email']) ? sanitize_email($_POST['email']) : '';
     if (empty($to) || !is_email($to)) {
-      wp_send_json_error(['message' => __('Invalid email address', 'submittal-builder')]);
+      wp_send_json_error(['message' => __('Invalid email address', 'submittal-spec-sheet-builder')]);
     }
 
     // Variable to capture PHPMailer errors
@@ -6862,10 +6853,10 @@ Framing,C-Studs,20 Gauge,362S162-20,3-5/8",1-5/8",33</pre>
     add_action('wp_mail_failed', $error_handler);
 
     // Prepare test email
-    $subject = __('Test Email from Submittal & Spec Sheet Builder', 'submittal-builder');
-    $message = __('This is a test email to verify SMTP configuration.', 'submittal-builder') . "\n\n";
-    $message .= sprintf(__('Sent at: %s', 'submittal-builder'), wp_date('Y-m-d H:i:s')) . "\n";
-    $message .= sprintf(__('From site: %s', 'submittal-builder'), get_bloginfo('name')) . "\n";
+    $subject = __('Test Email from Submittal & Spec Sheet Builder', 'submittal-spec-sheet-builder');
+    $message = __('This is a test email to verify SMTP configuration.', 'submittal-spec-sheet-builder') . "\n\n";
+    $message .= sprintf(__('Sent at: %s', 'submittal-spec-sheet-builder'), wp_date('Y-m-d H:i:s')) . "\n";
+    $message .= sprintf(__('From site: %s', 'submittal-spec-sheet-builder'), get_bloginfo('name')) . "\n";
 
     // Add headers
     $headers = ['Content-Type: text/plain; charset=UTF-8'];
@@ -6880,7 +6871,7 @@ Framing,C-Studs,20 Gauge,362S162-20,3-5/8",1-5/8",33</pre>
     if ($mail_error) {
       $error_message = $mail_error->get_error_message();
       wp_send_json_error([
-        'message' => sprintf(__('❌ Email failed: %s', 'submittal-builder'), $error_message)
+        'message' => sprintf(__('❌ Email failed: %s', 'submittal-spec-sheet-builder'), $error_message)
       ]);
     }
 
@@ -6888,21 +6879,21 @@ Framing,C-Studs,20 Gauge,362S162-20,3-5/8",1-5/8",33</pre>
       // Check if SMTP plugin is active
       $smtp_info = '';
       if (defined('WPMS_PLUGIN_VER')) {
-        $smtp_info = ' ' . __('(via WP Mail SMTP)', 'submittal-builder');
+        $smtp_info = ' ' . __('(via WP Mail SMTP)', 'submittal-spec-sheet-builder');
       } elseif (function_exists('easy_wp_smtp')) {
-        $smtp_info = ' ' . __('(via Easy WP SMTP)', 'submittal-builder');
+        $smtp_info = ' ' . __('(via Easy WP SMTP)', 'submittal-spec-sheet-builder');
       } elseif (class_exists('Postman')) {
-        $smtp_info = ' ' . __('(via Post SMTP)', 'submittal-builder');
+        $smtp_info = ' ' . __('(via Post SMTP)', 'submittal-spec-sheet-builder');
       } else {
-        $smtp_info = ' ' . __('(using PHP mail() - consider installing an SMTP plugin)', 'submittal-builder');
+        $smtp_info = ' ' . __('(using PHP mail() - consider installing an SMTP plugin)', 'submittal-spec-sheet-builder');
       }
 
       wp_send_json_success([
-        'message' => sprintf(__('✅ Test email queued successfully to %s%s. Check your inbox (including spam folder).', 'submittal-builder'), $to, $smtp_info)
+        'message' => sprintf(__('✅ Test email queued successfully to %s%s. Check your inbox (including spam folder).', 'submittal-spec-sheet-builder'), $to, $smtp_info)
       ]);
     } else {
       wp_send_json_error([
-        'message' => __('❌ Failed to send test email. WordPress mail function returned false. This usually means: 1) No SMTP plugin is configured, 2) PHP mail() is disabled on your server, or 3) Your host blocks outgoing mail. Consider installing WP Mail SMTP or Easy WP SMTP plugin.', 'submittal-builder')
+        'message' => __('❌ Failed to send test email. WordPress mail function returned false. This usually means: 1) No SMTP plugin is configured, 2) PHP mail() is disabled on your server, or 3) Your host blocks outgoing mail. Consider installing WP Mail SMTP or Easy WP SMTP plugin.', 'submittal-spec-sheet-builder')
       ]);
     }
   }
@@ -6911,7 +6902,7 @@ Framing,C-Studs,20 Gauge,362S162-20,3-5/8",1-5/8",33</pre>
   function ajax_clear_tracking() {
     // Check permission
     if (!current_user_can('manage_options')) {
-      wp_send_json_error(['message' => __('Unauthorized', 'submittal-builder')], 403);
+      wp_send_json_error(['message' => __('Unauthorized', 'submittal-spec-sheet-builder')], 403);
     }
 
     // Verify nonce
@@ -6919,7 +6910,7 @@ Framing,C-Studs,20 Gauge,362S162-20,3-5/8",1-5/8",33</pre>
 
     // Check Pro status
     if (!sfb_is_pro_active()) {
-      wp_send_json_error(['message' => __('Pro license required', 'submittal-builder')], 403);
+      wp_send_json_error(['message' => __('Pro license required', 'submittal-spec-sheet-builder')], 403);
     }
 
     // Get current tracking data
@@ -6930,7 +6921,7 @@ Framing,C-Studs,20 Gauge,362S162-20,3-5/8",1-5/8",33</pre>
     update_option('sfb_packets', []);
 
     wp_send_json_success([
-      'message' => sprintf(__('✅ Cleared %d tracking links', 'submittal-builder'), $count),
+      'message' => sprintf(__('✅ Cleared %d tracking links', 'submittal-spec-sheet-builder'), $count),
       'total' => 0,
       'viewed' => 0
     ]);
@@ -6940,7 +6931,7 @@ Framing,C-Studs,20 Gauge,362S162-20,3-5/8",1-5/8",33</pre>
   function ajax_optimize_db() {
     // Check permission
     if (!current_user_can('manage_options')) {
-      wp_send_json_error(['message' => __('Unauthorized', 'submittal-builder')], 403);
+      wp_send_json_error(['message' => __('Unauthorized', 'submittal-spec-sheet-builder')], 403);
     }
 
     // Verify nonce
@@ -6967,7 +6958,7 @@ Framing,C-Studs,20 Gauge,362S162-20,3-5/8",1-5/8",33</pre>
     }
 
     wp_send_json_success([
-      'message' => sprintf(__('✅ Optimized %d database tables', 'submittal-builder'), $optimized)
+      'message' => sprintf(__('✅ Optimized %d database tables', 'submittal-spec-sheet-builder'), $optimized)
     ]);
   }
 
@@ -6975,7 +6966,7 @@ Framing,C-Studs,20 Gauge,362S162-20,3-5/8",1-5/8",33</pre>
   function ajax_clean_orphans() {
     // Check permission
     if (!current_user_can('manage_options')) {
-      wp_send_json_error(['message' => __('Unauthorized', 'submittal-builder')], 403);
+      wp_send_json_error(['message' => __('Unauthorized', 'submittal-spec-sheet-builder')], 403);
     }
 
     // Verify nonce
@@ -7006,7 +6997,7 @@ Framing,C-Studs,20 Gauge,362S162-20,3-5/8",1-5/8",33</pre>
     $cleaned += (int) $orphaned_meta;
 
     wp_send_json_success([
-      'message' => sprintf(__('✅ Removed %d orphaned records', 'submittal-builder'), $cleaned)
+      'message' => sprintf(__('✅ Removed %d orphaned records', 'submittal-spec-sheet-builder'), $cleaned)
     ]);
   }
 
@@ -7025,7 +7016,7 @@ Framing,C-Studs,20 Gauge,362S162-20,3-5/8",1-5/8",33</pre>
       if (defined('WP_DEBUG') && WP_DEBUG) {
         error_log('[SFB] Nonce verification failed');
       }
-      wp_send_json_error(['message' => __('Invalid security token', 'submittal-builder')], 403);
+      wp_send_json_error(['message' => __('Invalid security token', 'submittal-spec-sheet-builder')], 403);
       wp_die(); // Explicit die to ensure clean exit
     }
 
@@ -7042,7 +7033,7 @@ Framing,C-Studs,20 Gauge,362S162-20,3-5/8",1-5/8",33</pre>
       if (defined('WP_DEBUG') && WP_DEBUG) {
         error_log('[SFB] Table does not exist: ' . $table);
       }
-      wp_send_json_error(['message' => __('Database table not found. Please reinstall the plugin.', 'submittal-builder')], 500);
+      wp_send_json_error(['message' => __('Database table not found. Please reinstall the plugin.', 'submittal-spec-sheet-builder')], 500);
       wp_die();
     }
 
@@ -7055,7 +7046,7 @@ Framing,C-Studs,20 Gauge,362S162-20,3-5/8",1-5/8",33</pre>
     // Check for database errors
     if ($wpdb->last_error) {
       error_log('[SFB] Database error: ' . $wpdb->last_error);
-      wp_send_json_error(['message' => __('Database error occurred', 'submittal-builder')], 500);
+      wp_send_json_error(['message' => __('Database error occurred', 'submittal-spec-sheet-builder')], 500);
       wp_die();
     }
 
@@ -7288,7 +7279,7 @@ Framing,C-Studs,20 Gauge,362S162-20,3-5/8",1-5/8",33</pre>
     try {
       // Verify nonce (using sfb_frontend_builder to match existing nonce)
       if (!isset($_POST['nonce']) || !wp_verify_nonce($_POST['nonce'], 'sfb_frontend_builder')) {
-        wp_send_json_error(['message' => __('Invalid security token', 'submittal-builder')], 403);
+        wp_send_json_error(['message' => __('Invalid security token', 'submittal-spec-sheet-builder')], 403);
       }
 
       // --- Check for new review payload format (includes quantities and notes) ---
@@ -7313,7 +7304,7 @@ Framing,C-Studs,20 Gauge,362S162-20,3-5/8",1-5/8",33</pre>
 
         if (json_last_error() !== JSON_ERROR_NONE || !is_array($products)) {
           error_log('[SFB] Invalid JSON in products payload: ' . json_last_error_msg());
-          wp_send_json_error(['message' => __('Invalid products payload', 'submittal-builder')], 400);
+          wp_send_json_error(['message' => __('Invalid products payload', 'submittal-spec-sheet-builder')], 400);
         }
 
         $project_name = isset($_POST['project_name']) ? sanitize_text_field(wp_unslash($_POST['project_name'])) : '';
@@ -7323,7 +7314,7 @@ Framing,C-Studs,20 Gauge,362S162-20,3-5/8",1-5/8",33</pre>
       }
 
       if (empty($products)) {
-        wp_send_json_error(['message' => __('No products selected', 'submittal-builder')], 400);
+        wp_send_json_error(['message' => __('No products selected', 'submittal-spec-sheet-builder')], 400);
       }
 
       // --- Receive user-selected field values from frontend dropdowns ---
@@ -7361,7 +7352,7 @@ Framing,C-Studs,20 Gauge,362S162-20,3-5/8",1-5/8",33</pre>
       }
 
       if (empty($product_ids)) {
-        wp_send_json_error(['message' => __('Invalid product data - no valid product IDs', 'submittal-builder')], 400);
+        wp_send_json_error(['message' => __('Invalid product data - no valid product IDs', 'submittal-spec-sheet-builder')], 400);
       }
 
       // Load full product data from database
@@ -7377,7 +7368,7 @@ Framing,C-Studs,20 Gauge,362S162-20,3-5/8",1-5/8",33</pre>
       );
 
       if (empty($full_products)) {
-        wp_send_json_error(['message' => __('No products found in database', 'submittal-builder')], 400);
+        wp_send_json_error(['message' => __('No products found in database', 'submittal-spec-sheet-builder')], 400);
       }
 
       // Create a map of product IDs to their quantity/note from review payload
@@ -7439,16 +7430,16 @@ Framing,C-Studs,20 Gauge,362S162-20,3-5/8",1-5/8",33</pre>
 
         // Extract breadcrumb components (Category / Product / Type)
         // Path array contains: [0] => Category, [1] => Product, [2] => Type (if 4-level hierarchy)
-        $category = isset($path[0]) ? $path[0] : __('Uncategorized', 'submittal-builder');
+        $category = isset($path[0]) ? $path[0] : __('Uncategorized', 'submittal-spec-sheet-builder');
         $product_label = isset($path[1]) ? $path[1] : '';
         $type_label = isset($path[2]) ? $path[2] : '';
 
         $formatted_products[] = [
           'id' => $product_id,
           'node_id' => $product_id,
-          'model' => isset($product['title']) ? $product['title'] : __('Unnamed Product', 'submittal-builder'),
-          'name' => isset($product['title']) ? $product['title'] : __('Unnamed Product', 'submittal-builder'),
-          'title' => isset($product['title']) ? $product['title'] : __('Unnamed Product', 'submittal-builder'),
+          'model' => isset($product['title']) ? $product['title'] : __('Unnamed Product', 'submittal-spec-sheet-builder'),
+          'name' => isset($product['title']) ? $product['title'] : __('Unnamed Product', 'submittal-spec-sheet-builder'),
+          'title' => isset($product['title']) ? $product['title'] : __('Unnamed Product', 'submittal-spec-sheet-builder'),
           'category' => $category,
           'product_label' => $product_label,
           'type_label' => $type_label,
@@ -7478,7 +7469,7 @@ Framing,C-Studs,20 Gauge,362S162-20,3-5/8",1-5/8",33</pre>
       $autoload = plugin_dir_path(__FILE__) . 'vendor/autoload.php';
       if (!file_exists($autoload)) {
         error_log('[SFB] Missing composer autoload at: ' . $autoload);
-        wp_send_json_error(['message' => __('PDF engine not installed. Please run composer install.', 'submittal-builder')], 500);
+        wp_send_json_error(['message' => __('PDF engine not installed. Please run composer install.', 'submittal-spec-sheet-builder')], 500);
       }
       require_once $autoload;
 
@@ -7593,14 +7584,14 @@ Framing,C-Studs,20 Gauge,362S162-20,3-5/8",1-5/8",33</pre>
         wp_send_json_success([
           'url' => $url,
           'filename' => $filename,
-          'message' => __('PDF generated successfully', 'submittal-builder')
+          'message' => __('PDF generated successfully', 'submittal-spec-sheet-builder')
         ]);
 
       } catch (\Throwable $pdf_error) {
         error_log('[SFB] PDF rendering error: ' . $pdf_error->getMessage() . "\n" . $pdf_error->getTraceAsString());
         wp_send_json_error([
           'message' => sprintf(
-            __('PDF engine error: %s', 'submittal-builder'),
+            __('PDF engine error: %s', 'submittal-spec-sheet-builder'),
             $pdf_error->getMessage()
           )
         ], 500);
@@ -7608,7 +7599,7 @@ Framing,C-Studs,20 Gauge,362S162-20,3-5/8",1-5/8",33</pre>
 
     } catch (\Throwable $e) {
       error_log('[SFB] PDF generation fatal error: ' . $e->getMessage() . "\n" . $e->getTraceAsString());
-      wp_send_json_error(['message' => __('Server error during PDF generation. Please check the error log.', 'submittal-builder')], 500);
+      wp_send_json_error(['message' => __('Server error during PDF generation. Please check the error log.', 'submittal-spec-sheet-builder')], 500);
     }
   }
   */
@@ -7627,7 +7618,7 @@ Framing,C-Studs,20 Gauge,362S162-20,3-5/8",1-5/8",33</pre>
     try {
       // --- Verify nonce for security ---
       if (!isset($p['nonce']) || !wp_verify_nonce($p['nonce'], 'sfb_frontend_builder')) {
-        return new WP_Error('invalid_nonce', __('Invalid security token', 'submittal-builder'), ['status' => 403]);
+        return new WP_Error('invalid_nonce', __('Invalid security token', 'submittal-spec-sheet-builder'), ['status' => 403]);
       }
 
       // --- Extract parameters (same as AJAX handler) ---
@@ -7646,7 +7637,7 @@ Framing,C-Studs,20 Gauge,362S162-20,3-5/8",1-5/8",33</pre>
       }
 
       if (empty($products)) {
-        return new WP_Error('bad_request', __('No products selected', 'submittal-builder'), ['status' => 400]);
+        return new WP_Error('bad_request', __('No products selected', 'submittal-spec-sheet-builder'), ['status' => 400]);
       }
 
       // --- Receive user-selected field values from frontend dropdowns ---
@@ -7677,7 +7668,7 @@ Framing,C-Studs,20 Gauge,362S162-20,3-5/8",1-5/8",33</pre>
       }
 
       if (empty($product_ids)) {
-        return new WP_Error('bad_request', __('Invalid product data - no valid product IDs', 'submittal-builder'), ['status' => 400]);
+        return new WP_Error('bad_request', __('Invalid product data - no valid product IDs', 'submittal-spec-sheet-builder'), ['status' => 400]);
       }
 
       // --- Load full product data from database (reuse existing logic) ---
@@ -7693,7 +7684,7 @@ Framing,C-Studs,20 Gauge,362S162-20,3-5/8",1-5/8",33</pre>
       );
 
       if (empty($full_products)) {
-        return new WP_Error('bad_request', __('No products found in database', 'submittal-builder'), ['status' => 400]);
+        return new WP_Error('bad_request', __('No products found in database', 'submittal-spec-sheet-builder'), ['status' => 400]);
       }
 
       // --- Create product metadata map ---
@@ -7745,16 +7736,16 @@ Framing,C-Studs,20 Gauge,362S162-20,3-5/8",1-5/8",33</pre>
 
         // Get product path/category
         $path = $this->get_node_breadcrumb($product['id']);
-        $category = isset($path[0]) ? $path[0] : __('Uncategorized', 'submittal-builder');
+        $category = isset($path[0]) ? $path[0] : __('Uncategorized', 'submittal-spec-sheet-builder');
         $product_label = isset($path[1]) ? $path[1] : '';
         $type_label = isset($path[2]) ? $path[2] : '';
 
         $formatted_products[] = [
           'id' => $product_id,
           'node_id' => $product_id,
-          'model' => isset($product['title']) ? $product['title'] : __('Unnamed Product', 'submittal-builder'),
-          'name' => isset($product['title']) ? $product['title'] : __('Unnamed Product', 'submittal-builder'),
-          'title' => isset($product['title']) ? $product['title'] : __('Unnamed Product', 'submittal-builder'),
+          'model' => isset($product['title']) ? $product['title'] : __('Unnamed Product', 'submittal-spec-sheet-builder'),
+          'name' => isset($product['title']) ? $product['title'] : __('Unnamed Product', 'submittal-spec-sheet-builder'),
+          'title' => isset($product['title']) ? $product['title'] : __('Unnamed Product', 'submittal-spec-sheet-builder'),
           'category' => $category,
           'product_label' => $product_label,
           'type_label' => $type_label,
@@ -7835,7 +7826,7 @@ Framing,C-Studs,20 Gauge,362S162-20,3-5/8",1-5/8",33</pre>
       // Group products by category
       $grouped_products = [];
       foreach ($formatted_products as $product) {
-        $category = $product['category'] ?? __('Uncategorized', 'submittal-builder');
+        $category = $product['category'] ?? __('Uncategorized', 'submittal-spec-sheet-builder');
         if (!isset($grouped_products[$category])) {
           $grouped_products[$category] = [];
         }
@@ -7850,7 +7841,7 @@ Framing,C-Studs,20 Gauge,362S162-20,3-5/8",1-5/8",33</pre>
   <meta charset="utf-8">
   <title>Submittal Package</title>
   <style>
-    :root{ --ink:#111827; --muted:#6b7280; --line:#e5e7eb; --bg:#ffffff; --accent:<?= esc_attr($brand['primary_color']); ?>; }
+    :root{ --ink:#111827; --muted:#6b7280; --line:#e5e7eb; --bg:#ffffff; --accent:<?php echo  esc_attr($brand['primary_color']); ?>; }
     *{ box-sizing:border-box; margin:0; padding:0; }
     body{ font-family: system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif; color:var(--ink); background:#fff; line-height:1.6; }
     h1,h2,h3{ margin:0 0 10px; font-weight:700; }
@@ -7887,7 +7878,7 @@ Framing,C-Studs,20 Gauge,362S162-20,3-5/8",1-5/8",33</pre>
       // --- Save PDF using Dompdf ---
       $autoload = plugin_dir_path(__FILE__) . 'vendor/autoload.php';
       if (!file_exists($autoload)) {
-        return new WP_Error('server_error', __('PDF engine not installed. Please run composer install.', 'submittal-builder'), ['status' => 500]);
+        return new WP_Error('server_error', __('PDF engine not installed. Please run composer install.', 'submittal-spec-sheet-builder'), ['status' => 500]);
       }
       require_once $autoload;
 
@@ -7946,7 +7937,7 @@ Framing,C-Studs,20 Gauge,362S162-20,3-5/8",1-5/8",33</pre>
       $bytes_written = file_put_contents($filepath, $pdf_output);
 
       if ($bytes_written === false || !file_exists($filepath)) {
-        return new WP_Error('server_error', __('Failed to write PDF file', 'submittal-builder'), ['status' => 500]);
+        return new WP_Error('server_error', __('Failed to write PDF file', 'submittal-spec-sheet-builder'), ['status' => 500]);
       }
 
       $url = trailingslashit($upload_dir['baseurl']) . 'sfb/' . $filename;
@@ -7985,12 +7976,12 @@ Framing,C-Studs,20 Gauge,362S162-20,3-5/8",1-5/8",33</pre>
     try {
       // Verify nonce
       if (!isset($_POST['_ajax_nonce']) || !wp_verify_nonce($_POST['_ajax_nonce'], 'sfb_frontend')) {
-        wp_send_json_error(['message' => __('Invalid security token', 'submittal-builder')], 403);
+        wp_send_json_error(['message' => __('Invalid security token', 'submittal-spec-sheet-builder')], 403);
       }
 
       // Check capability
       if (!current_user_can('edit_sfb_branding')) {
-        wp_send_json_error(['message' => __('You do not have permission to edit branding settings', 'submittal-builder')], 403);
+        wp_send_json_error(['message' => __('You do not have permission to edit branding settings', 'submittal-spec-sheet-builder')], 403);
       }
 
       // Get and decode data
@@ -7999,7 +7990,7 @@ Framing,C-Studs,20 Gauge,362S162-20,3-5/8",1-5/8",33</pre>
 
       if (json_last_error() !== JSON_ERROR_NONE) {
         error_log('[SFB] Invalid JSON in brand save: ' . json_last_error_msg());
-        wp_send_json_error(['message' => __('Invalid JSON data', 'submittal-builder')], 400);
+        wp_send_json_error(['message' => __('Invalid JSON data', 'submittal-spec-sheet-builder')], 400);
       }
 
       // Delegate to SFB_Branding class (Phase 7 refactor)
@@ -8017,7 +8008,7 @@ Framing,C-Studs,20 Gauge,362S162-20,3-5/8",1-5/8",33</pre>
 
     } catch (\Throwable $e) {
       error_log('[SFB] Brand save error: ' . $e->getMessage() . "\n" . $e->getTraceAsString());
-      wp_send_json_error(['message' => __('Server error saving brand settings', 'submittal-builder')], 500);
+      wp_send_json_error(['message' => __('Server error saving brand settings', 'submittal-spec-sheet-builder')], 500);
     }
   }
 
@@ -8025,17 +8016,17 @@ Framing,C-Studs,20 Gauge,362S162-20,3-5/8",1-5/8",33</pre>
   function ajax_export_pack() {
     // Security checks
     if (!current_user_can('access_sfb_agency')) {
-      wp_die(__('Unauthorized.', 'submittal-builder'));
+      wp_die(__('Unauthorized.', 'submittal-spec-sheet-builder'));
     }
 
     if (!sfb_is_agency_license()) {
-      wp_die(__('Agency Packs require an Agency license.', 'submittal-builder'));
+      wp_die(__('Agency Packs require an Agency license.', 'submittal-spec-sheet-builder'));
     }
 
     // Verify nonce
     $pack_id = isset($_GET['pack_id']) ? sanitize_text_field($_GET['pack_id']) : '';
     if (!$pack_id || !check_admin_referer('sfb_export_pack_' . $pack_id)) {
-      wp_die(__('Invalid request.', 'submittal-builder'));
+      wp_die(__('Invalid request.', 'submittal-spec-sheet-builder'));
     }
 
     // Get pack
@@ -8049,7 +8040,7 @@ Framing,C-Studs,20 Gauge,362S162-20,3-5/8",1-5/8",33</pre>
     }
 
     if (!$pack) {
-      wp_die(__('Pack not found.', 'submittal-builder'));
+      wp_die(__('Pack not found.', 'submittal-spec-sheet-builder'));
     }
 
     // Prepare JSON
@@ -8085,10 +8076,10 @@ Framing,C-Studs,20 Gauge,362S162-20,3-5/8",1-5/8",33</pre>
   public function generate_pdf_packet($data = []) {
     // 1) Security
     if (!isset($_GET['_wpnonce']) || !wp_verify_nonce($_GET['_wpnonce'], 'sfb_test_pdf')) {
-      wp_die(esc_html__('Invalid request (nonce).', 'submittal-builder'));
+      wp_die(esc_html__('Invalid request (nonce).', 'submittal-spec-sheet-builder'));
     }
     if (!current_user_can('manage_options')) {
-      wp_die(esc_html__('Insufficient permissions.', 'submittal-builder'));
+      wp_die(esc_html__('Insufficient permissions.', 'submittal-spec-sheet-builder'));
     }
 
     // 2) Get branding settings
@@ -8391,7 +8382,7 @@ Framing,C-Studs,20 Gauge,362S162-20,3-5/8",1-5/8",33</pre>
                     <img src="<?php echo esc_url($logo_url); ?>" alt="<?php echo esc_attr($company_name); ?> Logo" class="cover-logo" />
                 <?php endif; ?>
                 <div class="cover-title"><?php echo esc_html($company_name); ?></div>
-                <div class="cover-subtitle"><?php esc_html_e('Submittal & Spec Sheet Packet', 'submittal-builder'); ?></div>
+                <div class="cover-subtitle"><?php esc_html_e('Submittal & Spec Sheet Packet', 'submittal-spec-sheet-builder'); ?></div>
                 <div class="cover-date">
                     <?php echo esc_html(date('F j, Y')); ?>
                 </div>
@@ -8409,17 +8400,17 @@ Framing,C-Studs,20 Gauge,362S162-20,3-5/8",1-5/8",33</pre>
 
         <!-- Summary Section -->
         <div class="section summary">
-            <h2><?php esc_html_e('Summary', 'submittal-builder'); ?></h2>
-            <p class="small"><?php printf(esc_html__('This packet contains %d product(s) grouped by category.', 'submittal-builder'), count($sample_products)); ?></p>
+            <h2><?php esc_html_e('Summary', 'submittal-spec-sheet-builder'); ?></h2>
+            <p class="small"><?php printf(esc_html__('This packet contains %d product(s) grouped by category.', 'submittal-spec-sheet-builder'), count($sample_products)); ?></p>
             <?php
             $groups = [];
             foreach ($sample_products as $p) {
-              $g = isset($p['path'][0]) ? $p['path'][0] : __('Uncategorized', 'submittal-builder');
+              $g = isset($p['path'][0]) ? $p['path'][0] : __('Uncategorized', 'submittal-spec-sheet-builder');
               $groups[$g][] = $p;
             }
             foreach ($groups as $g => $items) {
               echo '<div class="summary-group">';
-              echo '<strong>' . esc_html($g) . '</strong> — ' . sprintf(esc_html__('%d item(s)', 'submittal-builder'), count($items));
+              echo '<strong>' . esc_html($g) . '</strong> — ' . sprintf(esc_html__('%d item(s)', 'submittal-spec-sheet-builder'), count($items));
               echo '</div>';
             }
             ?>
@@ -8427,22 +8418,22 @@ Framing,C-Studs,20 Gauge,362S162-20,3-5/8",1-5/8",33</pre>
 
         <!-- Table of Contents -->
         <div class="section toc pagebreak">
-            <h2><?php esc_html_e('Table of Contents', 'submittal-builder'); ?></h2>
+            <h2><?php esc_html_e('Table of Contents', 'submittal-spec-sheet-builder'); ?></h2>
             <ol>
-                <li><a href="#summary"><?php esc_html_e('Summary', 'submittal-builder'); ?></a></li>
-                <li><a href="#products"><?php esc_html_e('Product Specifications', 'submittal-builder'); ?></a></li>
+                <li><a href="#summary"><?php esc_html_e('Summary', 'submittal-spec-sheet-builder'); ?></a></li>
+                <li><a href="#products"><?php esc_html_e('Product Specifications', 'submittal-spec-sheet-builder'); ?></a></li>
             </ol>
-            <p class="small"><?php esc_html_e('Note: Links are clickable in supported PDF viewers.', 'submittal-builder'); ?></p>
+            <p class="small"><?php esc_html_e('Note: Links are clickable in supported PDF viewers.', 'submittal-spec-sheet-builder'); ?></p>
         </div>
 
         <!-- Products Section (Grouped by Category) -->
         <div id="products" class="section products">
-            <h2><?php esc_html_e('Product Specifications', 'submittal-builder'); ?></h2>
+            <h2><?php esc_html_e('Product Specifications', 'submittal-spec-sheet-builder'); ?></h2>
             <?php
             // Group products by category
             $categories = [];
             foreach ($sample_products as $p) {
-                $cat = isset($p['path'][0]) ? $p['path'][0] : __('Uncategorized', 'submittal-builder');
+                $cat = isset($p['path'][0]) ? $p['path'][0] : __('Uncategorized', 'submittal-spec-sheet-builder');
                 $categories[$cat][] = $p;
             }
 
@@ -8457,9 +8448,9 @@ Framing,C-Studs,20 Gauge,362S162-20,3-5/8",1-5/8",33</pre>
                     <table>
                         <thead>
                             <tr>
-                                <th style="width: 35%;"><?php esc_html_e('Product', 'submittal-builder'); ?></th>
-                                <th style="width: 45%;"><?php esc_html_e('Specifications', 'submittal-builder'); ?></th>
-                                <th style="width: 20%;"><?php esc_html_e('Notes', 'submittal-builder'); ?></th>
+                                <th style="width: 35%;"><?php esc_html_e('Product', 'submittal-spec-sheet-builder'); ?></th>
+                                <th style="width: 45%;"><?php esc_html_e('Specifications', 'submittal-spec-sheet-builder'); ?></th>
+                                <th style="width: 20%;"><?php esc_html_e('Notes', 'submittal-spec-sheet-builder'); ?></th>
                             </tr>
                         </thead>
                         <tbody>
@@ -8474,7 +8465,7 @@ Framing,C-Studs,20 Gauge,362S162-20,3-5/8",1-5/8",33</pre>
                                         </div>
                                     <?php endforeach; ?>
                                     <?php if (empty($p['specs'])): ?>
-                                        <span class="small"><?php esc_html_e('No specifications available', 'submittal-builder'); ?></span>
+                                        <span class="small"><?php esc_html_e('No specifications available', 'submittal-spec-sheet-builder'); ?></span>
                                     <?php endif; ?>
                                 </td>
                                 <td class="note"><?php echo esc_html($p['note'] ?? '—'); ?></td>
@@ -8840,7 +8831,7 @@ Framing,C-Studs,20 Gauge,362S162-20,3-5/8",1-5/8",33</pre>
 
     // Check if we're on any of our plugin pages
     // Screen IDs typically look like: 'toplevel_page_sfb' or 'submittal-builder_page_sfb-onboarding'
-    $is_sfb_page = (strpos($screen->id, 'sfb') !== false || strpos($screen->id, 'submittal-builder') !== false);
+    $is_sfb_page = (strpos($screen->id, 'sfb') !== false || strpos($screen->id, 'submittal-spec-sheet-builder') !== false);
     if (!$is_sfb_page) return;
 
     // Also check page param as fallback
@@ -9141,7 +9132,7 @@ Framing,C-Studs,20 Gauge,362S162-20,3-5/8",1-5/8",33</pre>
       }
 
       if (!$agency_pack) {
-        return new WP_Error('pack_not_found', __('Agency Pack not found', 'submittal-builder'), ['status' => 404]);
+        return new WP_Error('pack_not_found', __('Agency Pack not found', 'submittal-spec-sheet-builder'), ['status' => 404]);
       }
 
       $pack_data = $agency_pack['data'];
@@ -9198,19 +9189,19 @@ Framing,C-Studs,20 Gauge,362S162-20,3-5/8",1-5/8",33</pre>
         ];
       }
 
-      return new WP_Error('invalid_pack', __('Invalid Agency Pack format', 'submittal-builder'), ['status' => 500]);
+      return new WP_Error('invalid_pack', __('Invalid Agency Pack format', 'submittal-spec-sheet-builder'), ['status' => 500]);
     }
 
     // Load from industry pack JSON
     $json_file = plugin_dir_path(__FILE__) . 'assets/demo/' . $industry_pack . '.json';
     if (!file_exists($json_file)) {
-      return new WP_Error('pack_not_found', __('Industry pack not found', 'submittal-builder'), ['status' => 404]);
+      return new WP_Error('pack_not_found', __('Industry pack not found', 'submittal-spec-sheet-builder'), ['status' => 404]);
     }
 
     $pack_data = json_decode(file_get_contents($json_file), true);
 
     if (!$pack_data || !isset($pack_data['categories'])) {
-      return new WP_Error('invalid_pack', __('Invalid pack format', 'submittal-builder'), ['status' => 500]);
+      return new WP_Error('invalid_pack', __('Invalid pack format', 'submittal-spec-sheet-builder'), ['status' => 500]);
     }
 
     // Size limits for how many categories/types/items to load
@@ -10380,7 +10371,7 @@ Framing,C-Studs,20 Gauge,362S162-20,3-5/8",1-5/8",33</pre>
         return new WP_Error(
           'rate_limit_exceeded',
           sprintf(
-            __('Too many PDF generation requests. Limit: %d per hour. Please try again in %d seconds.', 'submittal-builder'),
+            __('Too many PDF generation requests. Limit: %d per hour. Please try again in %d seconds.', 'submittal-spec-sheet-builder'),
             $rate_limit['limit'],
             $rate_limit['retry_after']
           ),
@@ -10489,7 +10480,7 @@ Framing,C-Studs,20 Gauge,362S162-20,3-5/8",1-5/8",33</pre>
   <meta charset="utf-8">
   <title>Submittal Package</title>
   <style>
-    :root{ --ink:#111827; --muted:#6b7280; --line:#e5e7eb; --bg:#ffffff; --accent:<?= esc_attr($brand['primary_color']); ?>; }
+    :root{ --ink:#111827; --muted:#6b7280; --line:#e5e7eb; --bg:#ffffff; --accent:<?php echo  esc_attr($brand['primary_color']); ?>; }
     *{ box-sizing:border-box; margin:0; padding:0; }
     body{ font-family: system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif; color:var(--ink); background:#fff; line-height:1.6; }
     h1,h2,h3{ margin:0 0 10px; font-weight:700; }
@@ -10840,9 +10831,9 @@ Framing,C-Studs,20 Gauge,362S162-20,3-5/8",1-5/8",33</pre>
     ?>
     <div style="margin-top: 40px; padding: 16px 20px; background: #f9fafb; border: 1px solid #e5e7eb; border-radius: 8px; text-align: center;">
       <p style="margin: 0; color: #6b7280; font-size: 14px;">
-        <?php esc_html_e('Found a bug? Have a suggestion?', 'submittal-builder'); ?>
+        <?php esc_html_e('Found a bug? Have a suggestion?', 'submittal-spec-sheet-builder'); ?>
         <a href="https://webstuffguylabs.com/support/" target="_blank" rel="noopener noreferrer" style="color: #2563eb; text-decoration: none; font-weight: 600;">
-          <?php esc_html_e('Tell us about it', 'submittal-builder'); ?> →
+          <?php esc_html_e('Tell us about it', 'submittal-spec-sheet-builder'); ?> →
         </a>
       </p>
     </div>
@@ -11036,7 +11027,7 @@ Framing,C-Studs,20 Gauge,362S162-20,3-5/8",1-5/8",33</pre>
       return new WP_Error(
         'rate_limit_exceeded',
         sprintf(
-          __('Too many draft creation requests. Limit: %d per hour. Please try again in %d seconds.', 'submittal-builder'),
+          __('Too many draft creation requests. Limit: %d per hour. Please try again in %d seconds.', 'submittal-spec-sheet-builder'),
           $rate_limit['limit'],
           $rate_limit['retry_after']
         ),
@@ -11226,7 +11217,7 @@ Framing,C-Studs,20 Gauge,362S162-20,3-5/8",1-5/8",33</pre>
       if (!file_exists($json_file)) {
         return [
           'success' => false,
-          'message' => __('Industry pack not found.', 'submittal-builder')
+          'message' => __('Industry pack not found.', 'submittal-spec-sheet-builder')
         ];
       }
 
@@ -11234,7 +11225,7 @@ Framing,C-Studs,20 Gauge,362S162-20,3-5/8",1-5/8",33</pre>
       if (!$data ||!isset($data['categories'])) {
         return [
           'success' => false,
-          'message' => __('Invalid pack format.', 'submittal-builder')
+          'message' => __('Invalid pack format.', 'submittal-spec-sheet-builder')
         ];
       }
 
@@ -11346,9 +11337,9 @@ Framing,C-Studs,20 Gauge,362S162-20,3-5/8",1-5/8",33</pre>
       }
 
       // Build success message with skip info
-      $message = sprintf(__('Successfully seeded "%s" catalog!', 'submittal-builder'), $data['title']);
+      $message = sprintf(__('Successfully seeded "%s" catalog!', 'submittal-spec-sheet-builder'), $data['title']);
       if ($stats['skipped'] > 0) {
-        $message .= ' ' . sprintf(__('(%d items already existed and were skipped)', 'submittal-builder'), $stats['skipped']);
+        $message .= ' ' . sprintf(__('(%d items already existed and were skipped)', 'submittal-spec-sheet-builder'), $stats['skipped']);
       }
 
       $result = [
@@ -11372,7 +11363,7 @@ Framing,C-Studs,20 Gauge,362S162-20,3-5/8",1-5/8",33</pre>
     } catch (\Throwable $e) {
       return [
         'success' => false,
-        'message' => sprintf(__('Error seeding pack: %s', 'submittal-builder'), $e->getMessage())
+        'message' => sprintf(__('Error seeding pack: %s', 'submittal-spec-sheet-builder'), $e->getMessage())
       ];
     }
   }
@@ -11400,7 +11391,7 @@ Framing,C-Studs,20 Gauge,362S162-20,3-5/8",1-5/8",33</pre>
       if (empty($models)) {
         return [
           'success' => false,
-          'message' => __('No items found to create draft.', 'submittal-builder')
+          'message' => __('No items found to create draft.', 'submittal-spec-sheet-builder')
         ];
       }
 
@@ -11467,7 +11458,7 @@ Framing,C-Studs,20 Gauge,362S162-20,3-5/8",1-5/8",33</pre>
     } catch (\Throwable $e) {
       return [
         'success' => false,
-        'message' => sprintf(__('Error creating demo draft: %s', 'submittal-builder'), $e->getMessage())
+        'message' => sprintf(__('Error creating demo draft: %s', 'submittal-spec-sheet-builder'), $e->getMessage())
       ];
     }
   }
@@ -11522,7 +11513,7 @@ Framing,C-Studs,20 Gauge,362S162-20,3-5/8",1-5/8",33</pre>
       return [
         'success' => true,
         'message' => sprintf(
-          __('Demo reset complete. Removed %d posts, %d terms, %d files.', 'submittal-builder'),
+          __('Demo reset complete. Removed %d posts, %d terms, %d files.', 'submittal-spec-sheet-builder'),
           $posts_deleted,
           $terms_deleted,
           $files_deleted
@@ -11532,7 +11523,7 @@ Framing,C-Studs,20 Gauge,362S162-20,3-5/8",1-5/8",33</pre>
     } catch (\Throwable $e) {
       return [
         'success' => false,
-        'message' => sprintf(__('Error resetting demo content: %s', 'submittal-builder'), $e->getMessage())
+        'message' => sprintf(__('Error resetting demo content: %s', 'submittal-spec-sheet-builder'), $e->getMessage())
       ];
     }
   }
@@ -11678,7 +11669,7 @@ Framing,C-Studs,20 Gauge,362S162-20,3-5/8",1-5/8",33</pre>
       return [
         'success' => true,
         'message' => sprintf(
-          __('✅ Demo data generated successfully! Created %d tracking links, %d agency packs, and %d days of analytics data. Visit Tracking, Agency, and Agency Analytics pages to see the results.', 'submittal-builder'),
+          __('✅ Demo data generated successfully! Created %d tracking links, %d agency packs, and %d days of analytics data. Visit Tracking, Agency, and Agency Analytics pages to see the results.', 'submittal-spec-sheet-builder'),
           $tracking_count,
           $pack_count,
           $analytics_count
@@ -11688,7 +11679,7 @@ Framing,C-Studs,20 Gauge,362S162-20,3-5/8",1-5/8",33</pre>
     } catch (\Throwable $e) {
       return [
         'success' => false,
-        'message' => sprintf(__('Error generating demo data: %s', 'submittal-builder'), $e->getMessage())
+        'message' => sprintf(__('Error generating demo data: %s', 'submittal-spec-sheet-builder'), $e->getMessage())
       ];
     }
   }
@@ -11727,7 +11718,7 @@ Framing,C-Studs,20 Gauge,362S162-20,3-5/8",1-5/8",33</pre>
       return [
         'success' => true,
         'message' => sprintf(
-          __('✅ Demo data cleared successfully! Removed approximately %d demo items. Your real data remains intact.', 'submittal-builder'),
+          __('✅ Demo data cleared successfully! Removed approximately %d demo items. Your real data remains intact.', 'submittal-spec-sheet-builder'),
           $cleared_count
         )
       ];
@@ -11735,7 +11726,7 @@ Framing,C-Studs,20 Gauge,362S162-20,3-5/8",1-5/8",33</pre>
     } catch (\Throwable $e) {
       return [
         'success' => false,
-        'message' => sprintf(__('Error clearing demo data: %s', 'submittal-builder'), $e->getMessage())
+        'message' => sprintf(__('Error clearing demo data: %s', 'submittal-spec-sheet-builder'), $e->getMessage())
       ];
     }
   }
@@ -11782,7 +11773,7 @@ Framing,C-Studs,20 Gauge,362S162-20,3-5/8",1-5/8",33</pre>
       if (empty($models)) {
         return [
           'success' => false,
-          'message' => __('No models found. Please seed demo catalog first.', 'submittal-builder')
+          'message' => __('No models found. Please seed demo catalog first.', 'submittal-spec-sheet-builder')
         ];
       }
 
@@ -11842,14 +11833,14 @@ Framing,C-Studs,20 Gauge,362S162-20,3-5/8",1-5/8",33</pre>
 
       return [
         'success' => true,
-        'message' => sprintf(__('Demo draft created with %d items!', 'submittal-builder'), count($items)),
+        'message' => sprintf(__('Demo draft created with %d items!', 'submittal-spec-sheet-builder'), count($items)),
         'url' => $share_url
       ];
 
     } catch (\Throwable $e) {
       return [
         'success' => false,
-        'message' => sprintf(__('Error creating demo draft: %s', 'submittal-builder'), $e->getMessage())
+        'message' => sprintf(__('Error creating demo draft: %s', 'submittal-spec-sheet-builder'), $e->getMessage())
       ];
     }
   }
@@ -11913,13 +11904,13 @@ Framing,C-Studs,20 Gauge,362S162-20,3-5/8",1-5/8",33</pre>
 
       return [
         'success' => true,
-        'message' => __('All SFB data has been reset successfully.', 'submittal-builder')
+        'message' => __('All SFB data has been reset successfully.', 'submittal-spec-sheet-builder')
       ];
 
     } catch (\Throwable $e) {
       return [
         'success' => false,
-        'message' => sprintf(__('Error resetting data: %s', 'submittal-builder'), $e->getMessage())
+        'message' => sprintf(__('Error resetting data: %s', 'submittal-spec-sheet-builder'), $e->getMessage())
       ];
     }
   }
