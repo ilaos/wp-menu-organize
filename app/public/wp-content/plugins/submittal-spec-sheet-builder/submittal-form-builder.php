@@ -6943,6 +6943,7 @@ Framing,C-Studs,20 Gauge,362S162-20,3-5/8",1-5/8",33</pre>
     update_option('sfb_packets', []);
 
     wp_send_json_success([
+      /* translators: %d: number of tracking links cleared */
       'message' => sprintf(__('✅ Cleared %d tracking links', 'submittal-spec-sheet-builder'), $count),
       'total' => 0,
       'viewed' => 0
@@ -6980,6 +6981,7 @@ Framing,C-Studs,20 Gauge,362S162-20,3-5/8",1-5/8",33</pre>
     }
 
     wp_send_json_success([
+      /* translators: %d: number of database tables optimized */
       'message' => sprintf(__('✅ Optimized %d database tables', 'submittal-spec-sheet-builder'), $optimized)
     ]);
   }
@@ -7018,6 +7020,7 @@ Framing,C-Studs,20 Gauge,362S162-20,3-5/8",1-5/8",33</pre>
     ");
     $cleaned += (int) $orphaned_meta;
 
+      /* translators: %d: number of orphaned records removed */
     wp_send_json_success([
       'message' => sprintf(__('✅ Removed %d orphaned records', 'submittal-spec-sheet-builder'), $cleaned)
     ]);
@@ -8423,12 +8426,14 @@ Framing,C-Studs,20 Gauge,362S162-20,3-5/8",1-5/8",33</pre>
         <!-- Summary Section -->
         <div class="section summary">
             <h2><?php esc_html_e('Summary', 'submittal-spec-sheet-builder'); ?></h2>
+            <?php /* translators: %d: number of products in packet */ ?>
             <p class="small"><?php printf(esc_html__('This packet contains %d product(s) grouped by category.', 'submittal-spec-sheet-builder'), count($sample_products)); ?></p>
             <?php
             $groups = [];
             foreach ($sample_products as $p) {
               $g = isset($p['path'][0]) ? $p['path'][0] : __('Uncategorized', 'submittal-spec-sheet-builder');
               $groups[$g][] = $p;
+              /* translators: %d: number of items in category */
             }
             foreach ($groups as $g => $items) {
               echo '<div class="summary-group">';
@@ -10388,12 +10393,13 @@ Framing,C-Studs,20 Gauge,362S162-20,3-5/8",1-5/8",33</pre>
       $p = $req->get_json_params();
 
       // Rate limiting for PDF generation (5 per hour per IP)
+          /* translators: 1: rate limit per hour, 2: retry after seconds */
       $rate_limit = $this->check_rate_limit('pdf_generate', 5, 3600);
       if (!$rate_limit['allowed']) {
         return new WP_Error(
           'rate_limit_exceeded',
           sprintf(
-            __('Too many PDF generation requests. Limit: %d per hour. Please try again in %d seconds.', 'submittal-spec-sheet-builder'),
+            __('Too many PDF generation requests. Limit: %1$d per hour. Please try again in %2$d seconds.', 'submittal-spec-sheet-builder'),
             $rate_limit['limit'],
             $rate_limit['retry_after']
           ),
@@ -11044,12 +11050,13 @@ Framing,C-Studs,20 Gauge,362S162-20,3-5/8",1-5/8",33</pre>
     }
 
     // Rate limiting for draft creation (5 per hour per IP)
+        /* translators: 1: rate limit per hour, 2: retry after seconds */
     $rate_limit = $this->check_rate_limit('draft_create', 5, 3600);
     if (!$rate_limit['allowed']) {
       return new WP_Error(
         'rate_limit_exceeded',
         sprintf(
-          __('Too many draft creation requests. Limit: %d per hour. Please try again in %d seconds.', 'submittal-spec-sheet-builder'),
+          __('Too many draft creation requests. Limit: %1$d per hour. Please try again in %2$d seconds.', 'submittal-spec-sheet-builder'),
           $rate_limit['limit'],
           $rate_limit['retry_after']
         ),
