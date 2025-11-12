@@ -800,6 +800,7 @@ class SFB_PDF_Generator {
 
   <p class="summary-intro">
     <?php
+    /* translators: 1: number of models, 2: number of products */
     printf(
       esc_html__('This packet contains %1$d model(s) across %2$d products.', 'submittal-spec-sheet-builder'),
       $total_products,
