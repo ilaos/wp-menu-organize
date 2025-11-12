@@ -64,8 +64,8 @@ function sfb_render_license_logs_page() {
 					echo paginate_links([
 						'base' => add_query_arg('paged', '%#%'),
 						'format' => '',
-						'prev_text' => __('&laquo;'),
-						'next_text' => __('&raquo;'),
+						'prev_text' => __('&laquo;', 'submittal-spec-sheet-builder'),
+						'next_text' => __('&raquo;', 'submittal-spec-sheet-builder'),
 						'total' => $total_pages,
 						'current' => $current_page
 					]);
@@ -140,8 +140,8 @@ function sfb_render_license_logs_page() {
 					echo paginate_links([
 						'base' => add_query_arg('paged', '%#%'),
 						'format' => '',
-						'prev_text' => __('&laquo;'),
-						'next_text' => __('&raquo;'),
+						'prev_text' => __('&laquo;', 'submittal-spec-sheet-builder'),
+						'next_text' => __('&raquo;', 'submittal-spec-sheet-builder'),
 						'total' => $total_pages,
 						'current' => $current_page
 					]);

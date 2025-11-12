@@ -859,7 +859,7 @@ final class SFB_Rest {
       if (!$same_parent && !$valid_nesting) {
         return new WP_Error(
           'sfb_invalid_nesting',
-          __('Invalid move: node type cannot be nested under the selected parent.', 'submittal-form-builder'),
+          __('Invalid move: node type cannot be nested under the selected parent.', 'submittal-spec-sheet-builder'),
           ['status' => 400]
         );
       }

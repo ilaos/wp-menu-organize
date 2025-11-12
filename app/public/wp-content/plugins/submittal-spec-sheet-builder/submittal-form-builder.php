@@ -5349,12 +5349,12 @@ final class SFB_Plugin {
   function render_import_page() {
     // Security check
     if (!current_user_can('manage_options')) {
-      wp_die(__('You do not have sufficient permissions to access this page.'));
+      wp_die(__('You do not have sufficient permissions to access this page.', 'submittal-spec-sheet-builder'));
     }
 
     // Pro check
     if (!sfb_is_pro_active() && !sfb_is_agency_license()) {
-      wp_die(__('This feature requires a Pro or Agency license.'));
+      wp_die(__('This feature requires a Pro or Agency license.', 'submittal-spec-sheet-builder'));
     }
 
     ?>
