@@ -145,6 +145,7 @@ class SFB_Lead_Capture {
     $company_name = $settings['company_name'] ?? get_bloginfo('name');
 
     // Email subject - Clear and actionable for admin
+    /* translators: %s: project name or default "Submittal Request" */
     $subject = sprintf(
       __('🔔 New Lead: %s', 'submittal-spec-sheet-builder'),
       !empty($project_name) ? $project_name : __('Submittal Request', 'submittal-spec-sheet-builder')
@@ -155,9 +156,11 @@ class SFB_Lead_Capture {
     $lead_details[] = '━━━━━━━━━━━━━━━━━━━━━━━━━━━━';
     $lead_details[] = __('CONTACT INFORMATION:', 'submittal-spec-sheet-builder');
     $lead_details[] = '━━━━━━━━━━━━━━━━━━━━━━━━━━━━';
+    /* translators: %s: customer email address */
     $lead_details[] = sprintf(__('Email: %s', 'submittal-spec-sheet-builder'), $customer_email);
 
     if (!empty($phone)) {
+      /* translators: %s: customer phone number */
       $lead_details[] = sprintf(__('Phone: %s', 'submittal-spec-sheet-builder'), $phone);
     }
 
@@ -167,34 +170,39 @@ class SFB_Lead_Capture {
     $lead_details[] = '━━━━━━━━━━━━━━━━━━━━━━━━━━━━';
 
     if (!empty($project_name)) {
+      /* translators: %s: project name */
       $lead_details[] = sprintf(__('Project Name: %s', 'submittal-spec-sheet-builder'), $project_name);
     }
 
     if ($num_items > 0) {
+      /* translators: %d: number of products selected */
       $lead_details[] = sprintf(__('Products Selected: %d', 'submittal-spec-sheet-builder'), $num_items);
     }
 
     if (!empty($top_category)) {
+      /* translators: %s: primary product category name */
       $lead_details[] = sprintf(__('Primary Category: %s', 'submittal-spec-sheet-builder'), $top_category);
     }
 
+    /* translators: %s: submission date and time */
     $lead_details[] = sprintf(__('Submitted: %s', 'submittal-spec-sheet-builder'), current_time('F j, Y g:i a'));
 
     $lead_details[] = '';
     $lead_details[] = '━━━━━━━━━━━━━━━━━━━━━━━━━━━━';
 
     // Build complete message
+    /* translators: 1: lead details, 2: customer email, 3: dashboard URL, 4: company name */
     $message = sprintf(
       __('You\'ve received a new lead from your submittal builder!
 
-%s
+%1$s
 
 NEXT STEPS:
-→ Reply to this lead at: %s
-→ View all leads in your dashboard: %s
+→ Reply to this lead at: %2$s
+→ View all leads in your dashboard: %3$s
 
 ---
-%s', 'submittal-spec-sheet-builder'),
+%4$s', 'submittal-spec-sheet-builder'),
       implode("\n", $lead_details),
       $customer_email,
       admin_url('admin.php?page=submittal-builder-leads'),
