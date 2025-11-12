@@ -436,6 +436,7 @@ class SFB_Telemetry {
       <?php if ($enabled && $last_ping !== __('Never', 'submittal-spec-sheet-builder')): ?>
         <p class="description" style="margin-top: 10px;">
           <?php
+          /* translators: %s: timestamp of last data transmission */
           printf(
             esc_html__('Last data sent: %s', 'submittal-spec-sheet-builder'),
             esc_html($last_ping)
