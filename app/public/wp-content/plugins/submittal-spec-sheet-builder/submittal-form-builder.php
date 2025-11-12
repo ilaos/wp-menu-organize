@@ -5966,6 +5966,7 @@ Framing,C-Studs,20 Gauge,362S162-20,3-5/8",1-5/8",33</pre>
               <p>
                 <strong><?php
                 $expiry_days = get_option('sfb_branding')['drafts_expiry_days'] ?? 45;
+                /* translators: %d: number of days until draft expires */
                 printf(
                   esc_html__('Demo draft link (expires in %d days):', 'submittal-spec-sheet-builder'),
                   $expiry_days
@@ -6065,6 +6066,7 @@ Framing,C-Studs,20 Gauge,362S162-20,3-5/8",1-5/8",33</pre>
               } elseif ($current_status === 'active') {
                 echo '📍 <strong>' . esc_html__('Current: Active (Pro)', 'submittal-spec-sheet-builder') . '</strong>';
               } else {
+                /* translators: %s: license status (e.g., Free, Expired, Invalid) */
                 echo '📍 <strong>' . sprintf(esc_html__('Current: %s', 'submittal-spec-sheet-builder'), esc_html(ucfirst($current_status))) . '</strong>';
               }
             }
@@ -6078,6 +6080,7 @@ Framing,C-Studs,20 Gauge,362S162-20,3-5/8",1-5/8",33</pre>
               $dev_warnings[] = 'SFB_AGENCY_DEV';
             }
             if (!empty($dev_warnings)) {
+              /* translators: %s: comma-separated list of PHP constants */
               echo '<br><strong style="color: #dc2626;">⚠️ ' . sprintf(esc_html__('%s constant(s) ACTIVE - overriding all license checks!', 'submittal-spec-sheet-builder'), implode(', ', $dev_warnings)) . '</strong>';
               echo '<br><span style="color: #856404;">' . esc_html__('Remove from wp-config.php to test license states properly.', 'submittal-spec-sheet-builder') . '</span>';
             }
@@ -6870,7 +6873,9 @@ Framing,C-Studs,20 Gauge,362S162-20,3-5/8",1-5/8",33</pre>
     // Prepare test email
     $subject = __('Test Email from Submittal & Spec Sheet Builder', 'submittal-spec-sheet-builder');
     $message = __('This is a test email to verify SMTP configuration.', 'submittal-spec-sheet-builder') . "\n\n";
+    /* translators: %s: timestamp when email was sent */
     $message .= sprintf(__('Sent at: %s', 'submittal-spec-sheet-builder'), wp_date('Y-m-d H:i:s')) . "\n";
+    /* translators: %s: site name */
     $message .= sprintf(__('From site: %s', 'submittal-spec-sheet-builder'), get_bloginfo('name')) . "\n";
 
     // Add headers
@@ -6886,6 +6891,7 @@ Framing,C-Studs,20 Gauge,362S162-20,3-5/8",1-5/8",33</pre>
     if ($mail_error) {
       $error_message = $mail_error->get_error_message();
       wp_send_json_error([
+        /* translators: %s: error message from email system */
         'message' => sprintf(__('❌ Email failed: %s', 'submittal-spec-sheet-builder'), $error_message)
       ]);
     }
@@ -6903,8 +6909,9 @@ Framing,C-Studs,20 Gauge,362S162-20,3-5/8",1-5/8",33</pre>
         $smtp_info = ' ' . __('(using PHP mail() - consider installing an SMTP plugin)', 'submittal-spec-sheet-builder');
       }
 
+      /* translators: 1: recipient email address, 2: SMTP plugin information */
       wp_send_json_success([
-        'message' => sprintf(__('✅ Test email queued successfully to %s%s. Check your inbox (including spam folder).', 'submittal-spec-sheet-builder'), $to, $smtp_info)
+        'message' => sprintf(__('✅ Test email queued successfully to %1$s%2$s. Check your inbox (including spam folder).', 'submittal-spec-sheet-builder'), $to, $smtp_info)
       ]);
     } else {
       wp_send_json_error([
