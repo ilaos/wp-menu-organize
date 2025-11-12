@@ -11755,12 +11755,14 @@ Framing,C-Studs,20 Gauge,362S162-20,3-5/8",1-5/8",33</pre>
       return [
         'success' => true,
         'message' => sprintf(
+        /* translators: %d: number of demo items removed */
           __('✅ Demo data cleared successfully! Removed approximately %d demo items. Your real data remains intact.', 'submittal-spec-sheet-builder'),
           $cleared_count
         )
       ];
 
     } catch (\Throwable $e) {
+      /* translators: %s: error message */
       return [
         'success' => false,
         'message' => sprintf(__('Error clearing demo data: %s', 'submittal-spec-sheet-builder'), $e->getMessage())
@@ -11870,6 +11872,7 @@ Framing,C-Studs,20 Gauge,362S162-20,3-5/8",1-5/8",33</pre>
 
       return [
         'success' => true,
+        /* translators: %d: number of items in draft */
         'message' => sprintf(__('Demo draft created with %d items!', 'submittal-spec-sheet-builder'), count($items)),
         'url' => $share_url
       ];
@@ -11947,6 +11950,7 @@ Framing,C-Studs,20 Gauge,362S162-20,3-5/8",1-5/8",33</pre>
 
     } catch (\Throwable $e) {
       return [
+        /* translators: %s: error message */
         'success' => false,
         'message' => sprintf(__('Error resetting data: %s', 'submittal-spec-sheet-builder'), $e->getMessage())
       ];
