@@ -4916,6 +4916,7 @@ final class SFB_Plugin {
           <div class="sfb-stat-label"><?php esc_html_e('Total Views', 'submittal-spec-sheet-builder'); ?></div>
           <div class="sfb-stat-number"><?php echo esc_html(number_format($total_views)); ?></div>
           <div class="sfb-stat-sublabel">
+            /* translators: %s: average views per link (decimal number) */
             <?php printf(esc_html__('%s avg per link', 'submittal-spec-sheet-builder'), $total_packets > 0 ? number_format($total_views / $total_packets, 1) : '0'); ?>
           </div>
         </div>
@@ -4928,7 +4929,8 @@ final class SFB_Plugin {
             <div class="sfb-engagement-fill" style="width: <?php echo esc_attr($engagement_rate); ?>%;"></div>
           </div>
           <div class="sfb-stat-sublabel">
-            <?php printf(esc_html__('%d of %d links viewed', 'submittal-spec-sheet-builder'), $packets_with_views, $total_packets); ?>
+            /* translators: 1: number of links with views, 2: total number of links */
+            <?php printf(esc_html__('%1$d of %2$d links viewed', 'submittal-spec-sheet-builder'), $packets_with_views, $total_packets); ?>
           </div>
         </div>
 
@@ -5205,6 +5207,7 @@ final class SFB_Plugin {
 
         <!-- Pagination -->
         <?php if ($total_pages > 1): ?>
+              /* translators: %s: number of leads (formatted) */
           <div class="tablenav" style="margin-top: 16px;">
             <div class="tablenav-pages">
               <span class="displaying-num"><?php printf(_n('%s lead', '%s leads', $total_leads, 'submittal-spec-sheet-builder'), number_format_i18n($total_leads)); ?></span>
@@ -5726,6 +5729,7 @@ Framing,C-Studs,20 Gauge,362S162-20,3-5/8",1-5/8",33</pre>
 
     // Get cron status
     $next_run = wp_next_scheduled('sfb_purge_expired_drafts');
+      /* translators: %s: scheduled time for next cron run */
     if ($next_run) {
       $next_time = wp_date(get_option('time_format'), $next_run);
       $cron_status_html = '🟢 <strong>' . sprintf(__('Next: %s', 'submittal-spec-sheet-builder'), $next_time) . '</strong>';
@@ -5756,6 +5760,7 @@ Framing,C-Studs,20 Gauge,362S162-20,3-5/8",1-5/8",33</pre>
             $dev_warnings[] = 'SFB_PRO_DEV';
           }
           if (defined('SFB_AGENCY_DEV') && SFB_AGENCY_DEV) {
+            /* translators: %s: comma-separated list of PHP constants */
             $dev_warnings[] = 'SFB_AGENCY_DEV';
           }
           if (!empty($dev_warnings)) {
@@ -5778,6 +5783,7 @@ Framing,C-Studs,20 Gauge,362S162-20,3-5/8",1-5/8",33</pre>
             $dev_warnings[] = 'SFB_PRO_DEV';
           }
           if (defined('SFB_AGENCY_DEV') && SFB_AGENCY_DEV) {
+            /* translators: %s: comma-separated list of PHP constants */
             $dev_warnings[] = 'SFB_AGENCY_DEV';
           }
           if (!empty($dev_warnings)) {
@@ -5946,8 +5952,9 @@ Framing,C-Studs,20 Gauge,362S162-20,3-5/8",1-5/8",33</pre>
             <?php if (!empty($result['stats'])): ?>
               <p>
                 <?php
+                /* translators: 1: number of categories, 2: number of types, 3: number of items */
                 printf(
-                  esc_html__('Created %d categories, %d types, %d items.', 'submittal-spec-sheet-builder'),
+                  esc_html__('Created %1$d categories, %2$d types, %3$d items.', 'submittal-spec-sheet-builder'),
                   (int)$result['stats']['categories'],
                   (int)$result['stats']['types'],
                   (int)$result['stats']['items']
