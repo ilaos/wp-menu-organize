@@ -120,6 +120,7 @@ $is_returning = $onboarding_completed && !empty($company_name);
           style="width: 100%; padding: 8px 12px; border: 1px solid #d1d5db; border-radius: 4px; font-size: 14px;"
         >
         <p style="margin: 6px 0 0; font-size: 12px; color: #6b7280;">
+          <?php /* translators: %s: Media Library link */ ?>
           <?php printf(
             esc_html__('Upload in %s and paste URL here.', 'submittal-spec-sheet-builder'),
             '<a href="' . esc_url(admin_url('upload.php')) . '" target="_blank">' . esc_html__('Media Library', 'submittal-spec-sheet-builder') . '</a>'

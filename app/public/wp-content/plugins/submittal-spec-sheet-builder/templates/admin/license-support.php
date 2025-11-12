@@ -43,6 +43,7 @@ $subtitle = $subtitle_messages[$user_tier] ?? $subtitle_messages['pro'];
       <div style="flex:1; min-width:300px;">
         <div style="display:flex; align-items:center; gap:12px; margin-bottom:20px;">
           <h2 style="margin:0; font-size:20px; font-weight:600; color:#111827;">
+            <?php /* translators: %s: license tier label (Free, Pro, Agency) */ ?>
             <?php echo esc_html(sprintf(__('Submittal & Spec Sheet Builder %s', 'submittal-spec-sheet-builder'), $tier_label)); ?>
           </h2>
           <span class="sfb-status-badge" style="display:inline-block; padding:6px 14px; background:<?php echo esc_attr($lic['status_color']); ?>; color:#fff; border-radius:6px; font-size:12px; font-weight:600; letter-spacing:0.5px;">

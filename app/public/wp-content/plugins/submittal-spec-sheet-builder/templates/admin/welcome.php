@@ -289,6 +289,7 @@ $stats = [
     <div class="sfb-welcome-section sfb-welcome-whats-new">
       <div class="sfb-welcome-card-header">
         <span class="dashicons dashicons-megaphone"></span>
+        <?php /* translators: %s: plugin version number */ ?>
         <h2><?php echo esc_html(sprintf(__("What's New in Version %s", 'submittal-spec-sheet-builder'), $plugin_version)); ?></h2>
       </div>
       <div class="sfb-whats-new-grid">
