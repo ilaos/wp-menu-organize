@@ -2679,6 +2679,7 @@ final class SFB_Plugin {
                     <span style="color:#64748b;font-size:13px;margin-left:8px;">(<?php echo esc_html($user->user_email); ?>)</span>
                     <br>
                     <span style="color:#64748b;font-size:12px;">
+                  /* translators: %s: WordPress user role name (e.g., Administrator, Editor) */
                       <?php echo esc_html(sprintf(__('Current role: %s', 'submittal-spec-sheet-builder'), $current_role)); ?>
                     </span>
                   </div>
@@ -3091,6 +3092,7 @@ final class SFB_Plugin {
                      style="max-width: 400px;">
               <p class="sfb-setting-desc" style="margin-top: 8px; font-size: 12px; color: #6b7280;">
                 <?php printf(
+                /* translators: %s: default notification email address */
                   esc_html__('Default: %s (site admin email)', 'submittal-spec-sheet-builder'),
                   '<code>' . esc_html(get_option('admin_email')) . '</code>'
                 ); ?>
@@ -3172,6 +3174,7 @@ final class SFB_Plugin {
                 <?php
                 $tz = wp_timezone_string();
                 printf(
+                /* translators: %s: timezone name */
                   esc_html__('Choose when to send the weekly export. Time is in %s timezone.', 'submittal-spec-sheet-builder'),
                   '<strong>' . esc_html($tz) . '</strong>'
                 );
@@ -4078,6 +4081,7 @@ final class SFB_Plugin {
       <?php esc_html_e('Email address to receive lead notifications. Leave blank to use site admin email.', 'submittal-spec-sheet-builder'); ?>
       <?php if (!empty($placeholder)): ?>
         <br>
+        /* translators: %s: default email address */
         <?php printf(esc_html__('Default: %s', 'submittal-spec-sheet-builder'), '<code>' . esc_html($placeholder) . '</code>'); ?>
       <?php endif; ?>
     </p>
@@ -4098,6 +4102,7 @@ final class SFB_Plugin {
       <input type="checkbox" name="sfb_lead_bcc_admin" value="1" <?php echo $checked; ?>>
       <?php esc_html_e('BCC site admin email on lead notification emails', 'submittal-spec-sheet-builder'); ?>
     </label>
+    /* translators: %s: site admin email address */
     <span class="sfb-field-desc"><?php printf(esc_html__('When enabled, all lead notification emails will BCC %s', 'submittal-spec-sheet-builder'), get_option('admin_email')); ?></span>
     <?php
   }
@@ -4173,6 +4178,7 @@ final class SFB_Plugin {
     $next_run = wp_next_scheduled('sfb_purge_expired_drafts');
     if ($next_run) {
       $next_time = wp_date(get_option('time_format'), $next_run);
+      /* translators: %s: scheduled time for next cron run */
       $cron_status_html = '🟢 <strong>' . sprintf(__('Next: %s', 'submittal-spec-sheet-builder'), $next_time) . '</strong>';
     } else {
       $cron_status_html = '🔴 <strong>' . __('Not scheduled', 'submittal-spec-sheet-builder') . '</strong>';
@@ -4630,6 +4636,7 @@ final class SFB_Plugin {
       <div class="sfb-card">
         <h2><?php esc_html_e('🏆 Top 5 Products', 'submittal-spec-sheet-builder'); ?></h2>
         <p class="sfb-muted">
+          /* translators: %d: number of days for analytics period */
           <?php echo esc_html(sprintf(__('Most frequently selected products in the last %d days', 'submittal-spec-sheet-builder'), $days)); ?>
         </p>
 
@@ -4899,6 +4906,7 @@ final class SFB_Plugin {
           <div class="sfb-stat-label"><?php esc_html_e('Total Links', 'submittal-spec-sheet-builder'); ?></div>
           <div class="sfb-stat-number"><?php echo esc_html(number_format($total_packets)); ?></div>
           <div class="sfb-stat-sublabel">
+            /* translators: %d: number of active tracking links */
             <?php printf(esc_html__('%d active tracking links', 'submittal-spec-sheet-builder'), $total_packets); ?>
           </div>
         </div>
