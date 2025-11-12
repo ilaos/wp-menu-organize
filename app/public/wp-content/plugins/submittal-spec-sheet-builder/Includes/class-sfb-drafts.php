@@ -58,7 +58,8 @@ final class SFB_Drafts {
 
     // Build message
     $message = $purged_count > 0
-      ? sprintf(__('✅ Purged %d expired draft(s) at %s', 'submittal-spec-sheet-builder'), $purged_count, current_time('g:i A'))
+      /* translators: 1: number of drafts purged, 2: current time */
+      ? sprintf(__('✅ Purged %1$d expired draft(s) at %2$s', 'submittal-spec-sheet-builder'), $purged_count, current_time('g:i A'))
       : __('⚠️ Nothing to purge — all clear', 'submittal-spec-sheet-builder');
 
     return [

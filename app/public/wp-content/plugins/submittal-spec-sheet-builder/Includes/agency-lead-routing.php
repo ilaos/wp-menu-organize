@@ -256,6 +256,7 @@ class SFB_Agency_Lead_Routing {
         return [
           'valid' => false,
           'error' => sprintf(
+            /* translators: %s: IP address range name (e.g., "loopback", "private") */
             __('Webhook URL cannot target %s addresses', 'submittal-spec-sheet-builder'),
             $range['name']
           )
