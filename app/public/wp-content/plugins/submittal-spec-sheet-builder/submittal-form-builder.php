@@ -11366,8 +11366,10 @@ Framing,C-Studs,20 Gauge,362S162-20,3-5/8",1-5/8",33</pre>
       }
 
       // Build success message with skip info
+      /* translators: %s: catalog/pack title */
       $message = sprintf(__('Successfully seeded "%s" catalog!', 'submittal-spec-sheet-builder'), $data['title']);
       if ($stats['skipped'] > 0) {
+        /* translators: %d: number of items that were skipped */
         $message .= ' ' . sprintf(__('(%d items already existed and were skipped)', 'submittal-spec-sheet-builder'), $stats['skipped']);
       }
 
@@ -11392,6 +11394,7 @@ Framing,C-Studs,20 Gauge,362S162-20,3-5/8",1-5/8",33</pre>
     } catch (\Throwable $e) {
       return [
         'success' => false,
+        /* translators: %s: error message */
         'message' => sprintf(__('Error seeding pack: %s', 'submittal-spec-sheet-builder'), $e->getMessage())
       ];
     }
@@ -11486,6 +11489,7 @@ Framing,C-Studs,20 Gauge,362S162-20,3-5/8",1-5/8",33</pre>
 
     } catch (\Throwable $e) {
       return [
+        /* translators: %s: error message */
         'success' => false,
         'message' => sprintf(__('Error creating demo draft: %s', 'submittal-spec-sheet-builder'), $e->getMessage())
       ];
@@ -11539,10 +11543,11 @@ Framing,C-Studs,20 Gauge,362S162-20,3-5/8",1-5/8",33</pre>
         }
       }
 
+      /* translators: 1: posts deleted, 2: terms deleted, 3: files deleted */
       return [
         'success' => true,
         'message' => sprintf(
-          __('Demo reset complete. Removed %d posts, %d terms, %d files.', 'submittal-spec-sheet-builder'),
+          __('Demo reset complete. Removed %1$d posts, %2$d terms, %3$d files.', 'submittal-spec-sheet-builder'),
           $posts_deleted,
           $terms_deleted,
           $files_deleted
@@ -11551,6 +11556,7 @@ Framing,C-Studs,20 Gauge,362S162-20,3-5/8",1-5/8",33</pre>
 
     } catch (\Throwable $e) {
       return [
+        /* translators: %s: error message */
         'success' => false,
         'message' => sprintf(__('Error resetting demo content: %s', 'submittal-spec-sheet-builder'), $e->getMessage())
       ];
@@ -11696,15 +11702,17 @@ Framing,C-Studs,20 Gauge,362S162-20,3-5/8",1-5/8",33</pre>
       update_option('sfb_demo_analytics', $analytics_data, false);
 
       return [
+        /* translators: 1: tracking links count, 2: agency packs count, 3: days of analytics */
         'success' => true,
         'message' => sprintf(
-          __('✅ Demo data generated successfully! Created %d tracking links, %d agency packs, and %d days of analytics data. Visit Tracking, Agency, and Agency Analytics pages to see the results.', 'submittal-spec-sheet-builder'),
+          __('✅ Demo data generated successfully! Created %1$d tracking links, %2$d agency packs, and %3$d days of analytics data. Visit Tracking, Agency, and Agency Analytics pages to see the results.', 'submittal-spec-sheet-builder'),
           $tracking_count,
           $pack_count,
           $analytics_count
         )
       ];
 
+        /* translators: %s: error message */
     } catch (\Throwable $e) {
       return [
         'success' => false,
@@ -11867,6 +11875,7 @@ Framing,C-Studs,20 Gauge,362S162-20,3-5/8",1-5/8",33</pre>
       ];
 
     } catch (\Throwable $e) {
+        /* translators: %s: error message */
       return [
         'success' => false,
         'message' => sprintf(__('Error creating demo draft: %s', 'submittal-spec-sheet-builder'), $e->getMessage())
