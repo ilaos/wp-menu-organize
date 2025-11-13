@@ -256,6 +256,12 @@ class WP_Menu_Organize
                 'ajax_url' => admin_url('admin-ajax.php'),
                 'nonce' => wp_create_nonce('wmo_ajax_nonce')
             ));
+            
+            // Also localize for color picker script
+            wp_localize_script('wmo-color-picker', 'wmo_ajax', array(
+                'ajax_url' => admin_url('admin-ajax.php'),
+                'nonce' => wp_create_nonce('wmo_ajax_nonce')
+            ));
         }
         
         // Global icon applier

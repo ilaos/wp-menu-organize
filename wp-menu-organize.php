@@ -1683,6 +1683,7 @@ function wmo_migrate_options() {
         'menu_order' => get_option('wmo_menu_order', array()),
         'admin_customizations' => get_option('wmo_admin_customizations', array()),
         'theme_preference' => get_option('wmo_theme_preference', 'light'),
+        'templates' => get_option('wmo_templates', array()),
         'templates' => get_option('wmo_templates', array())
     );
     
@@ -1700,6 +1701,7 @@ function wmo_migrate_options() {
     delete_option('wmo_admin_customizations');
     delete_option('wmo_theme_preference');
     delete_option('wmo_templates');
+
     
     // Mark as migrated
     update_option('wmo_migrated_v2', true);
@@ -1708,6 +1710,8 @@ function wmo_migrate_options() {
     error_log('WMO: Database options migrated to wmo_settings');
 }
 add_action('admin_init', 'wmo_migrate_options');
+
+
 
 // Helper function to get settings with fallback
 function wmo_get_settings($key = null) {

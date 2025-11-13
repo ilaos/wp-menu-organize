@@ -74,7 +74,13 @@
                 $input.val(color);
                 
                 // Apply color to menu immediately (live preview)
-                wmoApplyColorToMenu(slug, color);
+                if (isSubmenu) {
+                    // Use complex function for submenus
+                    wmoApplyColorToMenu(slug, color);
+                } else {
+                    // Use simple, direct approach for parent menus (restore working functionality)
+                    wmoInjectCSS(slug, color);
+                }
                 
                 // Trigger custom event
                 $(document).trigger('wmoColorChanged', [slug, color, isSubmenu]);
@@ -155,6 +161,12 @@
             
             // Auto-save background color
             if (slug) {
+                console.log('WMO: About to auto-save background color for', slug, 'Color:', color);
+                console.log('WMO: wmo_ajax available:', typeof wmo_ajax !== 'undefined');
+                if (typeof wmo_ajax !== 'undefined') {
+                    console.log('WMO: AJAX URL:', wmo_ajax.ajax_url);
+                    console.log('WMO: Nonce available:', wmo_ajax.nonce ? 'YES' : 'NO');
+                }
                 wmoAutoSaveBackgroundColor(slug, color, $input);
                 // Show saved notification
                 showNotification('Background color saved successfully!', 'success');
@@ -413,6 +425,8 @@
 
     // Auto-save background color function
     function wmoAutoSaveBackgroundColor(slug, color, $input) {
+        console.log('WMO: wmoAutoSaveBackgroundColor called for', slug, 'Color:', color);
+        
         // Clear existing timeout
         if (autoSaveTimeouts[slug + '_bg']) {
             clearTimeout(autoSaveTimeouts[slug + '_bg']);
@@ -423,6 +437,7 @@
 
         // Set new timeout
         autoSaveTimeouts[slug + '_bg'] = setTimeout(function() {
+            console.log('WMO: Executing AJAX save for background color', slug);
             $.ajax({
                 url: wmo_ajax.ajax_url,
                 method: 'POST',
@@ -617,14 +632,9 @@
         }
         
         const cssRules = `
-            body #adminmenu li#menu-${slug} > a,
-            body #adminmenu li#toplevel_page_${slug} > a,
-            body #adminmenu li[id='menu-${slug}'] > a,
-            body #adminmenu li[id='toplevel_page_${slug}'] > a,
-            body #adminmenu li#menu-${slug} .wp-menu-name,
-            body #adminmenu li#toplevel_page_${slug} .wp-menu-name,
-            body #adminmenu li#menu-${slug} .wp-menu-image:before,
-            body #adminmenu li#toplevel_page_${slug} .wp-menu-image:before { 
+            body #adminmenu li[id*='${slug}'] > a,
+            body #adminmenu li[id*='${slug}'] .wp-menu-name,
+            body #adminmenu li[id*='${slug}'] .wp-menu-image:before { 
                 color: ${color} !important; 
             }
         `;

@@ -388,6 +388,7 @@ function wmo_apply_menu_colors()
 
 function wmo_apply_menu_background_colors()
 {
+    // Get background colors from WordPress option
     $background_colors = get_option('wmo_menu_background_colors', array());
     
     // Debug logging
