@@ -5,7 +5,7 @@ if (!defined('ABSPATH')) {
 }
 ?>
 <div class="wrap">
-    <h1>Menu Organize Settings</h1>
+    <h1>Sidebar Maestro Settings</h1>
     
     <!-- Theme Toggle Section -->
     <div class="wamm-section wmo-theme-section">
@@ -127,7 +127,7 @@ if (!defined('ABSPATH')) {
             <div class="wamm-settings-group">
                 <h4>Plugin Configuration</h4>
                 <p class="description">
-                    Configure general settings for the Menu Organize plugin. More options will be added here in future updates.
+                    Configure general settings for the Sidebar Maestro plugin. More options will be added here in future updates.
                 </p>
                 
                 <div class="wamm-settings-placeholder">

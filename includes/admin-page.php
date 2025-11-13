@@ -26,8 +26,8 @@ class WP_Admin_Menu_Maestro
     public function add_settings_page()
     {
         add_menu_page(
-            'WP Menu Organize',
-            'Menu Organize',
+            'Sidebar Maestro',
+            'Sidebar Maestro',
             'manage_options',
             'wp-admin-menu-maestro-settings',
             array($this, 'render_settings_page'),
@@ -48,7 +48,7 @@ class WP_Admin_Menu_Maestro
         // Add Settings submenu page (first)
         add_submenu_page(
             'wp-admin-menu-maestro-settings',
-            'Menu Organize Settings',
+            'Sidebar Maestro Settings',
             'Settings',
             'manage_options',
             'wp-admin-menu-maestro-settings-page',

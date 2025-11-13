@@ -1,5 +1,5 @@
 <div class="wrap">
-    <h1>WP Menu Organize Settings</h1>
+    <h1>Sidebar Maestro - Customize Tabs</h1>
     <div class="wamm-layout">
         <div class="wamm-main-content">
             <form method="post" action="options.php">
