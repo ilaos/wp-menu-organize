@@ -544,7 +544,13 @@ class WP_Admin_Menu_Maestro
         if (!is_admin()) {
             return;
         }
-        
+
+        // Declare global $menu to make it available in the template
+        global $menu;
+
+        // Log for debugging
+        error_log('WAMM render_reorder_page: Global menu count = ' . (is_array($menu) ? count($menu) : 'NOT ARRAY'));
+
         include WAMM_PLUGIN_PATH . 'templates/admin-reorder-page.php';
     }
 

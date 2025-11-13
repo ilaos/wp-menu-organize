@@ -162,7 +162,7 @@ error_log('WAMM: Final rendered order: ' . print_r($final_slugs, true));
     margin: 20px 0;
 }
 
-#wmo-sortable-menu {
+#wamm-sortable-menu {
     list-style: none;
     margin: 0;
     padding: 0;
@@ -342,7 +342,7 @@ jQuery(document).ready(function($) {
             
             // Collect the full order as array of slugs
             var order = [];
-            $('#wmo-sortable-menu li').each(function() {
+            $('#wamm-sortable-menu li').each(function() {
                 var slug = $(this).data('slug');
                 if (slug && slug.trim() !== '') {
                     order.push(slug);
@@ -398,14 +398,14 @@ jQuery(document).ready(function($) {
     function wmoDebugElements() {
         console.log('WMO Debug: Checking elements...');
         console.log('Menu items list found:', $('.menu-items-list').length);
-        console.log('Sortable menu found:', $('#wmo-sortable-menu').length);
-        console.log('Menu items found:', $('#wmo-sortable-menu li').length);
+        console.log('Sortable menu found:', $('#wamm-sortable-menu').length);
+        console.log('Menu items found:', $('#wamm-sortable-menu li').length);
         console.log('Menu item handles found:', $('.menu-item-handle').length);
         
         return {
             container: $('.menu-items-list').length,
-            menu: $('#wmo-sortable-menu').length,
-            items: $('#wmo-sortable-menu li').length,
+            menu: $('#wamm-sortable-menu').length,
+            items: $('#wamm-sortable-menu li').length,
             handles: $('.menu-item-handle').length
         };
     }
@@ -477,7 +477,7 @@ jQuery(document).ready(function($) {
             
             // Check if elements exist
             var $container = $('.menu-items-list');
-            var $menu = $('#wmo-sortable-menu');
+            var $menu = $('#wamm-sortable-menu');
             var $items = $menu.find('li');
             
             console.log('WAMM: Container found:', $container.length);
