@@ -159,7 +159,7 @@ function wamm_save_menu_order()
         wp_send_json_error('No order data received');
     }
 }
-add_action('wp_ajax_wmo_save_menu_order', 'wamm_save_menu_order');
+add_action('wp_ajax_wamm_save_menu_order', 'wamm_save_menu_order');
 
 function wamm_reset_menu_order()
 {
@@ -185,7 +185,7 @@ function wamm_reset_menu_order()
         ));
     }
 }
-add_action('wp_ajax_wmo_reset_menu_order', 'wamm_reset_menu_order');
+add_action('wp_ajax_wamm_reset_menu_order', 'wamm_reset_menu_order');
 
 function wamm_apply_custom_menu_order($menu_order)
 {

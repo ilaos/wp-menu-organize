@@ -3235,3 +3235,481 @@ body.wamm-dark-theme .wamm-notification-info {
     border-left-color: #1976d2;
 }
 
+
+/* ========================================================================
+   REORDER PAGE - MODERN ACCORDION LAYOUT
+   ======================================================================== */
+
+/* Page Container */
+.wamm-reorder-page {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding-bottom: 100px;
+}
+
+/* Header Section */
+.wamm-reorder-header {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 30px;
+    border-radius: 12px;
+    margin-bottom: 30px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    position: relative;
+}
+
+.wamm-reorder-title {
+    color: white !important;
+    font-size: 28px;
+    font-weight: 600;
+    margin: 0 0 10px 0 !important;
+}
+
+.wamm-reorder-subtitle {
+    color: rgba(255, 255, 255, 0.95);
+    font-size: 15px;
+    margin: 0;
+    line-height: 1.6;
+}
+
+.wamm-save-indicator {
+    position: absolute;
+    top: 30px;
+    right: 30px;
+    padding: 8px 16px;
+    border-radius: 6px;
+    font-size: 13px;
+    font-weight: 500;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    transition: all 0.3s ease;
+}
+
+.wamm-save-indicator.loading {
+    background: rgba(255, 255, 255, 0.2);
+    color: white;
+}
+
+.wamm-save-indicator.success {
+    background: rgba(76, 175, 80, 0.95);
+    color: white;
+    animation: wamm-fade-in 0.3s ease;
+}
+
+.wamm-save-indicator.error {
+    background: rgba(244, 67, 54, 0.95);
+    color: white;
+}
+
+.wamm-save-indicator .dashicons {
+    width: 18px;
+    height: 18px;
+    font-size: 18px;
+}
+
+.wamm-save-indicator .dashicons.spin {
+    animation: wamm-spin 1s linear infinite;
+}
+
+/* Main Panel */
+.wamm-reorder-panel {
+    background: #f9fafb;
+    border-radius: 12px;
+    padding: 20px;
+    border: 1px solid #e5e7eb;
+}
+
+.wamm-menu-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+/* Menu Item Card */
+.wamm-menu-item {
+    background: white;
+    border: 1px solid #e5e7eb;
+    border-radius: 10px;
+    overflow: hidden;
+    transition: all 0.2s ease;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+.wamm-menu-item:hover {
+    border-color: #0073aa;
+    box-shadow: 0 4px 12px rgba(0, 115, 170, 0.1);
+}
+
+.wamm-menu-item.wamm-dragging {
+    opacity: 0.7;
+    transform: rotate(2deg);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+    border-color: #0073aa;
+}
+
+/* Menu Item Header */
+.wamm-menu-item-header {
+    display: flex;
+    align-items: center;
+    padding: 16px;
+    cursor: move;
+    user-select: none;
+    background: white;
+    transition: background-color 0.2s ease;
+}
+
+.wamm-menu-item-header:hover {
+    background: #f9fafb;
+}
+
+/* Drag Handle */
+.wamm-handle {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    margin-right: 12px;
+    color: #9ca3af;
+    cursor: move;
+    transition: color 0.2s ease;
+    flex-shrink: 0;
+}
+
+.wamm-handle:hover {
+    color: #0073aa;
+}
+
+.wamm-handle .dashicons {
+    width: 20px;
+    height: 20px;
+    font-size: 20px;
+}
+
+/* Menu Main Content */
+.wamm-menu-main {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex: 1;
+    min-width: 0;
+}
+
+.wamm-menu-icon {
+    color: #6b7280;
+    width: 20px;
+    height: 20px;
+    font-size: 20px;
+    flex-shrink: 0;
+}
+
+.wamm-menu-title {
+    font-size: 15px;
+    font-weight: 500;
+    color: #1f2937;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.wamm-menu-slug {
+    font-size: 12px;
+    color: #9ca3af;
+    font-family: 'Courier New', Courier, monospace;
+    background: #f3f4f6;
+    padding: 2px 8px;
+    border-radius: 4px;
+    white-space: nowrap;
+}
+
+/* Accordion Toggle Button */
+.wamm-accordion-toggle {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 12px;
+    background: #f3f4f6;
+    border: 1px solid #e5e7eb;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    margin-left: 12px;
+    flex-shrink: 0;
+}
+
+.wamm-accordion-toggle:hover {
+    background: #e5e7eb;
+    border-color: #0073aa;
+}
+
+.wamm-accordion-toggle:focus {
+    outline: 2px solid #0073aa;
+    outline-offset: 2px;
+}
+
+.wamm-child-count {
+    background: #0073aa;
+    color: white;
+    font-size: 11px;
+    font-weight: 600;
+    padding: 2px 6px;
+    border-radius: 10px;
+    min-width: 20px;
+    text-align: center;
+}
+
+.wamm-accordion-toggle .dashicons {
+    width: 16px;
+    height: 16px;
+    font-size: 16px;
+    color: #6b7280;
+    transition: transform 0.2s ease;
+}
+
+.wamm-accordion-toggle[aria-expanded="true"] .dashicons {
+    transform: rotate(180deg);
+}
+
+/* Children Container */
+.wamm-menu-children {
+    background: #f9fafb;
+    border-top: 1px solid #e5e7eb;
+    padding: 12px 16px;
+    display: none;
+}
+
+/* Child Menu Item */
+.wamm-menu-child-item {
+    display: flex;
+    align-items: center;
+    padding: 12px;
+    background: white;
+    border: 1px solid #e5e7eb;
+    border-radius: 6px;
+    margin-bottom: 8px;
+    transition: all 0.2s ease;
+}
+
+.wamm-menu-child-item:last-child {
+    margin-bottom: 0;
+}
+
+.wamm-menu-child-item:hover {
+    border-color: #0073aa;
+    box-shadow: 0 2px 6px rgba(0, 115, 170, 0.1);
+}
+
+.wamm-menu-child-item .wamm-handle {
+    width: 24px;
+    height: 24px;
+    margin-right: 8px;
+}
+
+.wamm-menu-child-item .wamm-handle .dashicons {
+    width: 16px;
+    height: 16px;
+    font-size: 16px;
+}
+
+.wamm-menu-child-item .wamm-menu-title {
+    font-size: 14px;
+    font-weight: 400;
+    flex: 1;
+}
+
+.wamm-menu-child-item .wamm-menu-slug {
+    font-size: 11px;
+}
+
+/* Sortable Placeholder */
+.wamm-sortable-placeholder {
+    background: #e0f2fe;
+    border: 2px dashed #0073aa;
+    border-radius: 10px;
+    height: 60px;
+    margin: 6px 0;
+    opacity: 0.6;
+}
+
+/* Sticky Footer */
+.wamm-sticky-footer {
+    position: fixed;
+    bottom: 0;
+    left: 160px;
+    right: 0;
+    background: white;
+    border-top: 2px solid #e5e7eb;
+    box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.08);
+    z-index: 1000;
+    padding: 16px 20px;
+}
+
+.wamm-sticky-footer-content {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.wamm-sticky-footer button {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 14px;
+    padding: 10px 20px;
+    height: auto;
+    border-radius: 6px;
+}
+
+.wamm-sticky-footer button .dashicons {
+    width: 18px;
+    height: 18px;
+    font-size: 18px;
+}
+
+/* Animations */
+@keyframes wamm-fade-in {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes wamm-spin {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* Responsive Design */
+@media screen and (max-width: 960px) {
+    .wamm-sticky-footer {
+        left: 36px;
+    }
+}
+
+@media screen and (max-width: 782px) {
+    .wamm-reorder-page {
+        padding-bottom: 140px;
+    }
+
+    .wamm-reorder-header {
+        padding: 20px;
+        margin-bottom: 20px;
+    }
+
+    .wamm-reorder-title {
+        font-size: 22px !important;
+    }
+
+    .wamm-save-indicator {
+        position: static;
+        margin-top: 12px;
+        display: inline-flex;
+    }
+
+    .wamm-menu-item-header {
+        flex-wrap: wrap;
+        padding: 12px;
+    }
+
+    .wamm-menu-main {
+        flex-wrap: wrap;
+        width: 100%;
+    }
+
+    .wamm-menu-title {
+        flex-basis: 100%;
+        margin-bottom: 4px;
+    }
+
+    .wamm-accordion-toggle {
+        margin-left: 0;
+        margin-top: 8px;
+    }
+
+    .wamm-handle {
+        width: 40px;
+        height: 40px;
+    }
+
+    .wamm-sticky-footer {
+        left: 0;
+        padding: 12px;
+    }
+
+    .wamm-sticky-footer-content {
+        flex-direction: column;
+        gap: 8px;
+    }
+
+    .wamm-sticky-footer button {
+        width: 100%;
+        justify-content: center;
+        font-size: 15px;
+        padding: 12px 16px;
+    }
+}
+
+/* Dark Theme Support */
+body.wamm-dark-theme .wamm-reorder-panel {
+    background: #1e293b;
+    border-color: #334155;
+}
+
+body.wamm-dark-theme .wamm-menu-item {
+    background: #2d3748;
+    border-color: #334155;
+}
+
+body.wamm-dark-theme .wamm-menu-item-header:hover {
+    background: #374151;
+}
+
+body.wamm-dark-theme .wamm-menu-title {
+    color: #e5e7eb;
+}
+
+body.wamm-dark-theme .wamm-menu-slug {
+    background: #374151;
+    color: #9ca3af;
+}
+
+body.wamm-dark-theme .wamm-accordion-toggle {
+    background: #374151;
+    border-color: #4b5563;
+    color: #e5e7eb;
+}
+
+body.wamm-dark-theme .wamm-menu-children {
+    background: #1e293b;
+    border-top-color: #334155;
+}
+
+body.wamm-dark-theme .wamm-menu-child-item {
+    background: #2d3748;
+    border-color: #334155;
+}
+
+body.wamm-dark-theme .wamm-sticky-footer {
+    background: #1e293b;
+    border-top-color: #334155;
+}
+
+/* Accessibility */
+@media (prefers-reduced-motion: reduce) {
+    .wamm-menu-item,
+    .wamm-handle,
+    .wamm-accordion-toggle .dashicons {
+        transition: none;
+    }
+}
