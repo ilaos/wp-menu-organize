@@ -470,9 +470,9 @@ function wamm_apply_menu_background_colors()
             error_log('WAMM: Generated CSS rules: ' . $css_rules);
             
             // Also add as a separate style with higher priority
-            wp_register_style('wmo-background-colors', false);
-            wp_enqueue_style('wmo-background-colors');
-            wp_add_inline_style('wmo-background-colors', $css_rules);
+            wp_register_style('wamm-background-colors', false);
+            wp_enqueue_style('wamm-background-colors');
+            wp_add_inline_style('wamm-background-colors', $css_rules);
             error_log('WAMM: Background color CSS also added as separate style with higher priority');
         } else {
             error_log('WAMM: No background color CSS rules to add');

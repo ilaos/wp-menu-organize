@@ -247,18 +247,18 @@ class WP_Admin_Menu_Maestro
         wp_enqueue_style('wp-color-picker');
         
         if (strpos($hook_suffix, 'wp-admin-menu-maestro') !== false) {
-            wp_enqueue_script('wmo-admin', wamm_get_asset_url('admin.js'), array('jquery', 'wp-color-picker', 'jquery-ui-sortable'), '1.0', true);
-            wp_enqueue_script('wmo-icon-picker', wamm_get_asset_url('icon-picker.js'), array('jquery'), '1.0', true);
-            wp_enqueue_script('wmo-color-picker', wamm_get_asset_url('color-picker.js'), array('jquery', 'wp-color-picker'), '1.1', true);
-            wp_enqueue_style('wmo-admin', wamm_get_asset_url('admin.css'), array('wp-color-picker'), '1.0');
-            
-            wp_localize_script('wmo-admin', 'wamm_ajax', array(
+            wp_enqueue_script('wamm-admin', wamm_get_asset_url('admin.js'), array('jquery', 'wp-color-picker', 'jquery-ui-sortable'), '1.0', true);
+            wp_enqueue_script('wamm-icon-picker', wamm_get_asset_url('icon-picker.js'), array('jquery'), '1.0', true);
+            wp_enqueue_script('wamm-color-picker', wamm_get_asset_url('color-picker.js'), array('jquery', 'wp-color-picker'), '1.1', true);
+            wp_enqueue_style('wamm-admin', wamm_get_asset_url('admin.css'), array('wp-color-picker'), '1.0');
+
+            wp_localize_script('wamm-admin', 'wamm_ajax', array(
                 'ajax_url' => admin_url('admin-ajax.php'),
                 'nonce' => wp_create_nonce('wamm_ajax_nonce')
             ));
             
             // Also localize for color picker script
-            wp_localize_script('wmo-color-picker', 'wamm_ajax', array(
+            wp_localize_script('wamm-color-picker', 'wamm_ajax', array(
                 'ajax_url' => admin_url('admin-ajax.php'),
                 'nonce' => wp_create_nonce('wamm_ajax_nonce')
             ));
@@ -277,8 +277,8 @@ class WP_Admin_Menu_Maestro
                 }
                 $decoded_icons[$menu_id] = $icon_data;
             }
-            wp_enqueue_script('wmo-icon-applier', plugin_dir_url(__FILE__) . '../assets/js/icon-applier.js', array('jquery'), '1.0', true);
-            wp_localize_script('wmo-icon-applier', 'wamm_saved_icons', $decoded_icons);
+            wp_enqueue_script('wamm-icon-applier', plugin_dir_url(__FILE__) . '../assets/js/icon-applier.js', array('jquery'), '1.0', true);
+            wp_localize_script('wamm-icon-applier', 'wamm_saved_icons', $decoded_icons);
         }
     }
     

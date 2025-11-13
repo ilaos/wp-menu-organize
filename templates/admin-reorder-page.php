@@ -466,7 +466,7 @@ jQuery(document).ready(function($) {
     // Function to initialize sortable with enhanced retry mechanism
     function initializeSortableWithRetry(maxRetries = 10, delay = 300) {
         // COORDINATION CHECK - Prevent double sortable initialization
-        if (window.wmoSortableInitialized) {
+        if (window.wammSortableInitialized) {
             console.log('WAMM: Sortable already initialized, skipping duplicate initialization');
             return;
         }
@@ -488,21 +488,21 @@ jQuery(document).ready(function($) {
                 console.log('WAMM: Elements found, initializing sortable');
                 
                 // COORDINATION CHECK - Mark as initialized
-                window.wmoSortableInitialized = true;
-                
-                // Try to use the existing wmoInitializeSortable function first
-                if (typeof window.wmoInitializeSortable === 'function') {
-                    console.log('WAMM: Using existing wmoInitializeSortable function');
+                window.wammSortableInitialized = true;
+
+                // Try to use the existing wammInitializeSortable function first
+                if (typeof window.wammInitializeSortable === 'function') {
+                    console.log('WAMM: Using existing wammInitializeSortable function');
                     try {
-                        window.wmoInitializeSortable();
+                        window.wammInitializeSortable();
                     } catch (error) {
-                        console.error('WAMM: Error in wmoInitializeSortable:', error);
+                        console.error('WAMM: Error in wammInitializeSortable:', error);
                         // Fall back to our own initialization
                         initializeSortableFallback($menu);
                     }
                 } else {
                     // Fallback to our own initialization
-                    console.log('WAMM: wmoInitializeSortable not found, using fallback initialization');
+                    console.log('WAMM: wammInitializeSortable not found, using fallback initialization');
                     initializeSortableFallback($menu);
                 }
                 
