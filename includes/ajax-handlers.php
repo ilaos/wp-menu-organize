@@ -549,7 +549,7 @@ function wamm_apply_badges_globally()
     
     if (!empty($menu_badges) && is_array($menu_badges)) {
         // Ensure the CSS is loaded
-        echo '<link rel="stylesheet" href="' . wamm_PLUGIN_URL . 'assets/css/admin.css" type="text/css" />';
+        echo '<link rel="stylesheet" href="' . WAMM_PLUGIN_URL . 'assets/css/admin.css" type="text/css" />';
         
         echo '<script type="text/javascript">
             jQuery(document).ready(function($) {

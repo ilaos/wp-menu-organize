@@ -99,7 +99,7 @@ class WP_Admin_Menu_Maestro
         $customizations = wamm_get_settings('admin_customizations');
         
         // Include the template - now $menu_colors will be available in the template scope
-        include wamm_PLUGIN_PATH . 'templates/admin-settings-page.php';
+        include WAMM_PLUGIN_PATH . 'templates/admin-settings-page.php';
         
         error_log('WMO Debug: admin-settings-page.php template included successfully');
     }
@@ -545,7 +545,7 @@ class WP_Admin_Menu_Maestro
             return;
         }
         
-        include wamm_PLUGIN_PATH . 'templates/admin-reorder-page.php';
+        include WAMM_PLUGIN_PATH . 'templates/admin-reorder-page.php';
     }
 
     public function render_templates_page()
@@ -554,7 +554,7 @@ class WP_Admin_Menu_Maestro
             return;
         }
 
-        include wamm_PLUGIN_PATH . 'templates/admin-templates-page.php';
+        include WAMM_PLUGIN_PATH . 'templates/admin-templates-page.php';
     }
 
     public function render_settings_tab_page()
@@ -563,7 +563,7 @@ class WP_Admin_Menu_Maestro
             return;
         }
 
-        include wamm_PLUGIN_PATH . 'templates/admin-settings-tab-page.php';
+        include WAMM_PLUGIN_PATH . 'templates/admin-settings-tab-page.php';
     }
 }
 
