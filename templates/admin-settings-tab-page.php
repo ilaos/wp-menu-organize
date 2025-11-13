@@ -8,19 +8,19 @@ if (!defined('ABSPATH')) {
     <h1>Menu Organize Settings</h1>
     
     <!-- Theme Toggle Section -->
-    <div class="wmo-section wmo-theme-section">
+    <div class="wamm-section wmo-theme-section">
         <h3><span class="dashicons dashicons-admin-appearance"></span> Theme Settings</h3>
-        <div class="wmo-theme-toggle-wrapper">
-            <div class="wmo-theme-toggle">
-                <label class="wmo-theme-label">
-                    <input type="checkbox" id="wmo-dark-mode-toggle" class="wmo-theme-checkbox" />
-                    <span class="wmo-theme-slider">
-                        <span class="wmo-theme-slider-inner">
-                            <span class="wmo-theme-icon wmo-light-icon">☀️</span>
-                            <span class="wmo-theme-icon wmo-dark-icon">🌙</span>
+        <div class="wamm-theme-toggle-wrapper">
+            <div class="wamm-theme-toggle">
+                <label class="wamm-theme-label">
+                    <input type="checkbox" id="wamm-dark-mode-toggle" class="wamm-theme-checkbox" />
+                    <span class="wamm-theme-slider">
+                        <span class="wamm-theme-slider-inner">
+                            <span class="wamm-theme-icon wmo-light-icon">☀️</span>
+                            <span class="wamm-theme-icon wmo-dark-icon">🌙</span>
                         </span>
                     </span>
-                    <span class="wmo-theme-text">Dark Mode</span>
+                    <span class="wamm-theme-text">Dark Mode</span>
                 </label>
             </div>
             <p class="description">
@@ -30,10 +30,10 @@ if (!defined('ABSPATH')) {
     </div>
     
     <!-- Import/Export Configuration Section -->
-    <div class="wmo-section wmo-import-export-section">
+    <div class="wamm-section wmo-import-export-section">
         <h3><span class="dashicons dashicons-download"></span> Import/Export Configuration</h3>
         
-        <div class="wmo-import-export-intro">
+        <div class="wamm-import-export-intro">
             <p class="description">
                 <strong>⚡ Why use Import/Export?</strong><br>
                 • <strong>Multi-site management:</strong> Apply the same menu styling to multiple WordPress sites<br>
@@ -43,113 +43,113 @@ if (!defined('ABSPATH')) {
             </p>
         </div>
         
-        <div class="wmo-import-export-wrapper">
+        <div class="wamm-import-export-wrapper">
             <!-- Export Section -->
-            <div class="wmo-export-section">
+            <div class="wamm-export-section">
                 <h4><span class="dashicons dashicons-upload"></span> Export Your Settings</h4>
                 <p class="description">Download a file containing all your current menu customizations.</p>
                 
-                <div class="wmo-export-options">
-                    <label><input type="checkbox" id="wmo-export-colors" checked> Colors</label>
-                    <label><input type="checkbox" id="wmo-export-typography" checked> Typography</label>
-                    <label><input type="checkbox" id="wmo-export-badges" checked> Badges</label>
-                    <label><input type="checkbox" id="wmo-export-theme" checked> Theme Settings</label>
+                <div class="wamm-export-options">
+                    <label><input type="checkbox" id="wamm-export-colors" checked> Colors</label>
+                    <label><input type="checkbox" id="wamm-export-typography" checked> Typography</label>
+                    <label><input type="checkbox" id="wamm-export-badges" checked> Badges</label>
+                    <label><input type="checkbox" id="wamm-export-theme" checked> Theme Settings</label>
                 </div>
                 
-                <button type="button" id="wmo-export-btn" class="button button-secondary">
+                <button type="button" id="wamm-export-btn" class="button button-secondary">
                     <span class="dashicons dashicons-download"></span> Export Configuration
                 </button>
                 
-                <div class="wmo-export-info">
+                <div class="wamm-export-info">
                     <small>💾 This will create a .json file that you can save as a backup or use on other sites.</small>
                 </div>
             </div>
             
             <!-- Import Section -->
-            <div class="wmo-import-section">
+            <div class="wamm-import-section">
                 <h4><span class="dashicons dashicons-download"></span> Import Settings</h4>
                 <p class="description">Upload a configuration file to apply menu settings from another site or backup.</p>
                 
-                <div class="wmo-import-methods">
-                    <div class="wmo-import-file">
+                <div class="wamm-import-methods">
+                    <div class="wamm-import-file">
                         <label for="wmo-import-file">Choose Configuration File:</label>
-                        <input type="file" id="wmo-import-file" accept=".json" />
+                        <input type="file" id="wamm-import-file" accept=".json" />
                     </div>
                     
-                    <div class="wmo-import-text">
+                    <div class="wamm-import-text">
                         <label for="wmo-import-textarea">Or paste JSON configuration:</label>
-                        <textarea id="wmo-import-textarea" rows="4" placeholder='Paste your exported JSON configuration here...'></textarea>
+                        <textarea id="wamm-import-textarea" rows="4" placeholder='Paste your exported JSON configuration here...'></textarea>
                     </div>
                 </div>
                 
-                <div class="wmo-import-options">
+                <div class="wamm-import-options">
                     <label><input type="radio" name="wmo-import-mode" value="replace" checked> Replace all settings</label>
                     <label><input type="radio" name="wmo-import-mode" value="merge"> Merge with existing settings</label>
                 </div>
                 
-                <button type="button" id="wmo-preview-import-btn" class="button button-secondary" disabled>
+                <button type="button" id="wamm-preview-import-btn" class="button button-secondary" disabled>
                     <span class="dashicons dashicons-visibility"></span> Preview Import
                 </button>
                 
-                <button type="button" id="wmo-import-btn" class="button button-primary" disabled>
+                <button type="button" id="wamm-import-btn" class="button button-primary" disabled>
                     <span class="dashicons dashicons-download"></span> Import Configuration
                 </button>
                 
-                <div class="wmo-import-info">
+                <div class="wamm-import-info">
                     <small>⚠️ <strong>Tip:</strong> Always preview before importing to see what will change!</small>
                 </div>
             </div>
         </div>
         
         <!-- Import Preview Modal -->
-        <div id="wmo-import-preview-modal" class="wmo-modal" style="display: none;">
-            <div class="wmo-modal-content">
-                <div class="wmo-modal-header">
+        <div id="wamm-import-preview-modal" class="wamm-modal" style="display: none;">
+            <div class="wamm-modal-content">
+                <div class="wamm-modal-header">
                     <h3>Import Preview</h3>
-                    <button type="button" class="wmo-modal-close">&times;</button>
+                    <button type="button" class="wamm-modal-close">&times;</button>
                 </div>
-                <div class="wmo-modal-body">
+                <div class="wamm-modal-body">
                     <p>The following changes will be made:</p>
-                    <div id="wmo-preview-content"></div>
+                    <div id="wamm-preview-content"></div>
                 </div>
-                <div class="wmo-modal-footer">
+                <div class="wamm-modal-footer">
                     <button type="button" class="button button-secondary wmo-modal-close">Cancel</button>
-                    <button type="button" id="wmo-confirm-import-btn" class="button button-primary">Proceed with Import</button>
+                    <button type="button" id="wamm-confirm-import-btn" class="button button-primary">Proceed with Import</button>
                 </div>
             </div>
         </div>
     </div>
     
-    <div class="wmo-section wmo-settings-section">
+    <div class="wamm-section wmo-settings-section">
         <h3><span class="dashicons dashicons-admin-settings"></span> General Settings</h3>
         
-        <div class="wmo-settings-content">
-            <div class="wmo-settings-group">
+        <div class="wamm-settings-content">
+            <div class="wamm-settings-group">
                 <h4>Plugin Configuration</h4>
                 <p class="description">
                     Configure general settings for the Menu Organize plugin. More options will be added here in future updates.
                 </p>
                 
-                <div class="wmo-settings-placeholder">
-                    <div class="wmo-placeholder-item">
+                <div class="wamm-settings-placeholder">
+                    <div class="wamm-placeholder-item">
                         <span class="dashicons dashicons-clock"></span>
                         <h5>Coming Soon</h5>
                         <p>Advanced configuration options will be available here.</p>
                     </div>
                     
-                    <div class="wmo-placeholder-item">
+                    <div class="wamm-placeholder-item">
                         <span class="dashicons dashicons-admin-tools"></span>
                         <h5>Plugin Management</h5>
                         <p>Tools for managing plugin behavior and performance.</p>
                     </div>
                     
-                    <div class="wmo-placeholder-item">
+                    <div class="wamm-placeholder-item">
                         <span class="dashicons dashicons-admin-users"></span>
                         <h5>User Permissions</h5>
                         <p>Configure who can access and modify menu settings.</p>
                     </div>
                     
-                    <div class="wmo-placeholder-item">
+                    <div class="wamm-placeholder-item">
                         <span class="dashicons dashicons-backup"></span>
                         <h5>Backup & Restore</h5>
                         <p>Advanced backup and restore functionality for menu configurations.</p>
@@ -159,24 +159,24 @@ if (!defined('ABSPATH')) {
         </div>
     </div>
     
-    <div class="wmo-section wmo-advanced-settings-section">
+    <div class="wamm-section wmo-advanced-settings-section">
         <h3><span class="dashicons dashicons-admin-tools"></span> Advanced Settings</h3>
         
-        <div class="wmo-settings-content">
-            <div class="wmo-settings-group">
+        <div class="wamm-settings-content">
+            <div class="wamm-settings-group">
                 <h4>Performance & Optimization</h4>
                 <p class="description">
                     Fine-tune the plugin's performance and behavior for your specific needs.
                 </p>
                 
-                <div class="wmo-settings-placeholder">
-                    <div class="wmo-placeholder-item">
+                <div class="wamm-settings-placeholder">
+                    <div class="wamm-placeholder-item">
                         <span class="dashicons dashicons-performance"></span>
                         <h5>Performance Options</h5>
                         <p>Optimize loading times and resource usage.</p>
                     </div>
                     
-                    <div class="wmo-placeholder-item">
+                    <div class="wamm-placeholder-item">
                         <span class="dashicons dashicons-admin-plugins"></span>
                         <h5>Integration Settings</h5>
                         <p>Configure how the plugin integrates with other WordPress features.</p>

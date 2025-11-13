@@ -1,41 +1,41 @@
-﻿<div class="wrap">
+<div class="wrap">
     <h1>WP Menu Organize Settings</h1>
-    <div class="wmo-layout">
-        <div class="wmo-main-content">
+    <div class="wamm-layout">
+        <div class="wamm-main-content">
             <form method="post" action="options.php">
                 <?php
-                settings_fields('wmo_settings_group');
-                do_settings_sections('wmo_settings_group');
+                settings_fields('wamm_settings_group');
+                do_settings_sections('wamm_settings_group');
                 ?>
 
                 <!-- Debug info for toggle functionality -->
-                <div class="wmo-debug-info" style="display: none;">
+                <div class="wamm-debug-info" style="display: none;">
                     <h3>Debug Information</h3>
                     <p><strong>Current page:</strong> <?php echo esc_html($_GET['page'] ?? 'unknown'); ?></p>
-                    <p><strong>Hook suffix:</strong> <span id="wmo-hook-suffix">Loading...</span></p>
-                    <p><strong>Menu items found:</strong> <span id="wmo-menu-count">Loading...</span></p>
-                    <p><strong>Toggle headers found:</strong> <span id="wmo-toggle-count">Loading...</span></p>
+                    <p><strong>Hook suffix:</strong> <span id="wamm-hook-suffix">Loading...</span></p>
+                    <p><strong>Menu items found:</strong> <span id="wamm-menu-count">Loading...</span></p>
+                    <p><strong>Toggle headers found:</strong> <span id="wamm-toggle-count">Loading...</span></p>
                     <p><strong>Unique slug format:</strong> <code>slug_hash</code> (e.g., dashboard_dc7161be)</p>
                 </div>
                 
-                <div class="wmo-section">
+                <div class="wamm-section">
                     <h3>Menu Customization</h3>
                     <p class="description">
-                        <em>⚡ All changes are automatically saved when you make them - no need to click a save button!</em>
+                        <em>? All changes are automatically saved when you make them - no need to click a save button!</em>
                     </p>
                     
                     <!-- Search/Filter Box -->
                     <div style="padding: 20px 0; margin-bottom: 20px;">
                         <input type="text" 
-                               id="wmo-menu-search" 
+                               id="wamm-menu-search" 
                                placeholder="Search menu items..." 
                                style="width: 100%; max-width: 400px; padding: 10px; font-size: 14px; border: 1px solid #ddd; border-radius: 4px;">
                         <p style="margin-top: 10px; color: #666; font-style: italic;">Type to filter menu items (e.g., 'plugin', 'dashboard', 'posts')</p>
                     </div>
                     
-                    <div class="wmo-color-groups">
+                    <div class="wamm-color-groups">
                         <!-- Column 1 -->
-                        <div class="wmo-color-column">
+                        <div class="wamm-color-column">
                             <?php
                             // Process core WordPress items that may have submenus
                             global $menu, $submenu;
@@ -94,22 +94,22 @@
                             
                             // Display Core WordPress items with submenus
                             foreach ($core_with_submenus as $parent_item) {
-                                echo '<div class="wmo-color-group wmo-parent-menu-group">';
+                                echo '<div class="wamm-color-group wmo-parent-menu-group">';
                                 echo '<h3><span class="dashicons dashicons-dashboard"></span> ' . esc_html($parent_item['title']) . ' & Submenus</h3>';
-                                echo '<div class="wmo-color-items">';
+                                echo '<div class="wamm-color-items">';
                                 
                                 // Parent item
-                                echo '<div class="wmo-parent-item">';
-                                wmo_render_color_picker($menu_colors, $parent_item['slug'], $parent_item['title'] . ' (Parent)');
+                                echo '<div class="wamm-parent-item">';
+                                wamm_render_color_picker($menu_colors, $parent_item['slug'], $parent_item['title'] . ' (Parent)');
                                 echo '</div>';
                                 
                                 // Child items
                                 if (!empty($parent_item['submenus'])) {
-                                    echo '<div class="wmo-submenu-items">';
+                                    echo '<div class="wamm-submenu-items">';
                                     foreach ($parent_item['submenus'] as $subitem) {
                                         $submenu_slug = sanitize_title(strip_tags($subitem[0]));
                                         $submenu_title = strip_tags($subitem[0]);
-                                        wmo_render_color_picker($menu_colors, $submenu_slug, $submenu_title, true);
+                                        wamm_render_color_picker($menu_colors, $submenu_slug, $submenu_title, true);
                                     }
                                     echo '</div>';
                                 }
@@ -120,11 +120,11 @@
                             
                             // Display remaining core items without submenus (if any)
                             if (!empty($core_without_submenus)) {
-                                echo '<div class="wmo-color-group">';
+                                echo '<div class="wamm-color-group">';
                                 echo '<h3><span class="dashicons dashicons-dashboard"></span> Core WordPress (Simple)</h3>';
-                                echo '<div class="wmo-color-items">';
+                                echo '<div class="wamm-color-items">';
                                 foreach ($core_without_submenus as $item) {
-                                    wmo_render_color_picker($menu_colors, $item['slug'], $item['title']);
+                                    wamm_render_color_picker($menu_colors, $item['slug'], $item['title']);
                                 }
                                 echo '</div>';
                                 echo '</div>';
@@ -132,22 +132,22 @@
                             
                             // Display Site Management items with submenus
                             foreach ($site_with_submenus as $parent_item) {
-                                echo '<div class="wmo-color-group wmo-parent-menu-group">';
+                                echo '<div class="wamm-color-group wmo-parent-menu-group">';
                                 echo '<h3><span class="dashicons dashicons-admin-appearance"></span> ' . esc_html($parent_item['title']) . ' & Submenus</h3>';
-                                echo '<div class="wmo-color-items">';
+                                echo '<div class="wamm-color-items">';
                                 
                                 // Parent item
-                                echo '<div class="wmo-parent-item">';
-                                wmo_render_color_picker($menu_colors, $parent_item['slug'], $parent_item['title'] . ' (Parent)');
+                                echo '<div class="wamm-parent-item">';
+                                wamm_render_color_picker($menu_colors, $parent_item['slug'], $parent_item['title'] . ' (Parent)');
                                 echo '</div>';
                                 
                                 // Child items
                                 if (!empty($parent_item['submenus'])) {
-                                    echo '<div class="wmo-submenu-items">';
+                                    echo '<div class="wamm-submenu-items">';
                                     foreach ($parent_item['submenus'] as $subitem) {
                                         $submenu_slug = sanitize_title(strip_tags($subitem[0]));
                                         $submenu_title = strip_tags($subitem[0]);
-                                        wmo_render_color_picker($menu_colors, $submenu_slug, $submenu_title, true);
+                                        wamm_render_color_picker($menu_colors, $submenu_slug, $submenu_title, true);
                                     }
                                     echo '</div>';
                                 }
@@ -158,11 +158,11 @@
                             
                             // Display remaining site management items without submenus (if any)
                             if (!empty($site_without_submenus)) {
-                                echo '<div class="wmo-color-group">';
+                                echo '<div class="wamm-color-group">';
                                 echo '<h3><span class="dashicons dashicons-admin-appearance"></span> Site Management (Simple)</h3>';
-                                echo '<div class="wmo-color-items">';
+                                echo '<div class="wamm-color-items">';
                                 foreach ($site_without_submenus as $item) {
-                                    wmo_render_color_picker($menu_colors, $item['slug'], $item['title']);
+                                    wamm_render_color_picker($menu_colors, $item['slug'], $item['title']);
                                 }
                                 echo '</div>';
                                 echo '</div>';
@@ -171,7 +171,7 @@
                         </div>
                         
                         <!-- Column 2 -->
-                        <div class="wmo-color-column">
+                        <div class="wamm-color-column">
                             <?php
                             // Collect plugin menu items and other items with submenus
                             $plugin_items = [];
@@ -210,11 +210,11 @@
                             
                             // Display plugin items without submenus
                             if (!empty($plugin_items)) {
-                                echo '<div class="wmo-color-group">';
+                                echo '<div class="wamm-color-group">';
                                 echo '<h3><span class="dashicons dashicons-admin-plugins"></span> Plugin Menu Items</h3>';
-                                echo '<div class="wmo-color-items">';
+                                echo '<div class="wamm-color-items">';
                                 foreach ($plugin_items as $item) {
-                                    wmo_render_color_picker($menu_colors, $item['slug'], $item['title']);
+                                    wamm_render_color_picker($menu_colors, $item['slug'], $item['title']);
                                 }
                                 echo '</div>';
                                 echo '</div>';
@@ -222,22 +222,22 @@
                             
                             // Display other items with submenus in separate sections
                             foreach ($other_items_with_submenus as $parent_item) {
-                                echo '<div class="wmo-color-group wmo-parent-menu-group">';
+                                echo '<div class="wamm-color-group wmo-parent-menu-group">';
                                 echo '<h3><span class="dashicons dashicons-menu-alt3"></span> ' . esc_html($parent_item['title']) . ' & Submenus</h3>';
-                                echo '<div class="wmo-color-items">';
+                                echo '<div class="wamm-color-items">';
                                 
                                 // Parent item
-                                echo '<div class="wmo-parent-item">';
-                                wmo_render_color_picker($menu_colors, $parent_item['slug'], $parent_item['title'] . ' (Parent)');
+                                echo '<div class="wamm-parent-item">';
+                                wamm_render_color_picker($menu_colors, $parent_item['slug'], $parent_item['title'] . ' (Parent)');
                                 echo '</div>';
                                 
                                 // Child items
                                 if (!empty($parent_item['submenus'])) {
-                                    echo '<div class="wmo-submenu-items">';
+                                    echo '<div class="wamm-submenu-items">';
                                     foreach ($parent_item['submenus'] as $subitem) {
                                         $submenu_slug = sanitize_title(strip_tags($subitem[0]));
                                         $submenu_title = strip_tags($subitem[0]);
-                                        wmo_render_color_picker($menu_colors, $submenu_slug, $submenu_title, true);
+                                        wamm_render_color_picker($menu_colors, $submenu_slug, $submenu_title, true);
                                     }
                                     echo '</div>';
                                 }
@@ -653,7 +653,7 @@
     }
 
     .wmo-submenu-items .wmo-menu-item-wrapper::before {
-        content: "└─";
+        content: "+-";
         position: absolute;
         left: -8px;
         top: 50%;

@@ -1,9 +1,9 @@
-﻿<?php
+<?php
 if (!defined('ABSPATH')) {
     exit; // Exit if accessed directly
 }
 
-class WP_Menu_Organize
+class WP_Admin_Menu_Maestro
 {
     private static $instance = null;
 
@@ -29,57 +29,57 @@ class WP_Menu_Organize
             'WP Menu Organize',
             'Menu Organize',
             'manage_options',
-            'wp-menu-organize-settings',
+            'wp-admin-menu-maestro-settings',
             array($this, 'render_settings_page'),
             'dashicons-admin-generic'
         );
 
         // Add the main Customize Tabs submenu page (this replaces the default first submenu item)
         add_submenu_page(
-            'wp-menu-organize-settings',
+            'wp-admin-menu-maestro-settings',
             'Customize Tabs',
             'Customize Tabs',
             'manage_options',
-            'wp-menu-organize-settings',
+            'wp-admin-menu-maestro-settings',
             array($this, 'render_settings_page')
         );
 
 
         // Add Settings submenu page (first)
         add_submenu_page(
-            'wp-menu-organize-settings',
+            'wp-admin-menu-maestro-settings',
             'Menu Organize Settings',
             'Settings',
             'manage_options',
-            'wp-menu-organize-settings-page',
+            'wp-admin-menu-maestro-settings-page',
             array($this, 'render_settings_tab_page')
         );
         // Add Templates submenu page
         add_submenu_page(
-            'wp-menu-organize-settings',
+            'wp-admin-menu-maestro-settings',
             'Menu Templates',
             'Templates',
             'manage_options',
-            'wp-menu-organize-templates',
+            'wp-admin-menu-maestro-templates',
             array($this, 'render_templates_page')
         );
         add_submenu_page(
-            'wp-menu-organize-settings',
+            'wp-admin-menu-maestro-settings',
             'Reorder Admin Menu',
             'Reorder Menu',
             'manage_options',
-            'wp-menu-organize-reorder',
+            'wp-admin-menu-maestro-reorder',
             array($this, 'render_reorder_page')
         );
     }
 
     public function settings_init()
     {
-        register_setting('wmo_settings_group', 'wmo_admin_customizations', array($this, 'sanitize_admin_customizations'));
-        register_setting('wmo_settings_group', 'wmo_menu_colors', array($this, 'sanitize_menu_colors'));
-        register_setting('wmo_settings_group', 'wmo_menu_badges', array($this, 'sanitize_menu_badges'));
-        register_setting('wmo_settings_group', 'wmo_menu_typography', array($this, 'sanitize_menu_typography'));
-        register_setting('wmo_settings_group', 'wmo_menu_background_colors', array($this, 'sanitize_menu_background_colors'));
+        register_setting('wamm_settings_group', 'wamm_admin_customizations', array($this, 'sanitize_admin_customizations'));
+        register_setting('wamm_settings_group', 'wamm_menu_colors', array($this, 'sanitize_menu_colors'));
+        register_setting('wamm_settings_group', 'wamm_menu_badges', array($this, 'sanitize_menu_badges'));
+        register_setting('wamm_settings_group', 'wamm_menu_typography', array($this, 'sanitize_menu_typography'));
+        register_setting('wamm_settings_group', 'wamm_menu_background_colors', array($this, 'sanitize_menu_background_colors'));
     }
 
     public function render_settings_page()
@@ -88,7 +88,7 @@ class WP_Menu_Organize
         error_log('WMO Debug: render_settings_page() called - including admin-settings-page.php template');
         
         // Retrieve saved colors from database, or use empty array as default
-        $menu_colors = wmo_get_settings('colors');
+        $menu_colors = wamm_get_settings('colors');
         
         // Ensure $menu_colors is always an array
         if (!is_array($menu_colors)) {
@@ -96,22 +96,22 @@ class WP_Menu_Organize
         }
         
         global $menu, $submenu;
-        $customizations = wmo_get_settings('admin_customizations');
+        $customizations = wamm_get_settings('admin_customizations');
         
         // Include the template - now $menu_colors will be available in the template scope
-        include WMO_PLUGIN_PATH . 'templates/admin-settings-page.php';
+        include wamm_PLUGIN_PATH . 'templates/admin-settings-page.php';
         
         error_log('WMO Debug: admin-settings-page.php template included successfully');
     }
 
     public function handle_actions()
     {
-        if (isset($_POST['wmo_reset_customizations']) && check_admin_referer('wmo_reset_customizations', 'wmo_reset_nonce')) {
-            delete_option('wmo_admin_customizations');
-            add_settings_error('wmo_messages', 'wmo_message', 'All admin menu customizations have been reset to default.', 'updated');
+        if (isset($_POST['wamm_reset_customizations']) && check_admin_referer('wamm_reset_customizations', 'wamm_reset_nonce')) {
+            delete_option('wamm_admin_customizations');
+            add_settings_error('wamm_messages', 'wamm_message', 'All admin menu customizations have been reset to default.', 'updated');
         }
 
-        settings_errors('wmo_messages');
+        settings_errors('wamm_messages');
     }
 
     public function sanitize_admin_customizations($input)
@@ -232,10 +232,10 @@ class WP_Menu_Organize
         // Existing debug logs...
         error_log('WMO Debug: Hook suffix = ' . $hook_suffix);
         
-        if ($hook_suffix !== 'toplevel_page_wp-menu-organize-settings' && 
-            $hook_suffix !== 'menu-organize_page_wp-menu-organize-reorder' &&
-            $hook_suffix !== 'menu-organize_page_wp-menu-organize-templates' &&
-            $hook_suffix !== 'menu-organize_page_wp-menu-organize-settings-page') {
+        if ($hook_suffix !== 'toplevel_page_wp-admin-menu-maestro-settings' && 
+            $hook_suffix !== 'menu-organize_page_wp-admin-menu-maestro-reorder' &&
+            $hook_suffix !== 'menu-organize_page_wp-admin-menu-maestro-templates' &&
+            $hook_suffix !== 'menu-organize_page_wp-admin-menu-maestro-settings-page') {
             error_log('WMO Debug: Hook not matched, but checking for icon applier');
         } else {
             error_log('WMO Debug: Hook matched, loading scripts for toggle functionality');
@@ -246,26 +246,26 @@ class WP_Menu_Organize
         wp_enqueue_script('wp-color-picker');
         wp_enqueue_style('wp-color-picker');
         
-        if (strpos($hook_suffix, 'wp-menu-organize') !== false) {
-            wp_enqueue_script('wmo-admin', wmo_get_asset_url('admin.js'), array('jquery', 'wp-color-picker', 'jquery-ui-sortable'), '1.0', true);
-            wp_enqueue_script('wmo-icon-picker', wmo_get_asset_url('icon-picker.js'), array('jquery'), '1.0', true);
-            wp_enqueue_script('wmo-color-picker', wmo_get_asset_url('color-picker.js'), array('jquery', 'wp-color-picker'), '1.1', true);
-            wp_enqueue_style('wmo-admin', wmo_get_asset_url('admin.css'), array('wp-color-picker'), '1.0');
+        if (strpos($hook_suffix, 'wp-admin-menu-maestro') !== false) {
+            wp_enqueue_script('wmo-admin', wamm_get_asset_url('admin.js'), array('jquery', 'wp-color-picker', 'jquery-ui-sortable'), '1.0', true);
+            wp_enqueue_script('wmo-icon-picker', wamm_get_asset_url('icon-picker.js'), array('jquery'), '1.0', true);
+            wp_enqueue_script('wmo-color-picker', wamm_get_asset_url('color-picker.js'), array('jquery', 'wp-color-picker'), '1.1', true);
+            wp_enqueue_style('wmo-admin', wamm_get_asset_url('admin.css'), array('wp-color-picker'), '1.0');
             
-            wp_localize_script('wmo-admin', 'wmo_ajax', array(
+            wp_localize_script('wmo-admin', 'wamm_ajax', array(
                 'ajax_url' => admin_url('admin-ajax.php'),
-                'nonce' => wp_create_nonce('wmo_ajax_nonce')
+                'nonce' => wp_create_nonce('wamm_ajax_nonce')
             ));
             
             // Also localize for color picker script
-            wp_localize_script('wmo-color-picker', 'wmo_ajax', array(
+            wp_localize_script('wmo-color-picker', 'wamm_ajax', array(
                 'ajax_url' => admin_url('admin-ajax.php'),
-                'nonce' => wp_create_nonce('wmo_ajax_nonce')
+                'nonce' => wp_create_nonce('wamm_ajax_nonce')
             ));
         }
         
         // Global icon applier
-        $icons = wmo_get_settings('icons');
+        $icons = wamm_get_settings('icons');
         if (!empty($icons)) {
             $decoded_icons = array();
             foreach ($icons as $menu_id => $icon_data) {
@@ -278,7 +278,7 @@ class WP_Menu_Organize
                 $decoded_icons[$menu_id] = $icon_data;
             }
             wp_enqueue_script('wmo-icon-applier', plugin_dir_url(__FILE__) . '../assets/js/icon-applier.js', array('jquery'), '1.0', true);
-            wp_localize_script('wmo-icon-applier', 'wmo_saved_icons', $decoded_icons);
+            wp_localize_script('wmo-icon-applier', 'wamm_saved_icons', $decoded_icons);
         }
     }
     
@@ -287,10 +287,10 @@ class WP_Menu_Organize
     public function apply_theme_preference() {
         // Only apply on our plugin pages
         $screen = get_current_screen();
-        if ($screen && ($screen->id === 'toplevel_page_wp-menu-organize-settings' || 
-                       $screen->id === 'menu-organize_page_wp-menu-organize-reorder')) {
+        if ($screen && ($screen->id === 'toplevel_page_wp-admin-menu-maestro-settings' || 
+                       $screen->id === 'menu-organize_page_wp-admin-menu-maestro-reorder')) {
             
-            $dark_mode = wmo_get_settings('theme_preference') === 'dark';
+            $dark_mode = wamm_get_settings('theme_preference') === 'dark';
             
             if ($dark_mode) {
                 echo '<script>
@@ -304,7 +304,7 @@ class WP_Menu_Organize
                             themeToggle.checked = true;
                         }
                         
-                        console.log("WMO: Applied dark theme from server preference");
+                        console.log("WAMM: Applied dark theme from server preference");
                     });
                 </script>';
             }
@@ -545,7 +545,7 @@ class WP_Menu_Organize
             return;
         }
         
-        include WMO_PLUGIN_PATH . 'templates/admin-reorder-page.php';
+        include wamm_PLUGIN_PATH . 'templates/admin-reorder-page.php';
     }
 
     public function render_templates_page()
@@ -554,7 +554,7 @@ class WP_Menu_Organize
             return;
         }
 
-        include WMO_PLUGIN_PATH . 'templates/admin-templates-page.php';
+        include wamm_PLUGIN_PATH . 'templates/admin-templates-page.php';
     }
 
     public function render_settings_tab_page()
@@ -563,13 +563,13 @@ class WP_Menu_Organize
             return;
         }
 
-        include WMO_PLUGIN_PATH . 'templates/admin-settings-tab-page.php';
+        include wamm_PLUGIN_PATH . 'templates/admin-settings-tab-page.php';
     }
 }
 
 
 // Initialize the plugin
-WP_Menu_Organize::get_instance();
+WP_Admin_Menu_Maestro::get_instance();
 
 // Debug function to check admin hooks
 function debug_admin_hooks($hook) {
@@ -588,5 +588,5 @@ function debug_script_registration() {
 add_action('wp_enqueue_scripts', 'debug_script_registration');
 add_action('admin_enqueue_scripts', 'debug_script_registration');
 
-// Note: Icon application is now handled by wmo_apply_menu_icons() in wp-menu-organize.php
+// Note: Icon application is now handled by wamm_apply_menu_icons() in wp-admin-menu-maestro.php
 // This replaces the CSS-based approach with direct menu array modification

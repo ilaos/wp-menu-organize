@@ -1,78 +1,78 @@
-﻿// WP Menu Organize - Templates System
+// WP Menu Organize - Templates System
 (function($) {
     'use strict';
 
     // Initialize when document is ready
     $(function() {
-        if ($('#wmo-templates-gallery').length > 0) {
+        if ($('#wamm-templates-gallery').length > 0) {
             initTemplatesFunctionality();
         }
     });
 
     // Initialize templates functionality
     function initTemplatesFunctionality() {
-        console.log('WMO: Initializing templates functionality');
-        wmoLoadTemplates('all');
+        console.log('WAMM: Initializing templates functionality');
+        wammLoadTemplates('all');
     }
 
     // Load templates from server
-    function wmoLoadTemplates(category) {
-        console.log('WMO: Loading templates for category:', category);
+    function wammLoadTemplates(category) {
+        console.log('WAMM: Loading templates for category:', category);
         
-        var $gallery = $('#wmo-templates-gallery');
-        $gallery.html('<div class="wmo-templates-loading"><span class="dashicons dashicons-update-alt wmo-spin"></span> Loading templates...</div>');
+        var $gallery = $('#wamm-templates-gallery');
+        $gallery.html('<div class="wamm-templates-loading"><span class="dashicons dashicons-update-alt wmo-spin"></span> Loading templates...</div>');
 
         $.ajax({
-            url: wmo_ajax.ajax_url,
+            url: wamm_ajax.ajax_url,
             method: 'POST',
             data: {
-                action: 'wmo_load_templates',
+                action: 'wamm_load_templates',
                 category: category,
-                nonce: wmo_ajax.nonce
+                nonce: wamm_ajax.nonce
             },
             success: function(response) {
-                console.log('WMO: AJAX response:', response);
+                console.log('WAMM: AJAX response:', response);
                 if (response.success) {
-                    console.log('WMO: Templates:', response.data.templates);
-                    wmoRenderTemplates(response.data.templates);
+                    console.log('WAMM: Templates:', response.data.templates);
+                    wammRenderTemplates(response.data.templates);
                 } else {
-                    console.error('WMO: Failed to load templates:', response.data);
-                    $gallery.html('<div class="wmo-templates-error">Failed to load templates: ' + response.data + '</div>');
+                    console.error('WAMM: Failed to load templates:', response.data);
+                    $gallery.html('<div class="wamm-templates-error">Failed to load templates: ' + response.data + '</div>');
                 }
             },
             error: function(jqXHR, textStatus, errorThrown) {
-                console.error('WMO: AJAX error:', textStatus, errorThrown);
-                $gallery.html('<div class="wmo-templates-error">Failed to load templates. Please refresh the page.</div>');
+                console.error('WAMM: AJAX error:', textStatus, errorThrown);
+                $gallery.html('<div class="wamm-templates-error">Failed to load templates. Please refresh the page.</div>');
             }
         });
     }
 
     // Render templates on the page
-    function wmoRenderTemplates(templates) {
-        console.log('WMO: Rendering', templates.length, 'templates');
-        console.log('WMO: Template data:', templates);
+    function wammRenderTemplates(templates) {
+        console.log('WAMM: Rendering', templates.length, 'templates');
+        console.log('WAMM: Template data:', templates);
         
-        var $gallery = $('#wmo-templates-gallery');
+        var $gallery = $('#wamm-templates-gallery');
         
         if (templates.length === 0) {
-            $gallery.html('<div class="wmo-templates-empty">No templates found.</div>');
+            $gallery.html('<div class="wamm-templates-empty">No templates found.</div>');
             return;
         }
 
-        var html = '<div class="wmo-templates-grid">';
+        var html = '<div class="wamm-templates-grid">';
         
         templates.forEach(function(template, index) {
-            console.log('WMO: Template', index, ':', template);
-            console.log('WMO: Template', index, 'category:', template.category);
-            console.log('WMO: Template', index, 'preview:', template.preview);
+            console.log('WAMM: Template', index, ':', template);
+            console.log('WAMM: Template', index, 'category:', template.category);
+            console.log('WAMM: Template', index, 'preview:', template.preview);
             
-            html += '<div class="wmo-template-card" data-template-id="' + (template.id || '') + '">';
+            html += '<div class="wamm-template-card" data-template-id="' + (template.id || '') + '">';
             html += '  <div class="template-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">';
             html += '    <h4>' + (template.name || 'Untitled Template') + '</h4>';
-            html += '    <span class="favorite-star" data-template-id="' + (template.id || '') + '" style="cursor: pointer; font-size: 24px; color: #ddd;">☆</span>';
+            html += '    <span class="favorite-star" data-template-id="' + (template.id || '') + '" style="cursor: pointer; font-size: 24px; color: #ddd;">?</span>';
             html += '  </div>';
-            html += '  <div class="wmo-template-category">' + (template.category || 'General') + '</div>';
-            html += '  <div class="wmo-template-description">' + (template.description || 'No description available') + '</div>';
+            html += '  <div class="wamm-template-category">' + (template.category || 'General') + '</div>';
+            html += '  <div class="wamm-template-description">' + (template.description || 'No description available') + '</div>';
             
             // Add color preview bar based on template name
             var templateName = (template.name || '').toLowerCase();
@@ -108,8 +108,8 @@
             });
             html += '</div>';
             
-            html += '  <div class="wmo-template-preview">' + (template.preview || 'Preview not available') + '</div>';
-            html += '  <div class="wmo-template-actions">';
+            html += '  <div class="wamm-template-preview">' + (template.preview || 'Preview not available') + '</div>';
+            html += '  <div class="wamm-template-actions">';
             html += '    <button type="button" class="button preview-template" data-template-id="' + (template.id || '') + '">Preview</button>';
             html += '    <button type="button" class="button button-primary wmo-apply-template" data-template-id="' + (template.id || '') + '">Apply Template</button>';
             html += '  </div>';
@@ -120,9 +120,9 @@
         $gallery.html(html);
         
         // Attach event handlers to the Apply Template buttons
-        $gallery.find('.wmo-apply-template').on('click', function() {
+        $gallery.find('.wamm-apply-template').on('click', function() {
             var templateId = $(this).data('template-id');
-            var templateName = $(this).closest('.wmo-template-card').find('h4').text();
+            var templateName = $(this).closest('.wamm-template-card').find('h4').text();
             
             // Confirm before applying
             if (!confirm('Apply the "' + templateName + '" template? This will change your menu colors.')) {
@@ -134,13 +134,13 @@
             
             // Send AJAX request to save template
             $.ajax({
-                url: wmo_ajax.ajax_url,
+                url: wamm_ajax.ajax_url,
                 type: 'POST',
                 data: {
-                    action: 'wmo_apply_template',
+                    action: 'wamm_apply_template',
                     template_id: templateId,
                     colors: templateColors,
-                    nonce: wmo_ajax.nonce
+                    nonce: wamm_ajax.nonce
                 },
                 success: function(response) {
                     if (response.success) {
@@ -158,31 +158,31 @@
             });
         });
         
-        console.log('WMO: Templates rendered successfully!');
+        console.log('WAMM: Templates rendered successfully!');
         
         // Initialize favorites system after templates are rendered
         initFavoritesSystem();
     }
 
     // Apply template functionality
-    function wmoApplyTemplate(templateId) {
-        console.log('WMO: Applying template with ID:', templateId);
+    function wammApplyTemplate(templateId) {
+        console.log('WAMM: Applying template with ID:', templateId);
         
         // Show loading state
-        var $button = $('.wmo-apply-template[data-template-id="' + templateId + '"]');
+        var $button = $('.wamm-apply-template[data-template-id="' + templateId + '"]');
         var originalText = $button.text();
         $button.text('Applying...').prop('disabled', true);
         
         $.ajax({
-            url: wmo_ajax.ajax_url,
+            url: wamm_ajax.ajax_url,
             method: 'POST',
             data: {
-                action: 'wmo_apply_template',
+                action: 'wamm_apply_template',
                 template_id: templateId,
-                nonce: wmo_ajax.nonce
+                nonce: wamm_ajax.nonce
             },
             success: function(response) {
-                console.log('WMO: Apply template response:', response);
+                console.log('WAMM: Apply template response:', response);
                 if (response.success) {
                     // Show success message
                     $button.text('Applied!').removeClass('button-primary').addClass('button-secondary');
@@ -193,7 +193,7 @@
                     // Optionally reload the page or show a notification
                     alert('Template applied successfully!');
                 } else {
-                    console.error('WMO: Failed to apply template:', response.data);
+                    console.error('WAMM: Failed to apply template:', response.data);
                     $button.text('Error').removeClass('button-primary').addClass('button-secondary');
                     setTimeout(function() {
                         $button.text(originalText).removeClass('button-secondary').addClass('button-primary').prop('disabled', false);
@@ -202,7 +202,7 @@
                 }
             },
             error: function(jqXHR, textStatus, errorThrown) {
-                console.error('WMO: Apply template error:', textStatus, errorThrown);
+                console.error('WAMM: Apply template error:', textStatus, errorThrown);
                 $button.text('Error').removeClass('button-primary').addClass('button-secondary');
                 setTimeout(function() {
                     $button.text(originalText).removeClass('button-secondary').addClass('button-primary').prop('disabled', false);
@@ -215,7 +215,7 @@
     // Preview functionality
     jQuery(document).on('click', '.preview-template', function() {
         var templateId = jQuery(this).data('template-id');
-        var templateName = jQuery(this).closest('.wmo-template-card').find('h4').text();
+        var templateName = jQuery(this).closest('.wamm-template-card').find('h4').text();
         
         // Get colors based on template
         var menuHtml = generatePreviewMenu(templateId);
@@ -243,14 +243,14 @@
     function generatePreviewMenu(templateId) {
         var colors = getTemplateColors(templateId);
         return '<div style="width: 160px; font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, sans-serif;">' +
-            '<div style="padding: 8px 12px; background: ' + colors[0] + '; color: rgba(255,255,255,0.9); font-size: 14px; border-left: 4px solid transparent; cursor: pointer;">🏠 Dashboard</div>' +
-            '<div style="padding: 8px 12px; background: ' + colors[1] + '; color: rgba(255,255,255,0.9); font-size: 14px; border-left: 4px solid transparent; cursor: pointer;">📝 Posts</div>' +
-            '<div style="padding: 8px 12px; background: ' + colors[2] + '; color: rgba(255,255,255,0.9); font-size: 14px; border-left: 4px solid transparent; cursor: pointer;">🖼️ Media</div>' +
-            '<div style="padding: 8px 12px; background: ' + colors[3] + '; color: rgba(255,255,255,0.9); font-size: 14px; border-left: 4px solid #007cba; cursor: pointer;">📄 Pages</div>' +
-            '<div style="padding: 8px 12px; background: ' + colors[0] + '; color: rgba(255,255,255,0.9); font-size: 14px; border-left: 4px solid transparent; cursor: pointer;">💬 Comments</div>' +
-            '<div style="padding: 8px 12px; background: ' + colors[1] + '; color: rgba(255,255,255,0.9); font-size: 14px; border-left: 4px solid transparent; cursor: pointer;">🎨 Appearance</div>' +
-            '<div style="padding: 8px 12px; background: ' + colors[2] + '; color: rgba(255,255,255,0.9); font-size: 14px; border-left: 4px solid transparent; cursor: pointer;">🔌 Plugins</div>' +
-            '<div style="padding: 8px 12px; background: ' + colors[3] + '; color: rgba(255,255,255,0.9); font-size: 14px; border-left: 4px solid transparent; cursor: pointer;">⚙️ Settings</div>' +
+            '<div style="padding: 8px 12px; background: ' + colors[0] + '; color: rgba(255,255,255,0.9); font-size: 14px; border-left: 4px solid transparent; cursor: pointer;">?? Dashboard</div>' +
+            '<div style="padding: 8px 12px; background: ' + colors[1] + '; color: rgba(255,255,255,0.9); font-size: 14px; border-left: 4px solid transparent; cursor: pointer;">?? Posts</div>' +
+            '<div style="padding: 8px 12px; background: ' + colors[2] + '; color: rgba(255,255,255,0.9); font-size: 14px; border-left: 4px solid transparent; cursor: pointer;">??? Media</div>' +
+            '<div style="padding: 8px 12px; background: ' + colors[3] + '; color: rgba(255,255,255,0.9); font-size: 14px; border-left: 4px solid #007cba; cursor: pointer;">?? Pages</div>' +
+            '<div style="padding: 8px 12px; background: ' + colors[0] + '; color: rgba(255,255,255,0.9); font-size: 14px; border-left: 4px solid transparent; cursor: pointer;">?? Comments</div>' +
+            '<div style="padding: 8px 12px; background: ' + colors[1] + '; color: rgba(255,255,255,0.9); font-size: 14px; border-left: 4px solid transparent; cursor: pointer;">?? Appearance</div>' +
+            '<div style="padding: 8px 12px; background: ' + colors[2] + '; color: rgba(255,255,255,0.9); font-size: 14px; border-left: 4px solid transparent; cursor: pointer;">?? Plugins</div>' +
+            '<div style="padding: 8px 12px; background: ' + colors[3] + '; color: rgba(255,255,255,0.9); font-size: 14px; border-left: 4px solid transparent; cursor: pointer;">?? Settings</div>' +
             '</div>';
     }
 
@@ -287,16 +287,16 @@
     // Favorites system
     function initFavoritesSystem() {
         // Load favorites from localStorage
-        var favorites = JSON.parse(localStorage.getItem('wmo_favorite_templates') || '[]');
+        var favorites = JSON.parse(localStorage.getItem('wamm_favorite_templates') || '[]');
         
         // Update star display
         function updateStars() {
             $('.favorite-star').each(function() {
                 var templateId = $(this).data('template-id');
                 if (favorites.includes(templateId)) {
-                    $(this).text('★').css('color', '#ffb900');
+                    $(this).text('?').css('color', '#ffb900');
                 } else {
-                    $(this).text('☆').css('color', '#ddd');
+                    $(this).text('?').css('color', '#ddd');
                 }
             });
         }
@@ -309,24 +309,24 @@
             if (favorites.includes(templateId)) {
                 // Remove from favorites
                 favorites = favorites.filter(id => id !== templateId);
-                $(this).text('☆').css('color', '#ddd');
+                $(this).text('?').css('color', '#ddd');
             } else {
                 // Add to favorites
                 favorites.push(templateId);
-                $(this).text('★').css('color', '#ffb900');
+                $(this).text('?').css('color', '#ffb900');
             }
             
-            localStorage.setItem('wmo_favorite_templates', JSON.stringify(favorites));
+            localStorage.setItem('wamm_favorite_templates', JSON.stringify(favorites));
             reorganizeTemplates();
         });
         
         // Reorganize templates to show favorites first
         function reorganizeTemplates() {
-            var container = $('.wmo-templates-grid').first();
+            var container = $('.wamm-templates-grid').first();
             var favoriteTemplates = [];
             var regularTemplates = [];
             
-            container.find('.wmo-template-card').each(function() {
+            container.find('.wamm-template-card').each(function() {
                 var templateId = $(this).find('.favorite-star').data('template-id');
                 if (favorites.includes(templateId)) {
                     favoriteTemplates.push($(this).detach());

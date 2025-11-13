@@ -1,9 +1,13 @@
 <?php
 /*
-Plugin Name: WP Menu Organize
-Description: A plugin to customize and organize the WordPress Admin Menu.
-Version: 3.1.0
-Author: Ish Laos
+Plugin Name: WP Admin Menu Maestro
+Description: A powerful plugin to customize and organize the WordPress Admin Menu.
+Version: 4.0.0
+Author: Webstuffguy Labs
+Author URI: https://webstuffguylabs.com/
+Plugin URI: https://webstuffguylabs.com/wp-admin-menu-maestro
+Text Domain: wp-admin-menu-maestro
+Domain Path: /languages
 */
 
 if (!defined('ABSPATH')) {
@@ -11,44 +15,44 @@ if (!defined('ABSPATH')) {
 }
 
 // Define plugin constants
-define('WMO_PLUGIN_PATH', plugin_dir_path(__FILE__));
-define('WMO_PLUGIN_URL', plugin_dir_url(__FILE__));
+define('WAMM_PLUGIN_PATH', plugin_dir_path(__FILE__));
+define('WAMM_PLUGIN_URL', plugin_dir_url(__FILE__));
 
 // Include necessary files
-require_once WMO_PLUGIN_PATH . 'includes/helper-functions.php';
-require_once WMO_PLUGIN_PATH . 'includes/admin-page.php';
-require_once WMO_PLUGIN_PATH . 'includes/ajax-handlers.php';
+require_once WAMM_PLUGIN_PATH . 'includes/helper-functions.php';
+require_once WAMM_PLUGIN_PATH . 'includes/admin-page.php';
+require_once WAMM_PLUGIN_PATH . 'includes/ajax-handlers.php';
 
 // Initialize the plugin
-function wmo_init()
+function wamm_init()
 {
-    WP_Menu_Organize::get_instance();
+    WP_Admin_Menu_Maestro::get_instance();
 }
-add_action('plugins_loaded', 'wmo_init');
+add_action('plugins_loaded', 'wamm_init');
 
 // Debug: Log the admin menu
-function wmo_log_admin_menu()
+function wamm_log_admin_menu()
 {
     global $menu;
-    error_log('WMO: Current admin menu: ' . print_r($menu, true));
+    error_log('WAMM: Current admin menu: ' . print_r($menu, true));
 }
-add_action('admin_menu', 'wmo_log_admin_menu', 100);
+add_action('admin_menu', 'wamm_log_admin_menu', 100);
 
 // Add settings link on plugin page
-function wmo_settings_link($links)
+function wamm_settings_link($links)
 {
-    $settings_link = '<a href="admin.php?page=wp-menu-organize-settings">Settings</a>';
+    $settings_link = '<a href="admin.php?page=wp-admin-menu-maestro-settings">Settings</a>';
     array_unshift($links, $settings_link);
     return $links;
 }
 $plugin = plugin_basename(__FILE__);
-add_filter("plugin_action_links_$plugin", 'wmo_settings_link');
+add_filter("plugin_action_links_$plugin", 'wamm_settings_link');
 
 // Apply custom admin menu order
-function wmo_apply_admin_menu_order($menu_order)
+function wamm_apply_admin_menu_order($menu_order)
 {
     // Get custom order from flat structure (not nested under admin_customizations)
-    $custom_order = wmo_get_settings('menu_order');
+    $custom_order = wamm_get_settings('menu_order');
     
     if (empty($custom_order) || !is_array($custom_order)) {
         return $menu_order;
@@ -76,20 +80,20 @@ function wmo_apply_admin_menu_order($menu_order)
         }
     }
     
-    error_log('WMO: Applying menu order: ' . print_r($merged_order, true));
-    error_log('WMO: Original menu order: ' . print_r($menu_order, true));
-    error_log('WMO: Custom order: ' . print_r($custom_order, true));
-    error_log('WMO: Current menu slugs: ' . print_r($current_menu_slugs, true));
+    error_log('WAMM: Applying menu order: ' . print_r($merged_order, true));
+    error_log('WAMM: Original menu order: ' . print_r($menu_order, true));
+    error_log('WAMM: Custom order: ' . print_r($custom_order, true));
+    error_log('WAMM: Current menu slugs: ' . print_r($current_menu_slugs, true));
     
     return $merged_order;
 }
-add_filter('menu_order', 'wmo_apply_admin_menu_order', 10);
+add_filter('menu_order', 'wamm_apply_admin_menu_order', 10);
 add_filter('custom_menu_order', '__return_true');
 
 // Apply custom menu icons directly to menu array
-function wmo_apply_menu_icons() {
+function wamm_apply_menu_icons() {
     global $menu;
-    $icons = wmo_get_settings('icons');
+    $icons = wamm_get_settings('icons');
     if (!empty($icons)) {
         foreach ($menu as $key => $item) {
             $slug = $item[2]; // e.g., 'index.php' for Dashboard
@@ -99,28 +103,28 @@ function wmo_apply_menu_icons() {
                     $menu[$key][6] = $icon['value']; // e.g., 'dashicons-admin-post'
                 } elseif ($icon['type'] === 'emoji') {
                     // Wrap emoji in span for rendering
-                    $menu[$key][6] = '<span class="wmo-emoji-icon">' . esc_html($icon['value']) . '</span>';
+                    $menu[$key][6] = '<span class="wamm-emoji-icon">' . esc_html($icon['value']) . '</span>';
                 }
             }
         }
     }
-    error_log('WMO: Applied menu icons: ' . print_r($icons, true));
+    error_log('WAMM: Applied menu icons: ' . print_r($icons, true));
 }
-add_action('admin_menu', 'wmo_apply_menu_icons', 999); // High priority to override defaults
+add_action('admin_menu', 'wamm_apply_menu_icons', 999); // High priority to override defaults
 
 // Add deactivate submenus for enabled items
-function wmo_add_deactivate_submenus() {
+function wamm_add_deactivate_submenus() {
     global $menu, $submenu;
     
     // Get deactivate settings
-    $deactivate_settings = wmo_get_settings('deactivate_submenus');
+    $deactivate_settings = wamm_get_settings('deactivate_submenus');
     
     if (empty($deactivate_settings)) {
-        error_log('WMO: No deactivate settings found');
+        error_log('WAMM: No deactivate settings found');
         return;
     }
     
-    error_log('WMO: Enabled submenus: ' . print_r($deactivate_settings, true));
+    error_log('WAMM: Enabled submenus: ' . print_r($deactivate_settings, true));
     
     // Loop through menu items and add deactivate submenus for enabled ones
     foreach ($menu as $menu_item) {
@@ -130,27 +134,27 @@ function wmo_add_deactivate_submenus() {
         // Compute the check slug using sanitized title (matches what's saved in settings)
         $check_slug = sanitize_title(strip_tags($menu_title));
         
-        error_log('WMO: Checking menu item: ' . $menu_slug . ' (' . $menu_title . ') -> check_slug: ' . $check_slug);
+        error_log('WAMM: Checking menu item: ' . $menu_slug . ' (' . $menu_title . ') -> check_slug: ' . $check_slug);
         
         // Check if this menu item has deactivate enabled using the sanitized title
         if (isset($deactivate_settings[$check_slug]) && $deactivate_settings[$check_slug] && $menu_slug && strpos($menu_slug, 'separator') === false) {
-            error_log('WMO: Found enabled deactivate setting for: ' . $check_slug . ' (menu_slug: ' . $menu_slug . ')');
+            error_log('WAMM: Found enabled deactivate setting for: ' . $check_slug . ' (menu_slug: ' . $menu_slug . ')');
             
             // Get the plugin file for this menu item
-            $plugin_file = wmo_get_plugin_file_for_menu_slug($menu_slug);
+            $plugin_file = wamm_get_plugin_file_for_menu_slug($menu_slug);
             
             if (!$plugin_file) {
-                error_log('WMO: Could not find plugin file for menu slug: ' . $menu_slug);
+                error_log('WAMM: Could not find plugin file for menu slug: ' . $menu_slug);
                 continue; // Skip this menu item if we can't find its plugin
             }
             
             // Generate the deactivate URL with proper nonce and plugin identification
             $deactivate_url = wp_nonce_url(
-                admin_url('admin.php?wmo_action=deactivate_plugin&deactivate=1&plugin=' . urlencode($plugin_file)),
-                'wmo_deactivate_plugin',
+                admin_url('admin.php?wamm_action=deactivate_plugin&deactivate=1&plugin=' . urlencode($plugin_file)),
+                'wamm_deactivate_plugin',
                 'nonce'
             );
-            error_log('WMO: Generated deactivate URL: ' . $deactivate_url);
+            error_log('WAMM: Generated deactivate URL: ' . $deactivate_url);
             
             // Add the deactivate submenu
             $result = add_submenu_page(
@@ -158,19 +162,19 @@ function wmo_add_deactivate_submenus() {
                 'Deactivate Plugin', // Page title
                 'Deactivate', // Menu title
                 'manage_options', // Capability (changed back to manage_options)
-                'wmo_deactivate_plugin', // Menu slug
-                'wmo_deactivate_callback' // Callback function
+                'wamm_deactivate_plugin', // Menu slug
+                'wamm_deactivate_callback' // Callback function
             );
             
             if ($result) {
-                error_log('WMO: Successfully added deactivate submenu for: ' . $menu_slug . ' (' . $menu_title . ')');
+                error_log('WAMM: Successfully added deactivate submenu for: ' . $menu_slug . ' (' . $menu_title . ')');
                 
                 // Override the submenu URL to use our custom deactivate URL
                 if (isset($submenu[$menu_slug])) {
                     foreach ($submenu[$menu_slug] as $priority => $submenu_item) {
-                        if ($submenu_item[2] === 'wmo_deactivate_plugin') {
+                        if ($submenu_item[2] === 'wamm_deactivate_plugin') {
                             $submenu[$menu_slug][$priority][2] = $deactivate_url;
-                            error_log('WMO: Submenu link set to: ' . $submenu[$menu_slug][$priority][2]);
+                            error_log('WAMM: Submenu link set to: ' . $submenu[$menu_slug][$priority][2]);
                             break;
                         }
                     }
@@ -178,38 +182,38 @@ function wmo_add_deactivate_submenus() {
                 
                 // Check if submenu count < 1 after add, add dummy if needed
                 if (isset($submenu[$menu_slug]) && count($submenu[$menu_slug]) < 1) {
-                    error_log('WMO: Adding dummy submenu for: ' . $menu_slug . ' (submenu count < 1)');
+                    error_log('WAMM: Adding dummy submenu for: ' . $menu_slug . ' (submenu count < 1)');
                     add_submenu_page(
                         $menu_slug, // Parent slug
                         '', // Page title (empty for dummy)
                         '', // Menu title (empty for dummy)
                         'manage_options', // Capability (changed back to match)
-                        'wmo_dummy', // Menu slug
+                        'wamm_dummy', // Menu slug
                         '__return_false' // Callback (does nothing)
                     );
                 }
                 
                 // Verify the submenu was added to the global
                 if (isset($submenu[$menu_slug])) {
-                    error_log('WMO: Submenu array for ' . $menu_slug . ': ' . print_r($submenu[$menu_slug], true));
+                    error_log('WAMM: Submenu array for ' . $menu_slug . ': ' . print_r($submenu[$menu_slug], true));
                 } else {
-                    error_log('WMO: ERROR - Submenu not found in global for: ' . $menu_slug);
+                    error_log('WAMM: ERROR - Submenu not found in global for: ' . $menu_slug);
                 }
             } else {
-                error_log('WMO: ERROR - Failed to add deactivate submenu for: ' . $menu_slug);
+                error_log('WAMM: ERROR - Failed to add deactivate submenu for: ' . $menu_slug);
             }
         } else {
-            error_log('WMO: Menu item ' . $check_slug . ' not enabled for deactivate (menu_slug: ' . $menu_slug . ')');
+            error_log('WAMM: Menu item ' . $check_slug . ' not enabled for deactivate (menu_slug: ' . $menu_slug . ')');
         }
     }
     
     // Final debug: log all submenus
-    error_log('WMO: Final submenu state: ' . print_r($submenu, true));
+    error_log('WAMM: Final submenu state: ' . print_r($submenu, true));
 }
-add_action('admin_menu', 'wmo_add_deactivate_submenus', 999); // High priority to run after menu is built
+add_action('admin_menu', 'wamm_add_deactivate_submenus', 999); // High priority to run after menu is built
 
 // Handle deactivation action via admin_init hook
-add_action('admin_init', 'wmo_handle_deactivation_action');
+add_action('admin_init', 'wamm_handle_deactivation_action');
 
 /**
  * Get the plugin file for a given menu slug
@@ -218,7 +222,7 @@ add_action('admin_init', 'wmo_handle_deactivation_action');
  * @param string $menu_slug The menu slug to find the plugin for
  * @return string|false The plugin file path or false if not found
  */
-function wmo_get_plugin_file_for_menu_slug($menu_slug) {
+function wamm_get_plugin_file_for_menu_slug($menu_slug) {
     // Get all active plugins
     $active_plugins = get_option('active_plugins');
     $all_plugins = get_plugins();
@@ -233,7 +237,7 @@ function wmo_get_plugin_file_for_menu_slug($menu_slug) {
         'smartnav-wp' => 'smartnav-wp/smartnav-wp.php',
         
         // WP Menu Organize (our own plugin)
-        'wp-menu-organize-settings' => 'wp-menu-organize/wp-menu-organize.php',
+        'wp-admin-menu-maestro-settings' => 'wp-admin-menu-maestro/wp-admin-menu-maestro.php',
         
         // Common WordPress plugins
         'woocommerce' => 'woocommerce/woocommerce.php',
@@ -252,7 +256,7 @@ function wmo_get_plugin_file_for_menu_slug($menu_slug) {
     if (isset($menu_to_plugin_mappings[$menu_slug])) {
         $plugin_file = $menu_to_plugin_mappings[$menu_slug];
         if (in_array($plugin_file, $active_plugins)) {
-            error_log('WMO: Found plugin file via mapping: ' . $plugin_file . ' for menu slug: ' . $menu_slug);
+            error_log('WAMM: Found plugin file via mapping: ' . $plugin_file . ' for menu slug: ' . $menu_slug);
             return $plugin_file;
         }
     }
@@ -263,13 +267,13 @@ function wmo_get_plugin_file_for_menu_slug($menu_slug) {
         
         // Check if the menu slug matches the plugin slug
         if ($menu_slug === $plugin_slug) {
-            error_log('WMO: Found plugin file by slug match: ' . $plugin_file . ' for menu slug: ' . $menu_slug);
+            error_log('WAMM: Found plugin file by slug match: ' . $plugin_file . ' for menu slug: ' . $menu_slug);
             return $plugin_file;
         }
         
         // Check if the menu slug is part of the plugin file path
         if (strpos($plugin_file, $menu_slug) !== false) {
-            error_log('WMO: Found plugin file by path match: ' . $plugin_file . ' for menu slug: ' . $menu_slug);
+            error_log('WAMM: Found plugin file by path match: ' . $plugin_file . ' for menu slug: ' . $menu_slug);
             return $plugin_file;
         }
     }
@@ -281,13 +285,13 @@ function wmo_get_plugin_file_for_menu_slug($menu_slug) {
             $plugin_name = sanitize_title($plugin_data['Name']);
             
             if ($menu_slug === $plugin_name) {
-                error_log('WMO: Found plugin file by name match: ' . $plugin_file . ' for menu slug: ' . $menu_slug);
+                error_log('WAMM: Found plugin file by name match: ' . $plugin_file . ' for menu slug: ' . $menu_slug);
                 return $plugin_file;
             }
         }
     }
     
-    error_log('WMO: Could not find plugin file for menu slug: ' . $menu_slug);
+    error_log('WAMM: Could not find plugin file for menu slug: ' . $menu_slug);
     return false;
 }
 
@@ -295,16 +299,16 @@ function wmo_get_plugin_file_for_menu_slug($menu_slug) {
  * Handle deactivation action via admin_init hook
  * This prevents the "not allowed to access this page" error
  */
-function wmo_handle_deactivation_action() {
+function wamm_handle_deactivation_action() {
     // Check if deactivation is requested with valid nonce and parameters
-    if (isset($_GET['wmo_action']) && $_GET['wmo_action'] === 'deactivate_plugin' && 
+    if (isset($_GET['wamm_action']) && $_GET['wamm_action'] === 'deactivate_plugin' && 
         isset($_GET['deactivate']) && $_GET['deactivate'] === '1' && 
         isset($_GET['plugin']) && isset($_GET['nonce']) && 
-        wp_verify_nonce($_GET['nonce'], 'wmo_deactivate_plugin')) {
+        wp_verify_nonce($_GET['nonce'], 'wamm_deactivate_plugin')) {
         
         // Security check - ensure user can activate/deactivate plugins
         if (!current_user_can('activate_plugins')) {
-            error_log('WMO: Deactivation attempt blocked - insufficient permissions for user: ' . wp_get_current_user()->user_login);
+            error_log('WAMM: Deactivation attempt blocked - insufficient permissions for user: ' . wp_get_current_user()->user_login);
             wp_die('Sorry, you cannot deactivate plugins.');
         }
         
@@ -312,13 +316,13 @@ function wmo_handle_deactivation_action() {
         
         // Validate the plugin file exists and is active
         if (!file_exists(WP_PLUGIN_DIR . '/' . $plugin_file) || !is_plugin_active($plugin_file)) {
-            error_log('WMO: Invalid plugin file or plugin not active: ' . $plugin_file);
+            error_log('WAMM: Invalid plugin file or plugin not active: ' . $plugin_file);
             wp_die('Invalid plugin or plugin not active.');
         }
         
         // Prevent deactivation of our own plugin through this interface
-        if ($plugin_file === 'wp-menu-organize/wp-menu-organize.php') {
-            error_log('WMO: Attempt to deactivate wp-menu-organize blocked');
+        if ($plugin_file === 'wp-admin-menu-maestro/wp-admin-menu-maestro.php') {
+            error_log('WAMM: Attempt to deactivate wp-menu-organize blocked');
             wp_die('This plugin cannot deactivate itself through this interface. Please use the standard WordPress plugin management.');
         }
         
@@ -329,12 +333,12 @@ function wmo_handle_deactivation_action() {
         );
         
         if (in_array($plugin_file, $critical_plugins)) {
-            error_log('WMO: Attempt to deactivate critical plugin blocked: ' . $plugin_file);
+            error_log('WAMM: Attempt to deactivate critical plugin blocked: ' . $plugin_file);
             wp_die('Critical plugins cannot be deactivated through this interface. Please use the standard WordPress plugin management.');
         }
         
         // Log the deactivation attempt
-        error_log('WMO: Plugin deactivation initiated by user: ' . wp_get_current_user()->user_login . ' for plugin: ' . $plugin_file);
+        error_log('WAMM: Plugin deactivation initiated by user: ' . wp_get_current_user()->user_login . ' for plugin: ' . $plugin_file);
         
         // Deactivate the specified plugin
         deactivate_plugins($plugin_file);
@@ -346,10 +350,10 @@ function wmo_handle_deactivation_action() {
 }
 
 // Apply custom labels and visibility to admin menu
-function wmo_apply_admin_menu_customizations()
+function wamm_apply_admin_menu_customizations()
 {
     global $menu, $submenu;
-    $customizations = wmo_get_settings('admin_customizations');
+    $customizations = wamm_get_settings('admin_customizations');
     
     if (empty($customizations['items'])) {
         return;
@@ -438,12 +442,12 @@ function wmo_apply_admin_menu_customizations()
         }
     }
 }
-add_action('admin_menu', 'wmo_apply_admin_menu_customizations', 100);
+add_action('admin_menu', 'wamm_apply_admin_menu_customizations', 100);
 
 // Apply custom colors and icons to admin menu via CSS
-function wmo_apply_admin_menu_styles()
+function wamm_apply_admin_menu_styles()
 {
-    $icons = wmo_get_settings('icons');
+    $icons = wamm_get_settings('icons');
     
     if (empty($icons)) {
         return;
@@ -460,17 +464,17 @@ function wmo_apply_admin_menu_styles()
             } else if ($icon_data['type'] === 'emoji') {
                 // Apply emoji
                 echo "#toplevel_page_{$menu_slug} > a .wp-menu-image:before { content: none !important; }";
-                echo "#toplevel_page_{$menu_slug} > a .wp-menu-image .wmo-emoji-icon { display: block !important; font-size: 20px !important; }";
+                echo "#toplevel_page_{$menu_slug} > a .wp-menu-image .wamm-emoji-icon { display: block !important; font-size: 20px !important; }";
             }
         }
     }
     
     echo '</style>';
 }
-add_action('admin_head', 'wmo_apply_admin_menu_styles');
+add_action('admin_head', 'wamm_apply_admin_menu_styles');
 
 // Get inline styles
-function wmo_get_inline_styles()
+function wamm_get_inline_styles()
 {
     return '
         /* Modern Card Design - Complete UI Overhaul */
@@ -1481,10 +1485,10 @@ function wmo_get_inline_styles()
 add_action('admin_init', function() {
     if (isset($_GET['reset_wmo_icons']) && current_user_can('manage_options')) {
         // Clear the saved icons
-        delete_option('wmo_menu_icons');
+        delete_option('wamm_menu_icons');
         
         // Also clear any other related icon options that might exist
-        delete_option('wmo_saved_icons');
+        delete_option('wamm_saved_icons');
         
         // Add a success message
         add_action('admin_notices', function() {
@@ -1500,36 +1504,36 @@ add_action('admin_init', function() {
 });
 
 // Version control and cleanup system
-function wmo_version_check() {
-    $current_version = get_option('wmo_version', '0');
+function wamm_version_check() {
+    $current_version = get_option('wamm_version', '0');
     $plugin_version = '2.0.0'; // New optimized version
     
     if (version_compare($current_version, $plugin_version, '<')) {
         // Run upgrade routines
-        wmo_cleanup_old_data();
-        wmo_migrate_options(); // Ensure migration runs
-        update_option('wmo_version', $plugin_version);
+        wamm_cleanup_old_data();
+        wamm_migrate_options(); // Ensure migration runs
+        update_option('wamm_version', $plugin_version);
         
         // Log the upgrade
-        error_log('WMO: Plugin upgraded to version ' . $plugin_version);
+        error_log('WAMM: Plugin upgraded to version ' . $plugin_version);
     }
 }
-add_action('admin_init', 'wmo_version_check');
+add_action('admin_init', 'wamm_version_check');
 
 // Cleanup old data and options
-function wmo_cleanup_old_data() {
+function wamm_cleanup_old_data() {
     // Clean up any old options that might still exist
     $old_options = array(
-        'wmo_menu_colors',
-        'wmo_menu_badges', 
-        'wmo_menu_typography',
-        'wmo_saved_icons',
-        'wmo_custom_css',
-        'wmo_menu_order',
-        'wmo_admin_customizations',
-        'wmo_theme_preference',
-        'wmo_templates',
-        'wmo_dark_mode'
+        'wamm_menu_colors',
+        'wamm_menu_badges', 
+        'wamm_menu_typography',
+        'wamm_saved_icons',
+        'wamm_custom_css',
+        'wamm_menu_order',
+        'wamm_admin_customizations',
+        'wamm_theme_preference',
+        'wamm_templates',
+        'wamm_dark_mode'
     );
     
     foreach ($old_options as $option) {
@@ -1537,8 +1541,8 @@ function wmo_cleanup_old_data() {
     }
     
     // Clear any old transients
-    delete_transient('wmo_debug_data');
-    delete_transient('wmo_menu_cache');
+    delete_transient('wamm_debug_data');
+    delete_transient('wamm_menu_cache');
     
     // Clear any old error logs
     $upload_dir = wp_upload_dir();
@@ -1549,17 +1553,17 @@ function wmo_cleanup_old_data() {
 }
 
 // Plugin health check function
-function wmo_health_check() {
+function wamm_health_check() {
     $issues = array();
     $warnings = array();
     
     // Check if settings exist
-    if (!get_option('wmo_settings')) {
+    if (!get_option('wamm_settings')) {
         $issues[] = 'Settings not initialized';
     }
     
     // Check if migration completed
-    if (!get_option('wmo_migrated_v2')) {
+    if (!get_option('wamm_migrated_v2')) {
         $issues[] = 'Database migration not completed';
     }
     
@@ -1595,7 +1599,7 @@ function wmo_health_check() {
     
     // Check for error_log statements (should be removed)
     $php_files = array(
-        'wp-menu-organize.php',
+        'wp-admin-menu-maestro.php',
         'includes/ajax-handlers.php',
         'includes/admin-page.php',
         'includes/helper-functions.php'
@@ -1619,13 +1623,13 @@ function wmo_health_check() {
 }
 
 // Display health status in admin
-function wmo_display_health_status() {
+function wamm_display_health_status() {
     $screen = get_current_screen();
-    if (!$screen || strpos($screen->id, 'wp-menu-organize') === false) {
+    if (!$screen || strpos($screen->id, 'wp-admin-menu-maestro') === false) {
         return;
     }
     
-    $health = wmo_health_check();
+    $health = wamm_health_check();
     
     if (!empty($health['issues']) || !empty($health['warnings'])) {
         echo '<div class="notice notice-' . ($health['status'] === 'healthy' ? 'warning' : 'error') . ' is-dismissible">';
@@ -1657,65 +1661,120 @@ function wmo_display_health_status() {
         echo '</div>';
     }
 }
-add_action('admin_notices', 'wmo_display_health_status');
+add_action('admin_notices', 'wamm_display_health_status');
 
 // Remove the temporary minification function after use
-function wmo_remove_minification_function() {
+function wamm_remove_minification_function() {
     // This function will be called after minification is complete
     // We'll keep it for now but can remove it later
 }
 
+// CRITICAL: Migrate from old WMO naming to new WAMM naming
+// This preserves user data when upgrading from wp-menu-organize to wp-admin-menu-maestro
+function wamm_migrate_from_wmo() {
+    // Check if we've already migrated from WMO to WAMM
+    if (get_option('wamm_migrated_from_wmo')) {
+        return;
+    }
+
+    error_log('WAMM: Starting migration from WMO to WAMM...');
+
+    // List of all options to migrate
+    $options_to_migrate = array(
+        'wmo_settings' => 'wamm_settings',
+        'wmo_menu_colors' => 'wamm_menu_colors',
+        'wmo_menu_badges' => 'wamm_menu_badges',
+        'wmo_menu_typography' => 'wamm_menu_typography',
+        'wmo_menu_icons' => 'wamm_menu_icons',
+        'wmo_saved_icons' => 'wamm_saved_icons',
+        'wmo_custom_css' => 'wamm_custom_css',
+        'wmo_menu_order' => 'wamm_menu_order',
+        'wmo_admin_customizations' => 'wamm_admin_customizations',
+        'wmo_theme_preference' => 'wamm_theme_preference',
+        'wmo_templates' => 'wamm_templates',
+        'wmo_version' => 'wamm_version',
+        'wmo_migrated_v2' => 'wamm_migrated_v2',
+        'wmo_dark_mode' => 'wamm_dark_mode',
+        'wmo_menu_background_colors' => 'wamm_menu_background_colors'
+    );
+
+    $migrated_count = 0;
+
+    // Copy each old option to the new option name
+    foreach ($options_to_migrate as $old_option => $new_option) {
+        $value = get_option($old_option, null);
+        if ($value !== null) {
+            update_option($new_option, $value);
+            $migrated_count++;
+            error_log("WAMM: Migrated {$old_option} to {$new_option}");
+        }
+    }
+
+    // Mark migration as complete
+    update_option('wamm_migrated_from_wmo', true);
+
+    error_log("WAMM: Migration complete! Migrated {$migrated_count} options from WMO to WAMM");
+
+    // Show admin notice
+    add_action('admin_notices', function() {
+        echo '<div class="notice notice-success is-dismissible">';
+        echo '<p><strong>WP Admin Menu Maestro:</strong> Your settings have been successfully migrated from the previous version!</p>';
+        echo '</div>';
+    });
+}
+add_action('admin_init', 'wamm_migrate_from_wmo', 5); // Run early, before other migrations
+
 // Database migration function to consolidate options
-function wmo_migrate_options() {
+function wamm_migrate_options() {
     // Check if migration is needed
-    if (get_option('wmo_migrated_v2')) {
+    if (get_option('wamm_migrated_v2')) {
         return;
     }
     
     // Gather all old options
     $settings = array(
-        'colors' => get_option('wmo_menu_colors', array()),
-        'badges' => get_option('wmo_menu_badges', array()),
-        'typography' => get_option('wmo_menu_typography', array()),
-        'icons' => get_option('wmo_menu_icons', array()),
-        'saved_icons' => get_option('wmo_saved_icons', array()),
-        'custom_css' => get_option('wmo_custom_css', ''),
-        'menu_order' => get_option('wmo_menu_order', array()),
-        'admin_customizations' => get_option('wmo_admin_customizations', array()),
-        'theme_preference' => get_option('wmo_theme_preference', 'light'),
-        'templates' => get_option('wmo_templates', array()),
-        'templates' => get_option('wmo_templates', array())
+        'colors' => get_option('wamm_menu_colors', array()),
+        'badges' => get_option('wamm_menu_badges', array()),
+        'typography' => get_option('wamm_menu_typography', array()),
+        'icons' => get_option('wamm_menu_icons', array()),
+        'saved_icons' => get_option('wamm_saved_icons', array()),
+        'custom_css' => get_option('wamm_custom_css', ''),
+        'menu_order' => get_option('wamm_menu_order', array()),
+        'admin_customizations' => get_option('wamm_admin_customizations', array()),
+        'theme_preference' => get_option('wamm_theme_preference', 'light'),
+        'templates' => get_option('wamm_templates', array()),
+        'templates' => get_option('wamm_templates', array())
     );
     
     // Save as single option
-    update_option('wmo_settings', $settings);
+    update_option('wamm_settings', $settings);
     
     // Clean up old options
-    delete_option('wmo_menu_colors');
-    delete_option('wmo_menu_badges');
-    delete_option('wmo_menu_typography');
-    delete_option('wmo_menu_icons');
-    delete_option('wmo_saved_icons');
-    delete_option('wmo_custom_css');
-    delete_option('wmo_menu_order');
-    delete_option('wmo_admin_customizations');
-    delete_option('wmo_theme_preference');
-    delete_option('wmo_templates');
+    delete_option('wamm_menu_colors');
+    delete_option('wamm_menu_badges');
+    delete_option('wamm_menu_typography');
+    delete_option('wamm_menu_icons');
+    delete_option('wamm_saved_icons');
+    delete_option('wamm_custom_css');
+    delete_option('wamm_menu_order');
+    delete_option('wamm_admin_customizations');
+    delete_option('wamm_theme_preference');
+    delete_option('wamm_templates');
 
     
     // Mark as migrated
-    update_option('wmo_migrated_v2', true);
+    update_option('wamm_migrated_v2', true);
     
     // Log migration for debugging
-    error_log('WMO: Database options migrated to wmo_settings');
+    error_log('WAMM: Database options migrated to wamm_settings');
 }
-add_action('admin_init', 'wmo_migrate_options');
+add_action('admin_init', 'wamm_migrate_options');
 
 
 
 // Helper function to get settings with fallback
-function wmo_get_settings($key = null) {
-    $settings = get_option('wmo_settings', array());
+function wamm_get_settings($key = null) {
+    $settings = get_option('wamm_settings', array());
     
     if ($key === null) {
         return $settings;
@@ -1725,16 +1784,16 @@ function wmo_get_settings($key = null) {
 }
 
 // Helper function to update settings
-function wmo_update_settings($key, $value) {
-    $settings = wmo_get_settings();
+function wamm_update_settings($key, $value) {
+    $settings = wamm_get_settings();
     $settings[$key] = $value;
-    update_option('wmo_settings', $settings);
+    update_option('wamm_settings', $settings);
 }
 
 // Cleanup function to remove old debug data
-function wmo_cleanup_debug_data() {
+function wamm_cleanup_debug_data() {
     // Clear any transients
-    delete_transient('wmo_debug_data');
+    delete_transient('wamm_debug_data');
     
     // Clear any old error logs specific to your plugin
     $upload_dir = wp_upload_dir();
@@ -1743,4 +1802,4 @@ function wmo_cleanup_debug_data() {
         unlink($debug_file);
     }
 }
-add_action('admin_init', 'wmo_cleanup_debug_data');
+add_action('admin_init', 'wamm_cleanup_debug_data');

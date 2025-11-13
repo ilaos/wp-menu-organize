@@ -2,16 +2,16 @@
     'use strict';
 
     // Debug code to verify script loading
-    console.log('=== WMO Icon Picker: Script loaded ===');
+    console.log('=== WAMM Icon Picker: Script loaded ===');
     console.log('jQuery available:', typeof jQuery);
     console.log('jQuery version:', jQuery.fn.jquery);
 
     // COORDINATION FLAGS - Prevent double initialization
-    if (window.wmoIconPickerInitialized) {
-        console.log('WMO Icon Picker: Already initialized, skipping duplicate initialization');
+    if (window.wammIconPickerInitialized) {
+        console.log('WAMM Icon Picker: Already initialized, skipping duplicate initialization');
         return;
     }
-    window.wmoIconPickerInitialized = true;
+    window.wammIconPickerInitialized = true;
 
     // Debounce function for performance optimization
     function debounce(func, wait, immediate) {
@@ -34,7 +34,7 @@
 
     // Initialize icon picker functionality
     function initIconPickers() {
-        console.log('WMO Icon Picker: Initializing icon picker functionality');
+        console.log('WAMM Icon Picker: Initializing icon picker functionality');
         
         // Initialize icon type selector
         initIconTypeSelector();
@@ -54,7 +54,7 @@
 
     // Initialize icon type selector (Emoji vs Dashicon)
     function initIconTypeSelector() {
-        console.log('WMO Icon Picker: Initializing icon type selector');
+        console.log('WAMM Icon Picker: Initializing icon type selector');
         
         $(document).on('change', '.icon-type-selector', function() {
             var $selector = $(this);
@@ -62,7 +62,7 @@
             var selectedType = $selector.val();
             var menuSlug = $iconSection.find('.enable-custom-icon').data('original-slug');
             
-            console.log('WMO Icon Picker: Icon type changed to', selectedType, 'for menu', menuSlug);
+            console.log('WAMM Icon Picker: Icon type changed to', selectedType, 'for menu', menuSlug);
             
             // Show/hide appropriate picker
             if (selectedType === 'emoji') {
@@ -81,7 +81,7 @@
 
     // Initialize icon selection functionality
     function initIconSelection() {
-        console.log('WMO Icon Picker: Initializing icon selection');
+        console.log('WAMM Icon Picker: Initializing icon selection');
         
         // Emoji selection
         $(document).on('click', '.emoji-option', function() {
@@ -90,7 +90,7 @@
             var emoji = $option.data('emoji');
             var menuSlug = $iconSection.find('.enable-custom-icon').data('original-slug');
             
-            console.log('WMO Icon Picker: Emoji selected:', emoji, 'for menu', menuSlug);
+            console.log('WAMM Icon Picker: Emoji selected:', emoji, 'for menu', menuSlug);
             
             // Update selection
             $iconSection.find('.selected-emoji').val(emoji);
@@ -105,12 +105,12 @@
             if (!$menuItem.length) $menuItem = $('#adminmenu li#toplevel_page_' + menuSlug + ' .wp-menu-image');
             if ($menuItem.length && !$menuItem.data('preview-applied')) {
                 $menuItem.data('original-icon', $menuItem.html()).data('preview-applied', true);
-                $menuItem.empty().append('<span class="wmo-emoji-icon">' + emoji + '</span>');
+                $menuItem.empty().append('<span class="wamm-emoji-icon">' + emoji + '</span>');
             }
             
             // Auto-save
             if (menuSlug) {
-                wmoAutoSaveIcon(menuSlug, 'emoji', emoji);
+                wammAutoSaveIcon(menuSlug, 'emoji', emoji);
             }
         });
         
@@ -121,7 +121,7 @@
             var dashicon = $option.data('dashicon');
             var menuSlug = $iconSection.find('.enable-custom-icon').data('original-slug');
             
-            console.log('WMO Icon Picker: Dashicon selected:', dashicon, 'for menu', menuSlug);
+            console.log('WAMM Icon Picker: Dashicon selected:', dashicon, 'for menu', menuSlug);
             
             // Update selection
             $iconSection.find('.selected-dashicon').val(dashicon);
@@ -141,14 +141,14 @@
             
             // Auto-save
             if (menuSlug) {
-                wmoAutoSaveIcon(menuSlug, 'dashicon', dashicon);
+                wammAutoSaveIcon(menuSlug, 'dashicon', dashicon);
             }
         });
     }
 
     // Initialize search functionality
     function initSearchFunctionality() {
-        console.log('WMO Icon Picker: Initializing search functionality');
+        console.log('WAMM Icon Picker: Initializing search functionality');
         
         $(document).on('input', '.icon-search-input', debounce(function() {
             var $searchInput = $(this);
@@ -156,7 +156,7 @@
             var searchTerm = $searchInput.val().toLowerCase();
             var $activePicker = $iconSection.find('.emoji-picker:visible, .dashicon-picker:visible');
             
-            console.log('WMO Icon Picker: Searching for:', searchTerm);
+            console.log('WAMM Icon Picker: Searching for:', searchTerm);
             
             if ($activePicker.hasClass('dashicon-picker')) {
                 // Search dashicons
@@ -180,7 +180,7 @@
 
     // Initialize icon enable/disable toggle
     function initIconToggle() {
-        console.log('WMO Icon Picker: Initializing icon toggle');
+        console.log('WAMM Icon Picker: Initializing icon toggle');
         
         $(document).on('change', '.enable-custom-icon', function() {
             var $checkbox = $(this);
@@ -188,7 +188,7 @@
             var enabled = $checkbox.is(':checked');
             var menuSlug = $checkbox.data('original-slug');
             
-            console.log('WMO Icon Picker: Icon toggle changed to', enabled, 'for menu', menuSlug);
+            console.log('WAMM Icon Picker: Icon toggle changed to', enabled, 'for menu', menuSlug);
             
             // Show/hide icon settings
             $iconSection.find('.icon-settings').toggle(enabled);
@@ -199,7 +199,7 @@
             } else {
                 clearIconSelection($iconSection);
                 if (menuSlug) {
-                    wmoAutoSaveIcon(menuSlug, '', '');
+                    wammAutoSaveIcon(menuSlug, '', '');
                     var $menuItem = $('#adminmenu li#menu-' + menuSlug + ' .wp-menu-image');
                     if (!$menuItem.length) $menuItem = $('#adminmenu li#toplevel_page_' + menuSlug + ' .wp-menu-image');
                     if ($menuItem.length && $menuItem.data('original-icon')) {
@@ -232,7 +232,7 @@
                     if (iconType === 'dashicon') {
                         $menuItem.append('<span class="dashicons ' + iconValue + '"></span>');
                     } else if (iconType === 'emoji') {
-                        $menuItem.append('<span class="wmo-emoji-icon">' + iconValue + '</span>');
+                        $menuItem.append('<span class="wamm-emoji-icon">' + iconValue + '</span>');
                     }
                 }
             }
@@ -249,18 +249,18 @@
             }
         }
         
-        console.log('WMO Icon Picker: Updated preview for', iconType, ':', iconValue);
+        console.log('WAMM Icon Picker: Updated preview for', iconType, ':', iconValue);
     }
 
     // Load existing icons on page load
     function loadExistingIcons() {
-        console.log('WMO Icon Picker: Loading existing icons');
+        console.log('WAMM Icon Picker: Loading existing icons');
         
         // Check if saved icons are available from PHP
-        if (typeof wmo_saved_icons !== 'undefined') {
-            console.log('WMO Icon Picker: Found saved icons:', wmo_saved_icons);
+        if (typeof wamm_saved_icons !== 'undefined') {
+            console.log('WAMM Icon Picker: Found saved icons:', wamm_saved_icons);
             
-            Object.keys(wmo_saved_icons).forEach(function(menuSlug) {
+            Object.keys(wamm_saved_icons).forEach(function(menuSlug) {
                 loadExistingIconForMenu(menuSlug);
             });
         }
@@ -273,17 +273,17 @@
         });
         
         if ($iconSection.length === 0) {
-            console.log('WMO Icon Picker: No icon section found for menu', menuSlug);
+            console.log('WAMM Icon Picker: No icon section found for menu', menuSlug);
             return;
         }
         
         // Check if we have saved icon data
-        if (typeof wmo_saved_icons !== 'undefined' && wmo_saved_icons[menuSlug]) {
-            var iconData = wmo_saved_icons[menuSlug];
+        if (typeof wamm_saved_icons !== 'undefined' && wamm_saved_icons[menuSlug]) {
+            var iconData = wamm_saved_icons[menuSlug];
             var iconType = iconData.type;
             var iconValue = iconData.value;
             
-            console.log('WMO Icon Picker: Loading saved icon for', menuSlug, ':', iconType, iconValue);
+            console.log('WAMM Icon Picker: Loading saved icon for', menuSlug, ':', iconType, iconValue);
             
             // Enable the icon section
             $iconSection.find('.enable-custom-icon').prop('checked', true);
@@ -312,11 +312,11 @@
         $iconSection.find('.emoji-option, .dashicon-option').removeClass('selected');
         updateIconPreview($iconSection, '', '');
         
-        console.log('WMO Icon Picker: Cleared icon selection');
+        console.log('WAMM Icon Picker: Cleared icon selection');
     }
 
     // Auto-save icon function
-    function wmoAutoSaveIcon(menuSlug, iconType, iconValue) {
+    function wammAutoSaveIcon(menuSlug, iconType, iconValue) {
         // Clear existing timeout
         if (iconAutoSaveTimeouts[menuSlug]) {
             clearTimeout(iconAutoSaveTimeouts[menuSlug]);
@@ -326,43 +326,43 @@
         var $iconSection = $('.icon-section').filter(function() {
             return $(this).find('.enable-custom-icon').data('original-slug') === menuSlug;
         });
-        wmoShowIconSavingIndicator($iconSection, 'Saving...', 'info');
+        wammShowIconSavingIndicator($iconSection, 'Saving...', 'info');
 
         // Set new timeout
         iconAutoSaveTimeouts[menuSlug] = setTimeout(function() {
             $.ajax({
-                url: wmo_ajax.ajax_url,
+                url: wamm_ajax.ajax_url,
                 method: 'POST',
                 data: {
-                    action: 'wmo_save_icon',
+                    action: 'wamm_save_icon',
                     menu_id: menuSlug,
                     icon_type: iconType,
                     icon_value: iconValue,
-                    nonce: wmo_ajax.nonce
+                    nonce: wamm_ajax.nonce
                 },
                 success: function(response) {
                     if (response.success) {
-                        wmoShowIconSavingIndicator($iconSection, 'Saved!', 'success');
-                        console.log('WMO Icon Picker: Icon saved successfully for', menuSlug);
+                        wammShowIconSavingIndicator($iconSection, 'Saved!', 'success');
+                        console.log('WAMM Icon Picker: Icon saved successfully for', menuSlug);
                     } else {
-                        wmoShowIconSavingIndicator($iconSection, 'Error saving', 'error');
-                        console.error('WMO Icon Picker: Icon save failed:', response.data);
+                        wammShowIconSavingIndicator($iconSection, 'Error saving', 'error');
+                        console.error('WAMM Icon Picker: Icon save failed:', response.data);
                     }
                 },
                 error: function(jqXHR, textStatus, errorThrown) {
-                    wmoShowIconSavingIndicator($iconSection, 'Network error', 'error');
-                    console.error('WMO Icon Picker: Icon save AJAX error:', textStatus, errorThrown);
+                    wammShowIconSavingIndicator($iconSection, 'Network error', 'error');
+                    console.error('WAMM Icon Picker: Icon save AJAX error:', textStatus, errorThrown);
                 }
             });
         }, 500);
     }
 
     // Show saving indicator for icons
-    function wmoShowIconSavingIndicator($iconSection, message, type) {
-        var $indicator = $iconSection.find('.wmo-icon-saving-indicator');
+    function wammShowIconSavingIndicator($iconSection, message, type) {
+        var $indicator = $iconSection.find('.wamm-icon-saving-indicator');
         
         if ($indicator.length === 0) {
-            $indicator = $('<div class="wmo-icon-saving-indicator"></div>');
+            $indicator = $('<div class="wamm-icon-saving-indicator"></div>');
             $iconSection.find('.icon-settings').append($indicator);
         }
         
@@ -377,14 +377,14 @@
 
     // Initialize everything when document is ready
     $(document).ready(function() {
-        console.log('WMO Icon Picker: Document ready, initializing icon picker');
+        console.log('WAMM Icon Picker: Document ready, initializing icon picker');
         
         // Initialize icon pickers
         initIconPickers();
         
         // Apply existing icons on page load with delay
         setTimeout(function() {
-            console.log('WMO Icon Picker: Applying existing icons on page load');
+            console.log('WAMM Icon Picker: Applying existing icons on page load');
             loadExistingIcons();
         }, 1000);
     });

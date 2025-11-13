@@ -1,8 +1,13 @@
-# WP Menu Organize - Comprehensive WordPress Admin Menu Customization
+# WP Admin Menu Maestro - Comprehensive WordPress Admin Menu Customization
 
 ## Overview
 
-WP Menu Organize is a powerful WordPress plugin that provides comprehensive admin menu customization capabilities including hierarchical menu management, inline editing, color customization, typography settings, badge management, theme switching, and template system.
+WP Admin Menu Maestro is a powerful WordPress plugin that provides comprehensive admin menu customization capabilities including hierarchical menu management, inline editing, color customization, typography settings, badge management, theme switching, and template system.
+
+**Version:** 4.0.0
+**Author:** Webstuffguy Labs
+**Author URI:** https://webstuffguylabs.com/
+**Plugin URI:** https://webstuffguylabs.com/wp-admin-menu-maestro
 
 ## Features
 
@@ -57,7 +62,7 @@ WP Menu Organize is a powerful WordPress plugin that provides comprehensive admi
 
 ### Basic Menu Customization
 
-1. **Access Customize Tabs**: Navigate to WordPress Admin → Menu Organize → Customize Tabs
+1. **Access Customize Tabs**: Navigate to WordPress Admin → Menu Maestro → Customize Tabs
 2. **Search Menu Items**: Use the search box to filter menu items (e.g., 'plugin', 'dashboard', 'posts')
 3. **Expand Settings**: Click the arrow icon to expand individual menu item settings
 4. **Customize Colors**: Use color pickers to change menu item background colors
@@ -84,7 +89,7 @@ Each menu item is displayed in a compact card format:
 
 ### Settings Management
 
-1. **Access Settings**: Navigate to WordPress Admin → Menu Organize → Settings
+1. **Access Settings**: Navigate to WordPress Admin → Menu Maestro → Settings
 2. **Theme Toggle**: Switch between light and dark themes
 3. **Import Configuration**: Upload JSON files to restore settings
 4. **Export Configuration**: Download current settings as JSON
@@ -92,7 +97,7 @@ Each menu item is displayed in a compact card format:
 
 ### Template System
 
-1. **Access Templates**: Navigate to WordPress Admin → Menu Organize → Templates
+1. **Access Templates**: Navigate to WordPress Admin → Menu Maestro → Templates
 2. **Browse Templates**: View available templates by category
 3. **Apply Template**: Click "Apply" to instantly apply a template
 4. **Save Current**: Save your current configuration as a new template
@@ -100,7 +105,7 @@ Each menu item is displayed in a compact card format:
 
 ### Menu Reordering
 
-1. **Access Reorder**: Navigate to WordPress Admin → Menu Organize → Reorder Menu
+1. **Access Reorder**: Navigate to WordPress Admin → Menu Maestro → Reorder Menu
 2. **Drag and Drop**: Use drag handles to reorder menu items
 3. **Create Hierarchy**: Drag items into others to create submenus
 4. **Inline Editing**: Edit labels, toggle visibility, select icons
@@ -150,7 +155,7 @@ Each menu item is displayed in a compact card format:
 ## File Structure
 
 ```
-wp-menu-organize/
+wp-admin-menu-maestro/
 ├── templates/
 │   ├── admin-settings-page.php          # Customize Tabs interface
 │   ├── admin-settings-tab-page.php      # Settings tab interface
@@ -161,65 +166,70 @@ wp-menu-organize/
 │   └── helper-functions.php             # Helper functions and rendering
 ├── assets/
 │   ├── js/
-│   │   └── color-picker.js              # JavaScript for all features
+│   │   ├── admin.js                     # Main admin JavaScript
+│   │   ├── color-picker.js              # Color picker functionality
+│   │   ├── icon-picker.js               # Icon picker functionality
+│   │   ├── icon-applier.js              # Icon application logic
+│   │   └── templates.js                 # Template system JavaScript
 │   └── css/
 │       └── admin.css                    # Styles for all components
-└── wp-menu-organize.php                 # Main plugin file
+└── wp-admin-menu-maestro.php            # Main plugin file
 ```
 
 ## AJAX Handlers
 
 ### Color Management
-- `wmo_save_color`: Save menu item colors
-- `wmo_apply_colors_globally`: Apply colors to all admin pages
+- `wamm_save_color`: Save menu item colors
+- `wamm_save_background_color`: Save background colors
+- `wamm_apply_menu_colors`: Apply colors globally
 
 ### Typography Management
-- `wmo_save_typography`: Save typography settings
-- `wmo_apply_typography_globally`: Apply typography globally
+- `wamm_save_typography`: Save typography settings
+- `wamm_apply_typography_globally`: Apply typography globally
 
 ### Badge Management
-- `wmo_save_badge`: Save badge configurations
-- `wmo_apply_badges_globally`: Apply badges globally
+- `wamm_save_badge`: Save badge configurations
+- `wamm_apply_badges_globally`: Apply badges globally
 
 ### Theme Management
-- `wmo_save_theme`: Save theme preferences
-- `wmo_apply_theme_globally`: Apply theme globally
+- `wamm_save_theme`: Save theme preferences
+- `wamm_apply_theme_globally`: Apply theme globally
 
 ### Template System
-- `wmo_save_template`: Save current configuration as template
-- `wmo_load_templates`: Load available templates
-- `wmo_apply_template`: Apply selected template
+- `wamm_save_template`: Save current configuration as template
+- `wamm_load_templates`: Load available templates
+- `wamm_apply_template`: Apply selected template
 
 ### Import/Export
-- `wmo_export_configuration`: Export current settings
-- `wmo_import_configuration`: Import settings from file
-- `wmo_preview_import`: Preview import changes
+- `wamm_export_configuration`: Export current settings
+- `wamm_import_configuration`: Import settings from file
+- `wamm_preview_import`: Preview import changes
 
 ## CSS Classes
 
 ### Compact Card Layout
 ```css
-.wmo-menu-item-wrapper          /* Main container for each menu item */
-.wmo-menu-header               /* Header with title and controls */
-.wmo-menu-title               /* Menu item title */
-.wmo-menu-actions             /* Action buttons container */
-.wmo-color-picker-wrapper     /* Color picker container */
-.wmo-status-indicators        /* Status badges container */
-.wmo-status-badge             /* Individual status badge */
-.wmo-expand-toggle            /* Expand/collapse button */
-.wmo-expanded-content         /* Collapsible content area */
+.wamm-menu-item-wrapper          /* Main container for each menu item */
+.wamm-menu-header               /* Header with title and controls */
+.wamm-menu-title               /* Menu item title */
+.wamm-menu-actions             /* Action buttons container */
+.wamm-color-picker-wrapper     /* Color picker container */
+.wamm-status-indicators        /* Status badges container */
+.wamm-status-badge             /* Individual status badge */
+.wamm-expand-toggle            /* Expand/collapse button */
+.wamm-expanded-content         /* Collapsible content area */
 ```
 
 ### Search Interface
 ```css
-#wmo-menu-search              /* Search input field */
-.wmo-color-group              /* Menu item groups */
+#wamm-menu-search              /* Search input field */
+.wamm-color-group              /* Menu item groups */
 ```
 
 ### Theme System
 ```css
-.wmo-dark-theme               /* Dark theme class */
-.wmo-theme-toggle             /* Theme toggle container */
+.wamm-dark-theme               /* Dark theme class */
+.wamm-theme-toggle             /* Theme toggle container */
 ```
 
 ## JavaScript Functions
@@ -227,7 +237,7 @@ wp-menu-organize/
 ### Search and Filter
 ```javascript
 // Real-time search functionality
-$('#wmo-menu-search').on('keyup', function() {
+$('#wamm-menu-search').on('keyup', function() {
     var search = $(this).val().toLowerCase();
     // Filter logic implementation
 });
@@ -236,9 +246,9 @@ $('#wmo-menu-search').on('keyup', function() {
 ### Compact Card Toggle
 ```javascript
 // Expand/collapse functionality
-window.wmo_toggle_expand = function(button) {
+window.wamm_toggle_expand = function(button) {
     var $button = jQuery(button);
-    var $wrapper = $button.siblings('.wmo-submenu-wrapper');
+    var $wrapper = $button.siblings('.wamm-submenu-wrapper');
     // Toggle logic implementation
 };
 ```
@@ -246,31 +256,31 @@ window.wmo_toggle_expand = function(button) {
 ### Auto-Save Functions
 ```javascript
 // Color auto-save
-wmoAutoSaveColor(slug, color, $input)
+wammAutoSaveColor(slug, color, $input)
 
 // Typography auto-save
-wmoAutoSaveTypography(slug)
+wammAutoSaveTypography(slug)
 
 // Badge auto-save
-wmoAutoSaveBadge(slug)
+wammAutoSaveBadge(slug)
 
 // Theme auto-save
-wmoAutoSaveTheme(isDarkMode)
+wammAutoSaveTheme(isDarkMode)
 ```
 
 ## Database Structure
 
 ### Options Table
-- `wmo_menu_colors`: Menu item color settings
-- `wmo_menu_typography`: Typography configurations
-- `wmo_menu_badges`: Badge settings
-- `wmo_theme_preference`: Theme settings
-- `wmo_templates`: Template configurations
+- `wamm_settings`: Consolidated settings storage
+- `wamm_menu_colors`: Menu item color settings
+- `wamm_menu_typography`: Typography configurations
+- `wamm_menu_badges`: Badge settings
+- `wamm_menu_background_colors`: Background color settings
+- `wamm_theme_preference`: Theme settings
+- `wamm_templates`: Template configurations
 
-### Meta Fields
-- `_wmo_visible`: Menu item visibility settings
-- `_wmo_icon`: Custom icon selections
-- `_wmo_color`: Individual color settings
+### Settings Structure
+The plugin uses a consolidated settings approach where most settings are stored in the `wamm_settings` option for performance.
 
 ## Performance Optimizations
 
@@ -332,6 +342,16 @@ wmoAutoSaveTheme(isDarkMode)
 - **Database Errors**: WordPress error handling
 - **Template Errors**: Graceful template loading
 
+## Migration from WP Menu Organize
+
+If you're upgrading from the previous version (WP Menu Organize), all your settings will be automatically migrated:
+
+- All menu customizations preserved
+- Colors, badges, and typography maintained
+- Menu order retained
+- Templates and configurations migrated
+- Zero data loss during transition
+
 ## Troubleshooting
 
 ### Common Issues
@@ -360,16 +380,16 @@ wmoAutoSaveTheme(isDarkMode)
 
 ```javascript
 // Test search functionality
-$('#wmo-menu-search').val('dashboard').trigger('keyup');
+$('#wamm-menu-search').val('dashboard').trigger('keyup');
 
 // Test compact card expansion
-$('.wmo-expand-toggle').first().click();
+$('.wamm-expand-toggle').first().click();
 
 // Test color picker
-$('.wmo-color-field').first().wpColorPicker('open');
+$('.wamm-color-field').first().wpColorPicker('open');
 
 // Check for errors
-console.log('WMO Debug:', window.wmoDebug);
+console.log('WAMM Debug:', window.wammDebug);
 ```
 
 ## Future Enhancements
@@ -409,8 +429,16 @@ This plugin is licensed under the GPL v2 or later.
 
 ## Support
 
-For issues, feature requests, or contributions:
+For issues, feature requests, or support:
+- **Website**: https://webstuffguylabs.com/
+- **Plugin Page**: https://webstuffguylabs.com/wp-admin-menu-maestro
+
+For technical support:
 1. Check the troubleshooting section
 2. Review browser console for error messages
 3. Test with different browsers and configurations
-4. Submit detailed bug reports with steps to reproduce 
+4. Submit detailed bug reports with steps to reproduce
+
+---
+
+**Developed by Webstuffguy Labs** | https://webstuffguylabs.com/

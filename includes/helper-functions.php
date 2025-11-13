@@ -10,7 +10,7 @@ if (!defined('ABSPATH')) {
  *
  * @return array An array of menu slugs and titles.
  */
-function wmo_get_current_menu_slugs()
+function wamm_get_current_menu_slugs()
 {
     global $menu, $submenu;
     $slugs = array();
@@ -44,17 +44,17 @@ function wmo_get_current_menu_slugs()
  * @param string $title       Menu item title.
  * @param bool   $is_submenu  Whether the item is a submenu item.
  */
-function wmo_render_color_picker($menu_colors, $slug, $title, $is_submenu = false)
+function wamm_render_color_picker($menu_colors, $slug, $title, $is_submenu = false)
 {
     $color = isset($menu_colors[$slug]) ? esc_attr($menu_colors[$slug]) : '';
     
     // Get background colors data
-    $background_colors = get_option('wmo_menu_background_colors', array());
+    $background_colors = get_option('wamm_menu_background_colors', array());
     $sanitized_slug = sanitize_title($slug);
     
     // Add this check to prevent empty slugs
     if (empty($sanitized_slug)) {
-        error_log('WMO: Warning - Empty slug provided for menu item: ' . $title);
+        error_log('WAMM: Warning - Empty slug provided for menu item: ' . $title);
         return; // Don't render the color picker if slug is empty
     }
     
@@ -66,7 +66,7 @@ function wmo_render_color_picker($menu_colors, $slug, $title, $is_submenu = fals
     error_log('WMO Debug: Generated unique_slug: ' . $unique_slug . ' for sanitized_slug: ' . $sanitized_slug);
     
     // Get badge data
-    $menu_badges = wmo_get_settings('badges');
+    $menu_badges = wamm_get_settings('badges');
     $badge_data = isset($menu_badges[$sanitized_slug]) ? $menu_badges[$sanitized_slug] : array();
     $badge_text = $badge_data['text'] ?? '';
     $badge_color = $badge_data['color'] ?? '#ffffff';
@@ -74,7 +74,7 @@ function wmo_render_color_picker($menu_colors, $slug, $title, $is_submenu = fals
     $badge_enabled = $badge_data['enabled'] ?? false;
     
     // Get typography data
-    $menu_typography = wmo_get_settings('typography');
+    $menu_typography = wamm_get_settings('typography');
     $typography_data = isset($menu_typography[$sanitized_slug]) ? $menu_typography[$sanitized_slug] : array();
     $typography_enabled = $typography_data['enabled'] ?? false;
     $font_family = $typography_data['font_family'] ?? '';
@@ -117,7 +117,7 @@ function wmo_render_color_picker($menu_colors, $slug, $title, $is_submenu = fals
                 <div class="wmo-typography-toggle">
                     <label>
                         <input type="checkbox" 
-                               name="wmo_menu_typography[<?php echo esc_attr($sanitized_slug); ?>][enabled]" 
+                               name="wamm_menu_typography[<?php echo esc_attr($sanitized_slug); ?>][enabled]" 
                                value="1"
                                class="wmo-typography-enable"
                                data-menu-slug="<?php echo esc_attr($sanitized_slug); ?>"
@@ -129,9 +129,9 @@ function wmo_render_color_picker($menu_colors, $slug, $title, $is_submenu = fals
                 <div class="wmo-typography-controls">
                     <div class="wmo-typography-fields" style="<?php echo $typography_enabled ? '' : 'display: none;'; ?>">
                         <div class="wmo-typography-field">
-                            <label for="wmo_typography_family_<?php echo esc_attr($unique_slug); ?>">Font Family</label>
-                            <select id="wmo_typography_family_<?php echo esc_attr($unique_slug); ?>"
-                                    name="wmo_menu_typography[<?php echo esc_attr($sanitized_slug); ?>][font_family]"
+                            <label for="wamm_typography_family_<?php echo esc_attr($unique_slug); ?>">Font Family</label>
+                            <select id="wamm_typography_family_<?php echo esc_attr($unique_slug); ?>"
+                                    name="wamm_menu_typography[<?php echo esc_attr($sanitized_slug); ?>][font_family]"
                                     class="wmo-typography-family"
                                     data-menu-slug="<?php echo esc_attr($sanitized_slug); ?>">
                                 <option value="">Default</option>
@@ -149,9 +149,9 @@ function wmo_render_color_picker($menu_colors, $slug, $title, $is_submenu = fals
                         </div>
                         
                         <div class="wmo-typography-field">
-                            <label for="wmo_typography_size_<?php echo esc_attr($unique_slug); ?>">Font Size</label>
-                            <select id="wmo_typography_size_<?php echo esc_attr($unique_slug); ?>"
-                                    name="wmo_menu_typography[<?php echo esc_attr($sanitized_slug); ?>][font_size]"
+                            <label for="wamm_typography_size_<?php echo esc_attr($unique_slug); ?>">Font Size</label>
+                            <select id="wamm_typography_size_<?php echo esc_attr($unique_slug); ?>"
+                                    name="wamm_menu_typography[<?php echo esc_attr($sanitized_slug); ?>][font_size]"
                                     class="wmo-typography-size"
                                     data-menu-slug="<?php echo esc_attr($sanitized_slug); ?>">
                                 <option value="">Default</option>
@@ -169,9 +169,9 @@ function wmo_render_color_picker($menu_colors, $slug, $title, $is_submenu = fals
                         </div>
                         
                         <div class="wmo-typography-field">
-                            <label for="wmo_typography_weight_<?php echo esc_attr($unique_slug); ?>">Font Weight</label>
-                            <select id="wmo_typography_weight_<?php echo esc_attr($unique_slug); ?>"
-                                    name="wmo_menu_typography[<?php echo esc_attr($sanitized_slug); ?>][font_weight]"
+                            <label for="wamm_typography_weight_<?php echo esc_attr($unique_slug); ?>">Font Weight</label>
+                            <select id="wamm_typography_weight_<?php echo esc_attr($unique_slug); ?>"
+                                    name="wamm_menu_typography[<?php echo esc_attr($sanitized_slug); ?>][font_weight]"
                                     class="wmo-typography-weight"
                                     data-menu-slug="<?php echo esc_attr($sanitized_slug); ?>">
                                 <option value="">Default</option>
@@ -189,10 +189,10 @@ function wmo_render_color_picker($menu_colors, $slug, $title, $is_submenu = fals
                         
                         <!-- Color Picker - Now properly controlled by typography toggle -->
                         <div class="wmo-color-picker-wrapper">
-                            <label for="wmo_menucolors<?php echo esc_attr($unique_slug); ?>">Menu Color</label>
+                            <label for="wamm_menucolors<?php echo esc_attr($unique_slug); ?>">Menu Color</label>
                             <input type="text"
-                                id="wmo_menucolors<?php echo esc_attr($unique_slug); ?>"
-                                name="wmo_menu_colors[<?php echo esc_attr($sanitized_slug); ?>]"
+                                id="wamm_menucolors<?php echo esc_attr($unique_slug); ?>"
+                                name="wamm_menu_colors[<?php echo esc_attr($sanitized_slug); ?>]"
                                 value="<?php echo $color; ?>"
                                 class="wmo-color-field"
                                   data-menu-slug="<?php echo esc_attr($sanitized_slug); ?>"
@@ -227,8 +227,8 @@ function wmo_render_color_picker($menu_colors, $slug, $title, $is_submenu = fals
                                 
                                 <div class="wmo-color-controls">
                                     <input type="text"
-                                        id="wmo_menubgcolors<?php echo esc_attr($unique_slug); ?>"
-                                        name="wmo_menu_background_colors[<?php echo esc_attr($sanitized_slug); ?>]"
+                                        id="wamm_menubgcolors<?php echo esc_attr($unique_slug); ?>"
+                                        name="wamm_menu_background_colors[<?php echo esc_attr($sanitized_slug); ?>]"
                                         value="<?php echo isset($background_colors[$sanitized_slug]) ? esc_attr($background_colors[$sanitized_slug]) : '#000000'; ?>"
                                         class="wmo-background-color-field"
                                         data-menu-slug="<?php echo esc_attr($sanitized_slug); ?>"
@@ -583,7 +583,7 @@ function wmo_render_color_picker($menu_colors, $slug, $title, $is_submenu = fals
                 <div class="wmo-badge-toggle">
                     <label>
                         <input type="checkbox" 
-                               name="wmo_menu_badges[<?php echo esc_attr($sanitized_slug); ?>][enabled]" 
+                               name="wamm_menu_badges[<?php echo esc_attr($sanitized_slug); ?>][enabled]" 
                                value="1"
                                class="wmo-badge-enable"
                                data-menu-slug="<?php echo esc_attr($sanitized_slug); ?>"
@@ -594,10 +594,10 @@ function wmo_render_color_picker($menu_colors, $slug, $title, $is_submenu = fals
                 
                 <div class="wmo-badge-controls" style="<?php echo $badge_enabled ? '' : 'display: none;'; ?>">
                     <div class="wmo-badge-field">
-                        <label for="wmo_badge_text_<?php echo esc_attr($unique_slug); ?>">Badge Text</label>
+                        <label for="wamm_badge_text_<?php echo esc_attr($unique_slug); ?>">Badge Text</label>
                         <input type="text"
-                               id="wmo_badge_text_<?php echo esc_attr($unique_slug); ?>"
-                               name="wmo_menu_badges[<?php echo esc_attr($sanitized_slug); ?>][text]"
+                               id="wamm_badge_text_<?php echo esc_attr($unique_slug); ?>"
+                               name="wamm_menu_badges[<?php echo esc_attr($sanitized_slug); ?>][text]"
                                value="<?php echo esc_attr($badge_text); ?>"
                                class="wmo-badge-text"
                                data-menu-slug="<?php echo esc_attr($sanitized_slug); ?>"
@@ -607,20 +607,20 @@ function wmo_render_color_picker($menu_colors, $slug, $title, $is_submenu = fals
                     
                     <div class="wmo-badge-colors">
                         <div class="wmo-badge-color-field">
-                            <label for="wmo_badge_color_<?php echo esc_attr($unique_slug); ?>">Text Color</label>
+                            <label for="wamm_badge_color_<?php echo esc_attr($unique_slug); ?>">Text Color</label>
                             <input type="text"
-                                   id="wmo_badge_color_<?php echo esc_attr($unique_slug); ?>"
-                                   name="wmo_menu_badges[<?php echo esc_attr($sanitized_slug); ?>][color]"
+                                   id="wamm_badge_color_<?php echo esc_attr($unique_slug); ?>"
+                                   name="wamm_menu_badges[<?php echo esc_attr($sanitized_slug); ?>][color]"
                                    value="<?php echo esc_attr($badge_color); ?>"
                                    class="wmo-badge-color-picker"
                                    data-menu-slug="<?php echo esc_attr($sanitized_slug); ?>" />
                         </div>
                         
                         <div class="wmo-badge-color-field">
-                            <label for="wmo_badge_bg_<?php echo esc_attr($unique_slug); ?>">Background</label>
+                            <label for="wamm_badge_bg_<?php echo esc_attr($unique_slug); ?>">Background</label>
                             <input type="text"
-                                   id="wmo_badge_bg_<?php echo esc_attr($unique_slug); ?>"
-                                   name="wmo_menu_badges[<?php echo esc_attr($sanitized_slug); ?>][background]"
+                                   id="wamm_badge_bg_<?php echo esc_attr($unique_slug); ?>"
+                                   name="wamm_menu_badges[<?php echo esc_attr($sanitized_slug); ?>][background]"
                                    value="<?php echo esc_attr($badge_background); ?>"
                                    class="wmo-badge-bg-picker"
                                    data-menu-slug="<?php echo esc_attr($sanitized_slug); ?>" />
@@ -645,7 +645,7 @@ function wmo_render_color_picker($menu_colors, $slug, $title, $is_submenu = fals
                         <input type="checkbox" 
                                class="wmo-deactivate-enable"
                                data-menu-slug="<?php echo esc_attr($sanitized_slug); ?>"
-                               <?php checked(wmo_get_deactivate_setting($sanitized_slug)); ?> />
+                               <?php checked(wamm_get_deactivate_setting($sanitized_slug)); ?> />
                         <span class="wmo-deactivate-label">Add Quick Deactivate Submenu</span>
                     </label>
                     <p class="wmo-deactivate-warning" style="margin-top: 5px; color: #d63638; font-size: 12px; font-style: italic;">
@@ -666,7 +666,7 @@ function wmo_render_color_picker($menu_colors, $slug, $title, $is_submenu = fals
  *
  * @param array $menu_colors Array of menu colors.
  */
-function wmo_render_other_menu_items($menu_colors)
+function wamm_render_other_menu_items($menu_colors)
 {
     global $menu;
     $predefined_items = ['dashboard', 'posts', 'media', 'pages', 'comments', 'appearance', 'plugins', 'users', 'tools', 'settings'];
@@ -688,7 +688,7 @@ function wmo_render_other_menu_items($menu_colors)
             $menu_title = trim($menu_title); // Trim whitespace
         }
 
-        wmo_render_color_picker($menu_colors, $menu_slug, $menu_title);
+        wamm_render_color_picker($menu_colors, $menu_slug, $menu_title);
     }
 }
 
@@ -698,7 +698,7 @@ function wmo_render_other_menu_items($menu_colors)
  * @param array $input Raw menu colors input.
  * @return array Sanitized menu colors.
  */
-function wmo_sanitize_menu_colors($input)
+function wamm_sanitize_menu_colors($input)
 {
     $sanitized_colors = array();
     foreach ($input as $slug => $color) {
@@ -708,9 +708,9 @@ function wmo_sanitize_menu_colors($input)
 }
 
 // Security validation helper functions
-function wmo_validate_ajax_request() {
+function wamm_validate_ajax_request() {
     // Check nonce
-    if (!check_ajax_referer('wmo_ajax_nonce', 'nonce', false)) {
+    if (!check_ajax_referer('wamm_ajax_nonce', 'nonce', false)) {
         wp_send_json_error(['message' => 'Security check failed']);
         wp_die();
     }
@@ -730,8 +730,8 @@ function wmo_validate_ajax_request() {
  * @param string $menu_slug The menu slug.
  * @return bool Whether deactivate submenu is enabled.
  */
-function wmo_get_deactivate_setting($menu_slug) {
-    $deactivate_settings = wmo_get_settings('deactivate_submenus');
+function wamm_get_deactivate_setting($menu_slug) {
+    $deactivate_settings = wamm_get_settings('deactivate_submenus');
     return isset($deactivate_settings[$menu_slug]) ? (bool) $deactivate_settings[$menu_slug] : false;
 }
 
@@ -742,10 +742,10 @@ function wmo_get_deactivate_setting($menu_slug) {
  * @param bool $enabled Whether to enable deactivate submenu.
  * @return bool Success status.
  */
-function wmo_update_deactivate_setting($menu_slug, $enabled) {
-    $deactivate_settings = wmo_get_settings('deactivate_submenus');
+function wamm_update_deactivate_setting($menu_slug, $enabled) {
+    $deactivate_settings = wamm_get_settings('deactivate_submenus');
     $deactivate_settings[$menu_slug] = $enabled;
-    return wmo_update_settings('deactivate_submenus', $deactivate_settings);
+    return wamm_update_settings('deactivate_submenus', $deactivate_settings);
 }
 
 /**
@@ -754,10 +754,10 @@ function wmo_update_deactivate_setting($menu_slug, $enabled) {
  * @param string $menu_slug The menu slug.
  * @return string The deactivate URL with nonce.
  */
-function wmo_get_deactivate_url($menu_slug) {
+function wamm_get_deactivate_url($menu_slug) {
     return wp_nonce_url(
-        admin_url('admin.php?page=wmo_deactivate_plugin&deactivate=1'),
-        'wmo_deactivate_plugin',
+        admin_url('admin.php?page=wamm_deactivate_plugin&deactivate=1'),
+        'wamm_deactivate_plugin',
         'nonce'
     );
 }
@@ -766,30 +766,30 @@ function wmo_get_deactivate_url($menu_slug) {
  * Callback function for deactivate submenu action.
  * This is a fallback in case the admin_init hook doesn't catch the action.
  */
-function wmo_deactivate_callback() {
+function wamm_deactivate_callback() {
     // Security check - ensure user can activate/deactivate plugins
     if (!current_user_can('activate_plugins')) {
-        error_log('WMO: Deactivation attempt blocked - insufficient permissions for user: ' . wp_get_current_user()->user_login);
+        error_log('WAMM: Deactivation attempt blocked - insufficient permissions for user: ' . wp_get_current_user()->user_login);
         wp_die('Sorry, you cannot deactivate plugins.');
     }
     
     // Check if deactivation is requested with valid nonce and parameters
-    if (isset($_GET['wmo_action']) && $_GET['wmo_action'] === 'deactivate_plugin' && 
+    if (isset($_GET['wamm_action']) && $_GET['wamm_action'] === 'deactivate_plugin' && 
         isset($_GET['deactivate']) && $_GET['deactivate'] === '1' && 
         isset($_GET['plugin']) && isset($_GET['nonce']) && 
-        wp_verify_nonce($_GET['nonce'], 'wmo_deactivate_plugin')) {
+        wp_verify_nonce($_GET['nonce'], 'wamm_deactivate_plugin')) {
         
         $plugin_file = sanitize_text_field($_GET['plugin']);
         
         // Validate the plugin file exists and is active
         if (!file_exists(WP_PLUGIN_DIR . '/' . $plugin_file) || !is_plugin_active($plugin_file)) {
-            error_log('WMO: Invalid plugin file or plugin not active: ' . $plugin_file);
+            error_log('WAMM: Invalid plugin file or plugin not active: ' . $plugin_file);
             wp_die('Invalid plugin or plugin not active.');
         }
         
         // Prevent deactivation of our own plugin through this interface
-        if ($plugin_file === 'wp-menu-organize/wp-menu-organize.php') {
-            error_log('WMO: Attempt to deactivate wp-menu-organize blocked');
+        if ($plugin_file === 'wp-admin-menu-maestro/wp-admin-menu-maestro.php') {
+            error_log('WAMM: Attempt to deactivate wp-menu-organize blocked');
             wp_die('This plugin cannot deactivate itself through this interface. Please use the standard WordPress plugin management.');
         }
         
@@ -800,12 +800,12 @@ function wmo_deactivate_callback() {
         );
         
         if (in_array($plugin_file, $critical_plugins)) {
-            error_log('WMO: Attempt to deactivate critical plugin blocked: ' . $plugin_file);
+            error_log('WAMM: Attempt to deactivate critical plugin blocked: ' . $plugin_file);
             wp_die('Critical plugins cannot be deactivated through this interface. Please use the standard WordPress plugin management.');
         }
         
         // Log the deactivation attempt
-        error_log('WMO: Plugin deactivation initiated by user: ' . wp_get_current_user()->user_login . ' for plugin: ' . $plugin_file);
+        error_log('WAMM: Plugin deactivation initiated by user: ' . wp_get_current_user()->user_login . ' for plugin: ' . $plugin_file);
         
         // Deactivate the specified plugin
         deactivate_plugins($plugin_file);
@@ -816,13 +816,13 @@ function wmo_deactivate_callback() {
     } else {
         // Invalid request
         echo 'Invalid request.';
-        error_log('WMO: Invalid deactivation request - missing parameters or invalid nonce');
-        error_log('WMO: GET parameters: ' . print_r($_GET, true));
+        error_log('WAMM: Invalid deactivation request - missing parameters or invalid nonce');
+        error_log('WAMM: GET parameters: ' . print_r($_GET, true));
     }
 }
 
 // Helper for color validation
-function wmo_validate_color($color) {
+function wamm_validate_color($color) {
     if (preg_match('/^#[a-f0-9]{6}$/i', $color)) {
         return $color;
     }
@@ -830,13 +830,13 @@ function wmo_validate_color($color) {
 }
 
 // Helper for menu ID validation
-function wmo_validate_menu_id($menu_id) {
+function wamm_validate_menu_id($menu_id) {
     // Allow alphanumeric, dashes, underscores, and periods (for unique slugs)
     return preg_match('/^[a-zA-Z0-9_.-]+$/', $menu_id) ? $menu_id : false;
 }
 
 // Helper for typography validation
-function wmo_validate_typography_settings($settings) {
+function wamm_validate_typography_settings($settings) {
     $allowed_font_families = [
         'Arial, sans-serif',
         'Helvetica, sans-serif',
@@ -891,18 +891,18 @@ function wmo_validate_typography_settings($settings) {
 }
 
 // Helper for badge validation
-function wmo_validate_badge_settings($settings) {
+function wamm_validate_badge_settings($settings) {
     $validated = [];
     
     if (isset($settings['text'])) {
         $validated['text'] = sanitize_text_field($settings['text']);
     }
     
-    if (isset($settings['color']) && wmo_validate_color($settings['color'])) {
+    if (isset($settings['color']) && wamm_validate_color($settings['color'])) {
         $validated['color'] = $settings['color'];
     }
     
-    if (isset($settings['background']) && wmo_validate_color($settings['background'])) {
+    if (isset($settings['background']) && wamm_validate_color($settings['background'])) {
         $validated['background'] = $settings['background'];
     }
     
@@ -914,7 +914,7 @@ function wmo_validate_badge_settings($settings) {
 }
 
 // CSS sanitization function to prevent XSS attacks
-function wmo_sanitize_css($css) {
+function wamm_sanitize_css($css) {
     // Remove any JavaScript
     $css = preg_replace('#<script[^>]*>.*?</script>#is', '', $css);
     
@@ -950,18 +950,18 @@ function wmo_sanitize_css($css) {
 }
 
 // Secure CSS output function
-function wmo_output_custom_css() {
-    $settings = wmo_get_settings();
+function wamm_output_custom_css() {
+    $settings = wamm_get_settings();
     $custom_css = isset($settings['custom_css']) ? $settings['custom_css'] : '';
     
     if (!empty($custom_css)) {
         // Use WordPress's built-in method for adding inline styles
-        wp_add_inline_style('wp-menu-organize-style', $custom_css);
+        wp_add_inline_style('wp-admin-menu-maestro-style', $custom_css);
     }
 }
 
 // Template loader system to reduce memory usage
-function wmo_get_menu_template($template_name) {
+function wamm_get_menu_template($template_name) {
     // Define templates on-demand, not in memory
     $templates = array(
         'minimal' => array('dashboard', 'posts', 'pages', 'media', 'settings'),
@@ -976,7 +976,7 @@ function wmo_get_menu_template($template_name) {
 }
 
 // Load template configurations from file instead of memory
-function wmo_load_template_config($template_name) {
+function wamm_load_template_config($template_name) {
     $template_file = plugin_dir_path(__FILE__) . '../templates/' . $template_name . '.json';
     
     if (file_exists($template_file)) {
@@ -988,12 +988,12 @@ function wmo_load_template_config($template_name) {
 }
 
 // Export/Import Settings functionality
-function wmo_export_settings() {
+function wamm_export_settings() {
     if (!current_user_can('manage_options')) {
         return false;
     }
     
-    $settings = wmo_get_settings();
+    $settings = wamm_get_settings();
     
     // Add metadata
     $export_data = array(
@@ -1010,7 +1010,7 @@ function wmo_export_settings() {
     return $compressed;
 }
 
-function wmo_import_settings($data) {
+function wamm_import_settings($data) {
     if (!current_user_can('manage_options')) {
         return array('success' => false, 'message' => 'Insufficient permissions');
     }
@@ -1038,11 +1038,11 @@ function wmo_import_settings($data) {
     }
     
     // Backup current settings
-    $backup = wmo_get_settings();
-    update_option('wmo_settings_backup_' . time(), $backup);
+    $backup = wamm_get_settings();
+    update_option('wamm_settings_backup_' . time(), $backup);
     
     // Import new settings
-    $result = update_option('wmo_settings', $import_data['settings']);
+    $result = update_option('wamm_settings', $import_data['settings']);
     
     if ($result !== false) {
         return array(
@@ -1056,7 +1056,7 @@ function wmo_import_settings($data) {
     }
 }
 
-function wmo_get_import_preview($data) {
+function wamm_get_import_preview($data) {
     if (!current_user_can('manage_options')) {
         return false;
     }
@@ -1115,7 +1115,7 @@ function wmo_get_import_preview($data) {
 }
 
 // Asset URL helper for minified files with cache busting
-function wmo_get_asset_url($filename) {
+function wamm_get_asset_url($filename) {
     $extension = pathinfo($filename, PATHINFO_EXTENSION);
     
     // Force use unminified files for now to ensure our fixes work

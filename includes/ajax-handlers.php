@@ -8,8 +8,8 @@ if (!defined('ABSPATH')) {
  * This function MUST be defined before any calls to it
  * @return array
  */
-function wmo_get_builtin_templates() {
-    error_log('WMO: wmo_get_builtin_templates called successfully');
+function wamm_get_builtin_templates() {
+    error_log('WAMM: wamm_get_builtin_templates called successfully');
     return array(
         'default' => array(
             'name' => 'Default Layout',
@@ -119,10 +119,10 @@ function wmo_get_builtin_templates() {
     );
 }
 
-function wmo_save_menu_order()
+function wamm_save_menu_order()
 {
     // Use new validation helper
-    wmo_validate_ajax_request();
+    wamm_validate_ajax_request();
 
     $new_order = isset($_POST['order']) ? $_POST['order'] : array();
     
@@ -142,35 +142,35 @@ function wmo_save_menu_order()
     
     if (!empty($new_order)) {
         // Save to flat menu_order structure (not nested under admin_customizations)
-        $update_result = wmo_update_settings('menu_order', $new_order);
+        $update_result = wamm_update_settings('menu_order', $new_order);
         
         if ($update_result !== false) {
-            error_log('WMO: Menu order saved successfully: ' . print_r($new_order, true));
+            error_log('WAMM: Menu order saved successfully: ' . print_r($new_order, true));
             wp_send_json_success(array(
                 'message' => 'Menu order saved successfully',
                 'order' => $new_order
             ));
         } else {
-            error_log('WMO: Failed to save menu order');
+            error_log('WAMM: Failed to save menu order');
             wp_send_json_error('Failed to save menu order');
         }
     } else {
-        error_log('WMO: No order data received');
+        error_log('WAMM: No order data received');
         wp_send_json_error('No order data received');
     }
 }
-add_action('wp_ajax_wmo_save_menu_order', 'wmo_save_menu_order');
+add_action('wp_ajax_wmo_save_menu_order', 'wamm_save_menu_order');
 
-function wmo_reset_menu_order()
+function wamm_reset_menu_order()
 {
     // Use new validation helper
-    wmo_validate_ajax_request();
+    wamm_validate_ajax_request();
 
     // Remove the menu order setting
-    $settings = wmo_get_settings();
+    $settings = wamm_get_settings();
     if (isset($settings['menu_order'])) {
         unset($settings['menu_order']);
-        $update_result = update_option('wmo_settings', $settings);
+        $update_result = update_option('wamm_settings', $settings);
         
         if ($update_result !== false) {
             wp_send_json_success(array(
@@ -185,13 +185,13 @@ function wmo_reset_menu_order()
         ));
     }
 }
-add_action('wp_ajax_wmo_reset_menu_order', 'wmo_reset_menu_order');
+add_action('wp_ajax_wmo_reset_menu_order', 'wamm_reset_menu_order');
 
-function wmo_apply_custom_menu_order($menu_order)
+function wamm_apply_custom_menu_order($menu_order)
 {
     global $menu;
     
-            $saved_order = wmo_get_settings('menu_order');
+            $saved_order = wamm_get_settings('menu_order');
     
     if (empty($saved_order)) {
         return $menu_order;
@@ -221,24 +221,24 @@ function wmo_apply_custom_menu_order($menu_order)
     return array_keys($ordered_menu);
 }
 
-function wmo_save_menu_colors()
+function wamm_save_menu_colors()
 {
     // Use new validation helper
-    wmo_validate_ajax_request();
+    wamm_validate_ajax_request();
 
     $colors = isset($_POST['colors']) ? $_POST['colors'] : array();
     
     if (!empty($colors)) {
         $sanitized_colors = array();
         foreach ($colors as $slug => $color) {
-            $sanitized_slug = wmo_validate_menu_id($slug);
-            $sanitized_color = wmo_validate_color($color);
+            $sanitized_slug = wamm_validate_menu_id($slug);
+            $sanitized_color = wamm_validate_color($color);
             if ($sanitized_slug && $sanitized_color) {
                 $sanitized_colors[$sanitized_slug] = $sanitized_color;
             }
         }
         
-        $update_result = wmo_update_settings('colors', $sanitized_colors);
+        $update_result = wamm_update_settings('colors', $sanitized_colors);
         
         if ($update_result !== false) {
             wp_send_json_success('Colors saved successfully');
@@ -249,22 +249,22 @@ function wmo_save_menu_colors()
         wp_send_json_error('No color data received');
     }
 }
-add_action('wp_ajax_wmo_save_menu_colors', 'wmo_save_menu_colors');
+add_action('wp_ajax_wmo_save_menu_colors', 'wamm_save_menu_colors');
 
-function wmo_save_color()
+function wamm_save_color()
 {
     // Use new validation helper
-    wmo_validate_ajax_request();
+    wamm_validate_ajax_request();
 
-    $item_id = isset($_POST['id']) ? wmo_validate_menu_id($_POST['id']) : false;
-    $color = isset($_POST['color']) ? wmo_validate_color($_POST['color']) : '';
+    $item_id = isset($_POST['id']) ? wamm_validate_menu_id($_POST['id']) : false;
+    $color = isset($_POST['color']) ? wamm_validate_color($_POST['color']) : '';
     
     if (!$item_id) {
         wp_send_json_error('Invalid item ID provided');
         return;
     }
     
-    $menu_colors = wmo_get_settings('colors');
+    $menu_colors = wamm_get_settings('colors');
     
     if (empty($color)) {
         // Remove color if empty
@@ -276,7 +276,7 @@ function wmo_save_color()
         $menu_colors[$item_id] = $color;
     }
     
-    $update_result = wmo_update_settings('colors', $menu_colors);
+    $update_result = wamm_update_settings('colors', $menu_colors);
     
     if ($update_result !== false) {
         wp_send_json_success(array(
@@ -288,12 +288,12 @@ function wmo_save_color()
         wp_send_json_error('Failed to save color');
     }
 }
-add_action('wp_ajax_wmo_save_color', 'wmo_save_color');
+add_action('wp_ajax_wmo_save_color', 'wamm_save_color');
 
-function wmo_save_background_color()
+function wamm_save_background_color()
 {
     // Verify nonce
-    if (!wp_verify_nonce($_POST['nonce'], 'wmo_ajax_nonce')) {
+    if (!wp_verify_nonce($_POST['nonce'], 'wamm_ajax_nonce')) {
         wp_send_json_error('Invalid nonce');
     }
     
@@ -310,11 +310,11 @@ function wmo_save_background_color()
     }
     
     // Get existing background colors
-    $background_colors = get_option('wmo_menu_background_colors', array());
+    $background_colors = get_option('wamm_menu_background_colors', array());
     
     // Debug logging
-    error_log("WMO: AJAX save background color - Item ID: {$item_id}, Color: {$color}");
-    error_log("WMO: Existing background colors: " . (is_array($background_colors) ? count($background_colors) : 'none'));
+    error_log("WAMM: AJAX save background color - Item ID: {$item_id}, Color: {$color}");
+    error_log("WAMM: Existing background colors: " . (is_array($background_colors) ? count($background_colors) : 'none'));
     
     if (!is_array($background_colors)) {
         $background_colors = array();
@@ -323,17 +323,17 @@ function wmo_save_background_color()
     // Update the background color for this item
     if (!empty($color)) {
         $background_colors[$item_id] = $color;
-        error_log("WMO: Added/updated background color for {$item_id}: {$color}");
+        error_log("WAMM: Added/updated background color for {$item_id}: {$color}");
     } else {
         // Remove the background color if empty
         unset($background_colors[$item_id]);
-        error_log("WMO: Removed background color for {$item_id}");
+        error_log("WAMM: Removed background color for {$item_id}");
     }
     
     // Save the updated background colors
-    $update_result = update_option('wmo_menu_background_colors', $background_colors);
-    error_log("WMO: Update result: " . ($update_result ? 'success' : 'failed'));
-    error_log("WMO: Final background colors count: " . count($background_colors));
+    $update_result = update_option('wamm_menu_background_colors', $background_colors);
+    error_log("WAMM: Update result: " . ($update_result ? 'success' : 'failed'));
+    error_log("WAMM: Final background colors count: " . count($background_colors));
     
     if ($update_result !== false) {
         wp_send_json_success(array(
@@ -345,11 +345,11 @@ function wmo_save_background_color()
         wp_send_json_error('Failed to save background color');
     }
 }
-add_action('wp_ajax_wmo_save_background_color', 'wmo_save_background_color');
+add_action('wp_ajax_wmo_save_background_color', 'wamm_save_background_color');
 
-function wmo_apply_menu_colors()
+function wamm_apply_menu_colors()
 {
-    $menu_colors = wmo_get_settings('colors');
+    $menu_colors = wamm_get_settings('colors');
     
     if (!empty($menu_colors) && is_array($menu_colors)) {
         $css_rules = '';
@@ -381,30 +381,30 @@ function wmo_apply_menu_colors()
         }
         
         if (!empty($css_rules)) {
-            wp_add_inline_style('wp-menu-organize-style', $css_rules);
+            wp_add_inline_style('wp-admin-menu-maestro-style', $css_rules);
         }
     }
 }
 
-function wmo_apply_menu_background_colors()
+function wamm_apply_menu_background_colors()
 {
     // Get background colors from WordPress option
-    $background_colors = get_option('wmo_menu_background_colors', array());
+    $background_colors = get_option('wamm_menu_background_colors', array());
     
     // Debug logging
-    error_log('WMO: Global background colors function called');
-    error_log('WMO: Background colors found: ' . (is_array($background_colors) ? count($background_colors) : 'none'));
+    error_log('WAMM: Global background colors function called');
+    error_log('WAMM: Background colors found: ' . (is_array($background_colors) ? count($background_colors) : 'none'));
     if (is_array($background_colors) && !empty($background_colors)) {
-        error_log('WMO: Background color slugs: ' . implode(', ', array_keys($background_colors)));
+        error_log('WAMM: Background color slugs: ' . implode(', ', array_keys($background_colors)));
     }
     
     // Debug: Log current admin menu structure to understand the real IDs
     global $menu;
     if (!empty($menu)) {
-        error_log('WMO: Current admin menu structure:');
+        error_log('WAMM: Current admin menu structure:');
         foreach ($menu as $key => $item) {
             if (isset($item[2])) {
-                error_log("WMO: Menu item - Key: {$key}, Slug: {$item[2]}, Title: {$item[0]}");
+                error_log("WAMM: Menu item - Key: {$key}, Slug: {$item[2]}, Title: {$item[0]}");
             }
         }
     }
@@ -459,37 +459,37 @@ function wmo_apply_menu_background_colors()
                         background-color: inherit !important; 
                     }
                 ";
-                error_log("WMO: Added CSS rule for slug: {$slug}, color: {$color}");
+                error_log("WAMM: Added CSS rule for slug: {$slug}, color: {$color}");
             }
         }
         
         if (!empty($css_rules)) {
             // Use wp-admin style which is always loaded on admin pages
             wp_add_inline_style('wp-admin', $css_rules);
-            error_log('WMO: Background color CSS rules added to wp-admin style');
-            error_log('WMO: Generated CSS rules: ' . $css_rules);
+            error_log('WAMM: Background color CSS rules added to wp-admin style');
+            error_log('WAMM: Generated CSS rules: ' . $css_rules);
             
             // Also add as a separate style with higher priority
             wp_register_style('wmo-background-colors', false);
             wp_enqueue_style('wmo-background-colors');
             wp_add_inline_style('wmo-background-colors', $css_rules);
-            error_log('WMO: Background color CSS also added as separate style with higher priority');
+            error_log('WAMM: Background color CSS also added as separate style with higher priority');
         } else {
-            error_log('WMO: No background color CSS rules to add');
+            error_log('WAMM: No background color CSS rules to add');
         }
     } else {
-        error_log('WMO: No background colors found or not an array');
+        error_log('WAMM: No background colors found or not an array');
     }
 }
 
-function wmo_apply_typography_globally()
+function wamm_apply_typography_globally()
 {
     // Only apply on admin pages, not on plugin settings pages where JavaScript handles it
-    if (isset($_GET['page']) && strpos($_GET['page'], 'wp-menu-organize') !== false) {
+    if (isset($_GET['page']) && strpos($_GET['page'], 'wp-admin-menu-maestro') !== false) {
         return;
     }
     
-    $menu_typography = wmo_get_settings('typography');
+    $menu_typography = wamm_get_settings('typography');
     
     if (!empty($menu_typography) && is_array($menu_typography)) {
         $css_rules = '';
@@ -526,30 +526,30 @@ function wmo_apply_typography_globally()
         $css_rules .= "#adminmenu .wmo-menu-badge { font-size: 10px !important; font-weight: 600 !important; text-transform: uppercase !important; letter-spacing: 0.5px !important; }";
         
         if (!empty($css_rules)) {
-            wp_add_inline_style('wp-menu-organize-style', $css_rules);
+            wp_add_inline_style('wp-admin-menu-maestro-style', $css_rules);
         }
     }
 }
 
-function wmo_apply_badges_globally()
+function wamm_apply_badges_globally()
 {
     // Only apply on admin pages, not on plugin settings pages where JavaScript handles it
     // UNCOMMENT THE LINE BELOW TO TEST BADGES ON SETTINGS PAGE
-    // if (isset($_GET['page']) && strpos($_GET['page'], 'wp-menu-organize') !== false) {
+    // if (isset($_GET['page']) && strpos($_GET['page'], 'wp-admin-menu-maestro') !== false) {
     //     return;
     // }
     
-    $menu_badges = wmo_get_settings('badges');
+    $menu_badges = wamm_get_settings('badges');
     
     // Debug logging
-    error_log('WMO: Badge application - Found badges: ' . (is_array($menu_badges) ? count($menu_badges) : 'none'));
+    error_log('WAMM: Badge application - Found badges: ' . (is_array($menu_badges) ? count($menu_badges) : 'none'));
     if (is_array($menu_badges) && !empty($menu_badges)) {
-        error_log('WMO: Badge application - Badge slugs: ' . implode(', ', array_keys($menu_badges)));
+        error_log('WAMM: Badge application - Badge slugs: ' . implode(', ', array_keys($menu_badges)));
     }
     
     if (!empty($menu_badges) && is_array($menu_badges)) {
         // Ensure the CSS is loaded
-        echo '<link rel="stylesheet" href="' . WMO_PLUGIN_URL . 'assets/css/admin.css" type="text/css" />';
+        echo '<link rel="stylesheet" href="' . wamm_PLUGIN_URL . 'assets/css/admin.css" type="text/css" />';
         
         echo '<script type="text/javascript">
             jQuery(document).ready(function($) {
@@ -623,16 +623,16 @@ function wmo_apply_badges_globally()
 
 
 
-function wmo_apply_theme_preference()
+function wamm_apply_theme_preference()
 {
-    $dark_mode = wmo_get_settings('theme_preference') === 'dark';
+    $dark_mode = wamm_get_settings('theme_preference') === 'dark';
     
     if ($dark_mode) {
         // Add JavaScript to apply theme class
         wp_add_inline_script('wmo-admin-script', '
             document.addEventListener("DOMContentLoaded", function() {
                 document.body.classList.add("wmo-dark-theme");
-                console.log("WMO: Applied dark theme globally from server preference");
+                console.log("WAMM: Applied dark theme globally from server preference");
             });
         ');
         
@@ -656,32 +656,32 @@ function wmo_apply_theme_preference()
             }
         ';
         
-        wp_add_inline_style('wp-menu-organize-style', $dark_theme_css);
+        wp_add_inline_style('wp-admin-menu-maestro-style', $dark_theme_css);
     }
 }
 
-function wmo_save_badge()
+function wamm_save_badge()
 {
     // Use new validation helper
-    wmo_validate_ajax_request();
+    wamm_validate_ajax_request();
 
     $raw_slug = isset($_POST['slug']) ? $_POST['slug'] : '';
-    $slug = wmo_validate_menu_id($raw_slug);
+    $slug = wamm_validate_menu_id($raw_slug);
     $enabled = isset($_POST['enabled']) && ($_POST['enabled'] === 'true' || $_POST['enabled'] === '1');
     $text = isset($_POST['text']) ? sanitize_text_field($_POST['text']) : '';
-    $color = isset($_POST['color']) ? wmo_validate_color($_POST['color']) : '#ffffff';
-    $background = isset($_POST['background']) ? wmo_validate_color($_POST['background']) : '#0073aa';
+    $color = isset($_POST['color']) ? wamm_validate_color($_POST['color']) : '#ffffff';
+    $background = isset($_POST['background']) ? wamm_validate_color($_POST['background']) : '#0073aa';
     
     // Debug logging
-    error_log('WMO: Badge save attempt - Raw slug: ' . $raw_slug . ', Validated slug: ' . ($slug ?: 'FALSE'));
+    error_log('WAMM: Badge save attempt - Raw slug: ' . $raw_slug . ', Validated slug: ' . ($slug ?: 'FALSE'));
     
     if (!$slug) {
-        error_log('WMO: Badge save failed - Invalid slug: ' . $raw_slug);
+        error_log('WAMM: Badge save failed - Invalid slug: ' . $raw_slug);
         wp_send_json_error('Invalid slug provided: ' . $raw_slug);
         return;
     }
     
-    $menu_badges = wmo_get_settings('badges');
+    $menu_badges = wamm_get_settings('badges');
     
     if ($enabled && !empty($text)) {
         $menu_badges[$slug] = array(
@@ -697,30 +697,30 @@ function wmo_save_badge()
         }
     }
     
-    $update_result = wmo_update_settings('badges', $menu_badges);
+    $update_result = wamm_update_settings('badges', $menu_badges);
     
     if ($update_result !== false) {
-        error_log('WMO: Badge saved successfully for: ' . $slug);
+        error_log('WAMM: Badge saved successfully for: ' . $slug);
         wp_send_json_success(array(
             'message' => 'Badge saved successfully',
             'slug' => $slug,
             'badge' => isset($menu_badges[$slug]) ? $menu_badges[$slug] : null
         ));
     } else {
-        error_log('WMO: Failed to save badge for: ' . $slug);
+        error_log('WAMM: Failed to save badge for: ' . $slug);
         wp_send_json_error('Failed to save badge');
     }
 }
-add_action('wp_ajax_wmo_save_badge', 'wmo_save_badge');
+add_action('wp_ajax_wmo_save_badge', 'wamm_save_badge');
 
-function wmo_save_theme()
+function wamm_save_theme()
 {
     // Use new validation helper
-    wmo_validate_ajax_request();
+    wamm_validate_ajax_request();
 
     $dark_mode = isset($_POST['dark_mode']) && $_POST['dark_mode'] === 'true';
     
-    $update_result = wmo_update_settings('theme_preference', $dark_mode ? 'dark' : 'light');
+    $update_result = wamm_update_settings('theme_preference', $dark_mode ? 'dark' : 'light');
     
     if ($update_result !== false) {
         wp_send_json_success(array(
@@ -731,14 +731,14 @@ function wmo_save_theme()
         wp_send_json_error('Failed to save theme preference');
     }
 }
-add_action('wp_ajax_wmo_save_theme', 'wmo_save_theme');
+add_action('wp_ajax_wmo_save_theme', 'wamm_save_theme');
 
-function wmo_save_typography()
+function wamm_save_typography()
 {
     // Use new validation helper
-    wmo_validate_ajax_request();
+    wamm_validate_ajax_request();
 
-    $slug = isset($_POST['slug']) ? wmo_validate_menu_id($_POST['slug']) : '';
+    $slug = isset($_POST['slug']) ? wamm_validate_menu_id($_POST['slug']) : '';
     $enabled = isset($_POST['enabled']) && ($_POST['enabled'] === 'true' || $_POST['enabled'] === '1');
     $font_family = isset($_POST['font_family']) ? sanitize_text_field($_POST['font_family']) : '';
     $font_size = isset($_POST['font_size']) ? sanitize_text_field($_POST['font_size']) : '';
@@ -752,7 +752,7 @@ function wmo_save_typography()
         return;
     }
     
-    $menu_typography = wmo_get_settings('typography');
+    $menu_typography = wamm_get_settings('typography');
     
     if ($enabled) {
         $typography_settings = array(
@@ -791,7 +791,7 @@ function wmo_save_typography()
         }
     }
     
-    $update_result = wmo_update_settings('typography', $menu_typography);
+    $update_result = wamm_update_settings('typography', $menu_typography);
     
     if ($update_result !== false) {
         wp_send_json_success(array(
@@ -803,19 +803,19 @@ function wmo_save_typography()
         wp_send_json_error('Failed to save typography');
     }
 }
-add_action('wp_ajax_wmo_save_typography', 'wmo_save_typography');
+add_action('wp_ajax_wmo_save_typography', 'wamm_save_typography');
 
-function wmo_export_configuration()
+function wamm_export_configuration()
 {
-    error_log('WMO: wmo_export_configuration function called');
+    error_log('WAMM: wamm_export_configuration function called');
     
     if (!current_user_can('manage_options')) {
-        error_log('WMO: Insufficient permissions for export configuration');
+        error_log('WAMM: Insufficient permissions for export configuration');
         wp_send_json_error('Insufficient permissions');
         return;
     }
 
-    if (!check_ajax_referer('wmo_ajax_nonce', 'nonce', false)) {
+    if (!check_ajax_referer('wamm_ajax_nonce', 'nonce', false)) {
         wp_die('Security check failed');
     }
 
@@ -824,7 +824,7 @@ function wmo_export_configuration()
     $export_badges = isset($_POST['export_badges']) && $_POST['export_badges'] === 'true';
     $export_theme = isset($_POST['export_theme']) && $_POST['export_theme'] === 'true';
     
-    error_log('WMO: Export options - Colors: ' . ($export_colors ? 'yes' : 'no') . ', Typography: ' . ($export_typography ? 'yes' : 'no') . ', Badges: ' . ($export_badges ? 'yes' : 'no') . ', Theme: ' . ($export_theme ? 'yes' : 'no'));
+    error_log('WAMM: Export options - Colors: ' . ($export_colors ? 'yes' : 'no') . ', Typography: ' . ($export_typography ? 'yes' : 'no') . ', Badges: ' . ($export_badges ? 'yes' : 'no') . ', Theme: ' . ($export_theme ? 'yes' : 'no'));
     
     $export_data = array(
         'version' => '1.0',
@@ -833,52 +833,52 @@ function wmo_export_configuration()
     );
     
     if ($export_colors) {
-        $menu_colors = wmo_get_settings('colors');
+        $menu_colors = wamm_get_settings('colors');
         if (!empty($menu_colors)) {
             $export_data['data']['colors'] = $menu_colors;
         }
     }
     
     if ($export_typography) {
-        $menu_typography = wmo_get_settings('typography');
+        $menu_typography = wamm_get_settings('typography');
         if (!empty($menu_typography)) {
             $export_data['data']['typography'] = $menu_typography;
         }
     }
     
     if ($export_badges) {
-        $menu_badges = wmo_get_settings('badges');
+        $menu_badges = wamm_get_settings('badges');
         if (!empty($menu_badges)) {
             $export_data['data']['badges'] = $menu_badges;
         }
     }
     
     if ($export_theme) {
-        $dark_mode = wmo_get_settings('theme_preference') === 'dark';
+        $dark_mode = wamm_get_settings('theme_preference') === 'dark';
         $export_data['data']['theme'] = array(
             'dark_mode' => $dark_mode
         );
     }
     
-    error_log('WMO: Export data prepared successfully');
+    error_log('WAMM: Export data prepared successfully');
     wp_send_json_success(array(
         'message' => 'Configuration exported successfully',
         'data' => json_encode($export_data, JSON_PRETTY_PRINT)
     ));
 }
-add_action('wp_ajax_wmo_export_configuration', 'wmo_export_configuration');
+add_action('wp_ajax_wmo_export_configuration', 'wamm_export_configuration');
 
-function wmo_preview_import()
+function wamm_preview_import()
 {
-    error_log('WMO: wmo_preview_import function called');
+    error_log('WAMM: wamm_preview_import function called');
     
     if (!current_user_can('manage_options')) {
-        error_log('WMO: Insufficient permissions for preview import');
+        error_log('WAMM: Insufficient permissions for preview import');
         wp_send_json_error('Insufficient permissions');
         return;
     }
 
-    if (!check_ajax_referer('wmo_ajax_nonce', 'nonce', false)) {
+    if (!check_ajax_referer('wamm_ajax_nonce', 'nonce', false)) {
         wp_die('Security check failed');
     }
 
@@ -938,26 +938,26 @@ function wmo_preview_import()
         return;
     }
     
-    error_log('WMO: Import preview generated successfully');
+    error_log('WAMM: Import preview generated successfully');
     wp_send_json_success(array(
         'message' => 'Import preview generated successfully',
         'preview' => $preview,
         'summary' => implode(', ', $preview['summary'])
     ));
 }
-add_action('wp_ajax_wmo_preview_import', 'wmo_preview_import');
+add_action('wp_ajax_wmo_preview_import', 'wamm_preview_import');
 
-function wmo_import_configuration()
+function wamm_import_configuration()
 {
-    error_log('WMO: wmo_import_configuration function called');
+    error_log('WAMM: wamm_import_configuration function called');
     
     if (!current_user_can('manage_options')) {
-        error_log('WMO: Insufficient permissions for import configuration');
+        error_log('WAMM: Insufficient permissions for import configuration');
         wp_send_json_error('Insufficient permissions');
         return;
     }
 
-    if (!check_ajax_referer('wmo_ajax_nonce', 'nonce', false)) {
+    if (!check_ajax_referer('wamm_ajax_nonce', 'nonce', false)) {
         wp_die('Security check failed');
     }
 
@@ -993,7 +993,7 @@ function wmo_import_configuration()
                         foreach ($data as $slug => $color) {
                             $sanitized_colors[sanitize_text_field($slug)] = sanitize_hex_color($color);
                         }
-                        update_option('wmo_menu_colors', $sanitized_colors);
+                        update_option('wamm_menu_colors', $sanitized_colors);
                         $imported_items[] = 'Colors (' . count($sanitized_colors) . ' items)';
                     }
                     break;
@@ -1010,7 +1010,7 @@ function wmo_import_configuration()
                                 $sanitized_typography[sanitize_text_field($slug)] = $sanitized_settings;
                             }
                         }
-                        update_option('wmo_menu_typography', $sanitized_typography);
+                        update_option('wamm_menu_typography', $sanitized_typography);
                         $imported_items[] = 'Typography (' . count($sanitized_typography) . ' items)';
                     }
                     break;
@@ -1033,7 +1033,7 @@ function wmo_import_configuration()
                                 $sanitized_badges[sanitize_text_field($slug)] = $sanitized_badge;
                             }
                         }
-                        update_option('wmo_menu_badges', $sanitized_badges);
+                        update_option('wamm_menu_badges', $sanitized_badges);
                         $imported_items[] = 'Badges (' . count($sanitized_badges) . ' items)';
                     }
                     break;
@@ -1041,7 +1041,7 @@ function wmo_import_configuration()
                 case 'theme':
                     if (is_array($data)) {
                         if (isset($data['dark_mode'])) {
-                            update_option('wmo_dark_mode', (bool)$data['dark_mode']);
+                            update_option('wamm_dark_mode', (bool)$data['dark_mode']);
                             $imported_items[] = 'Theme settings';
                         }
                     }
@@ -1052,12 +1052,12 @@ function wmo_import_configuration()
             }
         } catch (Exception $e) {
             $errors[] = 'Error importing ' . $type . ': ' . $e->getMessage();
-            error_log('WMO: Import error for ' . $type . ': ' . $e->getMessage());
+            error_log('WAMM: Import error for ' . $type . ': ' . $e->getMessage());
         }
     }
     
     if (!empty($imported_items)) {
-        error_log('WMO: Import completed successfully: ' . implode(', ', $imported_items));
+        error_log('WAMM: Import completed successfully: ' . implode(', ', $imported_items));
         wp_send_json_success(array(
             'message' => 'Configuration imported successfully',
             'imported_items' => $imported_items,
@@ -1068,15 +1068,15 @@ function wmo_import_configuration()
         wp_send_json_error('No valid data found to import');
     }
 }
-add_action('wp_ajax_wmo_import_configuration', 'wmo_import_configuration');
+add_action('wp_ajax_wmo_import_configuration', 'wamm_import_configuration');
 
 // Template application handler
-function wmo_apply_template() {
+function wamm_apply_template() {
     if (!current_user_can('manage_options')) {
         wp_send_json_error('Insufficient permissions');
     }
     
-    if (!check_ajax_referer('wmo_ajax_nonce', 'nonce', false)) {
+    if (!check_ajax_referer('wamm_ajax_nonce', 'nonce', false)) {
         wp_send_json_error('Invalid nonce');
     }
     
@@ -1110,7 +1110,7 @@ function wmo_apply_template() {
     }
     
     // Save the complete color set
-    $result = update_option('wmo_menu_colors', $final_colors);
+    $result = update_option('wamm_menu_colors', $final_colors);
     
     if ($result) {
         wp_send_json_success('Template applied successfully');
@@ -1118,23 +1118,23 @@ function wmo_apply_template() {
         wp_send_json_error('Failed to apply template');
     }
 }
-add_action('wp_ajax_wmo_apply_template', 'wmo_apply_template');
+add_action('wp_ajax_wmo_apply_template', 'wamm_apply_template');
 
 // Icon system handler
-function wmo_save_icon() {
-    error_log('WMO: wmo_save_icon called');
+function wamm_save_icon() {
+    error_log('WAMM: wamm_save_icon called');
     
     if (!current_user_can('manage_options')) {
-        error_log('WMO: Icon save - insufficient permissions');
+        error_log('WAMM: Icon save - insufficient permissions');
         wp_send_json_error('Insufficient permissions');
     }
     
-    if (!check_ajax_referer('wmo_ajax_nonce', 'nonce', false)) {
+    if (!check_ajax_referer('wamm_ajax_nonce', 'nonce', false)) {
         wp_die('Security check failed');
     }
     
     $menu_id = sanitize_key($_POST['menu_id']); // Use sanitize_key for IDs
-    error_log('WMO: Icon save - original slug received: ' . $menu_id); // Log the plain slug being saved
+    error_log('WAMM: Icon save - original slug received: ' . $menu_id); // Log the plain slug being saved
     $icon_type = sanitize_text_field($_POST['icon_type']);
     
     // Handle emoji with proper UTF-8 encoding
@@ -1146,29 +1146,29 @@ function wmo_save_icon() {
         $icon_value = json_encode($emoji, JSON_UNESCAPED_UNICODE);
         // Remove quotes from JSON encoding
         $icon_value = trim($icon_value, '"');
-        error_log('WMO: Storing emoji as: ' . $icon_value);
+        error_log('WAMM: Storing emoji as: ' . $icon_value);
     } else {
         $icon_value = sanitize_text_field($_POST['icon_value']);
     }
     
-    error_log('WMO: Saving icon - menu_id: ' . $menu_id . ', type: ' . $icon_type . ', value: ' . $icon_value);
+    error_log('WAMM: Saving icon - menu_id: ' . $menu_id . ', type: ' . $icon_type . ', value: ' . $icon_value);
     
     if (empty($menu_id)) {
-        error_log('WMO: Icon save - empty menu_id');
+        error_log('WAMM: Icon save - empty menu_id');
         wp_send_json_error('No menu ID provided');
     }
     
-    $icons = wmo_get_settings('icons');
+    $icons = wamm_get_settings('icons');
     $icons[$menu_id] = array(
         'type' => $icon_type,
         'value' => $icon_value
     );
     
     // Use update_option with autoload set to yes for better performance
-    $result = wmo_update_settings('icons', $icons);
+    $result = wamm_update_settings('icons', $icons);
     
-    error_log('WMO: Icon save result: ' . ($result ? 'success' : 'failed'));
-    error_log('WMO: Saved icons: ' . print_r($icons, true));
+    error_log('WAMM: Icon save result: ' . ($result ? 'success' : 'failed'));
+    error_log('WAMM: Saved icons: ' . print_r($icons, true));
     
     if ($result !== false) {  // Changed from if ($result) to handle case where value doesn't change
         wp_send_json_success('Icon saved successfully');
@@ -1176,34 +1176,34 @@ function wmo_save_icon() {
         wp_send_json_error('Failed to save icon');
     }
 }
-add_action('wp_ajax_wmo_save_icon', 'wmo_save_icon');
+add_action('wp_ajax_wmo_save_icon', 'wamm_save_icon');
 
 // Deactivate submenu toggle handler
-function wmo_save_deactivate_toggle() {
-    error_log('WMO: wmo_save_deactivate_toggle called');
+function wamm_save_deactivate_toggle() {
+    error_log('WAMM: wamm_save_deactivate_toggle called');
     
     if (!current_user_can('manage_options')) {
-        error_log('WMO: Deactivate toggle save - insufficient permissions');
+        error_log('WAMM: Deactivate toggle save - insufficient permissions');
         wp_send_json_error('Insufficient permissions');
     }
     
-    if (!check_ajax_referer('wmo_ajax_nonce', 'nonce', false)) {
+    if (!check_ajax_referer('wamm_ajax_nonce', 'nonce', false)) {
         wp_die('Security check failed');
     }
     
     $menu_slug = sanitize_key($_POST['menu_slug']);
     $enabled = (bool) $_POST['enabled'];
     
-    error_log('WMO: Deactivate toggle save - menu_slug: ' . $menu_slug . ', enabled: ' . ($enabled ? 'true' : 'false'));
+    error_log('WAMM: Deactivate toggle save - menu_slug: ' . $menu_slug . ', enabled: ' . ($enabled ? 'true' : 'false'));
     
     if (empty($menu_slug)) {
-        error_log('WMO: Deactivate toggle save - empty menu_slug');
+        error_log('WAMM: Deactivate toggle save - empty menu_slug');
         wp_send_json_error('No menu slug provided');
     }
     
-    $result = wmo_update_deactivate_setting($menu_slug, $enabled);
+    $result = wamm_update_deactivate_setting($menu_slug, $enabled);
     
-    error_log('WMO: Deactivate toggle save result: ' . ($result ? 'success' : 'failed'));
+    error_log('WAMM: Deactivate toggle save result: ' . ($result ? 'success' : 'failed'));
     
     if ($result !== false) {
         wp_send_json_success('Deactivate toggle saved successfully');
@@ -1211,33 +1211,33 @@ function wmo_save_deactivate_toggle() {
         wp_send_json_error('Failed to save deactivate toggle');
     }
 }
-add_action('wp_ajax_wmo_save_deactivate_toggle', 'wmo_save_deactivate_toggle');
+add_action('wp_ajax_wmo_save_deactivate_toggle', 'wamm_save_deactivate_toggle');
 
 // Template system handlers
-function wmo_load_templates()
+function wamm_load_templates()
 {
-    error_log('WMO: wmo_load_templates function called');
+    error_log('WAMM: wamm_load_templates function called');
     
     if (!current_user_can('manage_options')) {
-        error_log('WMO: Insufficient permissions for load templates');
+        error_log('WAMM: Insufficient permissions for load templates');
         wp_send_json_error('Insufficient permissions');
         return;
     }
 
-    if (!check_ajax_referer('wmo_ajax_nonce', 'nonce', false)) {
-        error_log('WMO: Invalid nonce for load templates');
+    if (!check_ajax_referer('wamm_ajax_nonce', 'nonce', false)) {
+        error_log('WAMM: Invalid nonce for load templates');
         wp_send_json_error('Invalid nonce');
         return;
     }
 
     $category = isset($_POST['category']) ? sanitize_text_field($_POST['category']) : 'all';
     
-    error_log('WMO: About to call wmo_get_builtin_templates');
-    $builtin_templates = wmo_get_builtin_templates();
-    error_log('WMO: Got builtin templates: ' . print_r($builtin_templates, true));
+    error_log('WAMM: About to call wamm_get_builtin_templates');
+    $builtin_templates = wamm_get_builtin_templates();
+    error_log('WAMM: Got builtin templates: ' . print_r($builtin_templates, true));
     
-    $custom_templates = wmo_get_settings('templates');
-    error_log('WMO: Got custom templates: ' . print_r($custom_templates, true));
+    $custom_templates = wamm_get_settings('templates');
+    error_log('WAMM: Got custom templates: ' . print_r($custom_templates, true));
     
     // Combine all templates
     $all_templates = array();
@@ -1262,26 +1262,26 @@ function wmo_load_templates()
         });
     }
     
-    error_log('WMO: Loaded ' . count($all_templates) . ' templates for category: ' . $category);
+    error_log('WAMM: Loaded ' . count($all_templates) . ' templates for category: ' . $category);
     wp_send_json_success(array(
         'templates' => array_values($all_templates),
         'category' => $category
     ));
 }
-add_action('wp_ajax_wmo_load_templates', 'wmo_load_templates');
+add_action('wp_ajax_wmo_load_templates', 'wamm_load_templates');
 
 // Secure custom CSS save handler
-function wmo_save_custom_css() {
-    wmo_validate_ajax_request();
+function wamm_save_custom_css() {
+    wamm_validate_ajax_request();
     
     $custom_css = isset($_POST['custom_css']) ? $_POST['custom_css'] : '';
     
     // Sanitize CSS - allow only safe CSS properties
-    $custom_css = wmo_sanitize_css($custom_css);
+    $custom_css = wamm_sanitize_css($custom_css);
     
-    $settings = wmo_get_settings();
+    $settings = wamm_get_settings();
     $settings['custom_css'] = $custom_css;
-    $result = wmo_update_settings($settings);
+    $result = wamm_update_settings($settings);
     
     if ($result !== false) {
         wp_send_json_success(['message' => 'Custom CSS saved successfully']);
@@ -1289,13 +1289,13 @@ function wmo_save_custom_css() {
         wp_send_json_error('Failed to save custom CSS');
     }
 }
-add_action('wp_ajax_wmo_save_custom_css', 'wmo_save_custom_css');
+add_action('wp_ajax_wmo_save_custom_css', 'wamm_save_custom_css');
 
 // Export settings handler
-function wmo_export_settings_ajax() {
-    wmo_validate_ajax_request();
+function wamm_export_settings_ajax() {
+    wamm_validate_ajax_request();
     
-    $export_data = wmo_export_settings();
+    $export_data = wamm_export_settings();
     
     if ($export_data !== false) {
         wp_send_json_success(array(
@@ -1307,11 +1307,11 @@ function wmo_export_settings_ajax() {
         wp_send_json_error('Failed to export settings');
     }
 }
-add_action('wp_ajax_wmo_export_settings', 'wmo_export_settings_ajax');
+add_action('wp_ajax_wmo_export_settings', 'wamm_export_settings_ajax');
 
 // Import settings handler
-function wmo_import_settings_ajax() {
-    wmo_validate_ajax_request();
+function wamm_import_settings_ajax() {
+    wamm_validate_ajax_request();
     
     $import_data = isset($_POST['import_data']) ? sanitize_textarea_field($_POST['import_data']) : '';
     
@@ -1320,7 +1320,7 @@ function wmo_import_settings_ajax() {
         return;
     }
     
-    $result = wmo_import_settings($import_data);
+    $result = wamm_import_settings($import_data);
     
     if ($result['success']) {
         wp_send_json_success($result);
@@ -1328,11 +1328,11 @@ function wmo_import_settings_ajax() {
         wp_send_json_error($result['message']);
     }
 }
-add_action('wp_ajax_wmo_import_settings', 'wmo_import_settings_ajax');
+add_action('wp_ajax_wmo_import_settings', 'wamm_import_settings_ajax');
 
 // Import preview handler
-function wmo_import_preview_ajax() {
-    wmo_validate_ajax_request();
+function wamm_import_preview_ajax() {
+    wamm_validate_ajax_request();
     
     $import_data = isset($_POST['import_data']) ? sanitize_textarea_field($_POST['import_data']) : '';
     
@@ -1341,7 +1341,7 @@ function wmo_import_preview_ajax() {
         return;
     }
     
-    $preview = wmo_get_import_preview($import_data);
+    $preview = wamm_get_import_preview($import_data);
     
     if ($preview !== false) {
         wp_send_json_success(array(
@@ -1352,20 +1352,20 @@ function wmo_import_preview_ajax() {
         wp_send_json_error('Invalid import data format');
     }
 }
-add_action('wp_ajax_wmo_import_preview', 'wmo_import_preview_ajax');
+add_action('wp_ajax_wmo_import_preview', 'wamm_import_preview_ajax');
 
 // Hook to apply theme preference globally on all admin pages
-add_action('admin_head', 'wmo_apply_menu_colors');
+add_action('admin_head', 'wamm_apply_menu_colors');
 
 // Hook to apply background colors globally on all admin pages - use very late priority
-add_action('admin_head', 'wmo_apply_menu_background_colors', 999);
+add_action('admin_head', 'wamm_apply_menu_background_colors', 999);
 
 // Hook to apply typography globally on all admin pages
-add_action('admin_head', 'wmo_apply_typography_globally');
+add_action('admin_head', 'wamm_apply_typography_globally');
 
 // Hook to apply badges globally on all admin pages
-add_action('admin_head', 'wmo_apply_badges_globally');
+add_action('admin_head', 'wamm_apply_badges_globally');
 
 // Hook to apply theme preference globally on all admin pages
-add_action('admin_head', 'wmo_apply_theme_preference');
-add_action('admin_head', 'wmo_apply_theme_preference');
+add_action('admin_head', 'wamm_apply_theme_preference');
+add_action('admin_head', 'wamm_apply_theme_preference');

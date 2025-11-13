@@ -2,7 +2,7 @@
     'use strict';
 
     // Debug code to verify script loading
-    console.log('=== WMO: Script loaded ===');
+    console.log('=== WAMM: Script loaded ===');
     console.log('jQuery available:', typeof jQuery);
     console.log('jQuery UI available:', typeof jQuery.ui);
     console.log('Sortable available:', typeof jQuery.fn.sortable);
@@ -10,18 +10,18 @@
     console.log('jQuery UI version:', jQuery.ui ? jQuery.ui.version : 'Not available');
 
     // COORDINATION FLAGS - Prevent double initialization
-    if (window.wmoAdminJSInitialized) {
-        console.log('WMO: Admin JS already initialized, skipping duplicate initialization');
+    if (window.wammAdminJSInitialized) {
+        console.log('WAMM: Admin JS already initialized, skipping duplicate initialization');
         return;
     }
-    window.wmoAdminJSInitialized = true;
+    window.wammAdminJSInitialized = true;
     
-    // Global saveMenuOrder function - define at the top before wmoInitializeSortable
+    // Global saveMenuOrder function - define at the top before wammInitializeSortable
     window.saveMenuOrder = function() {
         try {
-            console.log('WMO: saveMenuOrder function called');
+            console.log('WAMM: saveMenuOrder function called');
             
-            var $status = $('#wmo-save-status');
+            var $status = $('#wamm-save-status');
             
             if ($status.length) {
                 $status.removeClass('success error').addClass('loading').text('Saving...');
@@ -29,32 +29,32 @@
             
             // Collect the full order as array of slugs - ensure all valid slugs
             var order = [];
-            $('#wmo-sortable-menu li').each(function() {
+            $('#wamm-sortable-menu li').each(function() {
                 var slug = $(this).data('slug');
                 if (slug && slug.trim() !== '') {
                     order.push(slug);
                 }
             });
             
-            console.log('WMO: Menu order to save:', order);
+            console.log('WAMM: Menu order to save:', order);
             
-            // Check if wmo_ajax is defined, fallback to admin-ajax.php
-            var ajaxUrl = (typeof wmo_ajax !== 'undefined' && wmo_ajax.ajax_url) ? wmo_ajax.ajax_url : ajaxurl;
-            var nonce = (typeof wmo_ajax !== 'undefined' && wmo_ajax.nonce) ? wmo_ajax.nonce : '';
+            // Check if wamm_ajax is defined, fallback to admin-ajax.php
+            var ajaxUrl = (typeof wamm_ajax !== 'undefined' && wamm_ajax.ajax_url) ? wamm_ajax.ajax_url : ajaxurl;
+            var nonce = (typeof wamm_ajax !== 'undefined' && wamm_ajax.nonce) ? wamm_ajax.nonce : '';
             
-            console.log('WMO: Using AJAX URL:', ajaxUrl);
-            console.log('WMO: Nonce available:', nonce ? 'YES' : 'NO');
+            console.log('WAMM: Using AJAX URL:', ajaxUrl);
+            console.log('WAMM: Nonce available:', nonce ? 'YES' : 'NO');
             
             $.ajax({
                 url: ajaxUrl,
                 type: 'POST',
                 data: {
-                    action: 'wmo_save_menu_order',
+                    action: 'wamm_save_menu_order',
                     order: order,
                     nonce: nonce
                 },
                 success: function(response) {
-                    console.log('WMO: Save response:', response);
+                    console.log('WAMM: Save response:', response);
                     
                     if (response.success) {
                         if ($status.length) {
@@ -62,7 +62,7 @@
                         }
                         
                         // Show success notice with refresh hint
-                        var notice = $('<div class="wmo-notice success">Menu order saved! Refresh page to see changes in admin sidebar.</div>');
+                        var notice = $('<div class="wamm-notice success">Menu order saved! Refresh page to see changes in admin sidebar.</div>');
                         $('body').append(notice);
                         setTimeout(function() {
                             notice.remove();
@@ -77,11 +77,11 @@
                         if ($status.length) {
                             $status.removeClass('loading success').addClass('error').text('Error saving menu order: ' + (response.data || 'Unknown error'));
                         }
-                        console.error('WMO: Save failed:', response.data);
+                        console.error('WAMM: Save failed:', response.data);
                     }
                 },
                 error: function(xhr, status, error) {
-                    console.error('WMO: AJAX error:', status, error);
+                    console.error('WAMM: AJAX error:', status, error);
                     if ($status.length) {
                         $status.removeClass('loading success').addClass('error').text('Network error while saving menu order');
                     }
@@ -91,21 +91,21 @@
                 }
             });
         } catch (error) {
-            console.error('WMO: Error in saveMenuOrder:', error);
+            console.error('WAMM: Error in saveMenuOrder:', error);
             alert('Error saving menu order: ' + error.message);
         }
     };
 
     // Global function to initialize sortable (for manual injection fallback)
-    window.wmoInitializeSortable = function() {
-        console.log('WMO: Initializing sortable...');
+    window.wammInitializeSortable = function() {
+        console.log('WAMM: Initializing sortable...');
         
         var $sortableContainer = $('.menu-items-list');
-        var $sortableMenu = $('#wmo-sortable-menu');
+        var $sortableMenu = $('#wamm-sortable-menu');
         
-        console.log('WMO: Container found:', $sortableContainer.length);
-        console.log('WMO: Menu found:', $sortableMenu.length);
-        console.log('WMO: Menu items found:', $sortableMenu.find('li').length);
+        console.log('WAMM: Container found:', $sortableContainer.length);
+        console.log('WAMM: Menu found:', $sortableMenu.length);
+        console.log('WAMM: Menu items found:', $sortableMenu.find('li').length);
         
         if ($sortableContainer.length && $sortableMenu.length) {
             try {
@@ -119,63 +119,63 @@
                     opacity: 0.8,
                     zIndex: 1000,
                     start: function(event, ui) {
-                        console.log('WMO: Started dragging:', ui.item);
+                        console.log('WAMM: Started dragging:', ui.item);
                         ui.item.addClass('dragging');
                     },
                     sort: function(event, ui) {
-                        console.log('WMO: Sorting in progress');
+                        console.log('WAMM: Sorting in progress');
                     },
                     change: function(event, ui) {
-                        console.log('WMO: Item position changed');
+                        console.log('WAMM: Item position changed');
                     },
                     update: function(event, ui) {
-                        console.log('WMO: Menu order updated');
+                        console.log('WAMM: Menu order updated');
                         // Check if saveMenuOrder is defined before calling
                         if (typeof window.saveMenuOrder === 'function') {
                             window.saveMenuOrder();
                         } else {
-                            console.error('WMO: saveMenuOrder function not found');
+                            console.error('WAMM: saveMenuOrder function not found');
                         }
                     },
                     stop: function(event, ui) {
-                        console.log('WMO: Stopped dragging:', ui.item);
+                        console.log('WAMM: Stopped dragging:', ui.item);
                         ui.item.removeClass('dragging');
                     }
                 }).disableSelection();
                 
-                console.log('WMO: Sortable initialized successfully');
+                console.log('WAMM: Sortable initialized successfully');
             } catch (error) {
-                console.error('WMO: Error initializing sortable:', error);
+                console.error('WAMM: Error initializing sortable:', error);
             }
         } else {
-            console.error('WMO: Sortable container or menu not found');
-            console.error('WMO: Container found:', $sortableContainer.length);
-            console.error('WMO: Menu found:', $sortableMenu.length);
+            console.error('WAMM: Sortable container or menu not found');
+            console.error('WAMM: Container found:', $sortableContainer.length);
+            console.error('WAMM: Menu found:', $sortableMenu.length);
         }
     };
 
     jQuery(document).ready(function($) {
-        console.log('WMO: Admin script loaded successfully');
-        console.log('WMO: Checking for menu items list...');
+        console.log('WAMM: Admin script loaded successfully');
+        console.log('WAMM: Checking for menu items list...');
         
         // Check if the menu items list exists
         var menuList = $('.menu-items-list');
         if (menuList.length > 0) {
-            console.log('WMO: Menu items list found with', menuList.find('li').length, 'items');
-            console.log('WMO: CSS classes applied:', menuList.attr('class'));
+            console.log('WAMM: Menu items list found with', menuList.find('li').length, 'items');
+            console.log('WAMM: CSS classes applied:', menuList.attr('class'));
         } else {
-            console.log('WMO: Menu items list not found');
+            console.log('WAMM: Menu items list not found');
         }
         
         // Check jQuery UI availability
         if (typeof $.fn.sortable !== 'undefined') {
-            console.log('WMO: jQuery UI sortable is available');
+            console.log('WAMM: jQuery UI sortable is available');
         } else {
-            console.log('WMO: jQuery UI sortable is NOT available');
+            console.log('WAMM: jQuery UI sortable is NOT available');
         }
 
         // Enhanced debugging for jQuery UI availability
-        console.log('=== WMO: jQuery UI Debugging ===');
+        console.log('=== WAMM: jQuery UI Debugging ===');
         console.log('typeof jQuery:', typeof jQuery);
         console.log('typeof jQuery.ui:', typeof jQuery.ui);
         console.log('typeof jQuery.fn.sortable:', typeof jQuery.fn.sortable);
@@ -199,90 +199,90 @@
 
         // Check if jQuery UI is available
         if (typeof $.fn.sortable === 'undefined') {
-            console.error('WMO: jQuery UI Sortable is not available');
-            console.error('WMO: Available jQuery UI widgets:', Object.keys($.fn).filter(key => key.includes('ui')));
+            console.error('WAMM: jQuery UI Sortable is not available');
+            console.error('WAMM: Available jQuery UI widgets:', Object.keys($.fn).filter(key => key.includes('ui')));
             
             // Try to detect if WordPress jQuery UI failed to load
             var wpJQueryUIScripts = $('script[src*="jquery-ui"]').length;
-            console.error('WMO: WordPress jQuery UI script tags found:', wpJQueryUIScripts);
+            console.error('WAMM: WordPress jQuery UI script tags found:', wpJQueryUIScripts);
             
             // Check if CDN fallback is available
             var cdnJQueryUI = $('script[src*="jquery-ui.min.js"]').length;
-            console.error('WMO: CDN jQuery UI script tags found:', cdnJQueryUI);
+            console.error('WAMM: CDN jQuery UI script tags found:', cdnJQueryUI);
             
-            console.error('WMO: jQuery UI sortable not available. Please check if scripts are loading properly.');
+            console.error('WAMM: jQuery UI sortable not available. Please check if scripts are loading properly.');
             return;
         }
 
         // Initialize sortable on the correct container
         var $sortableContainer = $('.menu-items-list');
-        var $sortableMenu = $('#wmo-sortable-menu');
+        var $sortableMenu = $('#wamm-sortable-menu');
         
-        console.log('WMO: Looking for sortable container:', $sortableContainer.length);
-        console.log('WMO: Looking for sortable menu:', $sortableMenu.length);
-        console.log('WMO: Menu items found:', $sortableMenu.find('li').length);
+        console.log('WAMM: Looking for sortable container:', $sortableContainer.length);
+        console.log('WAMM: Looking for sortable menu:', $sortableMenu.length);
+        console.log('WAMM: Menu items found:', $sortableMenu.find('li').length);
 
         if ($sortableContainer.length && $sortableMenu.length) {
             try {
-                console.log('WMO: Initializing sortable on container');
+                console.log('WAMM: Initializing sortable on container');
                 
                 // Use the global function
-                wmoInitializeSortable();
+                wammInitializeSortable();
                 
                 // Test the sortable functionality
                 setTimeout(function() {
                     var isSortable = $sortableMenu.hasClass('ui-sortable');
-                    console.log('WMO: Sortable initialized:', isSortable);
+                    console.log('WAMM: Sortable initialized:', isSortable);
                     if (!isSortable) {
-                        console.error('WMO: Sortable not properly initialized');
+                        console.error('WAMM: Sortable not properly initialized');
                     }
                     
                     // Additional tests
-                    console.log('WMO: Sortable instance:', $sortableMenu.sortable('instance'));
-                    console.log('WMO: Sortable options:', $sortableMenu.sortable('option'));
+                    console.log('WAMM: Sortable instance:', $sortableMenu.sortable('instance'));
+                    console.log('WAMM: Sortable options:', $sortableMenu.sortable('option'));
                 }, 100);
                 
             } catch (error) {
-                console.error('WMO: Error initializing sortable:', error);
-                console.error('WMO: Error stack:', error.stack);
+                console.error('WAMM: Error initializing sortable:', error);
+                console.error('WAMM: Error stack:', error.stack);
                 alert('Error initializing drag and drop: ' + error.message);
             }
         } else {
-            console.error('WMO: Sortable container or menu not found');
-            console.error('WMO: Container found:', $sortableContainer.length);
-            console.error('WMO: Menu found:', $sortableMenu.length);
+            console.error('WAMM: Sortable container or menu not found');
+            console.error('WAMM: Container found:', $sortableContainer.length);
+            console.error('WAMM: Menu found:', $sortableMenu.length);
         }
 
         // Add global debugging function
-        window.wmoDebug = function() {
-            console.log('=== WMO Debug Function ===');
+        window.wammDebug = function() {
+            console.log('=== WAMM Debug Function ===');
             console.log('jQuery version:', $.fn.jquery);
             console.log('jQuery UI version:', $.ui ? $.ui.version : 'Not loaded');
             console.log('Sortable available:', typeof $.fn.sortable === 'function');
             console.log('Container found:', $('.menu-items-list').length);
-            console.log('Menu found:', $('#wmo-sortable-menu').length);
-            console.log('Menu items:', $('#wmo-sortable-menu li').length);
-            console.log('Is sortable:', $('#wmo-sortable-menu').hasClass('ui-sortable'));
+            console.log('Menu found:', $('#wamm-sortable-menu').length);
+            console.log('Menu items:', $('#wamm-sortable-menu li').length);
+            console.log('Is sortable:', $('#wamm-sortable-menu').hasClass('ui-sortable'));
             console.log('saveMenuOrder function:', typeof window.saveMenuOrder === 'function');
             return {
                 jquery: $.fn.jquery,
                 jqueryUI: $.ui ? $.ui.version : null,
                 sortable: typeof $.fn.sortable === 'function',
                 container: $('.menu-items-list').length,
-                menu: $('#wmo-sortable-menu').length,
-                items: $('#wmo-sortable-menu li').length,
-                isSortable: $('#wmo-sortable-menu').hasClass('ui-sortable'),
+                menu: $('#wamm-sortable-menu').length,
+                items: $('#wamm-sortable-menu li').length,
+                isSortable: $('#wamm-sortable-menu').hasClass('ui-sortable'),
                 saveMenuOrder: typeof window.saveMenuOrder === 'function'
             };
         };
 
         // Add CSS debugging function
-        window.wmoDebugCSS = function() {
-            console.log('=== WMO CSS Debug Function ===');
+        window.wammDebugCSS = function() {
+            console.log('=== WAMM CSS Debug Function ===');
             
             var $container = $('.menu-items-list');
-            var $menu = $('#wmo-sortable-menu');
-            var $items = $('#wmo-sortable-menu li');
+            var $menu = $('#wamm-sortable-menu');
+            var $items = $('#wamm-sortable-menu li');
             var $handles = $('.menu-item-handle');
             
             // Check pointer-events
@@ -349,11 +349,11 @@
         };
 
         // Add CSS testing function
-        window.wmoTestCSS = function() {
-            console.log('=== WMO CSS Testing ===');
+        window.wammTestCSS = function() {
+            console.log('=== WAMM CSS Testing ===');
             
             // Add debug classes
-            $('.menu-items-list').addClass('wmo-debug-drag wmo-debug-outline');
+            $('.menu-items-list').addClass('wamm-debug-drag wmo-debug-outline');
             console.log('Added debug classes to menu container');
             
             // Test click events
@@ -382,15 +382,15 @@
         };
 
         // Add function to remove debug styles
-        window.wmoRemoveDebugCSS = function() {
-            $('.menu-items-list').removeClass('wmo-debug-drag wmo-debug-outline');
+        window.wammRemoveDebugCSS = function() {
+            $('.menu-items-list').removeClass('wamm-debug-drag wmo-debug-outline');
             $('.menu-item-handle').off('click mouseenter mouseleave mousedown');
             console.log('Removed debug CSS and event listeners');
         };
 
         // Add function to check script loading status
-        window.wmoCheckScripts = function() {
-            console.log('=== WMO: Script Loading Check ===');
+        window.wammCheckScripts = function() {
+            console.log('=== WAMM: Script Loading Check ===');
             
             // Check for jQuery
             console.log('jQuery loaded:', typeof jQuery !== 'undefined');
@@ -432,8 +432,8 @@
         };
 
         // Add function to check WordPress admin CSS conflicts
-        window.wmoCheckWordPressCSS = function() {
-            console.log('=== WMO WordPress CSS Conflict Check ===');
+        window.wammCheckWordPressCSS = function() {
+            console.log('=== WAMM WordPress CSS Conflict Check ===');
             
             // Check for WordPress admin styles that might interfere
             var wpAdminSelectors = [
@@ -442,7 +442,7 @@
                 '#wpbody *',
                 '.wrap *',
                 '.menu-items-list *',
-                '#wmo-sortable-menu *'
+                '#wamm-sortable-menu *'
             ];
             
             wpAdminSelectors.forEach(function(selector) {
@@ -516,62 +516,62 @@
         // Enhanced retry mechanism for sortable initialization
         function initializeSortableWithRetry(maxRetries = 10, delay = 300) {
             // COORDINATION CHECK - Prevent double sortable initialization
-            if (window.wmoSortableInitialized) {
-                console.log('WMO: Sortable already initialized, skipping duplicate initialization');
+            if (window.wammSortableInitialized) {
+                console.log('WAMM: Sortable already initialized, skipping duplicate initialization');
                 return;
             }
             var retryCount = 0;
             
             function tryInitialize() {
-                console.log('WMO: Attempting to initialize sortable (attempt ' + (retryCount + 1) + ' of ' + maxRetries + ')');
+                console.log('WAMM: Attempting to initialize sortable (attempt ' + (retryCount + 1) + ' of ' + maxRetries + ')');
                 
                 // Check if elements exist
                 var $container = $('.menu-items-list');
-                var $menu = $('#wmo-sortable-menu');
+                var $menu = $('#wamm-sortable-menu');
                 var $items = $menu.find('li');
                 
-                console.log('WMO: Container found:', $container.length);
-                console.log('WMO: Menu found:', $menu.length);
-                console.log('WMO: Menu items found:', $items.length);
+                console.log('WAMM: Container found:', $container.length);
+                console.log('WAMM: Menu found:', $menu.length);
+                console.log('WAMM: Menu items found:', $items.length);
                 
                 if ($container.length && $menu.length && $items.length > 0) {
-                    console.log('WMO: Elements found, initializing sortable');
+                    console.log('WAMM: Elements found, initializing sortable');
                     
                     // COORDINATION CHECK - Mark as initialized
-                    window.wmoSortableInitialized = true;
+                    window.wammSortableInitialized = true;
                     
-                    // Try to use the existing wmoInitializeSortable function first
-                    if (typeof window.wmoInitializeSortable === 'function') {
-                        console.log('WMO: Using existing wmoInitializeSortable function');
+                    // Try to use the existing wammInitializeSortable function first
+                    if (typeof window.wammInitializeSortable === 'function') {
+                        console.log('WAMM: Using existing wammInitializeSortable function');
                         try {
-                            window.wmoInitializeSortable();
+                            window.wammInitializeSortable();
                         } catch (error) {
-                            console.error('WMO: Error in wmoInitializeSortable:', error);
+                            console.error('WAMM: Error in wammInitializeSortable:', error);
                             // Fall back to our own initialization
                             initializeSortableFallback($menu);
                         }
                                     } else {
                     // Fallback to our own initialization
-                    console.log('WMO: wmoInitializeSortable not found, using fallback initialization');
+                    console.log('WAMM: wammInitializeSortable not found, using fallback initialization');
                     initializeSortableFallback($menu);
                 }
                 
                 // Post-init check
                 if ($menu.hasClass('ui-sortable')) {
-                    console.log('WMO: Sortable ready');
+                    console.log('WAMM: Sortable ready');
                 }
                 
                 return true; // Success
                 } else {
-                    console.log('WMO: Elements not found yet, retrying...');
+                    console.log('WAMM: Elements not found yet, retrying...');
                     
                     retryCount++;
                     if (retryCount < maxRetries) {
                         setTimeout(tryInitialize, delay);
                     } else {
-                        console.error('WMO: Failed to initialize sortable after', maxRetries, 'attempts');
+                        console.error('WAMM: Failed to initialize sortable after', maxRetries, 'attempts');
                         alert('Sortable menu not found. Please refresh or check console.');
-                        $('.wmo-instructions').append('<div class="notice notice-error"><p>Failed to initialize drag and drop functionality. Please refresh the page and try again.</p></div>');
+                        $('.wamm-instructions').append('<div class="notice notice-error"><p>Failed to initialize drag and drop functionality. Please refresh the page and try again.</p></div>');
                     }
                     return false;
                 }
@@ -598,22 +598,22 @@
                                 ui.item.removeClass('dragging');
                             },
                             update: function(event, ui) {
-                                console.log('WMO: Menu order updated');
+                                console.log('WAMM: Menu order updated');
                                 if (typeof window.saveMenuOrder === 'function') {
                                     window.saveMenuOrder();
                                 } else {
-                                    console.error('WMO: saveMenuOrder function not found');
+                                    console.error('WAMM: saveMenuOrder function not found');
                                 }
                             }
                         }).disableSelection();
                         
-                        console.log('WMO: Sortable initialized successfully (fallback)');
+                        console.log('WAMM: Sortable initialized successfully (fallback)');
                     } catch (error) {
-                        console.error('WMO: Error initializing sortable:', error);
+                        console.error('WAMM: Error initializing sortable:', error);
                     }
                 } else {
-                    console.error('WMO: jQuery UI sortable not available');
-                    $('.wmo-instructions').append('<div class="notice notice-error"><p>jQuery UI sortable is not available. Please check if jQuery UI is properly loaded.</p></div>');
+                    console.error('WAMM: jQuery UI sortable not available');
+                    $('.wamm-instructions').append('<div class="notice notice-error"><p>jQuery UI sortable is not available. Please check if jQuery UI is properly loaded.</p></div>');
                 }
             }
             
@@ -623,31 +623,31 @@
 
         // Initialize with enhanced retry mechanism if on reorder page
         if ($('.menu-items-list').length > 0) {
-            console.log('WMO: Found menu items list, initializing with retry mechanism');
+            console.log('WAMM: Found menu items list, initializing with retry mechanism');
             // COORDINATION CHECK - Only initialize if not already done by template
-            if (!window.wmoSortableInitialized) {
+            if (!window.wammSortableInitialized) {
                 initializeSortableWithRetry();
             } else {
-                console.log('WMO: Sortable already initialized by template, skipping admin.js initialization');
+                console.log('WAMM: Sortable already initialized by template, skipping admin.js initialization');
             }
         } else {
-            console.log('WMO: No menu items list found, skipping sortable initialization');
+            console.log('WAMM: No menu items list found, skipping sortable initialization');
         }
 
         // Apply menu colors functionality (existing code)
         var menuColors = {};
         
-        // Check if wmo_ajax is defined and has menuColors
-        if (typeof wmo_ajax !== 'undefined' && wmo_ajax.menuColors) {
-            menuColors = wmo_ajax.menuColors;
+        // Check if wamm_ajax is defined and has menuColors
+        if (typeof wamm_ajax !== 'undefined' && wamm_ajax.menuColors) {
+            menuColors = wamm_ajax.menuColors;
         }
         
         // Function to apply color to menu items
-        function wmoApplyColor(slug, color, isSubmenu = false, isPreview = false) {
-            console.log('WMO: Applying color to', slug, 'with color', color, 'isSubmenu:', isSubmenu, 'isPreview:', isPreview);
+        function wammApplyColor(slug, color, isSubmenu = false, isPreview = false) {
+            console.log('WAMM: Applying color to', slug, 'with color', color, 'isSubmenu:', isSubmenu, 'isPreview:', isPreview);
             
             if (!color) {
-                console.log('WMO: No color provided, skipping');
+                console.log('WAMM: No color provided, skipping');
                 return;
             }
             
@@ -685,17 +685,17 @@
             });
 
             if (menuItems.length === 0) {
-                console.log('WMO: Menu item not found for slug:', slug);
+                console.log('WAMM: Menu item not found for slug:', slug);
                 // Debug: Log available menu items
                 var allMenuItems = document.querySelectorAll('#adminmenu > li');
-                console.log('WMO: Available menu items for debugging:');
+                console.log('WAMM: Available menu items for debugging:');
                 allMenuItems.forEach(function(item, index) {
                     if (index < 10) { // Only log first 10 to avoid spam
                         console.log('  ' + index + ':', item.id, item.className, item.textContent.trim().substring(0, 30));
                     }
                 });
             } else {
-                console.log('WMO: Successfully applied color to', menuItems.length, 'menu item(s)');
+                console.log('WAMM: Successfully applied color to', menuItems.length, 'menu item(s)');
             }
 
             if (!isSubmenu && !isPreview) {
@@ -714,15 +714,15 @@
             }
         }
         
-        // Make wmoApplyColor globally accessible for live preview
-        window.wmoApplyColor = wmoApplyColor;
+        // Make wammApplyColor globally accessible for live preview
+        window.wammApplyColor = wammApplyColor;
         
         // Function to inject CSS for menu icons (targets pseudo-elements that JS can't reach)
-        function wmoInjectIconCSS(slug, color) {
-            console.log('WMO: Injecting icon CSS for', slug, 'with color', color);
+        function wammInjectIconCSS(slug, color) {
+            console.log('WAMM: Injecting icon CSS for', slug, 'with color', color);
             
             // Remove any existing preview CSS for this slug
-            var existingStyle = document.getElementById('wmo-preview-' + slug);
+            var existingStyle = document.getElementById('wamm-preview-' + slug);
             if (existingStyle) {
                 existingStyle.remove();
             }
@@ -730,7 +730,7 @@
             if (color) {
                 // Create new style element
                 var style = document.createElement('style');
-                style.id = 'wmo-preview-' + slug;
+                style.id = 'wamm-preview-' + slug;
                 style.type = 'text/css';
                 
                 // Generate CSS for various menu icon selectors
@@ -757,16 +757,16 @@
                 style.innerHTML = css;
                 document.head.appendChild(style);
                 
-                console.log('WMO: Injected icon CSS:', css);
+                console.log('WAMM: Injected icon CSS:', css);
             }
         }
         
         // Function to clean up preview CSS when needed
-        function wmoCleanupPreviewCSS(slug) {
-            var existingStyle = document.getElementById('wmo-preview-' + slug);
+        function wammCleanupPreviewCSS(slug) {
+            var existingStyle = document.getElementById('wamm-preview-' + slug);
             if (existingStyle) {
                 existingStyle.remove();
-                console.log('WMO: Cleaned up preview CSS for', slug);
+                console.log('WAMM: Cleaned up preview CSS for', slug);
             }
         }
 
@@ -774,45 +774,45 @@
         for (var slug in menuColors) {
             if (menuColors[slug]) {
                 var isSubmenu = slug.includes('-');
-                wmoApplyColor(slug, menuColors[slug], isSubmenu);
+                wammApplyColor(slug, menuColors[slug], isSubmenu);
             }
         }
         
         // ===== TOGGLE FUNCTIONALITY FIX =====
         // Global toggle function that takes a slug parameter and toggles .expanded class
-        window.wmo_toggle_expand = function(slug) {
-            console.log('WMO: Toggling expand for slug:', slug);
+        window.wamm_toggle_expand = function(slug) {
+            console.log('WAMM: Toggling expand for slug:', slug);
             
             // Find the wrapper using data-menu-slug attribute
-            var $wrapper = $('.wmo-menu-item-wrapper[data-menu-slug="' + slug + '"]');
-            var $expandedContent = $wrapper.find('.wmo-expanded-content');
-            var $header = $wrapper.find('.wmo-menu-header');
+            var $wrapper = $('.wamm-menu-item-wrapper[data-menu-slug="' + slug + '"]');
+            var $expandedContent = $wrapper.find('.wamm-expanded-content');
+            var $header = $wrapper.find('.wamm-menu-header');
             
             // Check if wrapper exists
             if ($wrapper.length === 0) {
-                console.error('WMO: Menu item wrapper not found for slug:', slug);
+                console.error('WAMM: Menu item wrapper not found for slug:', slug);
                 return;
             }
             
             // Check current visibility state
             var isVisible = $expandedContent.is(':visible');
-            console.log('WMO: Content visibility:', isVisible ? 'visible' : 'hidden');
+            console.log('WAMM: Content visibility:', isVisible ? 'visible' : 'hidden');
             
             // Toggle .expanded class on wrapper
             $wrapper.toggleClass('expanded');
             
             // Use jQuery's slideToggle for smooth animation (400ms default)
             $expandedContent.slideToggle(400, function() {
-                console.log('WMO: Slide animation completed for slug:', slug);
+                console.log('WAMM: Slide animation completed for slug:', slug);
                 
                 // Re-initialize color pickers in the expanded content if it's now visible
                 if ($expandedContent.is(':visible')) {
-                    console.log('WMO: Re-initializing color pickers for expanded content');
+                    console.log('WAMM: Re-initializing color pickers for expanded content');
                     if (typeof initColorPickers === 'function') {
                         initColorPickers();
                     } else if ($.fn.wpColorPicker) {
                         // Initialize any new color pickers that might not be initialized yet
-                        $expandedContent.find('.wmo-color-field').each(function() {
+                        $expandedContent.find('.wamm-color-field').each(function() {
                             if (!$(this).hasClass('wp-color-picker')) {
                                 $(this).wpColorPicker({
                                     defaultColor: '#23282d'
@@ -833,7 +833,7 @@
             });
             
             // Update arrow icon
-            var $icon = $header.find('.wmo-expand-toggle .dashicons');
+            var $icon = $header.find('.wamm-expand-toggle .dashicons');
             if (isVisible) {
                 $icon.removeClass('dashicons-arrow-up-alt2').addClass('dashicons-arrow-down-alt2');
             } else {
@@ -842,9 +842,9 @@
         };
         
         // Delegated event listener for both headers and toggle buttons
-        $(document).on('click', '.wmo-menu-header, .wmo-expand-toggle', function(e) {
+        $(document).on('click', '.wamm-menu-header, .wamm-expand-toggle', function(e) {
             // Don't trigger if clicking on color picker or other interactive elements
-            if ($(e.target).closest('.wmo-color-picker-wrapper, .wmo-status-indicators').length > 0) {
+            if ($(e.target).closest('.wamm-color-picker-wrapper, .wamm-status-indicators').length > 0) {
                 return;
             }
             
@@ -852,84 +852,84 @@
             var slug = null;
             
             // Determine which element was clicked and get the appropriate slug
-            if ($element.hasClass('wmo-expand-toggle')) {
+            if ($element.hasClass('wamm-expand-toggle')) {
                 // Clicked on the toggle button
                 e.stopPropagation(); // Prevent header click from also firing
                 slug = $element.data('menu-slug');
-                console.log('WMO: Expand toggle button clicked for slug:', slug);
-            } else if ($element.hasClass('wmo-menu-header')) {
+                console.log('WAMM: Expand toggle button clicked for slug:', slug);
+            } else if ($element.hasClass('wamm-menu-header')) {
                 // Clicked on the header
                 slug = $element.data('toggle-slug');
-                console.log('WMO: Menu header clicked for slug:', slug);
+                console.log('WAMM: Menu header clicked for slug:', slug);
             }
             
             if (slug) {
-                window.wmo_toggle_expand(slug);
+                window.wamm_toggle_expand(slug);
             } else {
-                console.error('WMO: No slug found for clicked element');
+                console.error('WAMM: No slug found for clicked element');
             }
         });
         
         // Debug function to check toggle elements
-        function wmoDebugToggleElements() {
-            var toggleHeaders = $('.wmo-toggle-header').length;
-            var menuWrappers = $('.wmo-menu-item-wrapper').length;
-            var expandButtons = $('.wmo-expand-toggle').length;
+        function wammDebugToggleElements() {
+            var toggleHeaders = $('.wamm-toggle-header').length;
+            var menuWrappers = $('.wamm-menu-item-wrapper').length;
+            var expandButtons = $('.wamm-expand-toggle').length;
             
-            console.log('WMO: Toggle debug - Headers:', toggleHeaders, 'Wrappers:', menuWrappers, 'Buttons:', expandButtons);
+            console.log('WAMM: Toggle debug - Headers:', toggleHeaders, 'Wrappers:', menuWrappers, 'Buttons:', expandButtons);
             
             // Update debug info if elements exist
-            if ($('#wmo-toggle-count').length) {
-                $('#wmo-toggle-count').text(toggleHeaders);
+            if ($('#wamm-toggle-count').length) {
+                $('#wamm-toggle-count').text(toggleHeaders);
             }
-            if ($('#wmo-menu-count').length) {
-                $('#wmo-menu-count').text(menuWrappers);
+            if ($('#wamm-menu-count').length) {
+                $('#wamm-menu-count').text(menuWrappers);
             }
             
             // Log first few toggle headers for debugging
-            $('.wmo-toggle-header').each(function(index) {
+            $('.wamm-toggle-header').each(function(index) {
                 if (index < 3) {
-                    console.log('WMO: Toggle header', index, 'slug:', $(this).data('toggle-slug'));
+                    console.log('WAMM: Toggle header', index, 'slug:', $(this).data('toggle-slug'));
                 }
             });
         }
         
         // Run debug on page load
-        wmoDebugToggleElements();
+        wammDebugToggleElements();
         
         // Update debug info with hook suffix
-        if (typeof wmo_ajax !== 'undefined' && wmo_ajax.hook_suffix) {
-            $('#wmo-hook-suffix').text(wmo_ajax.hook_suffix);
+        if (typeof wamm_ajax !== 'undefined' && wamm_ajax.hook_suffix) {
+            $('#wamm-hook-suffix').text(wamm_ajax.hook_suffix);
         }
         
         // Show debug info if needed (uncomment to enable)
-        // $('.wmo-debug-info').show();
+        // $('.wamm-debug-info').show();
         
         // Additional debug: Check if toggle function is available
-        console.log('WMO: Toggle function available:', typeof window.wmo_toggle_expand === 'function');
-        console.log('WMO: jQuery available:', typeof $ !== 'undefined');
-        console.log('WMO: Document ready completed');
+        console.log('WAMM: Toggle function available:', typeof window.wamm_toggle_expand === 'function');
+        console.log('WAMM: jQuery available:', typeof $ !== 'undefined');
+        console.log('WAMM: Document ready completed');
         
         // Test function for specific slugs (for debugging)
-        window.wmo_test_toggle = function(slug) {
-            console.log('WMO: Testing toggle for slug:', slug);
-            if (typeof window.wmo_toggle_expand === 'function') {
-                window.wmo_toggle_expand(slug);
+        window.wamm_test_toggle = function(slug) {
+            console.log('WAMM: Testing toggle for slug:', slug);
+            if (typeof window.wamm_toggle_expand === 'function') {
+                window.wamm_toggle_expand(slug);
             } else {
-                console.error('WMO: Toggle function not available');
+                console.error('WAMM: Toggle function not available');
             }
         };
         
         // Log available slugs for testing
-        $('.wmo-menu-item-wrapper').each(function(index) {
+        $('.wamm-menu-item-wrapper').each(function(index) {
             if (index < 5) { // Only log first 5 to avoid spam
                 var slug = $(this).data('menu-slug');
-                console.log('WMO: Available slug', index, ':', slug);
+                console.log('WAMM: Available slug', index, ':', slug);
             }
         });
         
         // Deactivate submenu confirmation handler
-        $(document).on('click', '.wp-submenu a[href*="wmo_deactivate_plugin"]', function(e) {
+        $(document).on('click', '.wp-submenu a[href*="wamm_deactivate_plugin"]', function(e) {
             e.preventDefault();
             
             var $link = $(this);
@@ -939,34 +939,34 @@
             // Create confirmation message
             var confirmMessage = 'Are you sure you want to deactivate ' + menuText + '? This will revert customizations until reactivated.';
             
-            console.log('WMO: Deactivate link clicked for:', menuText);
+            console.log('WAMM: Deactivate link clicked for:', menuText);
             
             // Show confirmation dialog
             if (confirm(confirmMessage)) {
-                console.log('WMO: User confirmed deactivation for:', menuText);
+                console.log('WAMM: User confirmed deactivation for:', menuText);
                 // Proceed with the deactivation
                 window.location.href = href;
             } else {
-                console.log('WMO: User cancelled deactivation for:', menuText);
+                console.log('WAMM: User cancelled deactivation for:', menuText);
                 // Cancel the action
                 return false;
             }
         });
         
         // Deactivate submenu toggle handler
-        $(document).on('change', '.wmo-deactivate-enable', function() {
+        $(document).on('change', '.wamm-deactivate-enable', function() {
             var $checkbox = $(this);
             var menuSlug = $checkbox.data('menu-slug');
             var enabled = $checkbox.is(':checked');
             
-            console.log('WMO: Deactivate toggle changed for', menuSlug, 'to', enabled);
+            console.log('WAMM: Deactivate toggle changed for', menuSlug, 'to', enabled);
             
             // Show saving indicator
-            var $wrapper = $checkbox.closest('.wmo-deactivate-wrapper');
-            var $indicator = $wrapper.find('.wmo-deactivate-saving-indicator');
+            var $wrapper = $checkbox.closest('.wamm-deactivate-wrapper');
+            var $indicator = $wrapper.find('.wamm-deactivate-saving-indicator');
             
             if ($indicator.length === 0) {
-                $indicator = $('<div class="wmo-deactivate-saving-indicator" style="margin-top: 5px; font-size: 12px; color: #0073aa;"></div>');
+                $indicator = $('<div class="wamm-deactivate-saving-indicator" style="margin-top: 5px; font-size: 12px; color: #0073aa;"></div>');
                 $wrapper.append($indicator);
             }
             
@@ -974,26 +974,26 @@
             
             // Auto-save via AJAX
             $.ajax({
-                url: wmo_ajax.ajax_url,
+                url: wamm_ajax.ajax_url,
                 method: 'POST',
                 data: {
-                    action: 'wmo_save_deactivate_toggle',
+                    action: 'wamm_save_deactivate_toggle',
                     menu_slug: menuSlug,
                     enabled: enabled ? 1 : 0,
-                    nonce: wmo_ajax.nonce
+                    nonce: wamm_ajax.nonce
                 },
                 success: function(response) {
                     if (response.success) {
                         $indicator.text('Saved!').removeClass('info error').addClass('success');
-                        console.log('WMO: Deactivate toggle saved successfully for', menuSlug);
+                        console.log('WAMM: Deactivate toggle saved successfully for', menuSlug);
                     } else {
                         $indicator.text('Error saving').removeClass('info success').addClass('error');
-                        console.error('WMO: Deactivate toggle save failed:', response.data);
+                        console.error('WAMM: Deactivate toggle save failed:', response.data);
                     }
                 },
                 error: function(jqXHR, textStatus, errorThrown) {
                     $indicator.text('Network error').removeClass('info success').addClass('error');
-                    console.error('WMO: Deactivate toggle AJAX error:', textStatus, errorThrown);
+                    console.error('WAMM: Deactivate toggle AJAX error:', textStatus, errorThrown);
                 },
                 complete: function() {
                     // Hide indicator after 2 seconds
@@ -1005,13 +1005,13 @@
         });
         
         // Menu search/filter functionality
-        $('#wmo-menu-search').on('keyup', function() {
+        $('#wamm-menu-search').on('keyup', function() {
             var search = $(this).val().toLowerCase();
             
             if (search === '') {
-                $('.wmo-color-group').show();
+                $('.wamm-color-group').show();
             } else {
-                $('.wmo-color-group').each(function() {
+                $('.wamm-color-group').each(function() {
                     var $group = $(this);
                     var text = $group.text().toLowerCase();
                     var matches = text.indexOf(search) > -1;
@@ -1020,10 +1020,10 @@
             }
             
             // Optional: Show count (remove if not wanted)
-            var visible = $('.wmo-color-group:visible').length;
-            var total = $('.wmo-color-group').length;
+            var visible = $('.wamm-color-group:visible').length;
+            var total = $('.wamm-color-group').length;
             if (search !== '') {
-                console.log(`WMO: Showing ${visible} of ${total} menu groups`);
+                console.log(`WAMM: Showing ${visible} of ${total} menu groups`);
             }
         });
     });

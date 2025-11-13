@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 // Prevent direct access
 if (!defined('ABSPATH')) {
     exit;
@@ -6,10 +6,10 @@ if (!defined('ABSPATH')) {
 ?>
 <div class="wrap">
     <h1>Menu Templates</h1>
-    <div class="wmo-section wmo-templates-section">
+    <div class="wamm-section wmo-templates-section">
         <h3><span class="dashicons dashicons-art"></span> Menu Templates</h3>
-        <div class="wmo-templates-gallery" id="wmo-templates-gallery">
-            <div class="wmo-templates-loading">
+        <div class="wamm-templates-gallery" id="wamm-templates-gallery">
+            <div class="wamm-templates-loading">
                 <span class="dashicons dashicons-update-alt wmo-spin"></span>
                 Loading templates...
             </div>
